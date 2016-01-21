@@ -1,0 +1,57 @@
+.column ul.category-menu li {
+    background: none;
+    margin: 0;
+    padding: 10px 0;
+}
+
+ul.category-menu li {
+    background: none;
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+    margin: 0;
+}
+
+.column ul.category-menu li.level0 ul.sub-menu-category {
+    display: none;
+}
+
+ul.category-menu li ul.sub-menu-category li {
+    margin-left: 15px;
+}
+
+ul.category-menu li ul.sub-menu-category {
+    display: none;
+}
+
+.sub-menu-category {
+    padding-left: 30px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.tz_button.plus:before {
+    content: "+";
+    display: inline-block;
+}
+
+.tz_button.minus:before {
+    content: "-";
+    display: inline-block;
+}
+
+a[id^=category-btn-] {
+    padding-right: 5px;
+}
+
+a[id^=category-btn-]:hover {
+    text-decoration: none;
+}
+
+.sub-menu-category > div {
+    padding-bottom: 5px;
+}
+
+.sub-menu-category > div.haschild,
+.sub-menu-category > div:last-child {
+    padding-bottom: 0;
+}

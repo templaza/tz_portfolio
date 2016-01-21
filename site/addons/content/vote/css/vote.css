@@ -1,0 +1,42 @@
+.TzVote-count {
+    display: inline-block;
+    font-size: 90%;
+    vertical-align: middle;
+}
+
+
+/* For Bootstrap style */
+.rating {
+    display: inline-block;
+    direction: rtl;
+    text-align: center;
+    cursor: pointer;
+}
+.rating > .rating-item {
+    display: inline-block;
+    position: relative;
+    width: auto;
+    text-decoration: none;
+    padding-right: 4px;
+    margin-right: 0;
+}
+.rating > .voted span{
+    display: inline-block;
+    margin: 0;
+    overflow: hidden;
+    position: absolute;
+    right: 2px;
+    top: 0;
+    padding-right: 2px;
+}
+
+.rating > .rating-item:hover span:before,
+.rating > .rating-item:hover ~ a span:before,
+.rating > .voted:before,
+.rating > .rating-item:hover:before,
+.rating > .rating-item:hover ~ .rating-item:before {
+    /*content: "\42";*/
+    color: #c66969;
+    top: 0;
+    left: 0;
+}

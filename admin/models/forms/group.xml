@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset>
+        <field type="text" name="id" class="readonly"
+               size="10" default="0"
+               readonly="true"
+               label="JGLOBAL_FIELD_ID_LABEL"
+               description ="JGLOBAL_FIELD_ID_DESC"/>
+
+        <field type="text" name="name"
+               class="inputbox" size="30"
+               required="true"
+               label="COM_TZ_PORTFOLIO_PLUS_NAME" />
+
+        <field name="alias" type="text" label="JFIELD_ALIAS_LABEL"
+               description="JFIELD_ALIAS_DESC" class="inputbox" size="45" />
+
+        <field name="published" type="list" label="JSTATUS"
+               description="JFIELD_PUBLISHED_DESC" class="inputbox"
+               filter="intval" size="1" default="1">
+            <option value="1">JPUBLISHED</option>
+            <option value="0">JUNPUBLISHED</option>
+        </field>
+
+        <field type="categoriesassignment" name="categories_assignment" class="checkbox"/>
+
+        <field name="description" type="editor" class="inputbox"
+               filter="JComponentHelper::filterText" buttons="true"
+               label="JGLOBAL_DESCRIPTION" />
+    </fieldset>
+</form>

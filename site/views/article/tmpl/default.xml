@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="COM_TZ_PORTFOLIO_PLUS_ARTICLE_VIEW_DEFAULT_TITLE" option="COM_TZ_PORTFOLIO_PLUS_VIEW_DEFAULT_OPTION">
+		<help
+			key = "JHELP_MENUS_MENU_ITEM_ARTICLE_SINGLE_ARTICLE"
+		/>
+		<message>
+			<![CDATA[COM_TZ_PORTFOLIO_PLUS_ARTICLE_VIEW_DEFAULT_DESC]]>
+		</message>
+	</layout>
+
+	<!-- Add fields to the request variables for the layout. -->
+	<fields name="request">
+		<fieldset name="request"
+			addfieldpath="/administrator/components/com_tz_portfolio_plus/models/fields">
+
+			<field name="id" type="modal_article"
+				label="COM_TZ_PORTFOLIO_PLUS_FIELD_SELECT_ARTICLE_LABEL"
+				required="true"
+				description="COM_TZ_PORTFOLIO_PLUS_FIELD_SELECT_ARTICLE_DESC"
+			/>
+		</fieldset>
+	</fields>
+
+	<!-- Add fields to the parameters object for the layout. -->
+	<fields name="params">
+        <fieldset name="request" addfieldpath="administrator/components/com_tz_portfolio_plus/models/fields">
+            <field type="tztemplates" name="tz_template_style_id"
+                   default="0"
+                   label="COM_TZ_PORTFOLIO_PLUS_TEMPLATE_STYLE_LABEL"
+                   description="COM_TZ_PORTFOLIO_PLUS_TEMPLATE_STYLE_DESC">
+                <option value="0">JOPTION_USE_DEFAULT</option>
+            </field>
+        </fieldset>
+	</fields>
+</metadata>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset addfieldpath="/administrator/components/com_categories/models/fields" >
+        <field type="text" name="id" class="readonly"
+               size="10" default="0"
+               readonly="true"
+               label="JGLOBAL_FIELD_ID_LABEL"
+               description ="JGLOBAL_FIELD_ID_DESC"/>
+
+        <field name="title" type="text" label="JGLOBAL_TITLE"
+               description="JFIELD_TITLE_DESC" class="inputbox" size="30"
+               required="true" />
+
+        <field type="text" name="name"
+               class="inputbox" size="30"
+               required="true"
+               label="COM_TZ_PORTFOLIO_PLUS_NAME" />
+        <field type="fieldgroups" name="groupid"
+               required="true" multiple="true"
+               label="COM_TZ_PORTFOLIO_PLUS_FIELDS_GROUP_REQUIRED"
+                description="COM_TZ_PORTFOLIO_PLUS_FIELDS_GROUP_REQUIRED_DESC"/>
+
+        <field name="published" type="list"
+               class="inputbox" filter="intval"
+               size="1" default="1"
+               label="JSTATUS"
+               description="JFIELD_PUBLISHED_DESC">
+            <option value="1">
+                JPUBLISHED</option>
+            <option value="0">
+                JUNPUBLISHED</option>
+        </field>
+
+        <field type="tzextrafieldtypes" name="type"
+               required="true"
+               label="COM_TZ_PORTFOLIO_PLUS_TYPE"
+               description="COM_TZ_PORTFOLIO_PLUS_TYPE_DESC">
+            <option value="">COM_TZ_PORTFOLIO_PLUS_OPTION_SELECT_TYPE</option>
+        </field>
+
+        <field type="tzextrafieldvalues" name="value"
+               label="COM_TZ_PORTFOLIO_PLUS_OPTION_FIELD_VALUE_LABEL"
+               description="COM_TZ_PORTFOLIO_PLUS_OPTION_FIELD_VALUE_DESC"/>
+
+        <field type="categoriesassignment" name="categories_assignment" class="checkbox"/>
+
+        <field name="description" type="editor" class="inputbox"
+               filter="JComponentHelper::filterText" buttons="true"
+               label="JGLOBAL_DESCRIPTION" />
+    </fieldset>
+
+    <fields name="params">
+        <fieldset name="request" label="JGLOBAL_FIELDSET_BASIC">
+            <field type="radio" name="required"
+                   class="btn-group" default="0"
+                   label="JOPTION_REQUIRED"
+                    description="COM_TZ_PORTFOLIO_PLUS_EXTRAFIELDS_REQUIRED_DESC">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+            <field type="radio" name="show_title"
+                   class="btn-group" default="1"
+                   label="JGLOBAL_SHOW_TITLE_LABEL"
+                   description="COM_TZ_PORTFOLIO_PLUS_EXTRAFIELDS_SHOW_TITLE_DESC">
+                <option value="0">JHIDE</option>
+                <option value="1">JSHOW</option>
+            </field>
+            <field type="radio" name="show_label"
+                   class="btn-group" default="1"
+                   label="COM_TZ_PORTFOLIO_PLUS_EXTRAFIELDS_SHOW_LABEL"
+                   description="COM_TZ_PORTFOLIO_PLUS_EXTRAFIELDS_SHOW_LABEL_DESC">
+                <option value="0">JHIDE</option>
+                <option value="1">JSHOW</option>
+            </field>
+        </fieldset>
+    </fields>
+
+    <fieldset name="preview_fieldset" label="JGLOBAL_PREVIEW">
+        <field type="tzextrafieldpreview" name="preview"/>
+    </fieldset>
+</form>

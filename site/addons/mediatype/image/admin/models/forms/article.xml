@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <!-- Parameters for article's create or edit view -->
+    <fields name="attribs">
+        <!-- Start article options in category listings -->
+        <fieldset name="article_category_listing">
+            <field type="spacer" name="spacer_image_article_category_listing_hr" hr="true"/>
+            <field type="spacer" name="spacer_image_article_category_listing_name"
+                   class="alert alert-warning btn-block"
+                   label="PLG_MEDIATYPE_IMAGE_OPTIONS_LABEL"/>
+            <field type="list" name="mt_show_cat_image_hover"
+                   label="PLG_MEDIATYPE_IMAGE_SHOW_IMAGE_HOVER_LABEL">
+                <option value="">COM_TZ_PORTFOLIO_PLUS_OPTION_INHERIT_FROM_CATEGORY</option>
+                <option value="0">JHIDE</option>
+                <option value="1">JSHOW</option>
+            </field>
+            <field type="tzimagesizelist" addon="image"
+                   addon_group="mediatype"
+                   param_name="image_size"
+                   param_text="title"
+                   param_value="image_name_prefix"
+                   name="mt_cat_image_size"
+                   label="PLG_MEDIATYPE_IMAGE_SIZE_LABEL"
+                   description="PLG_MEDIATYPE_IMAGE_SIZE_DESC">
+                <option value="">COM_TZ_PORTFOLIO_PLUS_OPTION_INHERIT_FROM_CATEGORY</option>
+                <option value="o">PLG_MEDIATYPE_IMAGE_ORIGINAL</option>
+            </field>
+        </fieldset>
+        <!-- End article options in category listings -->
+
+        <!-- Start article options -->
+        <fieldset name="article">
+            <field type="spacer" name="spacer_image_article_hr" hr="true"/>
+            <field type="spacer" name="spacer_image_article_name"
+                   class="alert alert-warning btn-block"
+                   label="PLG_MEDIATYPE_IMAGE_OPTIONS_LABEL"/>
+            <field type="tzimagesizelist" name="mt_image_size"
+                   addon="image" addon_group="mediatype"
+                   param_name="image_size"
+                   param_text="title"
+                   param_value="image_name_prefix"
+                   label="PLG_MEDIATYPE_IMAGE_SIZE_LABEL"
+                   description="PLG_MEDIATYPE_IMAGE_SIZE_DESC">
+                <option value="">COM_TZ_PORTFOLIO_PLUS_OPTION_INHERIT_FROM_CATEGORY</option>
+                <option value="o">PLG_MEDIATYPE_IMAGE_ORIGINAL</option>
+            </field>
+            <field type="list" name="mt_show_image_hover"
+                   label="PLG_MEDIATYPE_IMAGE_SHOW_IMAGE_HOVER_LABEL">
+                <option value="">COM_TZ_PORTFOLIO_PLUS_OPTION_INHERIT_FROM_CATEGORY</option>
+                <option value="0">JHIDE</option>
+                <option value="1">JSHOW</option>
+            </field>
+            <field type="list" name="mt_image_use_cloud"
+                   label="PLG_MEDIATYPE_IMAGE_USE_CLOUD_ZOOM_LABEL">
+                <option value="">COM_TZ_PORTFOLIO_PLUS_OPTION_INHERIT_FROM_CATEGORY</option>
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+
+            <!-- Start related options -->
+            <field type="list" name="mt_image_related_show_image"
+                   label="PLG_MEDIATYPE_IMAGE_RELATED_SHOW_IMAGE_LABEL">
+                <option value="">COM_TZ_PORTFOLIO_PLUS_OPTION_INHERIT_FROM_CATEGORY</option>
+                <option value="0">JHIDE</option>
+                <option value="1">JSHOW</option>
+            </field>
+            <field type="tzimagesizelist" name="mt_image_related_size"
+                   addon="image"
+                   addon_group="mediatype"
+                   param_name="image_size"
+                   param_text="title"
+                   param_value="image_name_prefix"
+                   label="PLG_MEDIATYPE_IMAGE_RELATED_SIZE_LABEL"
+                   description="PLG_MEDIATYPE_IMAGE_RELATED_SIZE_DESC">
+                <option value="">COM_TZ_PORTFOLIO_PLUS_OPTION_INHERIT_FROM_CATEGORY</option>
+                <option value="o">PLG_MEDIATYPE_IMAGE_ORIGINAL</option>
+            </field>
+            <!-- End related options -->
+        </fieldset>
+        <!-- End article options -->
+    </fields>
+    <!-- End parameters for article's create or edit view -->
+</form>

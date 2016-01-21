@@ -1,0 +1,13 @@
+.tz_portfolio_plus_articles .TzInner {
+    margin: 10px;
+    padding: 10px;
+    overflow: hidden;
+    border: 1px solid #ccc;
+}
+.tz_portfolio_plus_articles .element img{
+    max-width: 100%;
+    position: relative;
+}
+.tz_portfolio_plus_articles .element .tzpp_media{
+    overflow: hidden;
+}
