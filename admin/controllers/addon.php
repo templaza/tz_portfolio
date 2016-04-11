@@ -32,6 +32,168 @@ class TZ_Portfolio_PlusControllerAddon extends JControllerForm
         parent::display($cachable,$urlparams);
     }
 
+    public function manager(){
+        $app   = JFactory::getApplication();
+        $model = $this->getModel();
+        $table = $model->getTable();
+        $cid    = array();
+        $context = "$this->option.edit.$this->context";
+        $this -> input -> set('layout','manager');
+
+        $addon_view     = $this -> input -> getCmd('addon_view');
+        $addon_task     = $this -> input -> getCmd('addon_task');
+        $addon_layout   = $this -> input -> getCmd('addon_layout');
+
+        $link           = '';
+        if($addon_view){
+            $link   .= '&addon_view='.$addon_view;
+        }
+        if($addon_task){
+            $link   .= '&addon_task='.$addon_task;
+        }
+        if($addon_layout){
+            $link   .= '&addon_layout='.$addon_layout;
+        }
+
+        // Determine the name of the primary key for the data.
+        if (empty($key))
+        {
+            $key = $table->getKeyName();
+        }
+
+        // To avoid data collisions the urlVar may be different from the primary key.
+        if (empty($urlVar))
+        {
+            $urlVar = $key;
+        }
+
+        // Get the previous record id (if any) and the current record id.
+        $recordId = (int) (count($cid) ? $cid[0] : $this->input->getInt($urlVar));
+        $checkin = property_exists($table, 'checked_out');
+
+        // Access check.
+        if (!$this->allowEdit(array($key => $recordId), $key))
+        {
+            $this->setError(JText::_('JLIB_APPLICATION_ERROR_EDIT_NOT_PERMITTED'));
+            $this->setMessage($this->getError(), 'error');
+
+            $this->setRedirect(
+                JRoute::_(
+                    'index.php?option=' . $this->option . '&view=' . $this->view_list
+                    . $this->getRedirectToListAppend().$link, false
+                )
+            );
+
+            return false;
+        }
+
+        // Attempt to check-out the new record for editing and redirect.
+        if ($checkin && !$model->checkout($recordId))
+        {
+            // Check-out failed, display a notice but allow the user to see the record.
+            $this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_CHECKOUT_FAILED', $model->getError()));
+            $this->setMessage($this->getError(), 'error');
+
+            $this->setRedirect(
+                JRoute::_(
+                    'index.php?option=' . $this->option . '&view=' . $this->view_item
+                    . $this->getRedirectToItemAppend($recordId, $urlVar).$link, false
+                )
+            );
+
+            return false;
+        }
+        else
+        {
+            // Check-out succeeded, push the new record id into the session.
+            $this->holdEditId($context, $recordId);
+            $app->setUserState($context . '.data', null);
+
+
+            $this->setRedirect(
+                JRoute::_(
+                    'index.php?option=' . $this->option . '&view=' . $this->view_item
+                    . $this->getRedirectToItemAppend($recordId, $urlVar).$link, false
+                )
+            );
+
+            return true;
+        }
+    }
+
+//    public function edit($key = null, $urlVar = null)
+//    {
+//        $app   = JFactory::getApplication();
+//        $model = $this->getModel();
+//        $table = $model->getTable();
+//        $cid   = $this->input->post->get('cid', array(), 'array');
+//        $context = "$this->option.edit.$this->context";
+//
+//        // Determine the name of the primary key for the data.
+//        if (empty($key))
+//        {
+//            $key = $table->getKeyName();
+//        }
+//
+//        // To avoid data collisions the urlVar may be different from the primary key.
+//        if (empty($urlVar))
+//        {
+//            $urlVar = $key;
+//        }
+//
+//        // Get the previous record id (if any) and the current record id.
+//        $recordId = (int) (count($cid) ? $cid[0] : $this->input->getInt($urlVar));
+//        $checkin = property_exists($table, 'checked_out');
+//
+//        // Access check.
+//        if (!$this->allowEdit(array($key => $recordId), $key))
+//        {
+//            $this->setError(JText::_('JLIB_APPLICATION_ERROR_EDIT_NOT_PERMITTED'));
+//            $this->setMessage($this->getError(), 'error');
+//
+//            $this->setRedirect(
+//                JRoute::_(
+//                    'index.php?option=' . $this->option . '&view=' . $this->view_list
+//                    . $this->getRedirectToListAppend(), false
+//                )
+//            );
+//
+//            return false;
+//        }
+//
+//        // Attempt to check-out the new record for editing and redirect.
+//        if ($checkin && !$model->checkout($recordId))
+//        {
+//            // Check-out failed, display a notice but allow the user to see the record.
+//            $this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_CHECKOUT_FAILED', $model->getError()));
+//            $this->setMessage($this->getError(), 'error');
+//
+//            $this->setRedirect(
+//                JRoute::_(
+//                    'index.php?option=' . $this->option . '&view=' . $this->view_item
+//                    . $this->getRedirectToItemAppend($recordId, $urlVar), false
+//                )
+//            );
+//
+//            return false;
+//        }
+//        else
+//        {
+//            // Check-out succeeded, push the new record id into the session.
+//            $this->holdEditId($context, $recordId);
+//            $app->setUserState($context . '.data', null);
+//
+//            $this->setRedirect(
+//                JRoute::_(
+//                    'index.php?option=' . $this->option . '&view=' . $this->view_item
+//                    . $this->getRedirectToItemAppend($recordId, $urlVar), false
+//                )
+//            );
+//
+//            return true;
+//        }
+//    }
+
     public function upload()
     {
         // Check for request forgeries.

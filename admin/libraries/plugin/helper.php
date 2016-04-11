@@ -29,9 +29,15 @@ class TZ_Portfolio_PlusPluginHelper extends JPluginHelper{
     protected static $plugin_types  = null;
     protected static $instances     = array();
 
-    public static function getInstance($type, $plugin = null, $enabled=true, JEventDispatcher $dispatcher){
+    public static function getInstance($type, $plugin = null, $enabled=true, $dispatcher = null){
         if (!isset(self::$instances[$type.$plugin])) {
             if ($plugin_obj = self::getPlugin($type, $plugin, $enabled)) {
+                if($type == 'extrafields'){
+                    tzportfolioplusimport('fields.extrafield');
+                }
+                if(!$dispatcher){
+                    $dispatcher = JEventDispatcher::getInstance();
+                }
                 $className = 'PlgTZ_Portfolio_Plus' . ucfirst($type) . ucfirst($plugin);
                 if (!class_exists($className)) {
                     self::importPlugin($type, $plugin);
@@ -265,7 +271,7 @@ class TZ_Portfolio_PlusPluginHelper extends JPluginHelper{
         {
             $db     = JFactory::getDbo();
             $query  = $db->getQuery(true)
-                ->select('folder AS type, element AS name, params, manifest_cache')
+                ->select('id, folder AS type, element AS name, params, manifest_cache')
                 ->from('#__tz_portfolio_plus_extensions')
                 ->where('type =' . $db->quote('tz_portfolio_plus-plugin'))
                 ->order('ordering');

@@ -22,62 +22,10 @@ defined('_JEXEC') or die('Restricted access');
 
 class TZ_Portfolio_PlusTableFields extends JTable
 {
-//     /** @var int Primary key */
-//    var $id 				= null;
-//    /** @var string */
-//    var $name 				= '';
-//    /** @var string */
-//    var $title 				= null;
-//    /** @var string */
-//    var $type 				= null;
-//    /** @var string */
-//    var $value 				= null;
-//    /** @var string */
-//    var $default_value		= null;
-//    /** @var int */
-//    var $ordering   		= null;
-//    /** @var int */
-//    var $published			= null;
-//    /** @var int */
-////    var $groupid    		= null;
-//    /** @var string*/
-//    var $description		= null;
 
     function __construct(&$db) {
         parent::__construct('#__tz_portfolio_plus_fields','id',$db);
 
     }
-
-//    public function publish($pks = null,$state=1,$userId = 0){
-//        $k      = $this -> _tbl_key;
-//
-//        // If there are no primary keys set check to see if the instance key is set.
-//        if (empty($pks))
-//        {
-//            if ($this->$k)
-//            {
-//                $pks = array($this->$k);
-//            }
-//            // Nothing to set publishing state on, return false.
-//            else
-//            {
-//                $this->setError(JText::_('JLIB_DATABASE_ERROR_NO_ROWS_SELECTED'));
-//                return false;
-//            }
-//        }
-//
-//        // Build the WHERE clause for the primary keys.
-//        $where = $k . '=' . implode(' OR ' . $k . '=', $pks);
-//
-//        $query  = $this -> _db -> getQuery(true);
-//        $query -> update($this -> _db -> quoteName($this -> _tbl));
-//        $query -> set($this->_db->quoteName('published') . ' = ' . (int) $state);
-//        $query -> where('(' . $where . ')');
-//        $this -> _db -> setQuery($query);
-//
-//        $this -> _db -> execute();
-//
-//        return true;
-//    }
     
 }

@@ -27,164 +27,162 @@ JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
+JHtml::_('behavior.tabstate');
 JHtml::_('formbehavior.chosen', 'select');
 $listImage  = $this -> listImage;
 
 $assoc = JLanguageAssociations::isEnabled();
-?>
 
-<script type="text/javascript">
+JFactory::getDocument()->addScriptDeclaration('
 	Joomla.submitbutton = function(task)
 	{
-		if (task == 'category.cancel' || document.formvalidator.isValid(document.id('item-form'))) {
-			Joomla.submitform(task, document.getElementById('item-form'));
+		if (task == "category.cancel" || document.formvalidator.isValid(document.getElementById("item-form")))
+		{
+			' . $this->form->getField("description")->save() . '
+			Joomla.submitform(task, document.getElementById("item-form"));
 		}
 	};
-</script>
+');
+?>
 
 <form method="post" name="adminForm" id="item-form" class="form-validate form-horizontal" enctype="multipart/form-data"
 	action="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&extension='.JRequest::getCmd('extension', 'com_tz_portfolio_plus').'&layout=edit&id='.(int) $this->item->id); ?>">
     <div class="span8">
-        <ul class="nav nav-tabs">
-			<li class="active"><a href="#details" data-toggle="tab"><?php echo JText::_('JDETAILS');?></a></li>
-            <?php if($assoc):?>
-                <li><a href="#associations" data-toggle="tab"><?php echo JText::_('Associations');?></a></li>
-            <?php endif;?>
-			<li><a href="#metadata" data-toggle="tab"><?php echo JText::_('JGLOBAL_FIELDSET_METADATA_OPTIONS');?></a></li>
-			<?php if ($this->canDo->get('core.admin')): ?>
-				<li><a href="#permissions" data-toggle="tab"><?php echo JText::_('COM_CATEGORIES_FIELDSET_RULES');?></a></li>
-			<?php endif; ?>
-		</ul>
-        <div class="tab-content">
-			<div class="tab-pane active" id="details">
-				<div class="row-fluid">
-					<div class="span6">
-						<div class="control-group">
-							<div class="control-label">
-								<?php echo $this->form->getLabel('title'); ?>
-							</div>
-							<div class="controls">
-								<?php echo $this->form->getInput('title'); ?>
-							</div>
-						</div>
-						<div class="control-group">
-							<div class="control-label">
-								<?php echo $this->form->getLabel('alias'); ?>
-							</div>
-							<div class="controls">
-								<?php echo $this->form->getInput('alias'); ?>
-							</div>
-						</div>
-						<div class="control-group">
-							<div class="control-label">
-								<?php echo $this->form->getLabel('groupid'); ?>
-							</div>
-							<div class="controls">
-								<?php echo $this->form->getInput('groupid'); ?>
-							</div>
-						</div>
-						<div class="control-group">
-							<div class="control-label">
-								<?php echo $this->form->getLabel('images'); ?>
-							</div>
-							<div class="controls">
-								<div>
-								<?php echo $this->form->getInput('images'); ?>
-								</div>
-							</div>
-						</div>
-						<div class="control-group">
-							<div class="control-label">
-								<?php echo $this->form->getLabel('parent_id'); ?>
-							</div>
-							<div class="controls">
-								<?php echo $this->form->getInput('parent_id'); ?>
-							</div>
-						</div>
-						<div class="control-group">
-							<div class="control-label">
-								<?php echo $this -> form -> getLabel('template_id');?>
-							</div>
-							<div class="controls">
-								<?php echo $this -> form -> getInput('template_id');?>
-							</div>
-						</div>
-					</div>
-					<div class="span6">
-						<div class="control-group">
-							<div class="control-label max-width-180">
-								<?php echo $this->form->getLabel('inheritFrom','params'); ?>
-							</div>
-							<div class="controls">
-								<?php echo $this->form->getInput('inheritFrom','params'); ?>
-							</div>
-						</div>
-						<div class="control-group">
-							<div class="control-label">
-								<?php echo $this->form->getLabel('published'); ?>
-							</div>
-							<div class="controls">
-								<?php echo $this->form->getInput('published'); ?>
-							</div>
-						</div>
-						<div class="control-group">
-							<div class="control-label">
-								<?php echo $this->form->getLabel('access'); ?>
-							</div>
-							<div class="controls">
-								<?php echo $this->form->getInput('access'); ?>
-							</div>
-						</div>
-						<div class="control-group">
-							<div class="control-label">
-								<?php echo $this->form->getLabel('language'); ?>
-							</div>
-							<div class="controls">
-								<?php echo $this->form->getInput('language'); ?>
-							</div>
-						</div>
-						<div class="control-group">
-							<div class="control-label">
-								<?php echo $this->form->getLabel('id'); ?>
-							</div>
-							<div class="controls">
-								<?php echo $this->form->getInput('id'); ?>
-							</div>
-						</div>
-					</div>
-                </div>
+	<?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'details')); ?>
 
+		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'details', JText::_('JDETAILS', true)); ?>
+		<div class="row-fluid">
+			<div class="span6">
 				<div class="control-group">
 					<div class="control-label">
-						<?php echo $this->form->getLabel('description'); ?>
+						<?php echo $this->form->getLabel('title'); ?>
 					</div>
 					<div class="controls">
-						<?php echo $this->form->getInput('description'); ?>
+						<?php echo $this->form->getInput('title'); ?>
 					</div>
 				</div>
 				<div class="control-group">
 					<div class="control-label">
-						<?php echo $this->form->getLabel('extension'); ?>
+						<?php echo $this->form->getLabel('alias'); ?>
 					</div>
 					<div class="controls">
-						<?php echo $this->form->getInput('extension'); ?>
+						<?php echo $this->form->getInput('alias'); ?>
 					</div>
 				</div>
-            </div>
-            <?php if ($assoc) : ?>
-            <div class="tab-pane" id="associations">
-                <?php echo $this->loadTemplate('associations'); ?>
-            </div>
-            <?php endif; ?>
-            <div class="tab-pane" id="metadata">
-                <?php echo $this->loadTemplate('metadata'); ?>
-            </div>
-            <?php if ($this->canDo->get('core.admin')): ?>
-                <div class="tab-pane" id="permissions">
-                    <?php echo $this->form->getInput('rules'); ?>
-                </div>
-            <?php endif; ?>
-        </div>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('groupid'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('groupid'); ?>
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('images'); ?>
+					</div>
+					<div class="controls">
+						<div>
+							<?php echo $this->form->getInput('images'); ?>
+						</div>
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('parent_id'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('parent_id'); ?>
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this -> form -> getLabel('template_id');?>
+					</div>
+					<div class="controls">
+						<?php echo $this -> form -> getInput('template_id');?>
+					</div>
+				</div>
+			</div>
+			<div class="span6">
+				<div class="control-group">
+					<div class="control-label max-width-180">
+						<?php echo $this->form->getLabel('inheritFrom','params'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('inheritFrom','params'); ?>
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('published'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('published'); ?>
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('access'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('access'); ?>
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('language'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('language'); ?>
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="control-label">
+						<?php echo $this->form->getLabel('id'); ?>
+					</div>
+					<div class="controls">
+						<?php echo $this->form->getInput('id'); ?>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<div class="control-label">
+				<?php echo $this->form->getLabel('description'); ?>
+			</div>
+			<div class="controls">
+				<?php echo $this->form->getInput('description'); ?>
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<?php echo $this->form->getLabel('extension'); ?>
+			</div>
+			<div class="controls">
+				<?php echo $this->form->getInput('extension'); ?>
+			</div>
+		</div>
+		<?php echo JHtml::_('bootstrap.endTab'); ?>
+
+		<?php if ($assoc) : ?>
+		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'associations', JText::_('JGLOBAL_FIELDSET_ASSOCIATIONS', true)); ?>
+		<?php echo $this->loadTemplate('associations'); ?>
+		<?php echo JHtml::_('bootstrap.endTab'); ?>
+		<?php endif;?>
+
+		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'metadata', JText::_('JGLOBAL_FIELDSET_METADATA_OPTIONS', true)); ?>
+		<?php echo $this->loadTemplate('metadata'); ?>
+		<?php echo JHtml::_('bootstrap.endTab'); ?>
+
+		<?php if ($this->canDo->get('core.admin')): ?>
+			<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'permissions', JText::_('COM_CATEGORIES_FIELDSET_RULES', true)); ?>
+			<?php echo $this->form->getInput('rules'); ?>
+			<?php echo JHtml::_('bootstrap.endTab'); ?>
+		<?php endif; ?>
+
+	<?php echo JHtml::_('bootstrap.endTabSet'); ?>
     </div>
 
 	<div class="span4">

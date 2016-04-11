@@ -22,6 +22,7 @@ defined('_JEXEC') or die('Restricted access');
 
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.tooltip');
+JHtml::_('behavior.tabstate');
 JHtml::_('formbehavior.chosen', 'select');
 
 $form   = $this -> form;
@@ -37,38 +38,65 @@ JFactory::getDocument()->addScriptDeclaration('
 ');
 ?>
 <form name="adminForm" method="post" class="form-validate" id="group-form"
-      action="index.php?option=com_tz_portfolio_plus&view=group&layout=edit&id=<?php echo $this -> item -> id?>">
+      action="index.php?option=com_tz_portfolio_plus&view=group&layout=edit&id=<?php echo (int) $this -> item -> id?>">
     <div class="form-horizontal">
         <fieldset class="adminform">
+        <?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'details')); ?>
 
-            <ul class="nav nav-tabs">
-                <li class="active"><a href="#details" data-toggle="tab"><?php echo JText::_('JDETAILS');?></a></li>
-                <li><a href="#categories_assignment" data-toggle="tab"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_CATEGORIES_ASSIGNMENT');?></a></li>
-            </ul>
-            <div class="tab-content">
-                <div class="tab-pane active" id="details">
-                    <div class="control-group">
-                        <div class="control-label"><?php echo $form -> getLabel('name');?></div>
-                        <div class="controls"><?php echo $form -> getInput('name');?></div>
-                    </div>
-                    <div class="control-group">
-                        <div class="control-label"><?php echo $form -> getLabel('published');?></div>
-                        <div class="controls"><?php echo $form -> getInput('published');?></div>
-                    </div>
-                    <div class="control-group">
-                        <div class="control-label"><?php echo $form -> getLabel('id');?></div>
-                        <div class="controls"><?php echo $form -> getInput('id');?></div>
-                    </div>
-                    <div class="control-group">
-                        <div class="control-label"><?php echo $form -> getLabel('description');?></div>
-                        <div class="controls"><?php echo $form -> getInput('description');?></div>
-                    </div>
-                </div>
-
-                <div class="tab-pane assignment" id="categories_assignment">
-                    <?php echo $form->getInput('categories_assignment'); ?>
-                </div>
+            <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'details', JText::_('JDETAILS', true)); ?>
+            <div class="control-group">
+                <div class="control-label"><?php echo $form -> getLabel('name');?></div>
+                <div class="controls"><?php echo $form -> getInput('name');?></div>
             </div>
+            <div class="control-group">
+                <div class="control-label"><?php echo $form -> getLabel('published');?></div>
+                <div class="controls"><?php echo $form -> getInput('published');?></div>
+            </div>
+            <div class="control-group">
+                <div class="control-label"><?php echo $form -> getLabel('id');?></div>
+                <div class="controls"><?php echo $form -> getInput('id');?></div>
+            </div>
+            <div class="control-group">
+                <div class="control-label"><?php echo $form -> getLabel('description');?></div>
+                <div class="controls"><?php echo $form -> getInput('description');?></div>
+            </div>
+            <?php echo JHtml::_('bootstrap.endTab'); ?>
+
+            <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'categories_assignment', JText::_('COM_TZ_PORTFOLIO_PLUS_CATEGORIES_ASSIGNMENT', true)); ?>
+            <?php echo $form->getInput('categories_assignment'); ?>
+            <?php echo JHtml::_('bootstrap.endTab'); ?>
+
+        <?php echo JHtml::_('bootstrap.endTabSet'); ?>
+
+
+<!--            <ul class="nav nav-tabs">-->
+<!--                <li class="active"><a href="#details" data-toggle="tab">--><?php //echo JText::_('JDETAILS');?><!--</a></li>-->
+<!--                <li><a href="#categories_assignment" data-toggle="tab">--><?php //echo JText::_('COM_TZ_PORTFOLIO_PLUS_CATEGORIES_ASSIGNMENT');?><!--</a></li>-->
+<!--            </ul>-->
+<!--            <div class="tab-content">-->
+<!--                <div class="tab-pane active" id="details">-->
+<!--                    <div class="control-group">-->
+<!--                        <div class="control-label">--><?php //echo $form -> getLabel('name');?><!--</div>-->
+<!--                        <div class="controls">--><?php //echo $form -> getInput('name');?><!--</div>-->
+<!--                    </div>-->
+<!--                    <div class="control-group">-->
+<!--                        <div class="control-label">--><?php //echo $form -> getLabel('published');?><!--</div>-->
+<!--                        <div class="controls">--><?php //echo $form -> getInput('published');?><!--</div>-->
+<!--                    </div>-->
+<!--                    <div class="control-group">-->
+<!--                        <div class="control-label">--><?php //echo $form -> getLabel('id');?><!--</div>-->
+<!--                        <div class="controls">--><?php //echo $form -> getInput('id');?><!--</div>-->
+<!--                    </div>-->
+<!--                    <div class="control-group">-->
+<!--                        <div class="control-label">--><?php //echo $form -> getLabel('description');?><!--</div>-->
+<!--                        <div class="controls">--><?php //echo $form -> getInput('description');?><!--</div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!---->
+<!--                <div class="tab-pane assignment" id="categories_assignment">-->
+<!--                    --><?php //echo $form->getInput('categories_assignment'); ?>
+<!--                </div>-->
+<!--            </div>-->
         </fieldset>
 
     </div>

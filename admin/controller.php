@@ -76,6 +76,19 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
         $lName		= $this -> input -> get('layout', 'default');
         $id			= $this -> input -> getInt('id');
 
+        // Check for addon_datas
+        if($vName == 'addon_datas' && !$this -> input -> getInt('addon_id')){
+            $response = 500;
+            $app = JFactory::getApplication();
+
+            if ($app->get('sef_rewrite'))
+            {
+                $response = 404;
+            }
+            throw new Exception(JText::sprintf('JLIB_APPLICATION_ERROR_VIEW_NOT_FOUND', $vName,
+                $vFormat, $this->getName() . 'View'), $response);
+        }
+
         // Check for edit form.
         if ($vName == 'category' && $lName == 'edit' && !$this->checkEditId('com_tz_portfolio_plus.edit.category', $id)) {
             // Somehow the person just went to the form - we don't allow that.

@@ -42,15 +42,15 @@ class PlgTZ_Portfolio_PlusContentVote extends TZ_Portfolio_PlusPlugin
     }
 
     public function onAlwaysLoadDocument($context){
-        $document = JFactory::getDocument();
-        $document->addStyleSheet(TZ_Portfolio_PlusUri::root(true).'/addons/content/vote/css/vote.css');
-        $document->addScript(TZ_Portfolio_PlusUri::root(true).'/addons/content/vote/js/vote.js');
-        $document->addScriptDeclaration( 'var tzPortfolioVoteFolder = "'.TZ_Portfolio_PlusUri::base(true).'";
-        var tzPortfolioPlusBase = "'.TZ_Portfolio_PlusUri::base(true).'/addons/content/vote";
-        var TzPortfolioPlusVote_text=Array("'.JTEXT::_('PLG_CONTENT_VOTE_NO_AJAX').'","'
-            .JTEXT::_('PLG_CONTENT_VOTE_LOADING').'","'.JTEXT::_('PLG_CONTENT_VOTE_THANKS').'","'
-            .JTEXT::_('PLG_CONTENT_VOTE_LOGIN').'","'.JTEXT::_('PLG_CONTENT_VOTE_RATED').'","'
-            .JTEXT::_('PLG_CONTENT_VOTE_VOTES').'","'.JTEXT::_('PLG_CONTENT_VOTE_VOTE').'");');
+//        $document = JFactory::getDocument();
+//        $document->addStyleSheet(TZ_Portfolio_PlusUri::root(true).'/addons/content/vote/css/vote.css');
+//        $document->addScript(TZ_Portfolio_PlusUri::root(true).'/addons/content/vote/js/vote.js');
+//        $document->addScriptDeclaration( 'var tzPortfolioVoteFolder = "'.TZ_Portfolio_PlusUri::base(true).'";
+//        var tzPortfolioPlusBase = "'.TZ_Portfolio_PlusUri::base(true).'/addons/content/vote";
+//        var TzPortfolioPlusVote_text=Array("'.JTEXT::_('PLG_CONTENT_VOTE_NO_AJAX').'","'
+//            .JTEXT::_('PLG_CONTENT_VOTE_LOADING').'","'.JTEXT::_('PLG_CONTENT_VOTE_THANKS').'","'
+//            .JTEXT::_('PLG_CONTENT_VOTE_LOGIN').'","'.JTEXT::_('PLG_CONTENT_VOTE_RATED').'","'
+//            .JTEXT::_('PLG_CONTENT_VOTE_VOTES').'","'.JTEXT::_('PLG_CONTENT_VOTE_VOTE').'");');
     }
 
     public function onBeforeDisplayAdditionInfo($context, &$article, $params, $page = 0, $layout = 'default'){
@@ -88,13 +88,7 @@ class PlgTZ_Portfolio_PlusContentVote extends TZ_Portfolio_PlusPlugin
             }
         }elseif(in_array($context, array('com_tz_portfolio_plus.portfolio', 'com_tz_portfolio_plus.date'
         , 'com_tz_portfolio_plus.featured', 'com_tz_portfolio_plus.tags', 'com_tz_portfolio_plus.users'))){
-            if ($view = $this->getView($vName, 'count', $item, $params)) {
-                // Display html
-                ob_start();
-                $view->display();
-                $html = ob_get_contents();
-                ob_end_clean();
-                $html = trim($html);
+            if($html = $this -> _getViewHtml($context,$item, $params, $layout)){
                 return $html;
             }
         }
@@ -113,43 +107,23 @@ class PlgTZ_Portfolio_PlusContentVote extends TZ_Portfolio_PlusPlugin
 
         $item   = $article;
 
-        if($extension == 'module' || $extension == 'modules'){
-            if(isset($article -> id)){
-                $item -> rating_count   = 0;
-                $item -> rating_sum     = 0;
+        if(isset($article -> id)){
+            $item -> rating_count   = 0;
+            $item -> rating_sum     = 0;
 
-                $db	    = JFactory::getDBO();
-                $query  = $db -> getQuery(true);
-                $query -> select('*');
-                $query -> from('#__tz_portfolio_plus_content_rating');
-                $query -> where('content_id = '. $item -> id);
-                $db -> setQuery($query);
+            $db	    = JFactory::getDBO();
+            $query  = $db -> getQuery(true);
+            $query -> select('*');
+            $query -> from('#__tz_portfolio_plus_content_rating');
+            $query -> where('content_id = '. $item -> id);
+            $db -> setQuery($query);
 
-                if($vote = $db->loadObject()) {
-                    foreach($vote as $key => $value){
-                        $item -> $key   = $value;
-                    }
+            if($vote = $db->loadObject()) {
+                foreach($vote as $key => $value){
+                    $item -> $key   = $value;
                 }
             }
-            if($path = $this -> getModuleLayout($this -> _type, $this -> _name, $extension, $vName, $layout)){
-                // Display html
-                ob_start();
-                include $path;
-                $html = ob_get_contents();
-                ob_end_clean();
-                $html = trim($html);
-                return $html;
-            }
-        }else {
-            if ($view = $this->getView($vName, $layout, $article, $params)) {
-                // Display html
-                ob_start();
-                $view->display();
-                $html = ob_get_contents();
-                ob_end_clean();
-                $html = trim($html);
-                return $html;
-            }
         }
+        return parent::onContentDisplayArticleView($context, $item, $params, $page, $layout);
     }
 }

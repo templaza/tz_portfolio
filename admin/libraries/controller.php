@@ -58,21 +58,26 @@ class TZ_Portfolio_PlusControllerLegacy  extends JControllerLegacy{
                         $bool_tpl   = true;
                     }
                     if($bool_tpl) {
+                        $name   = strtolower($name);
                         // Load template language
                         $lang   = JFactory::getLanguage();
                         $lang -> load('tpl_'.$template -> template, COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH.DIRECTORY_SEPARATOR.$template -> template);
 
                         if(!$tplparams -> get('override_html_template_site',0)) {
                             $last_path  = array_pop($path['template']);
-                            $path['template'][] = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH.DIRECTORY_SEPARATOR
-                                . $template->template . DIRECTORY_SEPARATOR . 'html' . DIRECTORY_SEPARATOR
-                                . $tplparams -> get('layout','default') . DIRECTORY_SEPARATOR . $name;
+                            if(isset($template -> base_path) && $template -> base_path) {
+                                $path['template'][] = $template->base_path . DIRECTORY_SEPARATOR . $name;
+                            }
+                            if(isset($template -> home_path) && $template -> home_path) {
+                                $path['template'][] = $template->home_path . DIRECTORY_SEPARATOR . $name;
+                            }
                             $path['template'][] = $last_path;
                             $view -> set('_path',$path);
                         }else{
-                            $view ->addTemplatePath(COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH.DIRECTORY_SEPARATOR
-                                .$template -> template.DIRECTORY_SEPARATOR.'html'.DIRECTORY_SEPARATOR
-                                . $tplparams -> get('layout','default') . DIRECTORY_SEPARATOR . $name);
+                            if(isset($template -> home_path) && $template -> home_path) {
+                                $view->addTemplatePath($template->home_path . DIRECTORY_SEPARATOR . $name);
+                            }
+                            $view ->addTemplatePath($template -> base_path . DIRECTORY_SEPARATOR . $name);
                         }
                     }
                 }

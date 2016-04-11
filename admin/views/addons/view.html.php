@@ -20,7 +20,9 @@
 //no direct access
 defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.view');
-JHtml::addIncludePath(COM_TZ_PORTFOLIO_PLUS_ADMIN_HELPERS_PATH);
+
+JLoader::register('TZ_Portfolio_PlusHelperAddon_Datas', COM_TZ_PORTFOLIO_PLUS_ADMIN_HELPERS_PATH
+    .DIRECTORY_SEPARATOR.'addon_datas.php');
 JLoader::import('com_tz_portfolio_plus.helpers.addons', JPATH_ADMINISTRATOR.DIRECTORY_SEPARATOR.'components');
 
 class TZ_Portfolio_PlusViewAddons extends JViewLegacy

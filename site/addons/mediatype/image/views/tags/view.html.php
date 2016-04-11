@@ -25,6 +25,7 @@ class PlgTZ_Portfolio_PlusMediaTypeImageViewTags extends JViewLegacy{
     protected $item     = null;
     protected $params   = null;
     protected $image    = null;
+    protected $head     = false;
 
     public function display($tpl = null){
         $state          = $this -> get('State');
@@ -39,8 +40,13 @@ class PlgTZ_Portfolio_PlusMediaTypeImageViewTags extends JViewLegacy{
                     $image  = clone($media -> image);
 
                     if(isset($image -> url) && $image -> url) {
-                        $doc = JFactory::getDocument();
-                        $doc->addStyleSheet(JUri::base() . '/addons/mediatype/image/css/style.css');
+                        if(!$this -> head) {
+                            $doc = JFactory::getDocument();
+                            $doc->addStyleSheet(JUri::base() . '/addons/mediatype/image/css/style.css');
+                            $this -> head   = true;
+                        }
+
+                        $image->temp = $image->url;
 
                         if ($size = $params->get('mt_cat_image_size', 'o')) {
                             if (isset($image->url) && !empty($image->url)) {
@@ -65,12 +71,5 @@ class PlgTZ_Portfolio_PlusMediaTypeImageViewTags extends JViewLegacy{
         }
 
         parent::display($tpl);
-    }
-
-    // This function called by plugin
-    public function addDocument(){
-        $doc    = JFactory::getDocument();
-        $doc -> addStyleSheet(TZ_Portfolio_PlusUri::base().'/addons/mediatype/image/css/style.css');
-        return true;
     }
 }

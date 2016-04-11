@@ -20,7 +20,7 @@
 // no direct access
 defined('_JEXEC') or die;
 
-JLoader::import('com_tz_portfolio_plus.helpers.route', JPATH_ADMINISTRATOR . '/components');
+JLoader::import('com_tz_portfolio_plus.helpers.route', JPATH_SITE . '/components');
 
 class modTZ_Portfolio_PlusCategoriesHelper
 {
@@ -35,7 +35,6 @@ class modTZ_Portfolio_PlusCategoriesHelper
         $total = null;
         $catIds = null;
         $catIds = $params->get('catid');
-
 
         if ($params->get('show_total', 1))
             $total = ',(SELECT COUNT(*) FROM #__tz_portfolio_plus_content_category_map AS c WHERE c.catid = a.id) AS total';
@@ -69,6 +68,7 @@ class modTZ_Portfolio_PlusCategoriesHelper
             jimport('joomla.filesystem.file');
             foreach ($items as $item) {
                 $item->link = JRoute::_(TZ_Portfolio_PlusHelperRoute::getCategoryRoute($item->id));
+                $item -> params = new JRegistry($item -> params);
             }
 
             return $items;

@@ -613,9 +613,6 @@ class TZ_Portfolio_PlusControllerArticle extends JControllerForm
 		// Invoke the postSave method to allow for the child class to access the model.
 		$this->_postSaveHook($model, $validData);
 
-		// If ok, redirect to the return page.
-        $this->setRedirect($this->getReturnPage());
-
 		return true;
 	}
 }

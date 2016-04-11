@@ -466,8 +466,20 @@ class TZ_Portfolio_PlusExtraField{
         if($this -> params -> get('show_label',1)) {
             $title = '';
             if ($desc = $this->description) {
-                $text = htmlspecialchars(JText::_($this->getTitle()));
-                $title = ' title="' . JHtml::tooltipText(trim($text, ':'), $desc, 0) . '"';
+                if(preg_match('/(<img\s[^>]*?src\s*=\s*[\'\"])([^\'\"]*?)([\'\"][^>]*?>)/',$desc, $match)){
+                    if(count($match)) {
+                        if(isset($match[2])){
+                            $src    = $match[2];
+                            if(!preg_match('/^^(http|https):\/\//',$src) && !preg_match('/^\//',$src)) {
+                                $desc = preg_replace('/(<img\s[^>]*?src\s*=\s*[\'\"])([^\'\"]*?)([\'\"][^>]*?>)/'
+                                    , '$1' . JUri::root() . '$2$3', $desc);
+                            }
+                        }
+                    }
+                }
+                $desc   = htmlspecialchars($desc);
+                $text   = htmlspecialchars(JText::_($this->getTitle()));
+                $title  = ' title="' . JHtml::tooltipText(trim($text, ':'), $desc, 0, 0) . '"';
             }
 
             $html = '<label for="' . $this->getId() . '" id="' . $this->getId() . '-lbl" class="hasTooltip"' . $title . '>' .
