@@ -49,7 +49,17 @@ class modTZ_Portfolio_PlusArticlesHelper
         $query->join('LEFT', $db->quoteName('#__tz_portfolio_plus_tags') . ' AS t ON t.id=x.tagsid');
         $query->join('LEFT', $db->quoteName('#__users') . ' AS u ON u.id=c.created_by');
 
-        $query->where('m.main = 1 and c.state= 1');
+        $query->where('c.state= 1');
+
+        if($params -> get('category_filter', 2) == 2){
+            $query -> where('(m.main = 0 OR m.main = 1)');
+        }elseif($params -> get('category_filter',2) == 1){
+            $query -> where('m.main = 1');
+        }else{
+            $query -> where('m.main = 0');
+        }
+
+
         $nullDate = $db->Quote($db->getNullDate());
         $nowDate = $db->Quote(JFactory::getDate()->toSQL());
 
@@ -61,7 +71,7 @@ class modTZ_Portfolio_PlusArticlesHelper
             if(count($types)) {
                 $media_conditions   = array();
                 foreach($types as $type){
-                    $media_conditions[] = 'type='.$db -> quote($type);
+                    $media_conditions[] = 'c.type='.$db -> quote($type);
                 }
                 if(count($media_conditions)){
                     $query -> where('('.implode(' OR ', $media_conditions).')');

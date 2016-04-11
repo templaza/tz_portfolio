@@ -164,7 +164,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
         parent::preprocessForm($form, $data, $group);
     }
 
-    function getExtension($name, $type){
+    public function getExtension($name, $type){
         $db     = $this -> getDbo();
         $query  = $db -> getQuery(true);
         $query -> select('*');
@@ -281,6 +281,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
 
             if($result) {
                 $plugin_name    = null;
+
                 // Upload files to templates folder
                 if (isset($files_folders[0]->filename)) {
                     $files = (array)$files_folders[0]->filename;
@@ -338,7 +339,11 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
                         $app -> enqueueMessage(JText::_('COM_TZ_PORTFOLIO_PLUS_'.$input -> getCmd('view').'_ERROR_INSTALL_PROTECTED'),'error');
                         return false;
                     }
-                    $data['id'] = $extension -> id;
+                    $data['id']         = $extension -> id;
+                    $data['protected']  = $extension ->protected;
+                    $data['published']  = $extension -> published;
+                    $data['access']     = $extension -> access;
+                    $data['params']     = $extension -> params;
                 }
                 if(!$this -> save($data)){
                     return false;
@@ -574,7 +579,8 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
 
             if (file_exists($path))
             {
-                $this->_cache[$pk]->xml = simplexml_load_file($path);
+                $xml                    = simplexml_load_file($path);
+                $this->_cache[$pk]->xml = $xml;
             }
             else
             {
@@ -583,6 +589,48 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
         }
 
         return $this->_cache[$pk];
+    }
+
+    public function getAddOnItem($pk = null){
+        $pk         = (!empty($pk)) ? $pk : (int) $this->getState($this->getName().'.id');
+        $storeId    = __METHOD__.'::' .$pk;
+
+        if (!isset($this->_cache[$storeId]))
+        {
+            $false	= false;
+
+            // Get a row instance.
+            $table = $this->getTable();
+
+            // Attempt to load the row.
+            $return = $table->load($pk);
+
+            // Check for a table object error.
+            if ($return === false && $table->getError())
+            {
+                $this->setError($table->getError());
+
+                return $false;
+            }
+
+            // Convert to the JObject before adding other data.
+            $properties = $table->getProperties(1);
+            $this->_cache[$storeId] = JArrayHelper::toObject($properties, 'JObject');
+
+            // Convert the params field to an array.
+            $registry = new Registry;
+            $registry->loadString($table->params);
+            $this->_cache[$storeId]->params = $registry->toArray();
+
+            $dispatcher     = JEventDispatcher::getInstance();
+            $plugin         = TZ_Portfolio_PlusPluginHelper::getInstance($table -> folder,
+                $table -> element, false, $dispatcher);
+            if(method_exists($plugin, 'onAddOnDisplayManager')) {
+                $this->_cache[$storeId]->manager = $plugin->onAddOnDisplayManager();
+            }
+        }
+
+        return $this->_cache[$storeId];
     }
 
     public function prepareTable($table){
@@ -600,5 +648,11 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
         $condition[] = 'folder = ' . $this->_db->quote($table->folder);
 
         return $condition;
+    }
+
+    protected function cleanCache($group = null, $client_id = 0)
+    {
+        parent::cleanCache('com_tz_portfolio_plus', 0);
+        parent::cleanCache('com_tz_portfolio_plus', 1);
     }
 }

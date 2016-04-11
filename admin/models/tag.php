@@ -134,7 +134,7 @@ class TZ_Portfolio_PlusModelTag extends JModelAdmin
                         $msg = JText::sprintf('COM_TZ_PORTFOLIO_PLUS_ALIAS_SAVE_WARNING', $input -> get('view'));
                     }
 
-                    list($title, $alias) = $this->generateNewTitle($data['alias'], $data['title']);
+                    list($title, $alias) = $this->generateNewTitle(0, $data['alias'], $data['title']);
                     $data['alias']  = $alias;
 
                     if (isset($msg))
@@ -163,16 +163,18 @@ class TZ_Portfolio_PlusModelTag extends JModelAdmin
         }
 
         if(parent::save($data)){
-            $db = $this -> getDbo();
+            $db     = $this -> getDbo();
+            $query  = $db->getQuery(true);
+            $id     = $this->getState($this->getName() . '.id');
 
             // Assign articles with this tag;
             if(!empty($articlesAssignment) && count($articlesAssignment)){
 
-                $query  = $db -> getQuery(true);
-                $query -> select('contentid');
+                $query -> select('DISTINCT contentid');
                 $query -> from($db -> quoteName('#__tz_portfolio_plus_tag_content_map'));
-                $query -> where($db -> quoteName('contentid').' IN('
-                    .implode(',',$articlesAssignment).')');
+//                $query -> where($db -> quoteName('contentid').' IN('
+//                    .implode(',',$articlesAssignment).')');
+                $query->where('tagsid = ' . (int) $id);
                 $db -> setQuery($query);
 
                 if(!$updateIds = $db -> loadColumn()){
@@ -181,11 +183,11 @@ class TZ_Portfolio_PlusModelTag extends JModelAdmin
 
                 // Insert article items with this tag if they were created in
                 if($insertIds  = array_diff($articlesAssignment,$updateIds)){
-                    $query  = $db -> getQuery(true);
+                    $query -> clear();
                     $query -> insert($db -> quoteName('#__tz_portfolio_plus_tag_content_map'));
                     $query ->columns('contentid,tagsid');
                     foreach($insertIds as $cid){
-                        $query -> values($cid.','.$data['id']);
+                        $query -> values($cid.','.$id);
                     }
                     $db -> setQuery($query);
                     $db -> execute();
@@ -194,14 +196,14 @@ class TZ_Portfolio_PlusModelTag extends JModelAdmin
 
             // Remove tags mappings for article items this tag is NOT assigned to.
             // If unassigned then all existing maps will be removed.
-            $query = $db->getQuery(true)
-                ->delete('#__tz_portfolio_plus_tag_content_map');
+            $query -> clear();
+            $query -> delete('#__tz_portfolio_plus_tag_content_map');
 
             if (!empty($articlesAssignment) && count($articlesAssignment))
             {
                 $query->where('contentid NOT IN (' . implode(',', $articlesAssignment) . ')');
             }
-            $query->where('tagsid = ' . (int) $data['id']);
+            $query->where('tagsid = ' . (int) $id);
 
             $db->setQuery($query);
             $db->execute();
@@ -222,7 +224,7 @@ class TZ_Portfolio_PlusModelTag extends JModelAdmin
         }
     }
 
-    protected function generateNewTitle($alias, $title)
+    protected function generateNewTitle($category_id, $alias, $title)
     {
         // Alter the title & alias
         $table = $this->getTable();

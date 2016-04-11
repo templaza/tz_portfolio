@@ -11,7 +11,6 @@
 
 // No direct access
 defined('_JEXEC') or die;
-
 if(isset($this -> item) && $this -> item){
     $params = $this -> params;
 

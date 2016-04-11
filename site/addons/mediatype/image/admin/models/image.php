@@ -443,7 +443,7 @@ class PlgTZ_Portfolio_PlusMediaTypeModelImage extends TZ_Portfolio_PlusPluginMod
         }
     }
 
-    public function delete($article){
+    public function delete(&$article){
         if($article){
             if(is_object($article)){
                 if($article -> media && !empty($article -> media)) {

@@ -25,10 +25,13 @@ class PlgTZ_Portfolio_PlusMediaTypeImageViewArticle extends JViewLegacy{
     protected $item     = null;
     protected $params   = null;
     protected $image    = null;
+    protected $state    = null;
+    protected $head     = false;
 
     public function display($tpl = null){
         $state          = $this -> get('State');
         $params         = $state -> get('params');
+        $this -> state  = $state;
         $this -> params = $params;
         $item           = $this -> get('Item');
         $this -> image  = null;
@@ -52,8 +55,11 @@ class PlgTZ_Portfolio_PlusMediaTypeImageViewArticle extends JViewLegacy{
                         if ($params->get('mt_image_use_cloud', 1)) {
                             $doc = JFactory::getDocument();
 
-                            $doc->addStyleSheet(TZ_Portfolio_PlusUri::base(true) . '/addons/mediatype/image/css/cloud-zoom.min.css');
-                            $doc->addScript(TZ_Portfolio_PlusUri::base(true) . '/addons/mediatype/image/js/cloud-zoom.1.0.3.min.js');
+                            if(!$this -> head) {
+                                $doc->addStyleSheet(TZ_Portfolio_PlusUri::base(true) . '/addons/mediatype/image/css/cloud-zoom.min.css');
+                                $doc->addScript(TZ_Portfolio_PlusUri::base(true) . '/addons/mediatype/image/js/cloud-zoom.1.0.3.min.js');
+                                $this -> head   = true;
+                            }
 
                             if ($params->get('mt_image_cloud_size', 'o')) {
                                 $image_url_ext = JFile::getExt($image->url);
@@ -70,7 +76,12 @@ class PlgTZ_Portfolio_PlusMediaTypeImageViewArticle extends JViewLegacy{
                                     . $image_url_ext, $image->url);
                                 $image->url = JURI::root() . $image_url;
 
-                                JFactory::getDocument()->addCustomTag('<meta property="og:image" content="' . $image->url . '"/>');
+                                if($this -> getLayout() != 'related') {
+                                    JFactory::getDocument()->addCustomTag('<meta property="og:image" content="' . $image->url . '"/>');
+                                    if ($author = $item->author_info) {
+                                        JFactory::getDocument()->setMetaData('twitter:image', $image->url);
+                                    }
+                                }
                             }
 
                             if (isset($image->url_hover) && !empty($image->url_hover)) {

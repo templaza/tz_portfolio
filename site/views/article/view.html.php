@@ -445,42 +445,10 @@ class TZ_Portfolio_PlusViewArticle extends TZ_Portfolio_PlusViewLegacy
             $this->document->setMetaData('author', $this->item->author);
         }
 
-        $metaImage  = null;
-        if($metaMedia = $this -> listMedia):
-            $metaImageSize  = $this -> params -> get('detail_article_image_size','L');
-            if($metaMedia[0] -> type == 'image' || $metaMedia[0] -> type == 'imagegallery'):
-                if(isset($metaMedia[0] -> images) AND !empty($metaMedia[0] -> images)):
-                    $metaImage  = $metaMedia[0] -> images;
-                    $metaImage  = JUri::root().str_replace('.'.JFile::getExt($metaImage),'_'.$metaImageSize.'.'.JFile::getExt($metaImage),$metaImage);
-                endif;
-            elseif($metaMedia[0] -> type == 'video' || $metaMedia[0] -> type == 'audio'):
-                if(isset($metaMedia[0] -> thumb) AND !empty($metaMedia[0] -> thumb)):
-                    $metaImage  = $metaMedia[0] -> thumb;
-                    $metaImage  = JUri::root().str_replace('.'.JFile::getExt($metaImage),'_'.$metaImageSize.'.'.JFile::getExt($metaImage),$metaImage);
-                endif;
-            endif;
-        endif;
-
-        $socialInfo = new stdClass();
-        $socialInfo -> title        = $title;
-        $socialInfo -> image        = $metaImage;
-        $socialInfo -> description  = $description;
-        $this -> assign('socialInfo',$socialInfo);
-
-        $config = JFactory::getConfig();
-        $ssl    = -1;
-        if($config -> get('force_ssl')){
-            $ssl    = 1;
-        }
-
         // Set metadata tags with prefix property "og:"
         $this -> document -> addCustomTag('<meta property="og:title" content="'.$title.'"/>');
-        $this -> document -> addCustomTag('<meta property="og:url" content="'.
-        JRoute::_(TZ_Portfolio_PlusHelperRoute::getArticleRoute($this -> item -> slug, $this -> item -> catid),true,$ssl).'"/>');
+        $this -> document -> addCustomTag('<meta property="og:url" content="'.$this -> item -> fullLink.'"/>');
         $this -> document -> addCustomTag('<meta property="og:type" content="article"/>');
-        if($metaImage){
-            $this -> document -> addCustomTag('<meta property="og:image" content="'.$metaImage.'"/>');
-        }
         if($description){
             $this -> document -> addCustomTag('<meta property="og:description" content="'.$description.'"/>');
         }
@@ -500,33 +468,6 @@ class TZ_Portfolio_PlusViewArticle extends TZ_Portfolio_PlusViewLegacy
             $this -> document -> addCustomTag('<meta property="article:tag" content="'.$tags.'"/>');
         }
         ///// End set meta tags with prefix property "article:" ////
-
-        // Set meta tags with prefix name "twitter:"
-        if($author = $this -> item -> author_info){
-            if(isset($author -> social_links) && !empty($author -> social_links)){
-                $this -> document -> setMetaData('twitter:card','summary');
-                if(is_array($author -> social_links) && count($author -> social_links)){
-                    foreach($author -> social_links as $social_link){
-                        if(preg_match('/(https)?(:\/\/www\.)?twitter\.com\/(#!\/)?@?([^\/]*)/i',$social_link -> url,$match)){
-                            if(count($match) > 1){
-                                $this -> document -> setMetaData('twitter:site','@'.$match[count($match) - 1]);
-                                $this -> document -> setMetaData('twitter:creator','@'.$match[count($match) - 1]);
-                            }
-                            break;
-                        }
-                    }
-                }
-                if($metaImage){
-                    $this -> document -> setMetaData('twitter:image',$metaImage);
-                }
-                if($description){
-                    $this -> document -> setMetaData('twitter:description',$description);
-                }
-            }
-        }
-        //// End set meta tags with prefix name "twitter:" ////
-
-
 
 		$mdata = $this->item->metadata->toArray();
 		foreach ($mdata as $k => $v)

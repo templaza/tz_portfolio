@@ -172,6 +172,14 @@ class TZ_Portfolio_PlusModelAddons extends JModelList
                     }
                 }
 
+
+                $plugin = TZ_Portfolio_PlusPluginHelper::getInstance($item -> folder, $item -> element);
+
+                $item -> data_manager        = false;
+                if(method_exists($plugin, 'getDataManager')){
+                    $item -> data_manager    = $plugin -> getDataManager();
+                }
+
                 $langPath   = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.DIRECTORY_SEPARATOR.$item -> folder
                     .DIRECTORY_SEPARATOR.$item -> element;
                 $langKey    = 'plg_'.$item -> folder.'_'.$item -> element;

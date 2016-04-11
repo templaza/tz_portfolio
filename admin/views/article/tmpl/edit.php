@@ -27,6 +27,7 @@ JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
 JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
+JHtml::_('behavior.tabstate');
 JHtml::_('formbehavior.chosen', 'select');
 $doc    = JFactory::getDocument();
 $doc -> addscript(TZ_Portfolio_PlusUri::base(true, true).'/js/tz-chosen.min.js');

@@ -21,10 +21,12 @@ defined('_JEXEC') or die;
 
 JLoader::import('framework',JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/includes');
 tzportfolioplusimport('plugin.modeladmin');
+tzportfolioplusimport('model.admin');
 
 class TZ_Portfolio_PlusPlugin extends JPlugin{
     protected $special              = false;
     protected $vars                 = array();
+    protected $data_manager         = false;
 
     public function __construct(&$subject, $config = array())
     {
@@ -35,6 +37,40 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
             .DIRECTORY_SEPARATOR.'plugin'.DIRECTORY_SEPARATOR.'helper.php');
 
         parent::__construct($subject,$config);
+    }
+
+    public function getDataManager(){
+        return $this -> data_manager;
+    }
+
+    public function onAddOnDisplayManager($task = null){
+        tzportfolioplusimport('html.sidebar');
+        tzportfolioplusimport('controller.legacy');
+
+        $component_path = JPATH_ADMINISTRATOR.DIRECTORY_SEPARATOR.'components';
+
+        // Import addon_datas controller
+        JLoader::import('com_tz_portfolio_plus.helpers.addon_datas',$component_path);
+
+        // Import addon_data model
+        JLoader::import('com_tz_portfolio_plus.models.addon_data',$component_path);
+
+        // Import addon_datas model
+        JLoader::import('com_tz_portfolio_plus.models.addon_datas',$component_path);
+
+        ob_start();
+        JLoader::import($this -> _type.'.'.$this -> _name.'.admin.'.$this -> _name,COM_TZ_PORTFOLIO_PLUS_ADDON_PATH);
+        $html   = ob_get_contents();
+        ob_end_clean();
+
+        if($html){
+            $html   = trim($html);
+            if(!empty($html)) {
+                return $html;
+            }
+        }
+
+        return false;
     }
 
     public function onAddContentType(){
@@ -111,26 +147,26 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
         return $form;
     }
 
-    public function onAlwaysLoadDocument($context){
-        try{
-
-            list($option,$vName) = explode('.',$context);
-
-            if($option != 'module' && $option != 'modules'){
-                if($view = $this -> getView($vName)) {
-                    if(method_exists($view, 'addDocument')){
-                        $view -> addDocument();
-                        return true;
-                    }
-                }
-            }
-        }
-        catch(Exception $e){
-            $this -> setError($e -> getMessage());
-            return false;
-        }
-        return false;
-    }
+//    public function onAlwaysLoadDocument($context){
+//        try{
+//
+//            list($option,$vName) = explode('.',$context);
+//
+//            if($option != 'module' && $option != 'modules'){
+//                if($view = $this -> getView($vName)) {
+//                    if(method_exists($view, 'addDocument')){
+//                        $view -> addDocument();
+//                        return true;
+//                    }
+//                }
+//            }
+//        }
+//        catch(Exception $e){
+//            $this -> setError($e -> getMessage());
+//            return false;
+//        }
+//        return false;
+//    }
 
     // Load xml form file for article view of the plugin (this trigger called in system tz_portfolio_plus plugin)
     protected function contentPrepareForm($form, $data){
@@ -326,16 +362,46 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
                         return $html;
                     }
                 }else {
-                    if ($view = $this->getView($vName, $layout, $article, $params)) {
-                        // Display html
-                        ob_start();
-                        $view->display();
-                        $html = ob_get_contents();
-                        ob_end_clean();
-                        $html = trim($html);
+//                    if ($view = $this->getView($vName, $layout, $article, $params)) {
+//                        // Display html
+//                        ob_start();
+//                        $view->display();
+//                        $html = ob_get_contents();
+//                        ob_end_clean();
+//                        $html = trim($html);
+//                        return $html;
+//                    }
+
+                    tzportfolioplusimport('plugin.modelitem');
+
+                    if($html = $this -> _getViewHtml($context,$article, $params, $layout)){
                         return $html;
                     }
                 }
+            }
+        }
+    }
+
+    public function onContentDisplayArticleView($context, &$article, $params, $page = 0, $layout = null){
+        list($extension, $vName)   = explode('.', $context);
+
+        $item   = $article;
+
+        if($extension == 'module' || $extension == 'modules'){
+            if($path = $this -> getModuleLayout($this -> _type, $this -> _name, $extension, $vName, $layout)){
+                // Display html
+                ob_start();
+                include $path;
+                $html = ob_get_contents();
+                ob_end_clean();
+                $html = trim($html);
+                return $html;
+            }
+        }else {
+            tzportfolioplusimport('plugin.modelitem');
+
+            if($html = $this -> _getViewHtml($context,$article, $params, $layout)){
+                return $html;
             }
         }
     }
@@ -387,122 +453,179 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
         return false;
     }
 
-    protected function getView($vName, $layout = null, $article = null, $params = null)
-    {
-//        if ($article && $article -> type == $this -> _name) {
-            $plugin_path = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . DIRECTORY_SEPARATOR . $this->_type . DIRECTORY_SEPARATOR
-                . $this->_name;
+    protected function _getViewHtml($context, &$article, $params, $layout = null){
+        list($extension, $vName)   = explode('.', $context);
 
-            // Create view's class
-            $prefix = 'PlgTZ_Portfolio_Plus' . ucfirst($this->_type) . ucfirst($this->_name);
+        $input      = JFactory::getApplication()->input;
+        $addon_id   = $input -> getInt('addon_id');
+        $addon      = TZ_Portfolio_PlusPluginHelper::getPlugin($this -> _type, $this -> _name);
 
-            $doc = JFactory::getDocument();
-            $vType = $doc->getType();
-
-            // Create template path of tz_portfolio_plus
-            $template = TZ_Portfolio_PlusTemplate::getTemplate(true);
-            $tplparams = $template->params;
-
-            // Create TZ Portfolio Plus template's path
-            $tpath = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH . DIRECTORY_SEPARATOR . $template->template
-                . DIRECTORY_SEPARATOR . 'html' . DIRECTORY_SEPARATOR . $tplparams->get('layout', 'default')
-                . DIRECTORY_SEPARATOR . $vName . DIRECTORY_SEPARATOR . 'plg_' . $this->_type . '_' . $this->_name;
-
-            // Create default template of tz_portfolio_plus
-            $dTemplate = TZ_Portfolio_PlusTemplate::getTemplateDefault();
-            $defaultPath = null;
-
-            if ($template->id != $dTemplate->id) {
-                $dtplparams = $dTemplate->params;
-                $defaultPath = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH . DIRECTORY_SEPARATOR . $dTemplate->template
-                    . DIRECTORY_SEPARATOR . 'html' . DIRECTORY_SEPARATOR . $dtplparams->get('layout', 'default')
-                    . DIRECTORY_SEPARATOR . $vName . DIRECTORY_SEPARATOR . 'plg_' . $this->_type . '_' . $this->_name;
+        if(!$addon_id || ($addon_id && $addon_id == $addon -> id)){
+            tzportfolioplusimport('controller.legacy');
+            $result = true;
+            // Check task with format: addon_name.addon_view.addon_task (example image.default.display);
+            $adtask     = $input -> get('addon_task');
+            if($adtask && strpos($adtask,'.') > 0){
+                list($plgname,$adtask) = explode('.',$adtask,2);
+                if($plgname == $this -> _name){
+                    $result = true;
+                    $input -> set('addon_task',$adtask);
+                }else{
+                    $result = false;
+                }
             }
-
-            // Merge plugin params and article params
-            $_params = clone($this->params);
-            $_params->merge($params);
-
-            $controller = new JControllerLegacy(array('name' => $prefix, 'format' => $vType,
-                'base_path' => $plugin_path));
-
-        try{
-            if ($view = $controller->getView($vName, $vType, $prefix . 'View')) {
-                $vpaths = $view->get('_path');
-                $vpaths = $vpaths['template'];
-                $view->set('_path', array('template' => array()));
-
-                $plgVPath = $plugin_path . DIRECTORY_SEPARATOR . 'views'
-                    . DIRECTORY_SEPARATOR . $vName . DIRECTORY_SEPARATOR . 'tmpl';
-
-                if (!in_array($plgVPath, $vpaths)) {
-                    $view->addTemplatePath($plgVPath);
-                }
-
-                // Add default template path
-                if ($defaultPath && !in_array($defaultPath, $vpaths)) {
-                    $view->addTemplatePath($defaultPath);
-                }
-
-                // Create template path from template site
-                $_template = JFactory::getApplication()->getTemplate();
-                $tPathSite = JPATH_SITE . '/templates/' . $_template . '/html/com_tz_portfolio_plus/'
-                    . $vName . '/plg_' . $this->_type . '_' . $this->_name;
-
-
-                if (!$tplparams->get('override_html_template_site', 0)) {
-                    // Add template path which chosen in menu
-                    if (!in_array($tpath, $vpaths)) {
-                        $view->addTemplatePath($tpath);
-                    }
-                    if (!in_array($tPathSite, $vpaths)) {
-                        $view->addTemplatePath($tPathSite);
-                    }
-                } else {
-                    // Add template path from template site
-                    if (!in_array($tPathSite, $vpaths)) {
-                        $view->addTemplatePath($tPathSite);
-                    }
-                    // Add template path which chosen in menu
-                    if (!in_array($tpath, $vpaths)) {
-                        $view->addTemplatePath($tpath);
-                    }
-                }
-
-                // Get model
-                $controller->addModelPath($plugin_path . DIRECTORY_SEPARATOR . 'models', $prefix . 'Model');
-
+            if($result && $controller = TZ_Portfolio_Plus_AddOnControllerLegacy::getInstance('PlgTZ_Portfolio_Plus'
+                    .ucfirst($this -> _type).ucfirst($this -> _name)
+                    , array('base_path' => COM_TZ_PORTFOLIO_PLUS_ADDON_PATH
+                        .DIRECTORY_SEPARATOR.$this -> _type
+                        .DIRECTORY_SEPARATOR.$this -> _name))) {
                 tzportfolioplusimport('plugin.modelitem');
 
-                if ($model = $controller->getModel($vName, $prefix.'Model', array('ignore_request' => true))) {
+                $controller -> set('addon', $addon);
+                $controller -> set('article', $article);
+                $controller -> set('trigger_params', $params);
 
-                    // Set params for model
-                    $model->setState('params', $_params);
-
-                    if ($article && !empty($article)) {
-                        $model -> set('article', $article);
+                $task   = $input->get('addon_task');
+                if(!$task) {
+                    $input->set('addon_view', $vName);
+                    $input->set('addon_layout', 'default');
+                    if($layout) {
+                        $input->set('addon_layout', $layout);
                     }
-
-                    // Push the model into the view (as default)
-                    $view->setModel($model, true);
                 }
 
-                if ($layout) {
-                    $view->setLayout($layout);
-                }else{
-                    $view -> setLayout('default');
-                }
+                $html   = null;
+                ob_start();
+                $controller->execute($task);
+                $controller->redirect();
+                $html   = ob_get_contents();
+                ob_end_clean();
 
-                return $view;
+                if($html){
+                    $html   = trim($html);
+                }
+                $input -> set('addon_task', null);
+                return $html;
             }
         }
-        catch(Exception $e){
-            $this -> setError($e -> getMessage());
-            return false;
-        }
-//        }
-        return false;
     }
+
+//    protected function getView($vName, $layout = null, $article = null, $params = null)
+//    {
+////        if ($article && $article -> type == $this -> _name) {
+//            $plugin_path = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . DIRECTORY_SEPARATOR . $this->_type . DIRECTORY_SEPARATOR
+//                . $this->_name;
+//
+//            // Create view's class
+//            $prefix = 'PlgTZ_Portfolio_Plus' . ucfirst($this->_type) . ucfirst($this->_name);
+//
+//            $doc = JFactory::getDocument();
+//            $vType = $doc->getType();
+//
+//            // Create template path of tz_portfolio_plus
+//            $template = TZ_Portfolio_PlusTemplate::getTemplate(true);
+//            $tplparams = $template->params;
+//
+//            // Create TZ Portfolio Plus template's path
+//            $tpath = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH . DIRECTORY_SEPARATOR . $template->template
+//                . DIRECTORY_SEPARATOR . 'html' . DIRECTORY_SEPARATOR . $tplparams->get('layout', 'default')
+//                . DIRECTORY_SEPARATOR . $vName . DIRECTORY_SEPARATOR . 'plg_' . $this->_type . '_' . $this->_name;
+//
+//            // Create default template of tz_portfolio_plus
+//            $dTemplate = TZ_Portfolio_PlusTemplate::getTemplateDefault();
+//            $defaultPath = null;
+//
+//            if ($template->id != $dTemplate->id) {
+//                $dtplparams = $dTemplate->params;
+//                $defaultPath = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH . DIRECTORY_SEPARATOR . $dTemplate->template
+//                    . DIRECTORY_SEPARATOR . 'html' . DIRECTORY_SEPARATOR . $dtplparams->get('layout', 'default')
+//                    . DIRECTORY_SEPARATOR . $vName . DIRECTORY_SEPARATOR . 'plg_' . $this->_type . '_' . $this->_name;
+//            }
+//
+//            // Merge plugin params and article params
+//            $_params = clone($this->params);
+//            $_params->merge($params);
+//
+//            $controller = new JControllerLegacy(array('name' => $prefix, 'format' => $vType,
+//                'base_path' => $plugin_path));
+//
+//        try{
+//            if ($view = $controller->getView($vName, $vType, $prefix . 'View')) {
+//                $vpaths = $view->get('_path');
+//                $vpaths = $vpaths['template'];
+//                $view->set('_path', array('template' => array()));
+//
+//                $plgVPath = $plugin_path . DIRECTORY_SEPARATOR . 'views'
+//                    . DIRECTORY_SEPARATOR . $vName . DIRECTORY_SEPARATOR . 'tmpl';
+//
+//                if (!in_array($plgVPath, $vpaths)) {
+//                    $view->addTemplatePath($plgVPath);
+//                }
+//
+//                // Add default template path
+//                if ($defaultPath && !in_array($defaultPath, $vpaths)) {
+//                    $view->addTemplatePath($defaultPath);
+//                }
+//
+//                // Create template path from template site
+//                $_template = JFactory::getApplication()->getTemplate();
+//                $tPathSite = JPATH_SITE . '/templates/' . $_template . '/html/com_tz_portfolio_plus/'
+//                    . $vName . '/plg_' . $this->_type . '_' . $this->_name;
+//
+//
+//                if (!$tplparams->get('override_html_template_site', 0)) {
+//                    // Add template path which chosen in menu
+//                    if (!in_array($tpath, $vpaths)) {
+//                        $view->addTemplatePath($tpath);
+//                    }
+//                    if (!in_array($tPathSite, $vpaths)) {
+//                        $view->addTemplatePath($tPathSite);
+//                    }
+//                } else {
+//                    // Add template path from template site
+//                    if (!in_array($tPathSite, $vpaths)) {
+//                        $view->addTemplatePath($tPathSite);
+//                    }
+//                    // Add template path which chosen in menu
+//                    if (!in_array($tpath, $vpaths)) {
+//                        $view->addTemplatePath($tpath);
+//                    }
+//                }
+//
+//                // Get model
+//                $controller->addModelPath($plugin_path . DIRECTORY_SEPARATOR . 'models', $prefix . 'Model');
+//
+//                tzportfolioplusimport('plugin.modelitem');
+//
+//                if ($model = $controller->getModel($vName, $prefix.'Model', array('ignore_request' => true))) {
+//
+//                    // Set params for model
+//                    $model->setState('params', $_params);
+//
+//                    if ($article && !empty($article)) {
+//                        $model -> set('article', $article);
+//                    }
+//
+//                    // Push the model into the view (as default)
+//                    $view->setModel($model, true);
+//                }
+//
+//                if ($layout) {
+//                    $view->setLayout($layout);
+//                }else{
+//                    $view -> setLayout('default');
+//                }
+//
+//                return $view;
+//            }
+//        }
+//        catch(Exception $e){
+//            $this -> setError($e -> getMessage());
+//            return false;
+//        }
+////        }
+//        return false;
+//    }
 
     protected function getModel($name = null, $prefix = null, $config = array('ignore_request' => true))
     {

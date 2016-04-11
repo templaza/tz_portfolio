@@ -38,8 +38,10 @@ if (!JFactory::getUser()->authorise('core.manage', 'com_tz_portfolio_plus')) {
 
 // Register class TZ_Portfolio_PlusPluginHelper from folder libraries of TZ Portfolio Plus
 tzportfolioplusimport('plugin.helper');
+//tzportfolioplusimport('controller.legacy');
 
 $controller	= JControllerLegacy::getInstance('TZ_Portfolio_Plus');
+//$controller	= TZ_Portfolio_Plus_AddOnControllerLegacy::getInstance('TZ_Portfolio_Plus');
 
 $controller->execute(JFactory::getApplication()->input->get('task'));
 

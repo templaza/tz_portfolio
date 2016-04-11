@@ -54,6 +54,12 @@ class TZ_Portfolio_PlusTemplate {
             $templateId = null;
         }
 
+        if($home = $table -> getHome()){
+            $default_params = new JRegistry;
+            $default_params -> loadString($home -> params);
+            $home -> params = clone($default_params);
+        }
+
         if($templateId){
             $table -> load($templateId);
             $template -> id         = $templateId;
@@ -66,7 +72,7 @@ class TZ_Portfolio_PlusTemplate {
                 $template -> layout = json_decode($table -> layout);
             }
         }else{
-            if($home = $table -> getHome()){
+            if($home){
                 $template -> id         = $home -> id;
                 $template -> template   = $home -> template;
                 if($home -> params && !empty($home -> params)) {
@@ -80,30 +86,20 @@ class TZ_Portfolio_PlusTemplate {
         }
 
         $tplparams      = $template -> params;
-        $view_folder    = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH.DIRECTORY_SEPARATOR
-        . $template->template . DIRECTORY_SEPARATOR . 'html' . DIRECTORY_SEPARATOR
-        . $tplparams -> get('layout','default') . DIRECTORY_SEPARATOR . $input -> get('view');
 
-        if(!JFolder::exists($view_folder) && !$tplparams -> get('use_single_layout_builder',1)){
-            if($home = $table -> getHome()){
-                $default_params = new JRegistry;
-                $default_params -> loadString($home -> params);
-                $default_layout = 'default';
-                if($default_params) {
-                    $default_layout = $default_params->get('layout', 'default');
-                }
-                    $view_folder = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH . DIRECTORY_SEPARATOR
-                        . $home->template . DIRECTORY_SEPARATOR . 'html' . DIRECTORY_SEPARATOR
-                        . $default_layout . DIRECTORY_SEPARATOR . $input->get('view');
-                    if (JFolder::exists($view_folder) || (!JFolder::exists($view_folder)
-                            && $default_params -> get('use_single_layout_builder',1))) {
-                        $template -> id         = $home -> id;
-                        $template -> template   = $home -> template;
-                        $template -> params     = $default_params;
-                        if($home -> layout){
-                            $template -> layout = json_decode($home -> layout);
-                        }
-                    }
+        $template -> base_path  = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH.DIRECTORY_SEPARATOR
+            . $template->template. DIRECTORY_SEPARATOR . 'html'. DIRECTORY_SEPARATOR
+            . $template->params -> get('layout','default');
+
+        if($home){
+            if($home -> template != $template -> template) {
+                $template->home_path = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH . DIRECTORY_SEPARATOR
+                    . $home->template . DIRECTORY_SEPARATOR . 'html' . DIRECTORY_SEPARATOR
+                    . $tplparams->get('layout', 'default');
+            }else{
+                $template->home_path = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH . DIRECTORY_SEPARATOR
+                    . $home->template . DIRECTORY_SEPARATOR . 'html' . DIRECTORY_SEPARATOR
+                    . $home -> params->get('layout', 'default');
             }
         }
 

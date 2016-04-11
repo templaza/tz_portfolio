@@ -211,19 +211,19 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
 
         switch ($params -> get('orderby_sec', 'rdate')){
             default:
-                $orderby    = 'id DESC';
+                $orderby    = 'c.id DESC';
                 break;
             case 'rdate':
-                $orderby    = 'created DESC';
+                $orderby    = 'c.created DESC';
                 break;
             case 'date':
-                $orderby    = 'created ASC';
+                $orderby    = 'c.created ASC';
                 break;
             case 'alpha':
-                $orderby    = 'title ASC';
+                $orderby    = 'c.title ASC';
                 break;
             case 'ralpha':
-                $orderby    = 'title DESC';
+                $orderby    = 'c.title DESC';
                 break;
             case 'author':
                 $orderby    = 'u.name ASC';
@@ -232,13 +232,13 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
                 $orderby    = 'u.name DESC';
                 break;
             case 'hits':
-                $orderby    = 'hits DESC';
+                $orderby    = 'c.hits DESC';
                 break;
             case 'rhits':
-                $orderby    = 'hits ASC';
+                $orderby    = 'c.hits ASC';
                 break;
             case 'order':
-                $orderby    = 'ordering ASC';
+                $orderby    = 'c.ordering ASC';
                 break;
         }
 
@@ -303,8 +303,6 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
                 foreach($items as $i => &$item){
 
                     $_params        = clone($params);
-                    $temp           = clone($params);
-
 
                     $item->params   = clone($_params);
 
@@ -345,6 +343,9 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
                             $item->params->merge($catParams);
                         }
                     }
+
+                    // Merge with article params
+                    $item -> params -> merge($articleParams);
 
                     // Get all second categories
                     $item -> second_categories  = null;

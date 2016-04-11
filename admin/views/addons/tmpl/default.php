@@ -225,6 +225,18 @@ JFactory::getDocument()->addScriptDeclaration('
                                     <a href="index.php?option=com_tz_portfolio_plus&task=addon.edit&id=<?php echo $item -> id;?>">
                                     <?php echo $item->name; ?>
                                     </a>
+
+                                    <?php
+                                    if($item -> data_manager){
+                                    ?>
+                                        <a href="<?php echo JRoute::_(TZ_Portfolio_PlusHelperAddon_Datas::getRootURL($item -> id));?>"
+                                           target="_blank" class="btn btn-small hasTooltip"
+                                           title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ADDON_DATA_MANAGER')?>">
+                                            <span class="icon-book"></span><span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ADDON_DATA_MANAGER')?></span>
+                                        </a>
+                                    <?php
+                                    }
+                                    ?>
                                 </div>
                             </td>
                             <td class="center">

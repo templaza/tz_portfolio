@@ -18,13 +18,12 @@
 -------------------------------------------------------------------------*/
 
 //no direct access
-defined('_JEXEC') or die('Restricted access');
-
 defined('_JEXEC') or die;
 
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 JHtml::_('behavior.formvalidator');
+JHtml::_('behavior.tabstate');
 JHtml::_('formbehavior.chosen', 'select');
 $this->fieldsets = $this->form->getFieldsets('params');
 
@@ -141,6 +140,14 @@ JFactory::getDocument()->addScriptDeclaration("
         $this->ignore_fieldsets = array('basic', 'description');
         echo JLayoutHelper::render('joomla.edit.params', $this);
         ?>
+
+<!--        --><?php
+//        if($this -> item && isset($this -> item -> manager) && $this -> item -> manager):
+//        ?>
+<!--            --><?php //echo JHtml::_('bootstrap.addTab', 'myTab', 'addon_manager', JText::_('Manager', true)); ?>
+<!--                --><?php //echo $this -> item -> manager;?>
+<!--            --><?php //echo JHtml::_('bootstrap.endTab'); ?>
+<!--        --><?php //endif;?>
 
         <?php echo JHtml::_('bootstrap.endTabSet'); ?>
     </div>

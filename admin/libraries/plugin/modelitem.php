@@ -20,13 +20,50 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\Registry\Registry;
+
 class TZ_Portfolio_PlusPluginModelItem extends JModelItem{
-    protected $article  = null;
+
+    protected $addon            = null;
+    protected $article          = null;
+    protected $trigger_params   = null;
+
+    protected function populateState()
+    {
+        $input  = JFactory::getApplication() -> input;
+        $return = $input -> get('return', null, 'default', 'base64');
+        $this->setState('return_page', base64_decode($return));
+
+        $this -> setState($this -> getName().'.addon', $this -> addon);
+        $this -> setState($this -> getName().'.article', $this -> article);
+        $params    = null;
+        if($this -> addon){
+            $params    = new Registry($this -> addon -> params);
+        }
+        if($trigger_params = $this -> trigger_params){
+            if(is_string($trigger_params)){
+                $trigger_params = new Registry($trigger_params);
+            }
+            if($params){
+                $params -> merge($trigger_params);
+            }else{
+                $params    = $trigger_params;
+            }
+        }
+        $this -> setState('params', clone($params));
+
+        parent::populateState();
+    }
 
     public function getItem(){
         if($article = $this -> article){
             return $this -> article;
         }
         return false;
+    }
+
+    public function getReturnPage()
+    {
+        return base64_encode($this->getState('return_page'));
     }
 }

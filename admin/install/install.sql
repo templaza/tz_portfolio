@@ -18,6 +18,21 @@
 
 
 --
+-- Table structure for table `#__tz_portfolio_plus_addon_data`
+--
+
+CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_addon_data` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `extension_id` int(11) NOT NULL,
+  `element` varchar(255) NOT NULL,
+  `value` longtext NOT NULL,
+  `content_id` int(11) NOT NULL,
+  `published` tinyint(4) NOT NULL DEFAULT '0',
+  `ordering` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+--
 -- Table structure for table `#__tz_portfolio_plus_categories`
 --
 CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_categories` (

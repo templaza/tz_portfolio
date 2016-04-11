@@ -240,6 +240,7 @@ class com_tz_portfolio_plusInstallerScript{
         $db     = JFactory::getDbo();
         $arr    = null;
         $listTable  = array(
+            $db -> replacePrefix('#__tz_portfolio_plus_addon_data'),
             $db -> replacePrefix('#__tz_portfolio_plus_categories'),
             $db -> replacePrefix('#__tz_portfolio_plus_content'),
             $db -> replacePrefix('#__tz_portfolio_plus_content_category_map'),

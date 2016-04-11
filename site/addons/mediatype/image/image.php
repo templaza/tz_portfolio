@@ -53,6 +53,7 @@ class PlgTZ_Portfolio_PlusMediaTypeImage extends TZ_Portfolio_PlusPlugin
                 $this -> setVariable('image', $image);
             }
             $this -> setVariable('item', $article);
+
             return parent::onContentDisplayMediaType($context, $article, $params, $page, $layout);
         }
     }
