@@ -146,7 +146,7 @@ if($this -> items):
             if ($params->get('show_cat_author',0) or $params->get('show_cat_category',0)
                 or $params->get('show_cat_create_date',0) or $params->get('show_cat_modify_date',0)
                 or $params->get('show_cat_publish_date',0) or $params->get('show_cat_parent_category',0)
-                or $params->get('show_cat_hits',0) or $params->get('show_tags',0)
+                or $params->get('show_cat_hits',0) or $params->get('show_cat_tags',0)
                 or !empty($item -> event -> beforeDisplayAdditionInfo)
                 or !empty($item -> event -> afterDisplayAdditionInfo)) :
             ?>
