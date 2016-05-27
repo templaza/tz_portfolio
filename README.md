@@ -10,7 +10,7 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 	
-05/26/2016 - 1.0.1
+05/27/2016 - 1.0.1
 	
 	- Fix errors with view categories:
 		+ Can't display categories.
