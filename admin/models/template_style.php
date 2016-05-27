@@ -29,7 +29,7 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
     protected function populateState(){
         parent::populateState();
 
-        $this -> setState('template.id',JRequest::getInt('id'));
+        $this -> setState('template.id',JFactory::getApplication() -> input -> getInt('id'));
         $this -> setState('content.id',null);
         $this -> setState('category.id',null);
         $this -> setState('template.template',null);
@@ -225,9 +225,10 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
         $app        = JFactory::getApplication();
 
         $dispatcher = JEventDispatcher::getInstance();
-        $table = $this->getTable();
-
-        $post   = JRequest::get();
+        $table 		= $this->getTable();
+        $post   	= $app -> input -> post;
+		$post		= $post -> getArray();
+		
         $articlesAssignment         = null;
         $articlesAssignmentOld      = null;
         $categoriesAssignment       = null;
@@ -525,35 +526,6 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
 
         return true;
     }
-
-//    function save($data=array()){
-//        $post   = JRequest::get();
-//        unset($data['tags']);
-//        $data['params'] = '';
-//        if($attrib = $post['jform']['attrib']){
-//            $data['params'] = json_encode($attrib);
-//        }
-//        if(!$data['id'] || $data['id'] == 0){
-//            $data['title']  = $this ->generateNewTitle(null,null,$data['title']);
-//        }
-//
-//        $home   = false;
-//        if($data['home'] == '1'){
-//            $home   = true;
-//        }
-//        $table  = $this -> getTable();
-//        if(!$table -> hasHome()){
-//            $data['home']   = '1';
-//        }
-//
-//        if(parent::save($data)){
-//            if($data['id'] && $data['home'] == '1'){
-//                $this -> setHome($data['id']);
-//            }
-//            return true;
-//        }
-//        return false;
-//    }
 
     public function getTZLayout(){
         $item   = $this -> getItem();

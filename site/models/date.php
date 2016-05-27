@@ -102,10 +102,10 @@ class TZ_Portfolio_PlusModelDate extends JModelList{
 
 
         // Optional filter text
-        $this->setState('list.filter', JRequest::getString('filter-search'));
+        $this->setState('list.filter', $app -> input -> getString('filter-search'));
 
         // filter.order
-        $itemid = JRequest::getInt('id', 0) . ':' . JRequest::getInt('Itemid', 0);
+        $itemid = $app -> input -> getInt('id', 0) . ':' . $app -> input -> getInt('Itemid', 0);
         $orderCol = $app->getUserStateFromRequest('com_tz_portfolio_plus.date.list.' . $itemid . '.filter_order', 'filter_order', '', 'string');
         if (!in_array($orderCol, $this->filter_fields)) {
             $orderCol = 'a.ordering';
@@ -119,7 +119,7 @@ class TZ_Portfolio_PlusModelDate extends JModelList{
         }
         $this->setState('list.direction', $listOrder);
 
-        $this->setState('list.start', JRequest::getVar('limitstart', 0, '', 'int'));
+        $this->setState('list.start', $app -> input -> getInt('limitstart', 0));
 
 //        // set limit for query. If list, use parameter. If blog, add blog parameters for limit.
 //        $limit = $params->get('num_leading_articles') + $params->get('num_intro_articles') + $params->get('num_links');
@@ -129,7 +129,7 @@ class TZ_Portfolio_PlusModelDate extends JModelList{
         $this->setState('list.limit', $params -> get('tz_article_limit', 10));
 
         //Filter by first letter of article's title
-        $this -> setState('filter.char',JRequest::getString('char',null));
+        $this -> setState('filter.char',$app -> input -> getString('char',null));
         $this -> setState('filter.use_filter_first_letter',$params -> get('use_filter_first_letter',1));
 
         $this->setState('filter.language', $app->getLanguageFilter());
@@ -588,7 +588,7 @@ class TZ_Portfolio_PlusModelDate extends JModelList{
         $app		= JFactory::getApplication('site');
         $db			= $this->getDbo();
         $params		= $this->state->params;
-        $itemid		= JRequest::getInt('id', 0) . ':' . JRequest::getInt('Itemid', 0);
+        $itemid		= $app -> input -> getInt('id', 0) . ':' . $app -> input -> getInt('Itemid', 0);
         $orderCol	= $app->getUserStateFromRequest('com_tz_portfolio_plus.category.list.' . $itemid . '.filter_order', 'filter_order', '', 'string');
         $orderDirn	= $app->getUserStateFromRequest('com_tz_portfolio_plus.category.list.' . $itemid . '.filter_order_Dir', 'filter_order_Dir', '', 'cmd');
         $orderby	= ' ';

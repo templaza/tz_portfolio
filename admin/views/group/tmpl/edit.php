@@ -67,43 +67,13 @@ JFactory::getDocument()->addScriptDeclaration('
             <?php echo JHtml::_('bootstrap.endTab'); ?>
 
         <?php echo JHtml::_('bootstrap.endTabSet'); ?>
-
-
-<!--            <ul class="nav nav-tabs">-->
-<!--                <li class="active"><a href="#details" data-toggle="tab">--><?php //echo JText::_('JDETAILS');?><!--</a></li>-->
-<!--                <li><a href="#categories_assignment" data-toggle="tab">--><?php //echo JText::_('COM_TZ_PORTFOLIO_PLUS_CATEGORIES_ASSIGNMENT');?><!--</a></li>-->
-<!--            </ul>-->
-<!--            <div class="tab-content">-->
-<!--                <div class="tab-pane active" id="details">-->
-<!--                    <div class="control-group">-->
-<!--                        <div class="control-label">--><?php //echo $form -> getLabel('name');?><!--</div>-->
-<!--                        <div class="controls">--><?php //echo $form -> getInput('name');?><!--</div>-->
-<!--                    </div>-->
-<!--                    <div class="control-group">-->
-<!--                        <div class="control-label">--><?php //echo $form -> getLabel('published');?><!--</div>-->
-<!--                        <div class="controls">--><?php //echo $form -> getInput('published');?><!--</div>-->
-<!--                    </div>-->
-<!--                    <div class="control-group">-->
-<!--                        <div class="control-label">--><?php //echo $form -> getLabel('id');?><!--</div>-->
-<!--                        <div class="controls">--><?php //echo $form -> getInput('id');?><!--</div>-->
-<!--                    </div>-->
-<!--                    <div class="control-group">-->
-<!--                        <div class="control-label">--><?php //echo $form -> getLabel('description');?><!--</div>-->
-<!--                        <div class="controls">--><?php //echo $form -> getInput('description');?><!--</div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!---->
-<!--                <div class="tab-pane assignment" id="categories_assignment">-->
-<!--                    --><?php //echo $form->getInput('categories_assignment'); ?>
-<!--                </div>-->
-<!--            </div>-->
         </fieldset>
 
     </div>
     <div class="clr"></div>
 
     <input type="hidden" value="" name="task">
-    <input type="hidden" name="return" value="<?php echo JRequest::getCmd('return');?>" />
+    <input type="hidden" name="return" value="<?php echo JFactory::getApplication() -> input -> getCmd('return');?>" />
     <?php echo JHTML::_('form.token');?>
 
 </form>

@@ -20,7 +20,7 @@
 // no direct access
 defined('_JEXEC') or die;
 
-$tmpl   = JRequest::getString('tmpl');
+$tmpl   = JFactory::getApplication() -> input -> getString('tmpl');
 if($tmpl){
     JHtml::_('bootstrap.framework');
     JHtml::_('jquery.framework');

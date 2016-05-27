@@ -766,6 +766,14 @@
             <option value="0">JHIDE</option>
             <option value="1">JSHOW</option>
         </field>
+        <field name="show_description_image" type="radio"
+               class="btn-group"
+               default="0"
+               label="JGLOBAL_SHOW_CATEGORY_IMAGE_LABEL"
+               description="JGLOBAL_SHOW_CATEGORY_IMAGE_DESC">
+            <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
+        </field>
         <field name="maxLevelcat" type="list"
                default="-1"
                label="JGLOBAL_MAXIMUM_CATEGORY_LEVELS_LABEL"

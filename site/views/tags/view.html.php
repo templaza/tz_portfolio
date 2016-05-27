@@ -223,7 +223,7 @@ class TZ_Portfolio_PlusViewTags extends JViewLegacy
         JModelLegacy::addIncludePath(COM_TZ_PORTFOLIO_PLUS_PATH_SITE.DIRECTORY_SEPARATOR.'models');
         $model  = JModelLegacy::getInstance('Portfolio','TZ_Portfolio_PlusModel',array('ignore_request' => true));
         $model -> setState('params',$params);
-        $model -> setState('filter.tagId',JRequest::getInt('id'));
+        $model -> setState('filter.tagId',JFactory::getApplication() -> input -> getInt('id'));
 
         $this -> char           = $state -> get('filter.char');
         $this -> availLetter    = $model -> getAvailableLetter();

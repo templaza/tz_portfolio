@@ -70,10 +70,10 @@ class TZ_Portfolio_PlusModelUsers extends JModelList
         $input = JFactory::getApplication() -> input;
         $this -> setState('users.id',$input -> getInt('id'));
 
-        $offset = JRequest::getUInt('limitstart',0);
+        $offset = $input -> getUInt('limitstart',0);
         $this -> setState('offset', $offset);
 
-        $this->setState('list.start', JRequest::getVar('limitstart', 0, '', 'int'));
+        $this->setState('list.start', $input -> getInt('limitstart', 0));
 
         $app    = JFactory::getApplication('site');
         $params = $app -> getParams('com_tz_portfolio_plus');
@@ -104,7 +104,7 @@ class TZ_Portfolio_PlusModelUsers extends JModelList
         $this -> setState('params',$params);
         $this -> setState('list.limit',$limit);
         $this -> setState('users.catid',null);
-        $this -> setState('filter.char',JRequest::getString('char',null));
+        $this -> setState('filter.char',$input -> getString('char',null));
 
     }
 

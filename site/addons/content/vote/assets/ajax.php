@@ -54,8 +54,8 @@ $params->loadString($plugin->params);
 if ( $params->get('access') == 1 && !$user->get('id') ) {
 	echo 'login';
 } else {
-	$user_rating = JRequest::getInt('user_rating');
-	$cid = JRequest::getInt('cid');
+	$user_rating = $app -> input -> getInt('user_rating');
+	$cid = $app -> input -> getInt('cid');
 	$db  = JFactory::getDbo();
 	if ($user_rating >= 1 && $user_rating <= 5) {
 		$currip = $_SERVER['REMOTE_ADDR'];

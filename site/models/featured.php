@@ -46,7 +46,7 @@ class TZ_Portfolio_PlusModelFeatured extends TZ_Portfolio_PlusModelArticles
 		parent::populateState($ordering, $direction);
 
 		// List state information
-		$limitstart = JRequest::getVar('limitstart', 0, '', 'int');
+		$limitstart = JFactory::getApplication() -> input -> getInt('limitstart', 0);
 		$this->setState('list.start', $limitstart);
 
 		$params = $this->state->params;
@@ -77,7 +77,7 @@ class TZ_Portfolio_PlusModelFeatured extends TZ_Portfolio_PlusModelArticles
  		}
 
         //Filter by first letter of article's title
-        $this -> setState('filter.char',JRequest::getString('char',null));
+        $this -> setState('filter.char',JFactory::getApplication() -> input -> getString('char',null));
         $this -> setState('filter.use_filter_first_letter',$params -> get('use_filter_first_letter',1));
 
 

@@ -46,7 +46,7 @@ class TZ_Portfolio_PlusCategories extends JCategories
 		$query = $db->getQuery(true);
 
 		// Right join with c for category
-		$query->select('c.id, c.asset_id, c.access, c.alias, c.checked_out, c.checked_out_time,
+		$query->select('c.id, c.asset_id, c.access, c.images, c.alias, c.checked_out, c.checked_out_time,
 			c.created_time, c.created_user_id, c.description, c.extension, c.hits, c.language, c.level,
 			c.lft, c.metadata, c.metadesc, c.metakey, c.modified_time, c.note, c.params, c.parent_id,
 			c.path, c.published, c.rgt, c.title, c.modified_user_id, c.version');

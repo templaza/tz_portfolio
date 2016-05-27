@@ -123,7 +123,7 @@ class JHtmlIcon
 			return '<span class="hasTip" title="'.htmlspecialchars($tooltip, ENT_COMPAT, 'UTF-8').'">'.$button.'</span>';
 		}
 
-        $tmpl   = JRequest::getCmd('tmpl',null);
+        $tmpl   = JFactory::getApplication() -> input -> getCmd('tmpl',null);
         if($tmpl){
             $tmpl   = '&tmpl=component';
         }

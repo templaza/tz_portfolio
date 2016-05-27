@@ -51,7 +51,7 @@ class TZ_Portfolio_PlusControllerCategory extends JControllerForm
 		// Guess the JText message prefix. Defaults to the option.
 		if (empty($this->extension))
 		{
-			$this->extension = JRequest::getCmd('extension', 'com_tz_portfolio_plus');
+			$this->extension = $this -> input -> getCmd('extension', 'com_tz_portfolio_plus');
 		}
 	}
 
@@ -138,7 +138,7 @@ class TZ_Portfolio_PlusControllerCategory extends JControllerForm
 	 */
 	public function batch($model = null)
 	{
-		JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
 		// Set the model
 		$model = $this->getModel('Category');

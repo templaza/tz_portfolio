@@ -49,7 +49,7 @@ class TZ_Portfolio_PlusViewArticle extends TZ_Portfolio_PlusViewLegacy
 
         $doc -> addStyleSheet('components/com_tz_portfolio_plus/css/tzportfolioplus.min.css');
 
-        $tmpl   = JRequest::getString('tmpl');
+        $tmpl   = $app -> input -> getString('tmpl');
         if($tmpl){
             JHtml::_('bootstrap.framework');
             JHtml::_('jquery.framework');

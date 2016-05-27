@@ -32,11 +32,13 @@ class TZ_Portfolio_PlusControllerFeatured extends TZ_Portfolio_PlusControllerArt
 	function delete()
 	{
 		// Check for request forgeries
-		JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
+		$app	= JFactory::getApplication();
+		
 		// Initialise variables.
 		$user	= JFactory::getUser();
-		$ids	= JRequest::getVar('cid', array(), '', 'array');
+		$ids	= $this -> input -> get('cid', array(), 'array');
 
 		// Access checks.
 		foreach ($ids as $i => $id)
@@ -45,12 +47,12 @@ class TZ_Portfolio_PlusControllerFeatured extends TZ_Portfolio_PlusControllerArt
 			{
 				// Prune items that you can't delete.
 				unset($ids[$i]);
-				JError::raiseNotice(403, JText::_('JERROR_CORE_DELETE_NOT_PERMITTED'));
+				$app -> enqueueMessage(JText::_('JERROR_CORE_DELETE_NOT_PERMITTED'), 'warning');
 			}
 		}
 
 		if (empty($ids)) {
-			JError::raiseWarning(500, JText::_('JERROR_NO_ITEMS_SELECTED'));
+			$app -> enqueueMessage(JText::_('JERROR_NO_ITEMS_SELECTED'), 'error');
 		}
 		else {
 			// Get the model.
@@ -58,7 +60,7 @@ class TZ_Portfolio_PlusControllerFeatured extends TZ_Portfolio_PlusControllerArt
 
 			// Remove the items.
 			if (!$model->featured($ids, 0)) {
-				JError::raiseWarning(500, $model->getError());
+				$app -> enqueueMessage($model->getError(), 'error');
 			}
 		}
 

@@ -41,12 +41,12 @@ if (count($this->items[$this->parent->id]) > 0 && $this->maxLevelcat != 0) :
 					<?php echo $item->numitems; ?>
 				</span>
 			<?php endif; ?>
-			<?php if (count($item->getChildren()) > 0) : ?>
-				<a href="#category-<?php echo $item->id;?>" data-toggle="collapse" data-toggle="button" class="btn btn-mini pull-right"><i class="icon-plus"></i></a>
+			<?php if (count($item->getChildren()) > 0 && $this->maxLevelcat > 1) : ?>
+				<a href="#category-<?php echo $item->id;?>" data-toggle="collapse" data-toggle="button" class="btn btn-mini btn-default pull-right"><i class="icon-plus"></i></a>
 			<?php endif;?>
 		</h3>
-        <?php if ($this->params->get('show_description_image') && $item->getParams()->get('image')) : ?>
-            <img src="<?php echo $item->getParams()->get('image'); ?>" alt="<?php echo htmlspecialchars($item->getParams()->get('image_alt')); ?>" />
+        <?php if ($this->params->get('show_description_image',0) && $item->images) : ?>
+            <img src="<?php echo $item->images; ?>" alt="<?php echo htmlspecialchars($item->title); ?>" />
         <?php endif; ?>
 		<?php if ($this->params->get('show_subcat_desc_cat', 1)) :?>
 		<?php if ($item->description) : ?>
@@ -56,7 +56,7 @@ if (count($this->items[$this->parent->id]) > 0 && $this->maxLevelcat != 0) :
 		<?php endif; ?>
         <?php endif; ?>
 
-		<?php if (count($item->getChildren()) > 0) :?>
+		<?php if (count($item->getChildren()) > 0 && $this->maxLevelcat > 1) :?>
 			<div class="collapse fade" id="category-<?php echo $item->id;?>">
 			<?php
 			$this->items[$item->id] = $item->getChildren();

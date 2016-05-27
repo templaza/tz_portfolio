@@ -20,9 +20,10 @@
 // no direct access
 defined('_JEXEC') or die;
 
-$option         = JRequest::getCmd('option','com_tz_portfolio_plus');
-$view           = JRequest::getCmd('view','articles');
-$task           = JRequest::getCmd('task',null);
+$input			= JFactory::getApplication() -> input;
+$option         = $input -> getCmd('option','com_tz_portfolio_plus');
+$view           = $input -> getCmd('view','articles');
+$task           = $input -> getCmd('task',null);
 
 JLoader::import('com_tz_portfolio_plus.includes.framework',JPATH_ADMINISTRATOR.'/components');
 

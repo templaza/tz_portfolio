@@ -34,15 +34,16 @@ class TZ_Portfolio_PlusControllerArticle extends JControllerForm
 	function __construct($config = array())
 	{
         JFactory::getLanguage() -> load('com_content');
+
+		parent::__construct($config);
+		
 		// An article edit form can come from the articles or featured view.
 		// Adjust the redirect view on the value of 'return' in the request.
-		if (JRequest::getCmd('return') == 'featured')
+		if ($this -> input -> getCmd('return') == 'featured')
 		{
 			$this->view_list = 'featured';
 			$this->view_item = 'article&return=featured';
 		}
-
-		parent::__construct($config);
 	}
 
 	public function getModel($name = 'Article', $prefix = 'TZ_Portfolio_PlusModel', $config = array('ignore_request' => true))
@@ -65,7 +66,7 @@ class TZ_Portfolio_PlusControllerArticle extends JControllerForm
 	{
 		// Initialise variables.
 		$user = JFactory::getUser();
-		$categoryId = JArrayHelper::getValue($data, 'catid', JRequest::getInt('filter_category_id'), 'int');
+		$categoryId = JArrayHelper::getValue($data, 'catid', $this -> input -> getInt('filter_category_id'), 'int');
 		$allow = null;
 
 		if ($categoryId)
@@ -150,7 +151,7 @@ class TZ_Portfolio_PlusControllerArticle extends JControllerForm
 	 */
 	public function batch($model = null)
 	{
-		JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
 		// Set the model
 		$model = $this->getModel();
@@ -163,7 +164,7 @@ class TZ_Portfolio_PlusControllerArticle extends JControllerForm
 
     function tags(){
         $model      = JModelLegacy::getInstance('Tags','TZ_Portfolio_PlusModel',array('ignore_request' => true));
-        $model -> setState('term',JRequest::getString('term',null));
+        $model -> setState('term',$this -> input -> getString('term',null));
         echo json_encode($model -> getTags());
         die();
     }

@@ -193,6 +193,18 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
         // (e.g. from a JSON description).
         $results = $dispatcher->trigger('onInstallerBeforeInstallation', array($this, &$package));
 
+        /* phan code working */
+        if (in_array(true, $results, true))
+        {
+            return true;
+        }
+
+        if (in_array(false, $results, true))
+        {
+            return false;
+        }
+        /* end phan code working */
+
         $package        = $this -> _getPackageFromUpload();
         $extension_path = COM_TZ_PORTFOLIO_PLUS_PATH_SITE;
         $result         = true;
@@ -200,6 +212,16 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
 
         // This event allows a custom installation of the package or a customization of the package:
         $results = $dispatcher->trigger('onInstallerBeforeInstaller', array($this, &$package));
+
+        if (in_array(true, $results, true))
+        {
+            return true;
+        }
+
+        if (in_array(false, $results, true))
+        {
+            return false;
+        }
 
         // Was the package unpacked?
         if (!$package || !$package['type'])
@@ -215,6 +237,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
         $installer  = JInstaller::getInstance($package['dir']);
         $installer -> setPath('source',$package['dir']);
 
+
         if($manifest = $installer ->getManifest()){
             $attrib = $manifest -> attributes();
 
@@ -222,153 +245,40 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
             $type   = (string) $attrib -> type;
             $group  = '';
 
+
             if(!in_array($type, $this -> accept_types) || (in_array($type, $this -> accept_types)
                     && $type != $this -> type)){
                 $app->enqueueMessage(JText::_('COM_TZ_PORTFOLIO_PLUS_UNABLE_TO_FIND_INSTALL_PACKAGE'), 'error');
                 return false;
             }
 
-            $folder_name    = $name;
-            $extension_path .= DIRECTORY_SEPARATOR.$this -> folder;
 
-            if($folder_name && (is_numeric(strpos($folder_name,'tz_portfolio_plus_tpl_')))){
-                $folder_name    = preg_replace('/^tz_portfolio_plus_tpl_/','',$folder_name);
+            $_type  = str_replace('tz_portfolio_plus-','',$type);
+            tzportfolioplusimport('adapter.'.$_type);
+            $class  = 'TZ_Portfolio_PlusInstallerAdapter'.$_type;
+
+            $tzinstaller    = new $class($installer,$installer -> getDbo());
+            $tzinstaller -> setRoute('install');
+            $tzinstaller -> setManifest($installer -> getManifest());
+            $tzinstaller -> setProperties(array('type' => $type));
+            if(!$tzinstaller -> install()){
+                // There was an error installing the package.
+                $msg = JText::sprintf('COM_TZ_PORTFOLIO_PLUS_INSTALL_ERROR', $input -> getCmd('view'));
+                $result = false;
+                $msgType = 'error';
             }
-            if(isset($attrib -> group)) {
-                $group = (string)$attrib->group;
-                if($folder_name && (is_numeric(strpos($folder_name,'plg_'.$group.'_')))){
-                    $folder_name    = preg_replace('/^plg_'.$group.'_/','',$folder_name);
-                }
-                $extension_path .= DIRECTORY_SEPARATOR.$group;
-            }
-
-            $files_folders  = $manifest -> xPath('files');
-            $replace    = false;
-            if($attrib -> method == 'upgrade'){
-                $replace    = true;
-            }
-
-            // Upload folder to templates folder
-            if(isset($files_folders[0] -> folder)){
-                $folders    = (array)$files_folders[0] -> folder;
-                if(count($folders)){
-                    foreach($folders as $folder){
-                        if(JFolder::exists($package['dir'].DIRECTORY_SEPARATOR.$folder)) {
-                            if(JFolder::exists($extension_path . DIRECTORY_SEPARATOR . $folder_name . DIRECTORY_SEPARATOR . $folder)){
-                                if(!$replace){
-                                    $msg    = JText::_('COM_TZ_PORTFOLIO_PLUS_FOLDER_EXIST');
-                                    $result = false;
-                                }else{
-                                    JFolder::copy($package['dir'] . DIRECTORY_SEPARATOR . $folder,
-                                        $extension_path . DIRECTORY_SEPARATOR . $folder_name . DIRECTORY_SEPARATOR . $folder,
-                                        '', $replace);
-                                    $result = true;
-                                }
-                            }else {
-                                JFolder::copy($package['dir'] . DIRECTORY_SEPARATOR . $folder,
-                                    $extension_path . DIRECTORY_SEPARATOR . $folder_name . DIRECTORY_SEPARATOR . $folder,
-                                    '', $replace);
-                                $result = true;
-                            }
-                        }else{
-                            $msg    = JText::sprintf('JLIB_INSTALLER_ERROR_NO_FILE',$package['dir'] . DIRECTORY_SEPARATOR . $folder);
-                            $result = false;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if($result) {
-                $plugin_name    = null;
-
-                // Upload files to templates folder
-                if (isset($files_folders[0]->filename)) {
-                    $files = (array)$files_folders[0]->filename;
-
-                    if (count($files)) {
-                        $plugin_name    = array_shift($files);
-                        foreach ($files as $file) {
-                            if (JFile::exists($package['dir'] . DIRECTORY_SEPARATOR . $file)) {
-                                JFile::copy($package['dir'] . DIRECTORY_SEPARATOR . $file,
-                                    $extension_path . DIRECTORY_SEPARATOR . $folder_name . DIRECTORY_SEPARATOR . $file,
-                                    null, $replace);
-                                $result = true;
-                            } else {
-                                $msg    = JText::sprintf('JLIB_INSTALLER_ERROR_NO_FILE',$package['dir']
-                                    . DIRECTORY_SEPARATOR . $file);
-                                $result = false;
-                                break;
-                            }
-                        }
-                        if(JFile::exists($package['dir'] . DIRECTORY_SEPARATOR. $folder_name.'.xml')){
-                            JFile::copy($package['dir'] . DIRECTORY_SEPARATOR. $folder_name.'.xml',
-                                $extension_path . DIRECTORY_SEPARATOR . $folder_name . DIRECTORY_SEPARATOR.$folder_name.'.xml');
-                        }
-                    }
-                }
-
-                // Add template's information to table tz_portfolio_plus_extensions
-                $data   = null;
-                $data ['id']    = 0;
-                $data ['name']  = $name;
-                $data ['type']  = $type;
-                if($plugin_name && isset($plugin_name['plugin'])) {
-                    $data ['element'] = $plugin_name['plugin'];
-                }else{
-                    $data ['element'] = $folder_name;
-                }
-                $data ['folder']  = $group;
-                $manifest_cache = $installer -> parseXMLInstallFile($installer -> getPath('manifest'));
-                $manifest_cache['special']  = 0;
-                if($manifest       = $installer -> manifest){
-                    if(isset($manifest -> special)){
-                        $manifest_cache['special']  = (string) $manifest -> special;
-                    }
-                }
-                $manifest_cache = json_encode($manifest_cache);
-
-                $data['protected']      = 0;
-                $data['manifest_cache'] = $manifest_cache;
-                $data['published']      = 1;
-                $data['access']         = 1;
-                $data['params']         = $installer -> getParams();
-
-                if($extension = $this -> getExtension($name, $type)){
-                    if(isset($extension ->protected) && $extension ->protected){
-                        $app -> enqueueMessage(JText::_('COM_TZ_PORTFOLIO_PLUS_'.$input -> getCmd('view').'_ERROR_INSTALL_PROTECTED'),'error');
-                        return false;
-                    }
-                    $data['id']         = $extension -> id;
-                    $data['protected']  = $extension ->protected;
-                    $data['published']  = $extension -> published;
-                    $data['access']     = $extension -> access;
-                    $data['params']     = $extension -> params;
-                }
-                if(!$this -> save($data)){
-                    return false;
-                }
-
-                $this -> afterSave($data);
+            else
+            {
+                // Package installed sucessfully.
+                $msg = JText::sprintf('COM_TZ_PORTFOLIO_PLUS_INSTALL_SUCCESS', JText::_('COM_TZ_PORTFOLIO_PLUS_'.$input -> getCmd('view')));
+                $result = true;
+                $msgType = 'message';
             }
 
             // This event allows a custom a post-flight:
             $dispatcher->trigger('onInstallerAfterInstaller', array($this, &$package, $installer, &$result, &$msg));
 
-            if(!$result) {
-                $app->enqueueMessage($msg, 'warning');
-                $warning_msg    = 'JLIB_INSTALLER_ABORT_PLG_COPY_FILES';
-                if($this -> type == 'tz_portfolio_plus-plugin'){
-                    $warning_msg    = 'JLIB_INSTALLER_ABORT_PLG_COPY_FILES';
-                }elseif($this -> type == 'tz_portfolio_plus-template'){
-                    $warning_msg    = 'JLIB_INSTALLER_ABORT_TPL_INSTALL_COPY_FILES';
-                }
-
-                $app->enqueueMessage(JText::sprintf($warning_msg, $name),'warning');
-                $app->enqueueMessage(JText::sprintf('COM_TZ_PORTFOLIO_PLUS_INSTALL_ERROR', $input -> getCmd('view')), 'error');
-            }else {
-                $app->enqueueMessage($msg, 'message');
-            }
+            $app->enqueueMessage($msg, $msgType);
         }
 
         JInstallerHelper::cleanupInstall($package['packagefile'], $package['extractdir']);
@@ -382,88 +292,87 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
         $app    = JFactory::getApplication();
         $view   = $app -> input -> getCmd('view');
 
-        if ($user->authorise('core.delete', 'com_tz_portfolio_plus'))
-        {
-            $failed = array();
-
-            /*
-             * Ensure eid is an array of extension ids in the form id => client_id
-             * TODO: If it isn't an array do we want to set an error and fail?
-             */
-            if (!is_array($eid))
-            {
-                $eid = array($eid => 0);
-            }
-
-            // Get an installer object for the extension type
-            $table = $this -> getTable();
-
-            // Uninstall the chosen extensions
-            $msgs = array();
-            $result = false;
-
-            foreach ($eid as $id)
-            {
-                $id = trim($id);
-                $table->load($id);
-
-                $langstring = 'COM_TZ_PORTFOLIO_PLUS_' . strtoupper($table->type);
-                $rowtype = JText::_($langstring);
-
-                if (strpos($rowtype, $langstring) !== false)
-                {
-                    $rowtype = $table->type;
-                }
-
-                if ($table->type && $table->type == 'tz_portfolio_plus-plugin')
-                {
-
-                    // Is the template we are trying to uninstall a core one?
-                    // Because that is not a good idea...
-                    if ($table->protected)
-                    {
-                        JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_PLG_UNINSTALL_WARNCOREPLUGIN',
-                            JText::_('COM_TZ_PORTFOLIO_PLUS_'.$view)), JLog::WARNING, 'jerror');
-
-                        return false;
-                    }
-
-                    $plg_path   = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.DIRECTORY_SEPARATOR.$table -> folder
-                        .DIRECTORY_SEPARATOR.$table -> element;
-
-                    if(JFolder::exists($plg_path)){
-                        if(!$table -> delete($id)){
-                            $app -> enqueueMessage($table -> getError(),'warning');
-                            return false;
-                        }
-                        $result = JFolder::delete($plg_path);
-                    }
-
-                    // Build an array of extensions that failed to uninstall
-                    if ($result === false)
-                    {
-                        // There was an error in uninstalling the package
-                        $msgs[] = JText::sprintf('COM_TZ_PORTFOLIO_PLUS_UNINSTALL_ERROR', JText::_('COM_TZ_PORTFOLIO_PLUS_'.$view));
-                        $result = false;
-                    }
-                    else
-                    {
-                        // Package uninstalled sucessfully
-                        $msgs[] = JText::sprintf('COM_TZ_PORTFOLIO_PLUS_UNINSTALL_SUCCESS', JText::_('COM_TZ_PORTFOLIO_PLUS_'.$view));
-                        $result = true;
-                    }
-                }
-            }
-
-            $msg = implode("<br />", $msgs);
-            $app->enqueueMessage($msg);
-
-            return $result;
-        }
-        else
+        if (!$user->authorise('core.delete', 'com_tz_portfolio_plus'))
         {
             JError::raiseWarning(403, JText::_('JERROR_CORE_DELETE_NOT_PERMITTED'));
+
+            return false;
         }
+
+        $failed = array();
+
+        /*
+         * Ensure eid is an array of extension ids in the form id => client_id
+         * TODO: If it isn't an array do we want to set an error and fail?
+         */
+        if (!is_array($eid))
+        {
+            $eid = array($eid => 0);
+        }
+
+        // Get an installer object for the extension type
+        $table = $this -> getTable();
+
+        // Uninstall the chosen extensions
+        $msgs = array();
+        $result = false;
+
+        // Get an installer instance.
+        $installer  = JInstaller::getInstance();
+
+        foreach ($eid as $id)
+        {
+            $id = trim($id);
+            $table->load($id);
+
+            $langstring = 'COM_TZ_PORTFOLIO_PLUS_' . strtoupper($table->type);
+            $rowtype = JText::_($langstring);
+
+            if (strpos($rowtype, $langstring) !== false)
+            {
+                $rowtype = $table->type;
+            }
+
+            if ($table->type && $table->type == 'tz_portfolio_plus-plugin')
+            {
+
+                // Is the template we are trying to uninstall a core one?
+                // Because that is not a good idea...
+                if ($table->protected)
+                {
+                    JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_PLG_UNINSTALL_WARNCOREPLUGIN',
+                        JText::_('COM_TZ_PORTFOLIO_PLUS_'.$view)), JLog::WARNING, 'jerror');
+
+                    return false;
+                }
+
+                $_type  = str_replace('tz_portfolio_plus-','',$table->type);
+                tzportfolioplusimport('adapter.'.$_type);
+                $class  = 'TZ_Portfolio_PlusInstallerAdapter'.$_type;
+
+                $tzinstaller    = new $class($installer,$installer -> getDbo());
+
+                $result = $tzinstaller->uninstall($id);
+
+                // Build an array of extensions that failed to uninstall
+                if ($result === false)
+                {
+                    // There was an error in uninstalling the package
+                    $msgs[] = JText::sprintf('COM_TZ_PORTFOLIO_PLUS_UNINSTALL_ERROR', JText::_('COM_TZ_PORTFOLIO_PLUS_'.$view));
+
+                    continue;
+                }
+
+                // Package uninstalled sucessfully
+                $msgs[] = JText::sprintf('COM_TZ_PORTFOLIO_PLUS_UNINSTALL_SUCCESS', JText::_('COM_TZ_PORTFOLIO_PLUS_'.$view));
+                $result = true;
+            }
+        }
+
+        $msg = implode("<br />", $msgs);
+        $app->enqueueMessage($msg);
+
+        return $result;
     }
 
     public function afterSave($data){}

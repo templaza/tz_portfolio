@@ -26,7 +26,7 @@ class TZ_Portfolio_PlusControllerField extends JControllerForm
 
     public function save($key = null, $urlVar = null){
         // Check for request forgeries.
-        JRequest::checkToken() or die(JText::_('JINVALID_TOKEN'));
+        JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
         $app   = JFactory::getApplication();
         $lang  = JFactory::getLanguage();
@@ -47,8 +47,8 @@ class TZ_Portfolio_PlusControllerField extends JControllerForm
             $urlVar = $key;
         }
 
-        $recordId = JRequest::getInt($urlVar);
-        $data   = JRequest::getVar('jform', array(), 'post', 'array');
+        $recordId = $this -> input -> getInt($urlVar);
+        $data   = $this -> input -> post -> get('jform', array(), 'array');
 
         $context = "$this->option.edit.$this->context";
         $task = $this->getTask();

@@ -15,7 +15,7 @@
 			description="JFIELD_ALIAS_DESC" class="inputbox" size="45" />
 
 		<field type="tztext" name="tags" multiple="true"
-			   class="suggest"
+			   class="suggest" autocomplete="off"
 			   label="COM_TZ_PORTFOLIO_PLUS_FORM_TAGS"
 			   description="COM_TZ_PORTFOLIO_PLUS_FORM_TAGS_DESC"/>
 

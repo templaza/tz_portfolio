@@ -57,7 +57,7 @@ class TZ_Portfolio_PlusViewCategory extends JViewLegacy
 		}
 
 		parent::display($tpl);
-		JRequest::setVar('hidemainmenu', true);
+		JFactory::getApplication()->input->set('hidemainmenu', true);
 		$this->addToolbar();
 	}
 
@@ -69,7 +69,7 @@ class TZ_Portfolio_PlusViewCategory extends JViewLegacy
 	protected function addToolbar()
 	{
 		// Initialise variables.
-		$extension	= JRequest::getCmd('extension');
+		$extension	= JFactory::getApplication() -> input -> getCmd('extension');
 		$user		= TZ_Portfolio_PlusUser::getUser();
 		$userId		= $user->get('id');
 

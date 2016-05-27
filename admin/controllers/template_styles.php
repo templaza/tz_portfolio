@@ -54,7 +54,7 @@ class TZ_Portfolio_PlusControllerTemplate_Styles extends JControllerAdmin
         }
         catch (Exception $e)
         {
-            JError::raiseWarning(500, $e->getMessage());
+            JFactory::getApplication() -> enqueueMessage($e->getMessage(), 'error');
         }
 
         $this->setRedirect('index.php?option=com_tz_portfolio_plus&view=template_styles');
@@ -86,7 +86,7 @@ class TZ_Portfolio_PlusControllerTemplate_Styles extends JControllerAdmin
         }
         catch (Exception $e)
         {
-            JError::raiseWarning(500, $e->getMessage());
+            JFactory::getApplication() -> enqueueMessage($e->getMessage(), 'error');
         }
 
         $this->setRedirect('index.php?option=com_tz_portfolio_plus&view=template_styles');
@@ -117,7 +117,7 @@ class TZ_Portfolio_PlusControllerTemplate_Styles extends JControllerAdmin
         }
         catch (Exception $e)
         {
-            JError::raiseWarning(500, $e->getMessage());
+            JFactory::getApplication() -> enqueueMessage($e->getMessage(), 'error');
         }
 
         $this->setRedirect('index.php?option=com_tz_portfolio_plus&view=template_styles');

@@ -26,5 +26,22 @@ class TZ_Portfolio_PlusTableExtensions extends JTable
     {
         parent::__construct('#__tz_portfolio_plus_extensions', 'id', $db);
     }
+
+    public function find($options = array())
+    {
+        // Get the JDatabaseQuery object
+        $query = $this->_db->getQuery(true);
+
+        foreach ($options as $col => $val)
+        {
+            $query->where($col . ' = ' . $this->_db->quote($val));
+        }
+
+        $query->select($this->_db->quoteName('id'))
+            ->from($this->_db->quoteName('#__tz_portfolio_plus_extensions'));
+        $this->_db->setQuery($query);
+
+        return $this->_db->loadResult();
+    }
 }
 ?>

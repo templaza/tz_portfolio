@@ -21,7 +21,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 $params = $this -> item -> params;
-$tmpl           = JRequest::getString('tmpl');
+$tmpl           = JFactory::getApplication() -> input -> getString('tmpl');
 ?>
 <?php if($this -> listTags):?>
 <div class="TzArticleTag">

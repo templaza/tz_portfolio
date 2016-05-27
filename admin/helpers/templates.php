@@ -1,10 +1,24 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Ngoc Tu
- * Date: 11/26/2015
- * Time: 12:01 PM
- */
+/*------------------------------------------------------------------------
+
+# TZ Portfolio Plus Extension
+
+# ------------------------------------------------------------------------
+
+# author    DuongTVTemPlaza
+
+# copyright Copyright (C) 2015 templaza.com. All Rights Reserved.
+
+# @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
+
+# Websites: http://www.templaza.com
+
+# Technical Support:  Forum - http://templaza.com/Forum
+
+-------------------------------------------------------------------------*/
+
+// No direct access
+defined('_JEXEC') or die;
 
 class TZ_Portfolio_PlusHelperTemplates{
     public static function getTemplateOptions()

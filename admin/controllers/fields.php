@@ -67,14 +67,15 @@ class TZ_Portfolio_PlusControllerFields extends JControllerAdmin
     public function delete()
     {
         // Check for request forgeries
-        JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
+        JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
         // Get items to remove from the request.
-        $cid = JRequest::getVar('cid', array(), '', 'array');
+        $cid = $this -> input -> get('cid', array(), 'array');
 
         if (!is_array($cid) || count($cid) < 1)
         {
-            JError::raiseWarning(500, JText::_($this->text_prefix . '_NO_ITEM_SELECTED'));
+            JFactory::getApplication() -> enqueueMessage(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), 'error');
+			
         }
         else
         {

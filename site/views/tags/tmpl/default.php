@@ -52,7 +52,7 @@ JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
             <?php endif;?>
 
             <?php if($params -> get('show_limit_box',0)):?>
-            <form action="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&view=tags&id='.JRequest::getInt('id').'&Itemid='.JRequest::getInt('Itemid'));?>"
+            <form action="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&view=tags&id='.JFactory::getApplication() -> input -> getInt('id').'&Itemid='.JFactory::getApplication() -> input -> getInt('Itemid'));?>"
                   id="adminForm"
                   name="adminForm"
                   method="post">

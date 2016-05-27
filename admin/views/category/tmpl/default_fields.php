@@ -1,11 +1,25 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: SunlandNo1
- * Date: 6/28/12
- * Time: 9:06 AM
- * To change this template use File | Settings | File Templates.
- */
+/*------------------------------------------------------------------------
+
+# TZ Portfolio Plus Extension
+
+# ------------------------------------------------------------------------
+
+# author    DuongTVTemPlaza
+
+# copyright Copyright (C) 2015 templaza.com. All Rights Reserved.
+
+# @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
+
+# Websites: http://www.templaza.com
+
+# Technical Support:  Forum - http://templaza.com/Forum
+
+-------------------------------------------------------------------------*/
+
+// No direct access
+defined('_JEXEC') or die;
+
 $fieldsId   = $this -> fieldsId;
 ?>
 <ul class="adminformlist">

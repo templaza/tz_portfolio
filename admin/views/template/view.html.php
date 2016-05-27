@@ -42,7 +42,7 @@ class TZ_Portfolio_PlusViewTemplate extends JViewLegacy
     }
 
     protected function addToolbar(){
-        JRequest::setVar('hidemainmenu',true);
+        JFactory::getApplication()->input->set('hidemainmenu', true);
 
         $bar    = JToolBar::getInstance();
 

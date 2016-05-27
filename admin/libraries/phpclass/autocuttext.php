@@ -17,6 +17,9 @@
 
 -------------------------------------------------------------------------*/
 
+// No direct access
+defined('_JEXEC') or die;
+
 class AutoCutText{
 	/**
 	 * String data input

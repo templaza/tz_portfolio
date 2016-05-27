@@ -41,11 +41,9 @@ class TZ_Portfolio_PlusViewArticle extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-        if(JRequest::getCmd('task')!='lists'){
-//            JFactory::getLanguage()->load('com_content');
+        if(JFactory::getApplication()->input->getCmd('task')!='lists'){
             if ($this->getLayout() == 'pagebreak') {
-                // TODO: This is really dogy - should change this one day.
-                $eName		= JRequest::getVar('e_name');
+                $eName		= JFactory::getApplication()->input->get('e_name');
                 $eName		= preg_replace( '#[^A-Z0-9\-\_\[\]]#i', '', $eName );
                 $document	= JFactory::getDocument();
                 $document->setTitle(JText::_('COM_CONTENT_PAGEBREAK_DOC_TITLE'));
@@ -108,7 +106,7 @@ class TZ_Portfolio_PlusViewArticle extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		JRequest::setVar('hidemainmenu', true);
+		JFactory::getApplication()->input->set('hidemainmenu', true);
 		$user		= TZ_Portfolio_PlusUser::getUser();
 		$userId		= $user->get('id');
 		$isNew		= ($this->item->id == 0);

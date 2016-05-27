@@ -14,7 +14,7 @@ JHtml::_('formbehavior.chosen', 'select');
 
 if ($app->isSite())
 {
-	JSession::checkToken('get') or die(JText::_('JINVALID_TOKEN'));
+	JSession::checkToken('get') or jexit(JText::_('JINVALID_TOKEN'));
 }
 
 require_once JPATH_ROOT . '/components/com_tz_portfolio_plus/helpers/route.php';

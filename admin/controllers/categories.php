@@ -55,9 +55,9 @@ class TZ_Portfolio_PlusControllerCategories extends JControllerAdmin
 	 */
 	public function rebuild()
 	{
-		JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-		$extension = JRequest::getCmd('extension','com_tz_portfolio_plus');
+		$extension = $this -> input -> getCmd('extension','com_tz_portfolio_plus');
 		$this->setRedirect(JRoute::_('index.php?option=com_tz_portfolio_plus&view=categories&extension='.$extension, false));
 
 		// Initialise variables.
@@ -82,11 +82,11 @@ class TZ_Portfolio_PlusControllerCategories extends JControllerAdmin
 	 */
 	public function saveorder()
 	{
-		JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
 		// Get the arrays from the Request
-		$order	= JRequest::getVar('order',	null, 'post', 'array');
-		$originalOrder = explode(',', JRequest::getString('original_order_values'));
+		$order = $this->input->post->get('order', null, 'array');
+		$originalOrder = explode(',', $this -> input -> getString('original_order_values'));
 
 		// Make sure something has changed
 		if (!($order === $originalOrder)) {

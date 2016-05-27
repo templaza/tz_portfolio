@@ -17,6 +17,9 @@
 
 -------------------------------------------------------------------------*/
 
+// No direct access
+defined('_JEXEC') or die;
+
 $fieldsId   = $this -> fieldsId;
 ?>
 <ul class="adminformlist">

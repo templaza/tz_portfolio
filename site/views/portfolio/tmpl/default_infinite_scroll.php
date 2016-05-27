@@ -20,7 +20,7 @@
 defined('_JEXEC') or die();
 
 $params     = $this -> params;
-$lang       = JRequest::getCmd('lang');
+$lang       = JFactory::getApplication() -> input -> getCmd('lang');
 $language   = JLanguageHelper::getLanguages('lang_code');
 
 $doc    = JFactory::getDocument();

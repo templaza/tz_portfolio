@@ -58,7 +58,7 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
 
         $user		= JFactory::getUser();
 
-        $offset = JRequest::getUInt('limitstart',0);
+        $offset = $app -> input -> getUInt('limitstart',0);
 
         if($params -> get('show_limit_box',0)  && $params -> get('tz_portfolio_plus_layout') == 'default'){
             $limit  = $app->getUserStateFromRequest('com_tz_portfolio_plus.portfolio.limit','limit',$params -> get('tz_article_limit',10));
@@ -91,13 +91,13 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
         $this -> setState('Itemid',$params -> get('id'));
         $this -> setState('list.limit',$limit);
         $this -> setState('catid',$params -> get('catid'));
-        $this -> setState('filter.char',JRequest::getString('char',null));
+        $this -> setState('filter.char',$app -> input -> getString('char',null));
         $this -> setState('filter.tagId',null);
         $this -> setState('filter.userId',null);
         $this -> setState('filter.featured',null);
         $this -> setState('filter.year',null);
         $this -> setState('filter.month',null);
-        $this -> setState('filter.category_id',JRequest::getInt('id'));
+        $this -> setState('filter.category_id',$app -> input -> getInt('id'));
     }
 
     protected function getListQuery(){
@@ -407,7 +407,7 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
                     $item -> mediatypes = array();
 
                     // Add feed links
-                    if (JRequest::getCmd('format',null) != 'feed') {
+                    if (JFactory::getApplication() -> input -> getCmd('format',null) != 'feed') {
 
                         // Old plugins: Ensure that text property is available
                         if (!isset($item->text))
@@ -483,12 +483,13 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
 
     function ajaxtags($limitstart=null) {
 
+		$input		= JFactory::getApplication() -> input;
         $params     = JComponentHelper::getParams('com_tz_portfolio_plus');
 
-        $Itemid = JRequest::getInt('Itemid');
-        $page   = JRequest::getInt('page');
-        $char       = JRequest::getString('char');
-        $curTags    = stripslashes(JRequest::getString('tags'));
+        $Itemid 	= $input -> getInt('Itemid');
+        $page   	= $input -> getInt('page');
+        $char       = $input -> getString('char');
+        $curTags    = stripslashes($input -> getString('tags'));
         $curTags    = json_decode($curTags);
 
         $menu       = JMenu::getInstance('site');
@@ -541,11 +542,12 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
             $params -> set('tz_portfolio_plus_redirect','article');
         }
 
-        $Itemid     = JRequest::getInt('Itemid');
-        $page       = JRequest::getInt('page');
-        $layout     = JRequest::getString('layout');
-        $char       = JRequest::getString('char');
-        $catid      = JRequest::getInt('id');
+		$input		= JFactory::getApplication() -> input;
+        $Itemid     = $input -> getInt('Itemid');
+        $page       = $input -> getInt('page');
+        $layout     = $input -> getString('layout');
+        $char       = $input -> getString('char');
+        $catid      = $input -> getInt('id');
 
         $menu       = JMenu::getInstance('site');
         $menuParams = $menu -> getParams($Itemid);
@@ -585,10 +587,11 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
     function ajaxCategories(){
         $params     = JComponentHelper::getParams('com_tz_portfolio_plus');
 
-        $Itemid = JRequest::getInt('Itemid');
-        $page   = JRequest::getInt('page');
-        $curCatids    = JRequest::getString('catIds');
-        $curCatids    = json_decode($curCatids);
+		$input		= JFactory::getApplication() -> input;
+        $Itemid 	= $input -> getInt('Itemid');
+        $page   	= $input -> getInt('page');
+        $curCatids  = $input -> getString('catIds');
+        $curCatids  = json_decode($curCatids);
 
         $menu       = JMenu::getInstance('site');
         $menuParams = $menu -> getParams($Itemid);
@@ -799,15 +802,10 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
         return false;
     }
 
-//    function getPagination(){
-//        if($this -> pagNav)
-//            return $this -> pagNav;
-//        return false;
-//    }
-
     public function ajaxComments(){
-        $data   = json_decode(base64_decode(JRequest::getString('url')));
-        $id     = json_decode(base64_decode(JRequest::getString('id')));
+		$input	= JFactory::getApplication() -> input;
+        $data   = json_decode(base64_decode($input -> getString('url')));
+        $id     = json_decode(base64_decode($input -> getString('id')));
         if($data){
             require_once(JPATH_COMPONENT_ADMINISTRATOR.DIRECTORY_SEPARATOR.'libraries'
                 .DIRECTORY_SEPARATOR.'phpclass'.DIRECTORY_SEPARATOR.'http_fetcher.php');
@@ -816,7 +814,7 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
 
             $params     = JComponentHelper::getParams('com_tz_portfolio_plus');
 
-            $Itemid     = JRequest::getInt('Itemid');
+            $Itemid     = $input -> getInt('Itemid');
 
             $menu       = JMenu::getInstance('site');
             $menuParams = $menu -> getParams($Itemid);

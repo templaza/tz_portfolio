@@ -59,7 +59,7 @@ class TZ_Portfolio_PlusModelCategories extends JModelLegacy
 		$this->setState('filter.extension', $this->_extension);
 
 		// Get the parent id if defined.
-		$parentId = JRequest::getInt('id');
+		$parentId = $app -> input -> getInt('id');
 		$this->setState('filter.parentId', $parentId);
 
         $params     = $app -> getParams();
@@ -112,9 +112,9 @@ class TZ_Portfolio_PlusModelCategories extends JModelLegacy
 				$params->loadString($active->params);
 			}
 
-//			$options = array();
-//			$options['countItems'] = $params->get('show_cat_num_articles_cat', 1) || !$params->get('show_empty_categories_cat', 0);
-			$categories	= JCategories::getInstance('TZ_Portfolio_Plus');
+			$options = array();
+			$options['countItems'] = $params->get('show_cat_num_articles_cat', 1) || !$params->get('show_empty_categories_cat', 0);
+			$categories	= JCategories::getInstance('TZ_Portfolio_Plus',$options);
 			$this->_parent = $categories->get($this->getState('filter.parentId', 'root'));
 
 			if (is_object($this->_parent)) {

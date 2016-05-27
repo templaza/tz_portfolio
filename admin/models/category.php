@@ -112,7 +112,7 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 
     public function extrafields(){
         $data       = null;
-        $json       = JRequest::getString('json', null, null, 2);
+        $json       = JFactory::getApplication() -> input -> getString('json', null, null, 2);
         $ob_json    = json_decode($json);
 
         $fieldsGroup    = $this -> getGroupId($ob_json -> id);
@@ -174,7 +174,7 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 
     public function getGroups(){
 
-        $catid          = JRequest::getInt('id',null);
+        $catid          = JFactory::getApplication() -> input -> getInt('id',null);
 
         $groups    = '';
         
@@ -250,14 +250,14 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 	{
 		$app = JFactory::getApplication('administrator');
 
-		$parentId = JRequest::getInt('parent_id');
+		$parentId = $app -> input -> getInt('parent_id');
 		$this->setState('category.parent_id', $parentId);
 
 		// Load the User state.
-		$pk = (int) JRequest::getInt('id');
+		$pk = (int) $app -> input -> getInt('id');
 		$this->setState($this->getName() . '.id', $pk);
 
-		$extension = JRequest::getCmd('extension', 'com_tz_portfolio_plus');
+		$extension = $app -> input -> getCmd('extension', 'com_tz_portfolio_plus');
 		$this->setState('category.extension', $extension);
 		$parts = explode('.', $extension);
 
@@ -755,10 +755,10 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 	public function save($data)
 	{
 
-        $groupid                = JRequest::getVar('groupid',array(),'post','array');
-        $currentId              = JRequest::getCmd('id');
-
-        $post               = JRequest::get('post');
+		$input				= JFactory::getApplication() -> input;
+        $groupid            = $input -> post -> get('groupid',array(),'array');
+        $currentId          = $input -> getCmd('id');
+        $post               = $input -> post -> getArray();
         
         if(isset($post['jform']['params']['tz_fieldsid'])){
             $fieldsId   = $post['jform']['params']['tz_fieldsid'];
@@ -795,7 +795,7 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 		}
 
 		// Alter the title for save as copy
-		if (JRequest::getVar('task') == 'save2copy')
+		if ($input -> get('task') == 'save2copy')
 		{
 			list($title, $alias) = $this->generateNewTitle($data['parent_id'], $data['alias'], $data['title']);
 			$data['title'] = $title;
@@ -1046,7 +1046,7 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 		if (parent::publish($pks, $value)) {
 			// Initialise variables.
 			$dispatcher	= JDispatcher::getInstance();
-			$extension	= JRequest::getCmd('extension');
+			$extension	= JFactory::getApplication() -> input -> getCmd('extension');
 
 			// Include the content plugins for the change of category state event.
 			JPluginHelper::importPlugin('content');
@@ -1465,7 +1465,7 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 	 */
 	protected function cleanCache($group = null, $client_id = 0)
 	{
-		$extension = JRequest::getCmd('extension');
+		$extension = JFactory::getApplication() -> input -> getCmd('extension');
 		switch ($extension)
 		{
 			case 'com_tz_portfolio_plus':

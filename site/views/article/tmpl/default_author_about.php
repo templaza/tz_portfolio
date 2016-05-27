@@ -22,7 +22,7 @@ defined('_JEXEC') or die('Restricted access');
 
 $item           = $this -> item;
 $authorParams   = $this -> item -> params;
-$tmpl           = JRequest::getString('tmpl');
+$tmpl           = JFactory::getApplication() -> input -> getString('tmpl');
 ?>
 
 <?php

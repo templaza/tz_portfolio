@@ -68,13 +68,13 @@ class TZ_Portfolio_PlusModelTags extends JModelList
         $app    = JFactory::getApplication('site');
         $user   = JFactory::getUser();
 
-        $pk = JRequest::getInt('id');
+        $pk = $app -> input -> getInt('id');
         $this -> setState('tags.id',$pk);
 
-        $offset = JRequest::getUInt('limitstart',0);
+        $offset = $app -> input -> getUInt('limitstart',0);
         $this -> setState('offset', $offset);
 
-        $this->setState('list.start', JRequest::getVar('limitstart', 0, '', 'int'));
+        $this->setState('list.start', $app -> input -> getInt('limitstart', 0));
 
         $this -> setState('tags.catid',null);
 
@@ -101,7 +101,7 @@ class TZ_Portfolio_PlusModelTags extends JModelList
         $this -> setState('list.limit',$limit);
 
         $this -> setState('params',$params);
-        $this -> setState('filter.char',JRequest::getString('char',null));
+        $this -> setState('filter.char',$app -> input -> getString('char',null));
 
     }
 

@@ -21,7 +21,7 @@
 defined('_JEXEC') or die;
 
 if (JFactory::getApplication()->isSite()) {
-    JRequest::checkToken('get') or die(JText::_('JINVALID_TOKEN'));
+    JSession::checkToken('get') or jexit(JText::_('JINVALID_TOKEN'));
 }
 
 require_once JPATH_ROOT . '/components/com_tz_portfolio_plus/helpers/route.php';
@@ -32,7 +32,7 @@ JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('formbehavior.chosen', 'select');
 
-$function	= JRequest::getCmd('function', 'jSelectArticle');
+$function	= JFactory::getApplication()->input->getCmd('function', 'jSelectArticle');
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
 ?>

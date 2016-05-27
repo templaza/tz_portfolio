@@ -27,7 +27,7 @@ class TZ_Portfolio_PlusModelTag extends JModelLegacy
         $params = $app -> getParams();
         $this -> setState('params',$params);
 
-        $pk = JRequest::getInt('id');
+        $pk = $app -> input -> getInt('id');
         $this -> setState('article.id',$pk);
         $this -> setState('list.ordering',null);
         $this -> setState('list.direction', null);

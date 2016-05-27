@@ -49,7 +49,7 @@ JHtml::_('behavior.framework');
             <?php endif;?>
 
             <?php if($params -> get('show_limit_box',0)):?>
-            <form action="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&amp;view=users&amp;created_by='.JRequest::getCmd('created_by').'&amp;Itemid='.JRequest::getInt('Itemid'));?>"
+            <form action="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&amp;view=users&amp;created_by='.JFactory::getApplication() -> input -> getCmd('created_by').'&amp;Itemid='.JFactory::getApplication() -> input -> getInt('Itemid'));?>"
                   id="adminForm"
                   name="adminForm"
                   method="post">

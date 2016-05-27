@@ -84,7 +84,7 @@ class TZ_Portfolio_PlusViewForm extends JViewLegacy
 		$this->user		= $user;
 
 		if ($this->params->get('enable_category') == 1) {
-			$catid = JRequest::getInt('catid');
+			$catid = $app -> input -> getInt('catid');
 			$category = JCategories::getInstance('Content')->get($this->params->get('catid', 1));
 			$this->category_title = $category->title;
 		}

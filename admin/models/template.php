@@ -33,7 +33,7 @@ class TZ_Portfolio_PlusModelTemplate extends TZ_Portfolio_PlusModelAddon
     protected function populateState(){
         parent::populateState();
 
-        $this -> setState('template.id',JRequest::getInt('id'));
+        $this -> setState('template.id',JFactory::getApplication() -> input -> getInt('id'));
     }
     public function getTable($type = 'Extensions', $prefix = 'TZ_Portfolio_PlusTable', $config = array())
     {

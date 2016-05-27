@@ -69,7 +69,7 @@ class TZ_Portfolio_PlusHelperUsers
 				$vName == 'notes'
 			);
 
-			$extension = JRequest::getString('extension');
+			$extension = JFactory::getApplication() -> input -> getString('extension');
 			JSubMenuHelper::addEntry(
 				JText::_('COM_USERS_SUBMENU_NOTE_CATEGORIES'),
 				'index.php?option=com_categories&extension=com_users.notes',
@@ -162,7 +162,7 @@ class TZ_Portfolio_PlusHelperUsers
 		// Check for a database error.
 		if ($db->getErrorNum())
 		{
-			JError::raiseNotice(500, $db->getErrorMsg());
+			JFactory::getApplication() -> enqueueMessage($db->getErrorMsg(), 'warning');
 			return null;
 		}
 

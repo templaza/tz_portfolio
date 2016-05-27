@@ -46,47 +46,4 @@ class TZ_Portfolio_PlusControllerTemplates extends JControllerAdmin
 
         return true;
     }
-
-//    public function publish()
-//    {
-//        // Check for request forgeries.
-//        JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-//
-//        $ids    = $this->input->get('cid', array(), 'array');
-//        $values = array('publish' => 1, 'unpublish' => 0);
-//        $task   = $this->getTask();
-//        $value  = JArrayHelper::getValue($values, $task, 0, 'int');
-//        $mtype  = 'message';
-//
-//        if (empty($ids))
-//        {
-//            JError::raiseError(500, JText::_('COM_INSTALLER_ERROR_NO_EXTENSIONS_SELECTED'));
-//        }
-//        else
-//        {
-//            // Get the model.
-//            $model	= $this->getModel();
-//
-//            // Change the state of the records.
-//            if (!$model->publish($ids, $value))
-//            {
-//                JError::raiseError(500, implode('<br />', $model->getErrors()));
-//            }
-//            else
-//            {
-//                if ($value == 1)
-//                {
-//                    $ntext = 'COM_INSTALLER_N_EXTENSIONS_PUBLISHED';
-//                }
-//                elseif ($value == 0)
-//                {
-//                    $ntext = 'COM_INSTALLER_N_EXTENSIONS_UNPUBLISHED';
-//                }
-//
-//                $this->setMessage(JText::plural($ntext, count($ids)));
-//            }
-//        }
-//
-//        $this->setRedirect(JRoute::_('index.php?option=com_tz_portfolio_plus&view=templates', false));
-//    }
 }

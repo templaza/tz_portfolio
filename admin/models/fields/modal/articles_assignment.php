@@ -90,7 +90,8 @@ class JFormFieldModal_Articles_Assignment extends JFormFieldCheckboxes
         // Edit article button
         if ($allowEdit)
         {
-            $script[]   =       'td.innerHTML = "<a class=\"btn\" target=\"_blank\" href=\"index.php?option=com_tz_portfolio_plus&task=article.edit&id="+ids[i]+"\"><span class=\"icon-edit\"></span> ' . JText::_('JACTION_EDIT') . '</a> <a href=\"javascript:\" class=\"btn\" onclick=\"'.$this->id.'Remove(this);\"><i class=\"icon-remove\"></i> '.JText::_('JTOOLBAR_REMOVE').'</a>"';
+            $script[]   =       'td.className ="btn-group";';
+            $script[]   =       'td.innerHTML = "<a class=\"btn btn-small\" target=\"_blank\" href=\"index.php?option=com_tz_portfolio_plus&task=article.edit&id="+ids[i]+"\"><span class=\"icon-edit\"></span> ' . JText::_('JACTION_EDIT') . '</a> <a href=\"javascript:\" class=\"btn btn-small\" onclick=\"'.$this->id.'Remove(this);\"><i class=\"icon-remove\"></i> '.JText::_('JTOOLBAR_REMOVE').'</a>"';
         }
         $script[] =            'tr.appendChild(td);';
 
@@ -157,17 +158,17 @@ class JFormFieldModal_Articles_Assignment extends JFormFieldCheckboxes
             $link .= '&amp;forcedLanguage=' . $this->element['language'];
         }
 
-        $db	= JFactory::getDBO();
-        $db->setQuery(
-            'SELECT title' .
-            ' FROM #__tz_portfolio_plus_content' .
-            ' WHERE id = '.(int) $this->value
-        );
-        $title = $db->loadResult();
+//        $db	= JFactory::getDBO();
+//        $db->setQuery(
+//            'SELECT title' .
+//            ' FROM #__tz_portfolio_plus_content' .
+//            ' WHERE id = '.(int) $this->value
+//        );
+//        $title = $db->loadResult();
 
-        if ($error = $db->getErrorMsg()) {
-            JError::raiseWarning(500, $error);
-        }
+//        if ($error = $db->getErrorMsg()) {
+//            JError::raiseWarning(500, $error);
+//        }
 
         if (empty($title)) {
             $title = JText::_('COM_TZ_PORTFOLIO_PLUS_SELECT_AN_ARTICLE');
@@ -226,9 +227,11 @@ class JFormFieldModal_Articles_Assignment extends JFormFieldCheckboxes
                     <tr>
                         <td><?php echo $item -> title;?></td>
                         <td><?php echo $item -> category_title;?></td>
-                        <td>
-                            <a class="btn" target="_blank" href="index.php?option=com_tz_portfolio_plus&task=article.edit&id=<?php echo $item -> id;?>"><span class="icon-edit"></span> <?php echo JText::_('JACTION_EDIT')?></a>
-                            <a href="javascript:" class="btn" onclick="<?php echo $id;?>Remove(this);"><i class="icon-remove"></i> <?php echo JText::_('JTOOLBAR_REMOVE');?></a>
+                        <td class="btn-group">
+                            <a class="btn btn-small" target="_blank"
+                               href="index.php?option=com_tz_portfolio_plus&task=article.edit&id=<?php echo $item -> id;?>"><span class="icon-edit"></span> <?php echo JText::_('JACTION_EDIT')?></a>
+                            <a href="javascript:" class="btn btn-small"
+                               onclick="<?php echo $id;?>Remove(this);"><i class="icon-remove"></i> <?php echo JText::_('JTOOLBAR_REMOVE');?></a>
                         </td>
                         <td>
                             <?php echo $item -> id;?>

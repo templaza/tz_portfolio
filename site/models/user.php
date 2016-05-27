@@ -24,12 +24,12 @@ jimport('joomla.application.component.model');
 class TZ_Portfolio_PlusModelUser extends JModelLegacy
 {
     function populateState(){
-        $pk = JRequest::getInt('id');
+        $pk = JFactory::getApplication() -> input -> getInt('id');
         $this -> setState('article.id',$pk);
     }
 
     function getUser(){
-        $articleId  = JRequest::getInt('id');
+        $articleId  = JFactory::getApplication() -> input -> getInt('id');
         $query  = 'SELECT u.id,u.name,u.email,tu.images,tu.url,tu.gender,tu.description,'
                       .'tu.twitter,tu.facebook,tu.google_one FROM #__users AS u'
                   .' LEFT JOIN #__tz_portfolio_plus_users AS tu ON tu.usersid=u.id'

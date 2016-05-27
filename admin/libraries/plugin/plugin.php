@@ -183,6 +183,9 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
             JForm::addFormPath(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.'/'.$this -> _type.'/'.$this -> _name.'/admin/models/form');
             JForm::addFormPath(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.'/'.$this -> _type.'/'.$this -> _name.'/admin/models/forms');
 
+            JForm::addFieldPath(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.'/'.$this -> _type.'/'.$this -> _name.'/admin/models/field');
+            JForm::addFieldPath(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.'/'.$this -> _type.'/'.$this -> _name.'/admin/models/fields');
+
             // Load xml form file from above path
             if($viewName == 'article') {
                 $form->loadFile($viewName, false, '/form/fields[@name="attribs"]');
@@ -305,15 +308,20 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
         $html           = null;
         if($model = $this -> getModel()) {
             $model -> set('data', $data);
-            $this->form     = $model->getForm();
+
+            if(method_exists($model, 'getForm')) {
+                $this->form = $model->getForm();
+            }
 
             $this -> item   = $data;
             $path           = TZ_Portfolio_PlusPluginHelper::getLayoutPath($this -> _type, $this -> _name, 'admin');
 
-            ob_start();
-            require_once($path);
-            $html   = ob_get_contents();
-            ob_end_clean();
+            if(JFile::exists($path)) {
+                ob_start();
+                require_once($path);
+                $html = ob_get_contents();
+                ob_end_clean();
+            }
 
         }
         return $html;
@@ -509,123 +517,6 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
             }
         }
     }
-
-//    protected function getView($vName, $layout = null, $article = null, $params = null)
-//    {
-////        if ($article && $article -> type == $this -> _name) {
-//            $plugin_path = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . DIRECTORY_SEPARATOR . $this->_type . DIRECTORY_SEPARATOR
-//                . $this->_name;
-//
-//            // Create view's class
-//            $prefix = 'PlgTZ_Portfolio_Plus' . ucfirst($this->_type) . ucfirst($this->_name);
-//
-//            $doc = JFactory::getDocument();
-//            $vType = $doc->getType();
-//
-//            // Create template path of tz_portfolio_plus
-//            $template = TZ_Portfolio_PlusTemplate::getTemplate(true);
-//            $tplparams = $template->params;
-//
-//            // Create TZ Portfolio Plus template's path
-//            $tpath = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH . DIRECTORY_SEPARATOR . $template->template
-//                . DIRECTORY_SEPARATOR . 'html' . DIRECTORY_SEPARATOR . $tplparams->get('layout', 'default')
-//                . DIRECTORY_SEPARATOR . $vName . DIRECTORY_SEPARATOR . 'plg_' . $this->_type . '_' . $this->_name;
-//
-//            // Create default template of tz_portfolio_plus
-//            $dTemplate = TZ_Portfolio_PlusTemplate::getTemplateDefault();
-//            $defaultPath = null;
-//
-//            if ($template->id != $dTemplate->id) {
-//                $dtplparams = $dTemplate->params;
-//                $defaultPath = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH . DIRECTORY_SEPARATOR . $dTemplate->template
-//                    . DIRECTORY_SEPARATOR . 'html' . DIRECTORY_SEPARATOR . $dtplparams->get('layout', 'default')
-//                    . DIRECTORY_SEPARATOR . $vName . DIRECTORY_SEPARATOR . 'plg_' . $this->_type . '_' . $this->_name;
-//            }
-//
-//            // Merge plugin params and article params
-//            $_params = clone($this->params);
-//            $_params->merge($params);
-//
-//            $controller = new JControllerLegacy(array('name' => $prefix, 'format' => $vType,
-//                'base_path' => $plugin_path));
-//
-//        try{
-//            if ($view = $controller->getView($vName, $vType, $prefix . 'View')) {
-//                $vpaths = $view->get('_path');
-//                $vpaths = $vpaths['template'];
-//                $view->set('_path', array('template' => array()));
-//
-//                $plgVPath = $plugin_path . DIRECTORY_SEPARATOR . 'views'
-//                    . DIRECTORY_SEPARATOR . $vName . DIRECTORY_SEPARATOR . 'tmpl';
-//
-//                if (!in_array($plgVPath, $vpaths)) {
-//                    $view->addTemplatePath($plgVPath);
-//                }
-//
-//                // Add default template path
-//                if ($defaultPath && !in_array($defaultPath, $vpaths)) {
-//                    $view->addTemplatePath($defaultPath);
-//                }
-//
-//                // Create template path from template site
-//                $_template = JFactory::getApplication()->getTemplate();
-//                $tPathSite = JPATH_SITE . '/templates/' . $_template . '/html/com_tz_portfolio_plus/'
-//                    . $vName . '/plg_' . $this->_type . '_' . $this->_name;
-//
-//
-//                if (!$tplparams->get('override_html_template_site', 0)) {
-//                    // Add template path which chosen in menu
-//                    if (!in_array($tpath, $vpaths)) {
-//                        $view->addTemplatePath($tpath);
-//                    }
-//                    if (!in_array($tPathSite, $vpaths)) {
-//                        $view->addTemplatePath($tPathSite);
-//                    }
-//                } else {
-//                    // Add template path from template site
-//                    if (!in_array($tPathSite, $vpaths)) {
-//                        $view->addTemplatePath($tPathSite);
-//                    }
-//                    // Add template path which chosen in menu
-//                    if (!in_array($tpath, $vpaths)) {
-//                        $view->addTemplatePath($tpath);
-//                    }
-//                }
-//
-//                // Get model
-//                $controller->addModelPath($plugin_path . DIRECTORY_SEPARATOR . 'models', $prefix . 'Model');
-//
-//                tzportfolioplusimport('plugin.modelitem');
-//
-//                if ($model = $controller->getModel($vName, $prefix.'Model', array('ignore_request' => true))) {
-//
-//                    // Set params for model
-//                    $model->setState('params', $_params);
-//
-//                    if ($article && !empty($article)) {
-//                        $model -> set('article', $article);
-//                    }
-//
-//                    // Push the model into the view (as default)
-//                    $view->setModel($model, true);
-//                }
-//
-//                if ($layout) {
-//                    $view->setLayout($layout);
-//                }else{
-//                    $view -> setLayout('default');
-//                }
-//
-//                return $view;
-//            }
-//        }
-//        catch(Exception $e){
-//            $this -> setError($e -> getMessage());
-//            return false;
-//        }
-////        }
-//        return false;
-//    }
 
     protected function getModel($name = null, $prefix = null, $config = array('ignore_request' => true))
     {

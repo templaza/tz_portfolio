@@ -157,7 +157,8 @@ class PlgTZ_Portfolio_PlusMediaTypeModelImage extends TZ_Portfolio_PlusPluginMod
         }
 
         // Upload image or image hover
-        if($files = JRequest::getVar('jform','','files')) {
+		$input	= $app -> input;
+        if($files = $input -> files -> get('jform')) {
             $images         = array();
             $images_hover   = array();
             $imageObj       = new JImage();

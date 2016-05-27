@@ -1,11 +1,21 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: duongtvtemplaza
- * Date: 1/22/13
- * Time: 4:19 PM
- * To change this template use File | Settings | File Templates.
- */
+/*------------------------------------------------------------------------
+
+# TZ Portfolio Plus Extension
+
+# ------------------------------------------------------------------------
+
+# author    DuongTVTemPlaza
+
+# copyright Copyright (C) 2015 templaza.com. All Rights Reserved.
+
+# @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
+
+# Websites: http://www.templaza.com
+
+# Technical Support:  Forum - http://templaza.com/Forum
+
+-------------------------------------------------------------------------*/
 
 defined('JPATH_PLATFORM') or die;
 

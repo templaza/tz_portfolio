@@ -39,14 +39,14 @@ class TZ_Portfolio_PlusControllerArticles extends JControllerAdmin
 	 */
 	public function __construct($config = array())
 	{
+		parent::__construct($config);
+		
         JFactory::getLanguage() -> load('com_content');
-        $this -> input  = JFactory::getApplication()->input;
 		// Articles default form can come from the articles or featured view.
 		// Adjust the redirect view on the value of 'view' in the request.
-		if (JRequest::getCmd('view') == 'featured') {
+		if ($this -> input -> getCmd('view') == 'featured') {
 			$this->view_list = 'featured';
 		}
-		parent::__construct($config);
 
 		$this->registerTask('unfeatured',	'featured');
 	}
@@ -61,17 +61,18 @@ class TZ_Portfolio_PlusControllerArticles extends JControllerAdmin
 	public function publish()
 	{
 		// Check for request forgeries
-		JRequest::checkToken() or die(JText::_('JINVALID_TOKEN'));
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
+		$app	= JFactory::getApplication();
 		// Get items to publish from the request.
-		$cid = JRequest::getVar('cid', array(), '', 'array');
-		$data = array('publish' => 1, 'unpublish' => 0, 'archive' => 2, 'trash' => -2, 'report' => -3);
-		$task = $this->getTask();
-		$value = JArrayHelper::getValue($data, $task, 0, 'int');
+		$cid 	= $this -> input -> get('cid', array(), 'array');
+		$data 	= array('publish' => 1, 'unpublish' => 0, 'archive' => 2, 'trash' => -2, 'report' => -3);
+		$task 	= $this->getTask();
+		$value 	= JArrayHelper::getValue($data, $task, 0, 'int');
 
 		if (empty($cid))
 		{
-			JError::raiseWarning(500, JText::_($this->text_prefix . '_NO_ITEM_SELECTED'));
+			$app -> enqueueMessage(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), 'error');
 		}
 		else
 		{
@@ -84,7 +85,7 @@ class TZ_Portfolio_PlusControllerArticles extends JControllerAdmin
 			// Publish the items.
 			if (!$model->publish($cid, $value))
 			{
-				JError::raiseWarning(500, $model->getError());
+				$app -> enqueueMessage($model->getError(), 'error');
 			}
 			else
 			{
@@ -107,8 +108,8 @@ class TZ_Portfolio_PlusControllerArticles extends JControllerAdmin
 				$this->setMessage(JText::plural($ntext, count($cid)));
 			}
 		}
-		$extension = JRequest::getCmd('extension');
-		$extensionURL = ($extension) ? '&extension=' . JRequest::getCmd('extension') : '';
+		$extension = $this -> input -> getCmd('extension');
+		$extensionURL = ($extension) ? '&extension=' . $this -> input -> getCmd('extension') : '';
 		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list . $extensionURL, false));
 	}
 
@@ -121,11 +122,11 @@ class TZ_Portfolio_PlusControllerArticles extends JControllerAdmin
 	function featured()
 	{
 		// Check for request forgeries
-		JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
 		// Initialise variables.
 		$user	= JFactory::getUser();
-		$ids	= JRequest::getVar('cid', array(), '', 'array');
+		$ids	= $this -> input -> get('cid', array(), 'array');
 		$values	= array('featured' => 1, 'unfeatured' => 0);
 		$task	= $this->getTask();
 		$value	= JArrayHelper::getValue($values, $task, 0, 'int');
@@ -136,12 +137,12 @@ class TZ_Portfolio_PlusControllerArticles extends JControllerAdmin
 			if (!$user->authorise('core.edit.state', 'com_tz_portfolio_plus.article.'.(int) $id)) {
 				// Prune items that you can't change.
 				unset($ids[$i]);
-				JError::raiseNotice(403, JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
+				JFactory::getApplication() -> enqueueMessage(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'), 'warning');
 			}
 		}
 
 		if (empty($ids)) {
-			JError::raiseWarning(500, JText::_('JERROR_NO_ITEMS_SELECTED'));
+			JFactory::getApplication() -> enqueueMessage(JText::_('JERROR_NO_ITEMS_SELECTED'), 'error');
 		}
 		else {
 			// Get the model.
@@ -149,7 +150,7 @@ class TZ_Portfolio_PlusControllerArticles extends JControllerAdmin
 
 			// Publish the items.
 			if (!$model->featured($ids, $value)) {
-				JError::raiseWarning(500, $model->getError());
+				JFactory::getApplication() -> enqueueMessage($model->getError(), 'error');
 			}
 		}
 

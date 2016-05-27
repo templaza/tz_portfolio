@@ -41,12 +41,11 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
 	 */
 	public function __construct($config = array())
 	{
-        $this -> input  = JFactory::getApplication() -> input;
 		parent::__construct($config);
 
 		// Guess the JText message prefix. Defaults to the option.
 		if (empty($this->extension)) {
-			$this->extension = JRequest::getCmd('extension', 'com_tz_portfolio_plus');
+			$this->extension = $this -> input -> getCmd('extension', 'com_tz_portfolio_plus');
 		}
 	}
 

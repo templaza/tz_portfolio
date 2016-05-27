@@ -155,7 +155,7 @@ class TZ_Portfolio_PlusControllerArticle extends JControllerForm
 	{
 		// Initialise variables.
 		$user		= JFactory::getUser();
-		$categoryId	= JArrayHelper::getValue($data, 'catid', JRequest::getInt('catid'), 'int');
+		$categoryId	= JArrayHelper::getValue($data, 'catid', $this -> input -> getInt('catid'), 'int');
 		$allow		= null;
 
 		if ($categoryId) {
@@ -281,8 +281,8 @@ class TZ_Portfolio_PlusControllerArticle extends JControllerForm
 	protected function getRedirectToItemAppend($recordId = null, $urlVar = 'a_id')
 	{
 		// Need to override the parent method completely.
-		$tmpl		= JRequest::getCmd('tmpl');
-		$layout		= JRequest::getCmd('layout', 'edit');
+		$tmpl		= $this -> input -> getCmd('tmpl');
+		$layout		= $this -> input -> getCmd('layout', 'edit');
 		$append		= '';
 
 		// Setup redirect info.
@@ -300,9 +300,9 @@ class TZ_Portfolio_PlusControllerArticle extends JControllerForm
 			$append .= '&'.$urlVar.'='.$recordId;
 		}
 
-		$itemId	= JRequest::getInt('Itemid');
+		$itemId	= $this -> input -> getInt('Itemid');
 		$return	= $this->getReturnPage();
-		$catId = JRequest::getInt('catid', null, 'get');
+		$catId = $this -> input -> getInt('catid', null, 'get');
 
 		if ($itemId) {
 			$append .= '&Itemid='.$itemId;
@@ -329,7 +329,7 @@ class TZ_Portfolio_PlusControllerArticle extends JControllerForm
 	 */
 	protected function getReturnPage()
 	{
-		$return = JRequest::getVar('return', null, 'default', 'base64');
+		$return = $this->input->get('return', null, 'base64');
 
 		if (empty($return) || !JUri::isInternal(base64_decode($return))) {
 			return JURI::base();
@@ -385,10 +385,11 @@ class TZ_Portfolio_PlusControllerArticle extends JControllerForm
 
 		// Initialise variables.
 		$app   = JFactory::getApplication();
+		$input = $app -> input;
 		$lang  = JFactory::getLanguage();
 		$model = $this->getModel();
 		$table = $model->getTable();
-		$data  = JRequest::getVar('jform', array(), 'post', 'array');
+		$data  = $input -> post -> get('jform', array(), 'array');
 		$checkin = property_exists($table, 'checked_out');
 		$context = "$this->option.edit.$this->context";
 		$task = $this->getTask();
@@ -405,7 +406,7 @@ class TZ_Portfolio_PlusControllerArticle extends JControllerForm
 			$urlVar = $key;
 		}
 
-		$recordId = JRequest::getInt($urlVar);
+		$recordId = $input -> getInt($urlVar);
 
 		if (!$this->checkEditId($context, $recordId))
 		{

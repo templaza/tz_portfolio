@@ -70,10 +70,10 @@ class TZ_Portfolio_PlusViewCategories extends JViewLegacy
 		//Escape strings for HTML output
 		$this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx'));
 
-		$this->assign('maxLevelcat',	$params->get('maxLevelcat', -1));
-		$this->assignRef('params',		$params);
-		$this->assignRef('parent',		$parent);
-		$this->assignRef('items',		$items);
+		$this->maxLevelcat 	= $params->get('maxLevelcat', -1) < 0 ? PHP_INT_MAX : $params->get('maxLevelcat', PHP_INT_MAX);
+		$this -> params		= $params;
+		$this -> parent		= $parent;
+		$this -> items		= $items;
 
         $doc -> addStyleSheet('components/com_tz_portfolio_plus/css/tzportfolioplus.min.css');
 

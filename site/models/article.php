@@ -48,12 +48,12 @@ class TZ_Portfolio_PlusModelArticle extends JModelItem
 		$app = JFactory::getApplication('site');
 
 		// Load state from the request.
-		$pk = JRequest::getInt('id');
+		$pk = $app -> input -> getInt('id');
 		$this->setState('article.id', $pk);
 
         $this -> setState('article.catid',null);
 
-		$offset = JRequest::getUInt('limitstart');
+		$offset = $app -> input -> getUInt('limitstart');
 		$this->setState('list.offset', $offset);
 
 		// Load the parameters.
@@ -73,7 +73,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelItem
 
     public function download(){
         $query  = 'SELECT * FROM #__tz_portfolio_plus_xref_content'
-                  .' WHERE contentid='.JRequest::getInt('id');
+                  .' WHERE contentid='.JFactory::getApplication() -> input -> getInt('id');
 
         $db     = JFactory::getDbo();
         $db -> setQuery($query);
@@ -90,7 +90,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelItem
         $arr    = explode('///',$rows -> attachfiles);
         if(count($arr)>0){
             foreach($arr as $item){
-                if(md5($item) == JRequest::getCmd('attach')){
+                if(md5($item) == JFactory::getApplication() -> input -> getCmd('attach')){
                     $file   = $item;
                 }
             }
@@ -405,7 +405,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelItem
 	 */
 	public function hit($pk = 0)
 	{
-            $hitcount = JRequest::getInt('hitcount', 1);
+            $hitcount = JFactory::getApplication() -> input -> getInt('hitcount', 1);
 
             if ($hitcount)
             {

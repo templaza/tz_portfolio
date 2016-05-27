@@ -452,8 +452,8 @@ $assoc = JLanguageAssociations::isEnabled();
         </div>
         <div>
             <input type="hidden" name="task" value="" />
-            <input type="hidden" name="return" value="<?php echo JRequest::getCmd('return');?>" />
-            <input type="hidden" name="contentid" id="contentid" value="<?php echo JRequest::getCmd('id');?>">
+            <input type="hidden" name="return" value="<?php echo JFactory::getApplication() -> input -> getCmd('return');?>" />
+            <input type="hidden" name="contentid" id="contentid" value="<?php echo JFactory::getApplication() -> input -> getCmd('id');?>">
             <?php echo JHtml::_('form.token'); ?>
         </div>
     </form>

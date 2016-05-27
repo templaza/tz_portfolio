@@ -26,7 +26,7 @@ class TZ_Portfolio_PlusModelTemplate extends JModelLegacy
 {
     function populateState(){
         parent::populateState();
-        $this -> setState('template.id',JRequest::getInt('id'));
+        $this -> setState('template.id',JFactory::getApplication() -> input -> getInt('id'));
         $this -> setState('content.id',null);
         $this -> setState('category.id',null);
     }

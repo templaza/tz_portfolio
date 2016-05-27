@@ -206,7 +206,7 @@ if(!isset($item -> mediatypes) || (isset($item -> mediatypes) && !in_array($item
 ?>
 
 <?php if($this -> item -> introtext):?>
-    <div class="TzDescription" itemprop="description>
+    <div class="TzDescription" itemprop="description">
     <?php echo $this->item->introtext; ?>
     </div>
 <?php endif;?>

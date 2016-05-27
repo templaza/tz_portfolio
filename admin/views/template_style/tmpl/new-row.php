@@ -19,6 +19,9 @@
 
 define( '_JEXEC', 1 );
 
+// No direct access
+defined('_JEXEC') or die('Restricted access');
+
 define('JPATH_BASE', dirname(dirname(dirname(dirname(dirname(dirname(__FILE__)))))));
 require_once ( JPATH_BASE.'/includes/defines.php' );
 require_once ( JPATH_BASE.'/includes/framework.php' );

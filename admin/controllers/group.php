@@ -41,7 +41,7 @@ class TZ_Portfolio_PlusControllerGroup extends JControllerForm
             $key = $table->getKeyName();
         }
 
-        $recordId = JRequest::getInt($key);
+        $recordId = $this -> input -> getInt($key);
 
         // Clean the session data and redirect.
         $this->releaseEditId($context, $recordId);
@@ -90,12 +90,12 @@ class TZ_Portfolio_PlusControllerGroup extends JControllerForm
                     $error = $this->getError();
                     if ($error)
                     {
-                        JError::raiseWarning(500, $error);
+                        JFactory::getApplication() -> enqueueMessage($error, 'error');
                         return false;
                     }
                     else
                     {
-                        JError::raiseWarning(403, JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'));
+                        JFactory::getApplication() -> enqueueMessage(JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), 'error');
                         return false;
                     }
                 }
@@ -117,7 +117,7 @@ class TZ_Portfolio_PlusControllerGroup extends JControllerForm
     public function save($key = null, $urlVar = null){
 
         // Check for request forgeries.
-        JRequest::checkToken() or die(JText::_('JINVALID_TOKEN'));
+        JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
         $app   = JFactory::getApplication();
         $lang  = JFactory::getLanguage();
@@ -138,8 +138,8 @@ class TZ_Portfolio_PlusControllerGroup extends JControllerForm
             $urlVar = $key;
         }
 
-        $recordId = JRequest::getInt($urlVar);
-        $data  = JRequest::getVar('jform', array(), 'post', 'array');
+        $recordId = $this -> input -> getInt($urlVar);
+        $data  = $this -> input -> post -> get('jform', array(), 'array');
 
         $context = "$this->option.edit.$this->context";
         $task = $this->getTask();

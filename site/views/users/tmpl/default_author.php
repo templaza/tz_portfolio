@@ -22,7 +22,7 @@ defined('_JEXEC') or die('Restricted access');
 
 $item           = $this -> item_author;
 $authorParams   = $this -> params;
-$tmpl           = JRequest::getString('tmpl');
+$tmpl           = JFactory::getApplication() -> input -> getString('tmpl');
 ?>
 
 <?php if($authorParams -> get('show_cat_user',1)):

@@ -131,7 +131,7 @@ class TZ_Portfolio_PlusHelperCategories
         // Check for a database error.
         if ($error = $db->getErrorMsg())
         {
-            JError::raiseWarning(500, $error);
+            JFactory::getApplication()  -> enqueueMessage($error, 'error');
 
             return false;
         }

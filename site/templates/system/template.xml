@@ -8,6 +8,7 @@
     <authorEmail>info@templaza.com</authorEmail>
     <authorUrl>www.templaza.com</authorUrl>
     <copyright>Copyright (C) 2015 TemPlaza. All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
     <description>TZ_PORTFOLIO_PLUS_TPL_XML_DESCRIPTION</description>
     <files>
         <folder>css</folder>

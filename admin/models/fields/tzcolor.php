@@ -17,6 +17,8 @@
 
 -------------------------------------------------------------------------*/
 
+// No direct access
+defined('_JEXEC') or die;
 
 class JFormFieldTZColor extends JFormField
 {
