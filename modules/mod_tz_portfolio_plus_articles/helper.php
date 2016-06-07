@@ -225,7 +225,8 @@ class modTZ_Portfolio_PlusArticlesHelper
 
     protected static function __getArticleByKey($article, $key = 'id')
     {
-        $storeId = md5(__METHOD__ . '::' . $key);
+        $contentId	= JArrayHelper::getColumn($article, $key);
+        $storeId = md5(__METHOD__ . '::' . $key.'::'.implode(',',$contentId));
         if (!isset(modTZ_Portfolio_PlusArticlesHelper::$cache[$storeId])) {
             modTZ_Portfolio_PlusArticlesHelper::$cache[$storeId] = JArrayHelper::getColumn($article, $key);
             return modTZ_Portfolio_PlusArticlesHelper::$cache[$storeId];

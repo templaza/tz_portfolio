@@ -10,6 +10,12 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 	
+06/07/2016 - 1.0.2
+	
+	- Fix error select tags with layout portfolio of module mod_tz_portfolio_plus_articles.
+	- Fix error upload image with add-ons: image, image gallery of v1.0.1
+	- New feature: Preset for template style.
+	
 05/27/2016 - 1.0.1
 	
 	- Fix errors with view categories:

@@ -370,15 +370,6 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
                         return $html;
                     }
                 }else {
-//                    if ($view = $this->getView($vName, $layout, $article, $params)) {
-//                        // Display html
-//                        ob_start();
-//                        $view->display();
-//                        $html = ob_get_contents();
-//                        ob_end_clean();
-//                        $html = trim($html);
-//                        return $html;
-//                    }
 
                     tzportfolioplusimport('plugin.modelitem');
 
@@ -561,7 +552,9 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
     public function onContentAfterSave($context, $data, $isnew){
         if($context == 'com_tz_portfolio_plus.article') {
             if($model  = $this -> getModel()) {
-                $model->save($data);
+                if(method_exists($model,'save')) {
+                    $model->save($data);
+                }
             }
         }
 
@@ -570,7 +563,9 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
     public function onContentAfterDelete($context, $table){
         if($context == 'com_tz_portfolio_plus.article') {
             if($model  = $this -> getModel()) {
-                $model->delete($table);
+                if(method_exists($model,'delete')) {
+                    $model->delete($table);
+                }
             }
         }
     }

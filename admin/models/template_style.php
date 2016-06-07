@@ -234,6 +234,13 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
         $categoriesAssignment       = null;
         $categoriesAssignmentOld    = null;
 
+        $presets                    = null;
+
+        if($data && isset($data['presets'])){
+            $presets    = $data['presets'];
+            unset($data['presets']);
+        }
+
         $data['layout'] = '';
         if(isset($post['jform']['attrib']) && $attrib = $post['jform']['attrib']){
             $data['layout'] = json_encode($attrib);
@@ -503,6 +510,59 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
             $db->setQuery($query);
             $db->execute();
 
+            // Save preset
+            if($presets){
+                if(is_array($presets) && count($presets)){
+                    $presets    = array_filter($presets);
+                    if(count($presets) && isset($presets['name'])){
+                        $name   = trim($presets['name']);
+                        if($name && !empty($name)) {
+
+                            $preset_name            = JApplication::stringURLSafe($name);
+                            $tpl_base_path          = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH
+                                .DIRECTORY_SEPARATOR. $table -> template;
+
+                            while(JFile::exists($tpl_base_path.DIRECTORY_SEPARATOR.'config'
+                                .DIRECTORY_SEPARATOR.$preset_name.'.json')){
+                                $preset_name    = JString::increment($preset_name,'dash');
+                            }
+
+                            if(isset($presets['image']) && $presets['image']){
+                                $image_path = JPATH_ROOT.DIRECTORY_SEPARATOR.$presets['image'];
+                                if(JFile::exists($image_path)){
+                                    $image_name = $preset_name.'.'.JFile::getExt($image_path);
+                                    if(JFile::copy($image_path, COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH
+                                        .DIRECTORY_SEPARATOR. $table -> template.DIRECTORY_SEPARATOR
+                                        .'images'.DIRECTORY_SEPARATOR.'presets'
+                                        .DIRECTORY_SEPARATOR.$image_name)){
+                                        $presets['image']   = 'templates/'.$table -> template
+                                            .'/images/presets/'.$image_name;
+                                    }
+                                }
+                            }
+
+                            $presets['name']        = $preset_name;
+                            $preset_value           = new stdClass();
+                            $preset_value->layout   = $table->layout;
+                            $preset_value->params   = $table->params;
+                            $preset_value->presets  = $presets;
+
+                            $path   = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH
+                                .'/'.$table -> template.'/config/'.$preset_name.'.json';
+                            $preset_value   = json_encode($preset_value);
+                            if(JFile::write($path,$preset_value)){
+                                $query  = $db -> getQuery(true)
+                                    -> update('#__tz_portfolio_plus_templates')
+                                    -> set('preset='.$db -> quote($preset_name))
+                                    -> where('id='.$table -> id);
+                                $db -> setQuery($query);
+                                $db -> execute();
+                            }
+                        }
+                    }
+                }
+            }
+
             // Clean the cache.
             $this->cleanCache();
 
@@ -531,7 +591,7 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
         $item   = $this -> getItem();
         $params = $item -> layout;
         if(empty($params)){
-            $pathfile   = JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/views/template/tmpl/default.json';
+            $pathfile   = JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/views/template_style/tmpl/default.json';
             if(JFile::exists($pathfile)){
                 $string     = file_get_contents($pathfile);
                 return json_decode($string);
@@ -780,5 +840,177 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
             }
         }
         return (int) $templateId;
+    }
+
+    public function getPresets(){
+        if($item   = $this -> getItem()){
+            $test   = new stdClass();
+            $test -> demo_link      = 'http://tzportfolio.com/download/addons/tz_membership/downloadinfo/5-image-gallery-addon.html';
+            $test -> name     = "test";
+            $test -> image   = "powered_by.png";
+
+            $path   = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH.DIRECTORY_SEPARATOR.$item -> template
+                .DIRECTORY_SEPARATOR.'config';
+            if(JFolder::exists($path)){
+                $files  = JFolder::files($path,'.json',true,false,array('.json'));
+                if(count($files)){
+                    $items  = array();
+                    foreach($files as $i => $file){
+                        if($data       = JFile::read($path.DIRECTORY_SEPARATOR.$file)) {
+                            $config = json_decode($data);
+                            $items[] = $config->presets;
+                        }
+
+                    }
+                    if(count($items)) {
+                        return $items;
+                    }
+                }
+            }
+        }
+    }
+
+    public function loadPreset($data){
+        if($data && isset($data['preset'])){
+            $preset_name    = $data['preset'];
+            $path           = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH.DIRECTORY_SEPARATOR.$data['template']
+                .DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.$preset_name.'.json';
+            if(JFile::exists($path)){
+                $dispatcher = JEventDispatcher::getInstance();
+                $table      = $this->getTable();
+                $config     = JFile::read($path);
+                $config     = json_decode($config);
+                $key        = $table->getKeyName();
+                $pk         = (!empty($data[$key])) ? $data[$key] : (int) $this->getState($this->getName() . '.id');
+
+                $data['layout'] = $config -> layout;
+                $data['params'] = $config -> params;
+
+                // Allow an exception to be thrown.
+                try
+                {
+                    // Load the row if saving an existing record.
+                    if ($pk > 0)
+                    {
+                        $table->load($pk);
+                        $isNew = false;
+                    }
+
+                    // Bind the data.
+                    if (!$table->bind($data))
+                    {
+                        $this->setError($table->getError());
+
+                        return false;
+                    }
+
+                    // Prepare the row for saving
+                    $this->prepareTable($table);
+
+                    // Check the data.
+                    if (!$table->check())
+                    {
+                        $this->setError($table->getError());
+                        return false;
+                    }
+
+                    // Trigger the onContentBeforeSave event.
+                    $result = $dispatcher->trigger($this->event_before_save, array($this->option . '.' . $this->name, $table, $isNew));
+
+                    if (in_array(false, $result, true))
+                    {
+                        $this->setError($table->getError());
+                        return false;
+                    }
+
+                    // Store the data.
+                    if (!$table->store())
+                    {
+                        $this->setError($table->getError());
+                        return false;
+                    }
+                }
+                catch (Exception $e)
+                {
+                    $this->setError($e->getMessage());
+
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public function removePreset($data){
+        if($data && isset($data['preset'])){
+            $preset_name    = $data['preset'];
+            $path           = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH.DIRECTORY_SEPARATOR.$data['template']
+                .DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.$preset_name.'.json';
+            if(JFile::exists($path)){
+                // Remove file
+                if(JFile::delete($path)){
+                    $dispatcher = JEventDispatcher::getInstance();
+                    $table      = $this->getTable();
+                    $key        = $table->getKeyName();
+                    $pk         = (!empty($data[$key])) ? $data[$key] : (int) $this->getState($this->getName() . '.id');
+
+                    $_data['id']        = $pk;
+                    $_data['preset']    = '';
+
+                    // Allow an exception to be thrown.
+                    try
+                    {
+
+                        // Load the row if saving an existing record.
+                        if ($pk > 0)
+                        {
+                            $table->load($pk);
+                            $isNew  = false;
+                        }
+
+                        // Bind the data.
+                        if (!$table->bind($_data))
+                        {
+                            $this->setError($table->getError());
+
+                            return false;
+                        }
+
+                        // Prepare the row for saving
+                        $this->prepareTable($table);
+
+                        // Check the data.
+                        if (!$table->check())
+                        {
+                            $this->setError($table->getError());
+                            return false;
+                        }
+
+                        // Trigger the onContentBeforeSave event.
+                        $result = $dispatcher->trigger($this->event_before_save, array($this->option . '.' . $this->name, $table, $isNew));
+
+                        if (in_array(false, $result, true))
+                        {
+                            $this->setError($table->getError());
+                            return false;
+                        }
+
+                        // Store the data.
+                        if (!$table->store())
+                        {
+                            $this->setError($table->getError());
+                            return false;
+                        }
+                    }
+                    catch (Exception $e)
+                    {
+                        $this->setError($e->getMessage());
+
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 }

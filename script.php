@@ -161,9 +161,31 @@ class com_tz_portfolio_plusInstallerScript{
             }
         }
 
+
+        // Reinstall for add-ons to update version
+        JLoader::import('com_tz_portfolio_plus.libraries.installer',JPATH_ADMINISTRATOR
+            .DIRECTORY_SEPARATOR.'components');
+        $tzInstaller    = TZ_Portfolio_PlusInstaller::getInstance();
+        $addon_cores    = array('content' => 'vote',
+            'extrafields' => array('checkboxes','dropdownlist','multipleselect', 'radio', 'text', 'textarea'),
+            'mediatype' => 'image',
+            'user' => 'profile');
+        foreach($addon_cores as $type => $addon) {
+            $addon_path = $src . '/site/addons/'.$type;
+            if(is_array($addon)){
+                foreach($addon as $value) {
+                    $tzInstaller->install($addon_path.'/' . $value);
+                }
+            }else{
+                $tzInstaller -> install($addon_path.'/'.$addon);
+            }
+        }
+        // End reinstall for add-ons to update version
+
         $this -> installationResult($status);
 
     }
+
     function install($parent)
     {
         $this -> install_new    = true;
@@ -261,6 +283,20 @@ class com_tz_portfolio_plusInstallerScript{
             $installer  = JInstaller::getInstance();
             $sql        = $adapter -> getParent() -> manifest;
             $installer ->parseSQLFiles($sql -> install->sql);
+        }
+
+        $fields = $db -> getTableColumns('#__tz_portfolio_plus_templates');
+        if(!array_key_exists('preset',$fields)){
+            $arr[]  = 'ADD `preset` VARCHAR( 255 ) NOT NULL';
+        }
+
+        if($arr && count($arr)>0){
+            $arr    = implode(',',$arr);
+            if($arr){
+                $query  = 'ALTER TABLE `#__tz_portfolio_plus_templates` '.$arr;
+                $db -> setQuery($query);
+                $db -> execute();
+            }
         }
     }
 
