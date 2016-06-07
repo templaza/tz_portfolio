@@ -94,6 +94,10 @@ class TZ_Portfolio_PlusModelAddon_Data extends JModelAdmin{
 
     protected function loadFormData()
     {
+        // Check the session for previously entered form data.
+        $app    = JFactory::getApplication();
+        $data   = $app->getUserState('com_tz_portfolio_plus.edit.'.$this -> getName().'.data', array());
+
         if (empty($data)) {
             $data           = $this->getItem();
             if(is_string($data)){
