@@ -100,7 +100,7 @@ class TZ_Portfolio_PlusModelAddon_Data extends JModelAdmin{
 
         if (empty($data)) {
             $data           = $this->getItem();
-            if(is_string($data)){
+            if($data && isset($data -> value) && is_string($data -> value)){
                 $data -> value  = json_decode($data -> value);
             }
         }

@@ -10,6 +10,10 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 	
+06/09/2016 - 1.0.3
+	
+	- Fix error upload image from server with add-on image of v1.0.2
+	
 06/07/2016 - 1.0.2
 	
 	- Fix error select tags with layout portfolio of module mod_tz_portfolio_plus_articles.
