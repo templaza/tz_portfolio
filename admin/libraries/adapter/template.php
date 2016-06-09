@@ -26,20 +26,18 @@ class TZ_Portfolio_PlusInstallerAdapterTemplate extends JInstallerAdapterTemplat
     public function __construct(JInstaller $parent, JDatabaseDriver $db, array $options = array())
     {
 
-        // Get a generic JTableExtension instance for use if not already loaded
-        if (!($this->extension instanceof JTableInterface))
-        {
-            $this->extension = JTable::getInstance('Extensions','TZ_Portfolio_PlusTable');
-            $this -> extension -> extension_id  = $this -> extension -> id;
-        }
-
-        // Sanity check, make sure the type is set by taking the adapter name from the class name
-        if (!$this->type)
-        {
-            $this->type = 'tz_portfolio_plus-'.strtolower(str_replace('TZ_Portfolio_PlusInstallerAdapter', '', get_called_class()));
-        }
-
         parent::__construct($parent, $db, $options);
+
+        // Get a generic TZ_Portfolio_PlusTableExtension instance for use if not already loaded
+        if (!($this->extension instanceof TZ_Portfolio_PlusTableExtensions)) {
+            JTable::addIncludePath(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH . DIRECTORY_SEPARATOR . 'tables');
+            $this->extension = JTable::getInstance('Extensions', 'TZ_Portfolio_PlusTable');
+        }
+
+        if(is_object($this -> extension) && isset($this -> extension -> id)) {
+            $this->extension->extension_id = $this->extension->id;
+        }
+        $this->type = 'tz_portfolio_plus-'.strtolower(str_replace('TZ_Portfolio_PlusInstallerAdapter', '', get_called_class()));
     }
 
     protected function checkExistingExtension()
@@ -70,29 +68,6 @@ class TZ_Portfolio_PlusInstallerAdapterTemplate extends JInstallerAdapterTemplat
 
     protected function setupInstallPaths()
     {
-//        // Get the client application target
-//        $cname = (string) $this->getManifest()->attributes()->client;
-//
-//        if ($cname)
-//        {
-//            // Attempt to map the client to a base path
-//            $client = JApplicationHelper::getClientInfo($cname, true);
-//
-//            if ($client === false)
-//            {
-//                throw new RuntimeException(JText::sprintf('JLIB_INSTALLER_ABORT_TPL_INSTALL_UNKNOWN_CLIENT', $cname));
-//            }
-//
-//            $basePath = $client->path;
-//            $this->clientId = $client->id;
-//        }
-//        else
-//        {
-//            // No client attribute was found so we assume the site as the client
-//            $basePath = JPATH_SITE;
-//            $this->clientId = 0;
-//        }
-
         // Set the template root path
         if (empty($this->element))
         {

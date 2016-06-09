@@ -25,35 +25,23 @@ class TZ_Portfolio_PlusInstallerAdapterPlugin extends JInstallerAdapterPlugin{
     public function __construct(JInstaller $parent, JDatabaseDriver $db, array $options = array())
     {
 
-        // Get a generic JTableExtension instance for use if not already loaded
-        if (!($this->extension instanceof JTableInterface))
-        {
-            $this->extension = JTable::getInstance('Extensions','TZ_Portfolio_PlusTable');
-            $this -> extension -> extension_id  = $this -> extension -> id;
-        }
-
-        // Sanity check, make sure the type is set by taking the adapter name from the class name
-        if (!$this->type)
-        {
-            $this->type = 'tz_portfolio_plus-'.strtolower(str_replace('TZ_Portfolio_PlusInstallerAdapter', '', get_called_class()));
-        }
-
         parent::__construct($parent, $db, $options);
+
+        // Get a generic TZ_Portfolio_PlusTableExtension instance for use if not already loaded
+        if (!($this->extension instanceof TZ_Portfolio_PlusTableExtensions)) {
+            JTable::addIncludePath(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH . DIRECTORY_SEPARATOR . 'tables');
+            $this->extension = JTable::getInstance('Extensions', 'TZ_Portfolio_PlusTable');
+        }
+
+        if (is_object($this->extension) && isset($this->extension->id)) {
+            $this->extension->extension_id = $this->extension->id;
+        }
+
+        $this->type = 'tz_portfolio_plus-'.strtolower(str_replace('TZ_Portfolio_PlusInstallerAdapter', '', get_called_class()));
     }
 
     protected function setupInstallPaths()
     {
-//        $this->group = (string) $this->getManifest()->attributes()->group;
-//
-//        if (empty($this->element) && empty($this->group))
-//        {
-//            throw new RuntimeException(
-//                JText::sprintf(
-//                    'JLIB_INSTALLER_ABORT_PLG_INSTALL_NO_FILE',
-//                    JText::_('JLIB_INSTALLER_' . $this->route)
-//                )
-//            );
-//        }
         parent::setupInstallPaths();
 
         $this->parent->setPath('extension_root', COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/' . $this->group . '/' . $this->element);

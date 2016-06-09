@@ -437,45 +437,6 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
             }
         }
 
-//        JPluginHelper::importPlugin('tz_portfolio_plus_mediatype');
-//        if($plugins = JPluginHelper::getPlugin('tz_portfolio_plus_mediatype')){
-//            $field  = $form ->getField('type',null);
-//            $xml  = $form -> getXml();
-////            $form -> setFieldAttribute('type','option','test');
-//            var_dump($xml); die();
-//            foreach($plugins as $plugin){
-//            }
-//        }
-
-//        $xml        = $form -> getXml();
-//        if($fieldsets = $xml -> fields -> fieldset) {
-//            $xmlstr = array();
-//
-//            for($j = 0; $j <count($fieldsets); $j ++) {
-//                $fieldset   = $fieldsets[$j];
-//                $attributes = $fieldset -> attributes();
-//
-//                $xmlstr[]   = '<fields name="'.((string) $attributes['name']).'">';
-//
-//                if($fieldset -> field && count($fieldset -> field)){
-//                    for($i = 0; $i < count($fieldset -> field); $i ++){
-//                        $field      = $fieldset -> field[$i];
-//                        $_field     = clone($field);
-//                        $xmlstr[]   = $_field -> asXML();
-//                        $name       = (string) $field -> attributes()['name'];
-//                        $form -> removeField($name,'media');
-//                    }
-//                }
-//
-//                $xmlstr[]   = '</fields>';
-//            }
-//
-//            if(count($xmlstr)){
-//                $xmlstr = '<form><fields name="media">'.implode('',$xmlstr).'</fields></form>';
-//                $form -> load($xmlstr);
-//            }
-//        }
-
         return $form;
     }
 
@@ -537,12 +498,6 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
         $pk = (int) $this->getState($this->getName() . '.id');
         return TZ_Portfolio_PlusHelperTags::getTagTitlesByArticleId($pk);
     }
-
-//    public function validate($form, $data, $group = null)
-//    {
-//        $return = parent::validate($form,$data,$group);
-//        var_dump($form); die();
-//    }
 
     /**
      * Method to save the form data.
@@ -1015,14 +970,6 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
                 }
             }
         }
-
-//        if($plugins = JPluginHelper::getPlugin('tz_portfolio_plus_mediatype')){
-//            $lang   = JFactory::getLanguage();
-//            foreach($plugins as $plugin){
-//                $lang -> load('plg_tz_portfolio_plus_mediatype_'.$plugin -> name,JPATH_ADMINISTRATOR);
-//                $field_type -> addChild('option',JText::_('PLG_TZ_PORTFOLIO_PLUS_MEDIATYPE_'.strtoupper($plugin -> name).'_TITLE'))->addAttribute('value',$plugin -> name);
-//            }
-//        }
 
         parent::preprocessForm($form, $data, $group);
     }

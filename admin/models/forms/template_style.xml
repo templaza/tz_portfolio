@@ -25,6 +25,8 @@
         <field type="modal_articles_assignment" name="articles_assignment"
                edit = "true"
                label="COM_TZ_PORTFOLIO_PLUS_ARTICLES_ASSIGNMENT"/>
+
+        <field type="hidden" name="preset"/>
     </fieldset>
 
     <fields name="params">
@@ -44,5 +46,16 @@
         </fieldset>
         <fieldset name="advanced" label="JGLOBAL_FIELDSET_ADVANCED">
         </fieldset>
+    </fields>
+
+    <fields name="presets">
+        <field type="text" name="name"
+               label="COM_TZ_PORTFOLIO_PLUS_NAME"/>
+        <field type="media" name="image"
+               label="COM_TZ_PORTFOLIO_PLUS_FORM_IMAGE"/>
+        <field type="text" name="demo_link"
+               label="COM_TZ_PORTFOLIO_PLUS_DEMO_LINK_LABEL"/>
+        <field type="text" name="doc_link"
+               label="COM_TZ_PORTFOLIO_PLUS_DOCUMENT_LINK_LABEL"/>
     </fields>
 </form>

@@ -44,7 +44,7 @@ class TZ_Portfolio_PlusModelAddon_Data extends JModelAdmin{
         parent::__construct($config);
     }
 
-    function populateState(){
+    protected function populateState(){
 
         $addon_id   = JFactory::getApplication()->input->getInt('addon_id');
         $this -> setState($this -> getName().'.addon_id',$addon_id);
@@ -87,13 +87,6 @@ class TZ_Portfolio_PlusModelAddon_Data extends JModelAdmin{
         return $form;
     }
 
-//    public function validate($form, $data, $group = null)
-//    {
-//        if($data = parent::validate($form, $data, $group)){
-//        }
-//        return $data;
-//    }
-
     public function getTable($type = 'Addon_Data', $prefix = 'TZ_Portfolio_PlusTable', $config = array())
     {
         return JTable::getInstance($type, $prefix, $config);
@@ -101,9 +94,15 @@ class TZ_Portfolio_PlusModelAddon_Data extends JModelAdmin{
 
     protected function loadFormData()
     {
+        // Check the session for previously entered form data.
+        $app    = JFactory::getApplication();
+        $data   = $app->getUserState('com_tz_portfolio_plus.edit.'.$this -> getName().'.data', array());
+
         if (empty($data)) {
             $data           = $this->getItem();
-            $data -> value  = json_decode($data -> value);
+            if(is_string($data)){
+                $data -> value  = json_decode($data -> value);
+            }
         }
 
         return $data;

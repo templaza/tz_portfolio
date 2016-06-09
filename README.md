@@ -4,11 +4,17 @@ TZ Portfolio is a really good portfolio developing extensions for Joomla that al
 
 Plus it has all layouts and multi-categories you would need for a portfolio with two basic views: Portfolio and Single Article view.
 
-Documentation: http://www.tzportfolio.com/docs/
+Documentation: http://tzportfolio.com/document.html
 
 Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
+	
+06/07/2016 - 1.0.2
+	
+	- Fix error select tags with layout portfolio of module mod_tz_portfolio_plus_articles.
+	- Fix error upload image with add-ons: image, image gallery of v1.0.1
+	- New feature: Preset for template style.
 	
 05/27/2016 - 1.0.1
 	

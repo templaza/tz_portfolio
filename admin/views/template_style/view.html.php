@@ -28,6 +28,7 @@ class TZ_Portfolio_PlusViewTemplate_Style extends JViewLegacy
     protected $form         = null;
     protected $childrens    = null;
     protected $includeTypes = null;
+    protected $presets      = null;
 
     public function display($tpl=null)
     {
@@ -39,6 +40,7 @@ class TZ_Portfolio_PlusViewTemplate_Style extends JViewLegacy
         $this -> item       = $this -> get('Item');
         $this -> tzlayout   = $this -> get('TZLayout');
         $this -> form       = $this -> get('Form');
+        $this -> presets    = $this -> get('Presets');
 
         if($includeTypes = TZ_Portfolio_PlusPluginHelper::getContentTypes()) {
             $this->includeTypes = $includeTypes;

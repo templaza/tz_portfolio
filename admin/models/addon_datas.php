@@ -26,7 +26,7 @@ class TZ_Portfolio_PlusModelAddon_Datas extends JModelList{
 
     protected $addon_element   = null;
 
-    function populateState($ordering = null, $direction = null){
+    protected function populateState($ordering = null, $direction = null){
         $addon_id   = JFactory::getApplication()->input->getInt('addon_id');
         $this -> setState($this -> getName().'.addon_id',$addon_id);
 

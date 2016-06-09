@@ -157,31 +157,30 @@ class PlgTZ_Portfolio_PlusMediaTypeModelImage extends TZ_Portfolio_PlusPluginMod
         }
 
         // Upload image or image hover
-		$input	= $app -> input;
-        if($files = $input -> files -> get('jform')) {
+        if($files = $input -> files -> get('jform', array(), 'array')) {
             $images         = array();
             $images_hover   = array();
             $imageObj       = new JImage();
 
-            if(isset($files['name']) && isset($files['name']['media'])
-                && isset($files['name']['media']['image'])){
+            if(isset($files['media']) && isset($files['media']['image'])){
+                $files  = $files['media']['image'];
 
                 // Get image from form
-                if(isset($files['name']['media']['image']['url_client'])) {
-                    $images['name'] = $files['name']['media']['image']['url_client'];
-                    $images['type'] = $files['type']['media']['image']['url_client'];
-                    $images['tmp_name'] = $files['tmp_name']['media']['image']['url_client'];
-                    $images['error'] = $files['error']['media']['image']['url_client'];
-                    $images['size'] = $files['size']['media']['image']['url_client'];
+                if(isset($files['url_client']['name']) && !empty($files['url_client']['name'])) {
+                    $images['name'] = $files['url_client']['name'];
+                    $images['type'] = $files['url_client']['type'];
+                    $images['tmp_name'] = $files['url_client']['tmp_name'];
+                    $images['error'] = $files['url_client']['error'];
+                    $images['size'] = $files['url_client']['size'];
                 }
 
                 // Get image hover data from form
-                if(isset($files['name']['media']['image']['url_hover_client'])) {
-                    $images_hover['name']       = $files['name']['media']['image']['url_hover_client'];
-                    $images_hover['type']       = $files['type']['media']['image']['url_hover_client'];
-                    $images_hover['tmp_name']   = $files['tmp_name']['media']['image']['url_hover_client'];
-                    $images_hover['error']      = $files['error']['media']['image']['url_hover_client'];
-                    $images_hover['size']       = $files['size']['media']['image']['url_hover_client'];
+                if(isset($files['url_hover_client']['name']) && !empty($files['url_hover_client']['name'])) {
+                    $images_hover['name']       = $files['url_hover_client']['name'];
+                    $images_hover['type']       = $files['url_hover_client']['type'];
+                    $images_hover['tmp_name']   = $files['url_hover_client']['tmp_name'];
+                    $images_hover['error']      = $files['url_hover_client']['error'];
+                    $images_hover['size']       = $files['url_hover_client']['size'];
                 }
             }
 
