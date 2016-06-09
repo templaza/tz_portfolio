@@ -156,271 +156,263 @@ class PlgTZ_Portfolio_PlusMediaTypeModelImage extends TZ_Portfolio_PlusPluginMod
             unset($image_data['url_hover']);
         }
 
+        $images         = array();
+        $images_hover   = array();
+        $imageObj       = new JImage();
+
         // Upload image or image hover
         if($files = $input -> files -> get('jform', array(), 'array')) {
-            $images         = array();
-            $images_hover   = array();
-            $imageObj       = new JImage();
 
             if(isset($files['media']) && isset($files['media']['image'])){
                 $files  = $files['media']['image'];
 
                 // Get image from form
                 if(isset($files['url_client']['name']) && !empty($files['url_client']['name'])) {
-                    $images['name'] = $files['url_client']['name'];
-                    $images['type'] = $files['url_client']['type'];
-                    $images['tmp_name'] = $files['url_client']['tmp_name'];
-                    $images['error'] = $files['url_client']['error'];
-                    $images['size'] = $files['url_client']['size'];
+                    $images = $files['url_client'];
                 }
 
                 // Get image hover data from form
                 if(isset($files['url_hover_client']['name']) && !empty($files['url_hover_client']['name'])) {
-                    $images_hover['name']       = $files['url_hover_client']['name'];
-                    $images_hover['type']       = $files['url_hover_client']['type'];
-                    $images_hover['tmp_name']   = $files['url_hover_client']['tmp_name'];
-                    $images_hover['error']      = $files['url_hover_client']['error'];
-                    $images_hover['size']       = $files['url_hover_client']['size'];
+                    $images_hover    = $files['url_hover_client'];
                 }
             }
+        }
 
             $path               = '';
             $path_hover         = '';
 
-            if(count($images) || count($images_hover)) {
-                jimport('joomla.filesystem.file');
+            jimport('joomla.filesystem.file');
 
-                $imageType              = null;
-                $imageMimeType          = null;
-                $imageSize              = null;
-                $image_hoverType        = null;
-                $image_hoverMimeType    = null;
-                $image_hoverSize        = null;
+            $imageType              = null;
+            $imageMimeType          = null;
+            $imageSize              = null;
+            $image_hoverType        = null;
+            $image_hoverMimeType    = null;
+            $image_hoverSize        = null;
 
-                // Create original image with new name (upload from client)
-                if(count($images) && !empty($images['tmp_name'])) {
+            // Create original image with new name (upload from client)
+            if(count($images) && !empty($images['tmp_name'])) {
 
-                    // Get image file type
-                    $imageType  = JFile::getExt($images['name']);
-                    $imageType  = strtolower($imageType);
+                // Get image file type
+                $imageType  = JFile::getExt($images['name']);
+                $imageType  = strtolower($imageType);
 
-                    // Get image's mime type
-                    $imageMimeType  = $images['type'];
+                // Get image's mime type
+                $imageMimeType  = $images['type'];
 
-                    // Get image's size
-                    $imageSize  = $images['size'];
+                // Get image's size
+                $imageSize  = $images['size'];
 
-                    $path   = COM_TZ_PORTFOLIO_PLUS_MEDIA_ARTICLE_ROOT.DIRECTORY_SEPARATOR;
-                    $path  .=  $data -> alias . '-' . $data -> id . '_o';
-                    $path  .= '.' . JFile::getExt($images['name']);
+                $path   = COM_TZ_PORTFOLIO_PLUS_MEDIA_ARTICLE_ROOT.DIRECTORY_SEPARATOR;
+                $path  .=  $data -> alias . '-' . $data -> id . '_o';
+                $path  .= '.' . JFile::getExt($images['name']);
 
-                    if($input -> getCmd('task') == 'save2copy' && $input -> getInt('id')){
-                        $image_data['url_server']   = null;
-                    }
-                }elseif(isset($image_data['url_server'])
-                    && !empty($image_data['url_server'])){ // Create original image with new name (upload from server)
+                if($input -> getCmd('task') == 'save2copy' && $input -> getInt('id')){
+                    $image_data['url_server']   = null;
+                }
+            }elseif(isset($image_data['url_server'])
+                && !empty($image_data['url_server'])){ // Create original image with new name (upload from server)
 
-                    // Get image file type
-                    $imageType  = JFile::getExt($image_data['url_server']);
-                    $imageType  = strtolower($imageType);
+                // Get image file type
+                $imageType  = JFile::getExt($image_data['url_server']);
+                $imageType  = strtolower($imageType);
 
-                    // Get image's mime type
-                    $imageObj -> loadFile(JPATH_ROOT . DIRECTORY_SEPARATOR
-                        . $image_data['url_server']);
-                    $imageMimeType  = $imageObj->getImageFileProperties($imageObj->getPath());
-                    $imageMimeType  = $imageMimeType -> mime;
+                // Get image's mime type
+                $imageObj -> loadFile(JPATH_ROOT . DIRECTORY_SEPARATOR
+                    . $image_data['url_server']);
+                $imageMimeType  = $imageObj->getImageFileProperties($imageObj->getPath());
+                $imageMimeType  = $imageMimeType -> mime;
 
-                    // Get image's size
-                    $imageSize  = $imageMimeType -> filesize;
+                // Get image's size
+                $imageSize  = $imageMimeType -> filesize;
 
-                    $path   = COM_TZ_PORTFOLIO_PLUS_MEDIA_ARTICLE_ROOT.DIRECTORY_SEPARATOR;
-                    $path  .=  $data -> alias . '-' . $data -> id . '_o';
-                    $path  .= '.' . JFile::getExt($image_data['url_server']);
+                $path   = COM_TZ_PORTFOLIO_PLUS_MEDIA_ARTICLE_ROOT.DIRECTORY_SEPARATOR;
+                $path  .=  $data -> alias . '-' . $data -> id . '_o';
+                $path  .= '.' . JFile::getExt($image_data['url_server']);
+            }
+
+            // Create original image hover with new name (upload from client)
+            if(count($images_hover) && !empty($images_hover['tmp_name'])) {
+
+                // Get image hover file type
+                $image_hoverType  = JFile::getExt($images_hover['name']);
+                $image_hoverType  = strtolower($image_hoverType);
+
+                // Get image hover's mime type
+                $image_hoverMimeType    = $images_hover['type'];
+
+                // Get image's size
+                $image_hoverSize    = $images_hover['size'];
+
+                $path_hover     = COM_TZ_PORTFOLIO_PLUS_MEDIA_ARTICLE_ROOT.DIRECTORY_SEPARATOR;
+                $path_hover    .= $data -> alias . '-' . $data -> id . '-h_o';
+                $path_hover    .= '.' . JFile::getExt($images_hover['name']);
+
+                if($input -> getCmd('task') == 'save2copy' && $input -> getInt('id')){
+                    $image_data['url_hover_server']   = null;
+                }
+            }elseif(isset($image_data['url_hover_server'])
+                && !empty($image_data['url_hover_server'])){ // Create original image with new name (upload from server)
+
+                // Get image hover file type
+                $image_hoverType  = JFile::getExt($image_data['url_hover_server']);
+                $image_hoverType  = strtolower($image_hoverType);
+
+                // Get image hover's mime type
+                $imageObj -> loadFile(JPATH_ROOT . DIRECTORY_SEPARATOR
+                    . $image_data['url_hover_server']);
+
+                $image_hoverMimeType    = $imageObj->getImageFileProperties($imageObj->getPath());
+                $image_hoverMimeType    = $image_hoverMimeType -> mime;
+
+                // Get image hover's size
+                $image_hoverSize  = $image_hoverMimeType -> filesize;
+
+                $path_hover     = COM_TZ_PORTFOLIO_PLUS_MEDIA_ARTICLE_ROOT.DIRECTORY_SEPARATOR;
+                $path_hover    .=  $data -> alias . '-' . $data -> id . '-h_o';
+                $path_hover    .= '.' . JFile::getExt($image_data['url_hover_server']);
+            }
+
+            // Upload original image
+            if($path && !empty($path)){
+
+                //-- Check image information --//
+                // Check MIME Type
+                if (!in_array($imageMimeType, $mime_types)) {
+                    $app->enqueueMessage(JText::_('PLG_MEDIATYPE_IMAGE_ERROR_WARNINVALID_MIME'), 'notice');
+                    return false;
                 }
 
-                // Create original image hover with new name (upload from client)
-                if(count($images_hover) && !empty($images_hover['tmp_name'])) {
-
-                    // Get image hover file type
-                    $image_hoverType  = JFile::getExt($images_hover['name']);
-                    $image_hoverType  = strtolower($image_hoverType);
-
-                    // Get image hover's mime type
-                    $image_hoverMimeType    = $images_hover['type'];
-
-                    // Get image's size
-                    $image_hoverSize    = $images_hover['size'];
-
-                    $path_hover     = COM_TZ_PORTFOLIO_PLUS_MEDIA_ARTICLE_ROOT.DIRECTORY_SEPARATOR;
-                    $path_hover    .= $data -> alias . '-' . $data -> id . '-h_o';
-                    $path_hover    .= '.' . JFile::getExt($images_hover['name']);
-
-                    if($input -> getCmd('task') == 'save2copy' && $input -> getInt('id')){
-                        $image_data['url_hover_server']   = null;
-                    }
-                }elseif(isset($image_data['url_hover_server'])
-                    && !empty($image_data['url_hover_server'])){ // Create original image with new name (upload from server)
-
-                    // Get image hover file type
-                    $image_hoverType  = JFile::getExt($image_data['url_hover_server']);
-                    $image_hoverType  = strtolower($image_hoverType);
-
-                    // Get image hover's mime type
-                    $imageObj -> loadFile(JPATH_ROOT . DIRECTORY_SEPARATOR
-                        . $image_data['url_hover_server']);
-
-                    $image_hoverMimeType    = $imageObj->getImageFileProperties($imageObj->getPath());
-                    $image_hoverMimeType    = $image_hoverMimeType -> mime;
-
-                    // Get image hover's size
-                    $image_hoverSize  = $image_hoverMimeType -> filesize;
-
-                    $path_hover     = COM_TZ_PORTFOLIO_PLUS_MEDIA_ARTICLE_ROOT.DIRECTORY_SEPARATOR;
-                    $path_hover    .=  $data -> alias . '-' . $data -> id . '-h_o';
-                    $path_hover    .= '.' . JFile::getExt($image_data['url_hover_server']);
+                // Check file type
+                if (!in_array($imageType, $file_types)) {
+                    $app->enqueueMessage(JText::_('PLG_MEDIATYPE_IMAGE_ERROR_WARNFILETYPE'), 'notice');
+                    return false;
                 }
 
-                // Upload original image
-                if($path && !empty($path)){
+                // Check file size
+                if ($imageSize > $file_sizes) {
+                    $app->enqueueMessage(JText::_('PLG_MEDIATYPE_IMAGE_ERROR_WARNFILETOOLARGE'), 'notice');
+                    return false;
+                }
+                //-- End check image information --//
 
-                    //-- Check image information --//
-                    // Check MIME Type
-                    if (!in_array($imageMimeType, $mime_types)) {
-                        $app->enqueueMessage(JText::_('PLG_MEDIATYPE_IMAGE_ERROR_WARNINVALID_MIME'), 'notice');
-                        return false;
-                    }
-
-                    // Check file type
-                    if (!in_array($imageType, $file_types)) {
-                        $app->enqueueMessage(JText::_('PLG_MEDIATYPE_IMAGE_ERROR_WARNFILETYPE'), 'notice');
-                        return false;
-                    }
-
-                    // Check file size
-                    if ($imageSize > $file_sizes) {
-                        $app->enqueueMessage(JText::_('PLG_MEDIATYPE_IMAGE_ERROR_WARNFILETOOLARGE'), 'notice');
-                        return false;
-                    }
-                    //-- End check image information --//
-
-                    // Before upload image to file must delete original file
-                    if($media && isset($media -> url) && !empty($media -> url)){
-                        $image_url  = $media -> url;
-                        $image_url  = str_replace('.'.JFile::getExt($image_url),'_o'
-                            .'.'.JFile::getExt($image_url),$image_url);
-                        JFile::delete(JPATH_ROOT.DIRECTORY_SEPARATOR.str_replace('/',DIRECTORY_SEPARATOR,
-                                $image_url));
-                    }
-
-                    if(isset($images['tmp_name']) && !empty($images['tmp_name'])
-                        && !JFile::upload($images['tmp_name'],$path)){
-                        $path       = '';
-                    }elseif(isset($image_data['url_server']) && !empty($image_data['url_server'])
-                        && !JFile::copy(JPATH_ROOT.DIRECTORY_SEPARATOR.$image_data['url_server'],$path)){
-                        $path       = '';
-                    }
+                // Before upload image to file must delete original file
+                if($media && isset($media -> url) && !empty($media -> url)){
+                    $image_url  = $media -> url;
+                    $image_url  = str_replace('.'.JFile::getExt($image_url),'_o'
+                        .'.'.JFile::getExt($image_url),$image_url);
+                    JFile::delete(JPATH_ROOT.DIRECTORY_SEPARATOR.str_replace('/',DIRECTORY_SEPARATOR,
+                            $image_url));
                 }
 
-                // Upload original image hover
-                if($path_hover && !empty($path_hover)){
+                if(isset($images['tmp_name']) && !empty($images['tmp_name'])
+                    && !JFile::upload($images['tmp_name'],$path)){
+                    $path       = '';
+                }elseif(isset($image_data['url_server']) && !empty($image_data['url_server'])
+                    && !JFile::copy(JPATH_ROOT.DIRECTORY_SEPARATOR.$image_data['url_server'],$path)){
+                    $path       = '';
+                }
+            }
 
-                    //-- Check image information --//
-                    // Check MIME Type
-                    if (!in_array($image_hoverMimeType, $mime_types)) {
-                        $app->enqueueMessage(JText::_('PLG_MEDIATYPE_IMAGE_ERROR_WARNINVALID_MIME'), 'notice');
-                        return false;
-                    }
+            // Upload original image hover
+            if($path_hover && !empty($path_hover)){
 
-                    // Check file type
-                    if (!in_array($image_hoverType, $file_types)) {
-                        $app->enqueueMessage(JText::_('PLG_MEDIATYPE_IMAGE_ERROR_WARNFILETYPE'), 'notice');
-                        return false;
-                    }
-
-                    // Check file size
-                    if ($image_hoverSize > $file_sizes) {
-                        $app->enqueueMessage(JText::_('PLG_MEDIATYPE_IMAGE_ERROR_WARNFILETOOLARGE'), 'notice');
-                        return false;
-                    }
-                    //-- End check image information --//
-
-                    // Before upload image hover file to file must delete original file
-                    if($media && isset($media -> url_hover) && !empty($media -> url_hover)){
-                        $image_url  = $media -> url_hover;
-                        $image_url  = str_replace('.'.JFile::getExt($image_url),'_o'
-                            .'.'.JFile::getExt($image_url),$image_url);
-                        JFile::delete(JPATH_ROOT.DIRECTORY_SEPARATOR.str_replace('/',DIRECTORY_SEPARATOR,
-                                $image_url));
-                    }
-
-                    if(isset($images_hover['tmp_name']) && !empty($images_hover['tmp_name'])
-                        && !JFile::upload($images_hover['tmp_name'],$path_hover)){
-                        $path_hover = '';
-                    }elseif(isset($image_data['url_hover_server']) && !empty($image_data['url_hover_server'])
-                        && !JFile::copy(JPATH_ROOT.DIRECTORY_SEPARATOR.$image_data['url_hover_server'],$path_hover)){
-                        $path_hover = '';
-                    }
+                //-- Check image information --//
+                // Check MIME Type
+                if (!in_array($image_hoverMimeType, $mime_types)) {
+                    $app->enqueueMessage(JText::_('PLG_MEDIATYPE_IMAGE_ERROR_WARNINVALID_MIME'), 'notice');
+                    return false;
                 }
 
-                // Upload image and image hover with resize
-                if($image_size = $params -> get('image_size')){
-                    $image_size = $this -> prepareImageSize($image_size);
+                // Check file type
+                if (!in_array($image_hoverType, $file_types)) {
+                    $app->enqueueMessage(JText::_('PLG_MEDIATYPE_IMAGE_ERROR_WARNFILETYPE'), 'notice');
+                    return false;
+                }
 
-                    $image              = null;
-                    $image_hover        = null;
+                // Check file size
+                if ($image_hoverSize > $file_sizes) {
+                    $app->enqueueMessage(JText::_('PLG_MEDIATYPE_IMAGE_ERROR_WARNFILETOOLARGE'), 'notice');
+                    return false;
+                }
+                //-- End check image information --//
 
-                    if(is_array($image_size) && count($image_size)){
-                        foreach($image_size as $_size){
-                            $size           = json_decode($_size);
+                // Before upload image hover file to file must delete original file
+                if($media && isset($media -> url_hover) && !empty($media -> url_hover)){
+                    $image_url  = $media -> url_hover;
+                    $image_url  = str_replace('.'.JFile::getExt($image_url),'_o'
+                        .'.'.JFile::getExt($image_url),$image_url);
+                    JFile::delete(JPATH_ROOT.DIRECTORY_SEPARATOR.str_replace('/',DIRECTORY_SEPARATOR,
+                            $image_url));
+                }
 
-                            // Upload image with resize
-                            if($path) {
-                                // Create new ratio from new with of image size param
-                                $imageObj -> loadFile($path);
-                                $imgProperties  = $imageObj->getImageFileProperties($imageObj -> getPath());
-                                $newH           = ($imgProperties -> height * $size -> width) / ($imgProperties -> width);
-                                $newImage       = $imageObj->resize($size -> width, $newH);
+                if(isset($images_hover['tmp_name']) && !empty($images_hover['tmp_name'])
+                    && !JFile::upload($images_hover['tmp_name'],$path_hover)){
+                    $path_hover = '';
+                }elseif(isset($image_data['url_hover_server']) && !empty($image_data['url_hover_server'])
+                    && !JFile::copy(JPATH_ROOT.DIRECTORY_SEPARATOR.$image_data['url_hover_server'],$path_hover)){
+                    $path_hover = '';
+                }
+            }
 
-                                $newPath = COM_TZ_PORTFOLIO_PLUS_MEDIA_ARTICLE_ROOT . DIRECTORY_SEPARATOR
-                                    . $data->alias . '-' . $data->id . '_' . $size->image_name_prefix
-                                    . '.' . JFile::getExt($path);
+            // Upload image and image hover with resize
+            if($image_size = $params -> get('image_size')){
+                $image_size = $this -> prepareImageSize($image_size);
 
-                                // Before generate image to file must delete old files
-                                if($media && isset($media -> url) && !empty($media -> url)){
-                                    $image_url  = $media -> url;
-                                    $image_url  = str_replace('.'.JFile::getExt($image_url),'_'.$size ->image_name_prefix
-                                        .'.'.JFile::getExt($image_url),$image_url);
-                                    JFile::delete(JPATH_ROOT.DIRECTORY_SEPARATOR.str_replace('/',DIRECTORY_SEPARATOR,
-                                            $image_url));
-                                }
+                $image              = null;
+                $image_hover        = null;
 
-                                // Generate image to file
-                                $newImage->toFile($newPath, $imgProperties->type);
+                if(is_array($image_size) && count($image_size)){
+                    foreach($image_size as $_size){
+                        $size           = json_decode($_size);
+
+                        // Upload image with resize
+                        if($path) {
+                            // Create new ratio from new with of image size param
+                            $imageObj -> loadFile($path);
+                            $imgProperties  = $imageObj->getImageFileProperties($imageObj -> getPath());
+                            $newH           = ($imgProperties -> height * $size -> width) / ($imgProperties -> width);
+                            $newImage       = $imageObj->resize($size -> width, $newH);
+
+                            $newPath = COM_TZ_PORTFOLIO_PLUS_MEDIA_ARTICLE_ROOT . DIRECTORY_SEPARATOR
+                                . $data->alias . '-' . $data->id . '_' . $size->image_name_prefix
+                                . '.' . JFile::getExt($path);
+
+                            // Before generate image to file must delete old files
+                            if($media && isset($media -> url) && !empty($media -> url)){
+                                $image_url  = $media -> url;
+                                $image_url  = str_replace('.'.JFile::getExt($image_url),'_'.$size ->image_name_prefix
+                                    .'.'.JFile::getExt($image_url),$image_url);
+                                JFile::delete(JPATH_ROOT.DIRECTORY_SEPARATOR.str_replace('/',DIRECTORY_SEPARATOR,
+                                        $image_url));
                             }
 
-                            // Upload image hover with resize
-                            if($path_hover) {
-                                // Create new ratio from new with of image size param
-                                $imageObj -> loadFile($path_hover);
-                                $imgHoverProperties = $imageObj->getImageFileProperties($imageObj -> getPath());
-                                $newH               = ($imgHoverProperties -> height * $size -> width) / ($imgHoverProperties -> width);
-                                $newHImage          = $imageObj->resize($size -> width, $newH);
-                                $newHPath           = COM_TZ_PORTFOLIO_PLUS_MEDIA_ARTICLE_ROOT . DIRECTORY_SEPARATOR
-                                    . $data->alias . '-' . $data->id . '-h_' . $size -> image_name_prefix
-                                    . '.' . JFile::getExt($path_hover);
+                            // Generate image to file
+                            $newImage->toFile($newPath, $imgProperties->type);
+                        }
 
-                                // Before generate image hover to file must delete old files
-                                if($media && isset($media -> url_hover) && !empty($media -> url_hover)){
-                                    $image_url_hover    = $media -> url_hover;
-                                    $image_url_hover    = str_replace('.'.JFile::getExt($image_url_hover),'_'.$size ->image_name_prefix
-                                        .'.'.JFile::getExt($image_url_hover),$image_url_hover);
-                                    JFile::delete(JPATH_ROOT.DIRECTORY_SEPARATOR.str_replace('/',DIRECTORY_SEPARATOR,
-                                            $image_url_hover));
-                                }
+                        // Upload image hover with resize
+                        if($path_hover) {
+                            // Create new ratio from new with of image size param
+                            $imageObj -> loadFile($path_hover);
+                            $imgHoverProperties = $imageObj->getImageFileProperties($imageObj -> getPath());
+                            $newH               = ($imgHoverProperties -> height * $size -> width) / ($imgHoverProperties -> width);
+                            $newHImage          = $imageObj->resize($size -> width, $newH);
+                            $newHPath           = COM_TZ_PORTFOLIO_PLUS_MEDIA_ARTICLE_ROOT . DIRECTORY_SEPARATOR
+                                . $data->alias . '-' . $data->id . '-h_' . $size -> image_name_prefix
+                                . '.' . JFile::getExt($path_hover);
 
-                                // Generate image to file
-                                $newHImage->toFile($newHPath, $imgHoverProperties->type);
+                            // Before generate image hover to file must delete old files
+                            if($media && isset($media -> url_hover) && !empty($media -> url_hover)){
+                                $image_url_hover    = $media -> url_hover;
+                                $image_url_hover    = str_replace('.'.JFile::getExt($image_url_hover),'_'.$size ->image_name_prefix
+                                    .'.'.JFile::getExt($image_url_hover),$image_url_hover);
+                                JFile::delete(JPATH_ROOT.DIRECTORY_SEPARATOR.str_replace('/',DIRECTORY_SEPARATOR,
+                                        $image_url_hover));
                             }
+
+                            // Generate image to file
+                            $newHImage->toFile($newHPath, $imgHoverProperties->type);
                         }
                     }
                 }
@@ -440,7 +432,7 @@ class PlgTZ_Portfolio_PlusMediaTypeModelImage extends TZ_Portfolio_PlusPluginMod
             unset($image_data['url_hover_server']);
 
             $this -> __save($data,$image_data);
-        }
+//        }
     }
 
     public function delete(&$article){
