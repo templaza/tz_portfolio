@@ -10,6 +10,10 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+06/10/2016 - Image Gallery addon v1.0.1
+	
+	- Fix error upload image from server.
+	
 04/11/2016 - 1.0.0
 	
 	- Release version 1.0.0
