@@ -151,7 +151,6 @@ jQuery(document).ready(function(){
 
                 <?php echo $this->pagination->getPagesLinks(); ?>
             </div>
-            <div class="clearfix"></div>
         <?php endif;?>
     <?php endif;?>
 

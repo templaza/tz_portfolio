@@ -1,4 +1,8 @@
 ul.mod_tz_tag li{
     background: none;
-    display:inline;
+    margin-bottom: 5px;
+    display:inline-block;
+}
+ul.mod_tz_tag{
+    margin-left: 0;
 }

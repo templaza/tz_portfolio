@@ -31,7 +31,7 @@
 
     <fields name="params">
         <fieldset name="basic" label="JGLOBAL_FIELDSET_OPTIONS">
-            <field type="folderlist" name="layout" default=""
+            <field type="tzfolderlist" name="layout" default=""
                    hide_none="true" hide_default="true" directory=""
                    filter="" exclude="" stripext=""
                    label="COM_TZ_PORTFOLIO_PLUS_LAYOUT_LABEL"

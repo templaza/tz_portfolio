@@ -181,11 +181,13 @@ class modTZ_Portfolio_PlusArticlesHelper
 //                $results = $dispatcher->trigger('onContentAfterTitle', array('modules.mod_tz_portfolio_plus_articles', &$item, &$params, 0));
 //                $item->event->afterDisplayTitle = trim(implode("\n", $results));
 //
-//                $results = $dispatcher->trigger('onContentBeforeDisplay', array('modules.mod_tz_portfolio_plus_articles', &$item, &$params, 0));
-//                $item->event->beforeDisplayContent = trim(implode("\n", $results));
-//
-//                $results = $dispatcher->trigger('onContentAfterDisplay', array('modules.mod_tz_portfolio_plus_articles', &$item, &$params, 0));
-//                $item->event->afterDisplayContent = trim(implode("\n", $results));
+                $results = $dispatcher->trigger('onContentBeforeDisplay', array('modules.mod_tz_portfolio_plus_articles',
+                    &$item, &$params, 0, $params->get('layout', 'default')));
+                $item->event->beforeDisplayContent = trim(implode("\n", $results));
+
+                $results = $dispatcher->trigger('onContentAfterDisplay', array('modules.mod_tz_portfolio_plus_articles',
+                    &$item, &$params, 0, $params->get('layout', 'default')));
+                $item->event->afterDisplayContent = trim(implode("\n", $results));
 
                 // Process the tz portfolio's content plugins.
                 $results    = $dispatcher -> trigger('onBeforeDisplayAdditionInfo',array('modules.mod_tz_portfolio_plus_articles',

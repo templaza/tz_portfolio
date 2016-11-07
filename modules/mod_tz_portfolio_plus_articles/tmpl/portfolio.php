@@ -26,6 +26,10 @@ $doc->addScript(JUri::root() . '/components/com_tz_portfolio_plus/js/jquery.isot
 $doc->addStyleSheet(JUri::base(true) . '/components/com_tz_portfolio_plus/css/isotope.min.css');
 $doc->addStyleSheet(JUri::base(true) . '/modules/mod_tz_portfolio_plus_articles/css/style.css');
 
+if($params -> get('load_style', 0)) {
+    $doc->addStyleSheet(JUri::base(true) . '/modules/mod_tz_portfolio_plus_articles/css/basic.css');
+}
+
 if ($params->get('height_element')) {
     $doc->addStyleDeclaration('
         #portfolio' . $module->id . ' .TzInner{
@@ -120,55 +124,76 @@ if ($list):
                 }
 
                 if(!isset($item -> mediatypes) || (isset($item -> mediatypes) && !in_array($item -> type,$item -> mediatypes))){
-
+                ?>
+                <div class="information">
+                    <?php
                     if ($params -> get('show_title', 1)) {
-                        echo '<h3><a href="' . $item->link . '">' . $item->title . '</a></h3>';
-                    }
-                    if ($params -> get('show_introtext', 1)) {
-                        echo $item->introtext;
-                    }
-                    if(isset($item -> event -> beforeDisplayAdditionInfo)){
-                        echo $item -> event -> beforeDisplayAdditionInfo;
-                    }
-                    if ($params -> get('show_author', 1)) {
-                        echo '<div class="muted tz_created_by"><span class="text">' . JText::_('MOT_TZ_PORTFOLIO_PLUS_ARTICLE_TZ_CREATED_BY')
-                            . '</span><a href="' . $item->author_link . '">' . $item->user_name . '</a></div>';
-                    }
-                    if ($params -> get('show_created_date', 1)) {
-                        echo '<div class="muted tz_date"><span class="text">' . JText::_('MOT_TZ_PORTFOLIO_PLUS_ARTICLE_TZ_DATE')
-                            . '</span>' . JHtml::_('date', $item->created, JText::_('DATE_FORMAT_LC1')) . '</div>';
-                    }
-                    if ($params -> get('show_hit', 1)) {
-                        echo '<div class="muted tz_hit"><span class="text">' . JText::_('MOT_TZ_PORTFOLIO_PLUS_ARTICLE_TZ_HIT') . '</span>' . $item->hits . '</div>';
-                    }
-                    if ($params -> get('show_tag', 1)) {
-                        if (isset($tags[$item->content_id])) {
-                            echo '<div class="muted tz_tag"><span class="text">' . JText::_('MOT_TZ_PORTFOLIO_PLUS_ARTICLE_TZ_TAGS') . '</span>';
-                            foreach ($tags[$item->content_id] as $t => $tag) {
-                                echo '<a href="' . $tag->link . '">' . $tag->title . '</a>';
-                                if ($t != count($tags[$item->content_id]) - 1) {
-                                    echo ', ';
-                                }
-                            }
-                            echo '</div>';
-                        }
-                    }
-                    if ($params -> get('show_category', 1)) {
-                        if (isset($categories[$item->content_id]) && $categories[$item->content_id]) {
-                            if (count($categories[$item->content_id]))
-                                echo '<div class="muted tz_categories"><span class="text">' . JText::_('MOT_TZ_PORTFOLIO_PLUS_ARTICLE_TZ_CATEGORIES') . '</span>';
-                            foreach ($categories[$item->content_id] as $c => $category) {
-                                echo '<a href="' . $category->link . '">' . $category->title . '</a>';
-                                if ($c != count($categories[$item->content_id]) - 1) {
-                                    echo ', ';
-                                }
-                            }
-                            echo '</div>';
-                        }
+                        echo '<h3 class="title"><a href="' . $item->link . '">' . $item->title . '</a></h3>';
                     }
 
-                    if(isset($item -> event -> afterDisplayAdditionInfo)){
-                        echo $item -> event -> afterDisplayAdditionInfo;
+                    //Call event onContentBeforeDisplay on plugin
+                    if(isset($item -> event -> beforeDisplayContent)) {
+                        echo $item->event->beforeDisplayContent;
+                    }
+
+                    if ($params->get('show_introtext', 1)) {
+                    ?>
+                        <div class="description"><?php echo $item->introtext;?></div>
+                    <?php }
+                    if($params -> get('show_author', 1) or $params->get('show_created_date', 1)
+                        or $params->get('show_hit', 1) or $params->get('show_tag', 1)
+                        or $params->get('show_category', 1)
+                        or !empty($item -> event -> beforeDisplayAdditionInfo)
+                        or !empty($item -> event -> afterDisplayAdditionInfo)) {
+                    ?>
+                    <div class="muted item-meta">
+                        <?php
+                        if (isset($item->event->beforeDisplayAdditionInfo)) {
+                            echo $item->event->beforeDisplayAdditionInfo;
+                        }
+
+                        if ($params->get('show_author', 1)) {
+                            echo '<div class="tz_created_by"><span class="text">' . JText::_('MOT_TZ_PORTFOLIO_PLUS_ARTICLE_TZ_CREATED_BY')
+                                . '</span><a href="' . $item->author_link . '">' . $item->user_name . '</a></div>';
+                        }
+                        if ($params->get('show_created_date', 1)) {
+                            echo '<div class="tz_date"><span class="text">' . JText::_('MOT_TZ_PORTFOLIO_PLUS_ARTICLE_TZ_DATE')
+                                . '</span>' . JHtml::_('date', $item->created, JText::_('DATE_FORMAT_LC1')) . '</div>';
+                        }
+                        if ($params->get('show_hit', 1)) {
+                            echo '<div class="tz_hit"><span class="text">' . JText::_('MOT_TZ_PORTFOLIO_PLUS_ARTICLE_TZ_HIT') . '</span>' . $item->hits . '</div>';
+                        }
+                        if ($params->get('show_tag', 1)) {
+                            if (isset($tags[$item->content_id])) {
+                                echo '<div class="tz_tag"><span class="text">' . JText::_('MOT_TZ_PORTFOLIO_PLUS_ARTICLE_TZ_TAGS') . '</span>';
+                                foreach ($tags[$item->content_id] as $t => $tag) {
+                                    echo '<a href="' . $tag->link . '">' . $tag->title . '</a>';
+                                    if ($t != count($tags[$item->content_id]) - 1) {
+                                        echo ', ';
+                                    }
+                                }
+                                echo '</div>';
+                            }
+                        }
+                        if ($params->get('show_category', 1)) {
+                            if (isset($categories[$item->content_id]) && $categories[$item->content_id]) {
+                                if (count($categories[$item->content_id]))
+                                    echo '<div class="tz_categories"><span class="text">' . JText::_('MOT_TZ_PORTFOLIO_PLUS_ARTICLE_TZ_CATEGORIES') . '</span>';
+                                foreach ($categories[$item->content_id] as $c => $category) {
+                                    echo '<a href="' . $category->link . '">' . $category->title . '</a>';
+                                    if ($c != count($categories[$item->content_id]) - 1) {
+                                        echo ', ';
+                                    }
+                                }
+                                echo '</div>';
+                            }
+                        }
+                        if(isset($item -> event -> afterDisplayAdditionInfo)){
+                            echo $item -> event -> afterDisplayAdditionInfo;
+                        }
+                        ?>
+                    </div>
+                        <?php
                     }
 
                     if(isset($item -> event -> contentDisplayListView)) {
@@ -177,10 +202,10 @@ if ($list):
                     if($params -> get('show_readmore',1)){
                     ?>
                     <a href="<?php echo $item->link?>"
-                       class="btn btn-primary"><?php echo $params -> get('readmore_text','Read More');?></a>
-                <?php }
-                }
-                ?>
+                       class="btn btn-primary readmore"><?php echo $params -> get('readmore_text','Read More');?></a>
+                    <?php }?>
+                </div>
+                <?php } ?>
             </div>
         </div>
         <?php endforeach; ?>

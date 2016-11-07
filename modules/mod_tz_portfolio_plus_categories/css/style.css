@@ -4,29 +4,17 @@
     padding: 10px 0;
 }
 
-ul.category-menu li {
-    background: none;
-    padding: 10px 0;
-    border-bottom: 1px solid #ccc;
+.category-menu .item {
+    padding: 0 0 5px;
     margin: 0;
 }
 
-.column ul.category-menu li.level0 ul.sub-menu-category {
-    display: none;
-}
-
-ul.category-menu li ul.sub-menu-category li {
-    margin-left: 15px;
-}
-
-ul.category-menu li ul.sub-menu-category {
-    display: none;
-}
-
-.sub-menu-category {
+.sub-menu-category.in {
     padding-left: 30px;
     padding-top: 5px;
-    padding-bottom: 5px;
+}
+.category-menu .tz_button:before{
+    min-width: 8px;
 }
 
 .tz_button.plus:before {
@@ -39,16 +27,10 @@ ul.category-menu li ul.sub-menu-category {
     display: inline-block;
 }
 
-a[id^=category-btn-] {
-    padding-right: 5px;
-}
-
-a[id^=category-btn-]:hover {
+.category-menu a:hover,
+.category-menu a:focus{
+    outline: none;
     text-decoration: none;
-}
-
-.sub-menu-category > div {
-    padding-bottom: 5px;
 }
 
 .sub-menu-category > div.haschild,

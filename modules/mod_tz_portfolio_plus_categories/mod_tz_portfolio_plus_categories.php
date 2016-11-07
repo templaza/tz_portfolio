@@ -26,5 +26,6 @@ $document = JFactory::getDocument();
 $document->addStyleSheet('modules/mod_tz_portfolio_plus_categories/css/style.css');
 
 $list = modTZ_Portfolio_PlusCategoriesHelper::getList($params);
+$moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'), ENT_COMPAT, 'UTF-8');
 require JModuleHelper::getLayoutPath('mod_tz_portfolio_plus_categories', $params->get('layout', 'default'));
 ?>

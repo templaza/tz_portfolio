@@ -7,7 +7,7 @@
 	<license>GNU/GPL v2 or later http://www.gnu.org/licenses/gpl-2.0.html</license>
 	<authorEmail>support@templaza.com</authorEmail>
 	<authorUrl>www.templaza.com/</authorUrl>
-	<version>1.0.3</version>
+	<version>1.0.4</version>
     
     <scriptfile>script.php</scriptfile>
 
@@ -69,13 +69,13 @@
 
         <menu>com_tz_portfolio_plus</menu>
         <submenu>
+            <menu link="option=com_tz_portfolio_plus&amp;view=articles">com_tz_portfolio_plus_articles</menu>
+            <menu link="option=com_tz_portfolio_plus&amp;view=categories">com_tz_portfolio_plus_categories</menu>
             <menu link="option=com_tz_portfolio_plus&amp;view=fields">com_tz_portfolio_plus_fields</menu>
             <menu link="option=com_tz_portfolio_plus&amp;view=groups">com_tz_portfolio_plus_field_groups</menu>
-            <menu link="option=com_tz_portfolio_plus&amp;view=categories">com_tz_portfolio_plus_categories</menu>
-            <menu link="option=com_tz_portfolio_plus&amp;view=articles">com_tz_portfolio_plus_articles</menu>
             <menu link="option=com_tz_portfolio_plus&amp;view=tags">com_tz_portfolio_plus_tags</menu>
-            <menu link="option=com_tz_portfolio_plus&amp;view=template_styles">com_tz_portfolio_plus_template_styles</menu>
             <menu link="option=com_tz_portfolio_plus&amp;view=addons">com_tz_portfolio_plus_addons</menu>
+            <menu link="option=com_tz_portfolio_plus&amp;view=template_styles">com_tz_portfolio_plus_template_styles</menu>
             <menu link="option=com_tz_portfolio_plus&amp;view=templates">com_tz_portfolio_plus_templates</menu>
         </submenu>
         <languages folder="admin/languages">

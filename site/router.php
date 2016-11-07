@@ -348,15 +348,12 @@ class TZ_Portfolio_PlusRouter extends JComponentRouterBase
         }
 
         if ($view == 'date') {
-            if (!$menuItemGiven) {
-                if ($view != $params -> get('sef_date_prefix','date')) {
-                    $segments[] = $params -> get('sef_date_prefix','date');
-                }else {
-                    $segments[] = $view;
-                }
-                unset($query['view']);
+            if ($view != $params -> get('sef_date_prefix','date')) {
+                $segments[] = $params -> get('sef_date_prefix','date');
+            }else {
+                $segments[] = $view;
             }
-
+            unset($query['view']);
             $bool = false;
             if (isset($query['year']) && isset($query['month'])) {
                 $bool = true;
@@ -714,7 +711,6 @@ class TZ_Portfolio_PlusRouter extends JComponentRouterBase
     }
 
     protected function sefParse(&$segments){
-
         $total = count($segments);
         $vars = array();
 
@@ -840,6 +836,15 @@ class TZ_Portfolio_PlusRouter extends JComponentRouterBase
         // last segment has a number prepended, it is an article, otherwise, it is a category.
 
         if (!$advanced) {
+
+//            $view   = $segments[0];
+//            if($item && isset($item -> query) && isset($item -> query['view'])){
+//                if ($item -> query['view'] == $params -> get('sef_tags_prefix','tags')
+//                    || $item -> query['view'] == $params -> get('sef_users_prefix','users')
+//                    || $item -> query['view'] == $params -> get('sef_date_prefix','date')) {
+//                    $view   = $item -> query['view'];
+//                }
+//            }
 
             if ($segments[0] == $params -> get('sef_tags_prefix','tags')) {
                 $vars['view'] = 'tags';

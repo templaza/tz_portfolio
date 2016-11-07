@@ -65,7 +65,10 @@ class TZ_Portfolio_PlusTemplate {
             $template -> id         = $templateId;
             $template -> template   = $table -> template;
             if($table -> params && !empty($table -> params)) {
-                $_params    = new JRegistry($table -> params);
+                $_params    = $table -> params;
+                if(is_string($_params)) {
+                    $_params = new JRegistry($_params);
+                }
                 $template->params = $_params;
             }
             if($table -> layout){
@@ -76,7 +79,10 @@ class TZ_Portfolio_PlusTemplate {
                 $template -> id         = $home -> id;
                 $template -> template   = $home -> template;
                 if($home -> params && !empty($home -> params)) {
-                    $_params    = new JRegistry($home -> params);
+                    $_params    = $home -> params;
+                    if(is_string($_params)) {
+                        $_params = new JRegistry($_params);
+                    }
                     $template->params = $_params;
                 }
                 if($home -> layout){

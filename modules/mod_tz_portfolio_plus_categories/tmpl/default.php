@@ -23,7 +23,7 @@ defined('_JEXEC') or die('Restricted access');
 if ($list):
     ?>
 
-    <div class="category-menu">
+    <div class="category-menu<?php echo $moduleclass_sfx;?>">
         <?php $i = 0; ?>
         <?php $str = null; ?>
         <?php ob_start(); ?>
@@ -36,7 +36,7 @@ if ($list):
                 $subLevel = 0;
             ?>
             <?php if ($subLevel == 0): ?>
-                <div class="level00">
+                <div class="item level<?php echo $item -> level - 1;?>">
                     <?php if ($params -> get('show_image', 1) && $item->images) {
                         echo '<a href="' . $item->link . '"><img src="' . JUri::base() . $item->images . '" alt="' . $item->title . '"/></a>';
                     } ?>
@@ -53,7 +53,7 @@ if ($list):
                     } ?>
                 </div>
             <?php elseif ($subLevel > 0): ?>
-                <div class="level00 haschild">
+                <div class="item level<?php echo $item -> level -1;?> haschild">
 
                 <a id="category-btn-<?php echo $item->id; ?>" href="#category-<?php echo $item->id; ?>"
                    data-toggle="collapse" data-toggle="button" class=" ">
@@ -77,7 +77,7 @@ if ($list):
 
                 <div class="sub-menu-category sub-menu-category-<?php echo $subLevel ?> collapse fade" id="category-<?php echo $item->id; ?>">
             <?php elseif ($subLevel < 0): ?>
-                <div class="level00">
+                <div class="item level<?php echo $item -> level -1;?>">
                     <?php if ($params -> get('show_image',1) && $item->images) {
                         echo '<a href="' . $item->link . '"><img src="' . JUri::base() . $item->images . '" alt="' . $item->title . '"/></a>';
                     } ?>

@@ -62,15 +62,18 @@ JHtml::_('behavior.framework');
             </form>
             <?php endif;?>
 
-            <?php foreach($items as $i => &$item):
-                $this -> item   = &$item;
-            ?>
-            <div class="<?php if($i == 0): echo 'TzItemsLeading'; else: echo 'TzItemsRow row-0'; endif;?>">
-                <div class="TzLeading leading-0" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-                <?php echo $this -> loadTemplate('item');?>
-                </div>
+            <div class="TzItemsRow row">
+                <?php foreach($items as $i => &$item):
+                    $this -> item   = &$item;
+                ?>
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="TzItem"
+                             itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+                        <?php echo $this -> loadTemplate('item');?>
+                        </div>
+                    </div>
+                <?php endforeach;?>
             </div>
-            <?php endforeach;?>
 
             <?php if (($this->params->def('show_pagination', 1) == 1
                     || ($this->params->get('show_pagination') == 2))

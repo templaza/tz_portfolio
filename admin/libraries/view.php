@@ -55,69 +55,11 @@ class TZ_Portfolio_PlusViewLegacy extends JViewLegacy{
                         $color      = null;
                         $margin     = null;
                         $padding    = null;
+                        $childRows  = array();
 
-                        if($tplItems -> backgroundcolor && !preg_match('/^rgba\([0-9]+\,\s+?[0-9]+\,\s+?[0-9]+\,\s+?0\)$/i',trim($tplItems -> backgroundcolor))){
-                            $background  = 'background: '.$tplItems -> backgroundcolor.';';
-                        }
-                        if($tplItems -> textcolor && !preg_match('/^rgba\([0-9]+\,\s+?[0-9]+\,\s+?[0-9]+\,\s+?0\)$/i',trim($tplItems -> textcolor))){
-                            $color      =  'color: '.$tplItems -> textcolor.';';
-                        }
-                        if(isset($tplItems -> margin) && !empty($tplItems -> margin)){
-                            $margin = 'margin: '.$tplItems -> margin.';';
-                        }
-                        if(isset($tplItems -> padding) && !empty($tplItems -> padding)){
-                            $padding = 'padding: '.$tplItems -> padding.';';
-                        }
-                        if($background || $color || $margin || $padding){
-                            $this -> document -> addStyleDeclaration('
-                            #tz-portfolio-template-'.JApplication::stringURLSafe($tplItems -> name).'{
-                                '.$background.$color.$margin.$padding.'
-                            }
-                        ');
-                        }
-                        if($tplItems -> linkcolor && !preg_match('/^rgba\([0-9]+\,\s+?[0-9]+\,\s+?[0-9]+\,\s+?0\)$/i',trim($tplItems -> linkcolor))){
-                            $this -> document -> addStyleDeclaration('
-                                #tz-portfolio-template-'.JApplication::stringURLSafe($tplItems -> name).' a{
-                                    color: '.$tplItems -> linkcolor.';
-                                }
-                            ');
-                        }
-                        if($tplItems -> linkhovercolor && !preg_match('/^rgba\([0-9]+\,\s+?[0-9]+\,\s+?[0-9]+\,\s+?0\)$/i',trim($tplItems -> linkhovercolor))){
-                            $this -> document -> addStyleDeclaration('
-                                #tz-portfolio-template-'.JApplication::stringURLSafe($tplItems -> name).' a:hover{
-                                    color: '.$tplItems -> linkhovercolor.';
-                                }
-                            ');
-                        }
-                        $rows[] = '<div id="tz-portfolio-template-'.JApplication::stringURLSafe($tplItems -> name).'"'
-                            .' class="'.($tplItems -> {"class"}?' '.$tplItems -> {"class"}:'')
-                            .($tplItems -> responsive?' '.$tplItems -> responsive:'').'">';
-                        if(isset($tplItems -> containertype) && $tplItems -> containertype){
-                            $rows[] = '<div class="'.$tplItems -> containertype.'">';
-                        }
-
-                        $rows[] = '<div class="row">';
                         if($tplItems && isset($tplItems -> children)){
                             foreach($tplItems -> children as $children){
                                 $html   = null;
-
-                                if(!empty($children -> {"col-lg"}) || !empty($children -> {"col-md"})
-                                    || !empty($children -> {"col-sm"}) || !empty($children -> {"col-xs"})
-                                    || !empty($children -> {"col-lg-offset"}) || !empty($children -> {"col-md-offset"})
-                                    || !empty($children -> {"col-sm-offset"}) || !empty($children -> {"col-xs-offset"})
-                                    || !empty($children -> {"customclass"}) || $children -> responsiveclass){
-                                    $rows[] = '<div class="'
-                                        .(!empty($children -> {"col-lg"})?'col-lg-'.$children -> {"col-lg"}:'')
-                                        .(!empty($children -> {"col-md"})?' col-md-'.$children -> {"col-md"}:'')
-                                        .(!empty($children -> {"col-sm"})?' col-sm-'.$children -> {"col-sm"}:'')
-                                        .(!empty($children -> {"col-xs"})?' col-xs-'.$children -> {"col-xs"}:'')
-                                        .(!empty($children -> {"col-lg-offset"})?' col-lg-offset-'.$children -> {"col-lg-offset"}:'')
-                                        .(!empty($children -> {"col-md-offset"})?' col-md-offset-'.$children -> {"col-md-offset"}:'')
-                                        .(!empty($children -> {"col-sm-offset"})?' col-sm-offset-'.$children -> {"col-sm-offset"}:'')
-                                        .(!empty($children -> {"col-xs-offset"})?' col-xs-offset-'.$children -> {"col-xs-offset"}:'')
-                                        .(!empty($children -> {"customclass"})?' '.$children -> {"customclass"}:'')
-                                        .($children -> responsiveclass?' '.$children -> responsiveclass:'').'">';
-                                }
 
                                 if($children -> type && $children -> type !='none'){
                                     if(in_array($children -> type, $this -> core_types)) {
@@ -155,28 +97,107 @@ class TZ_Portfolio_PlusViewLegacy extends JViewLegacy{
                                     $html   = trim($html);
                                 }
 
-                                $rows[] = $html;
+                                if(!empty($html) || (!empty($children -> children) and is_array($children -> children))){
+                                    if(!empty($children -> {"col-lg"}) || !empty($children -> {"col-md"})
+                                        || !empty($children -> {"col-sm"}) || !empty($children -> {"col-xs"})
+                                        || !empty($children -> {"col-lg-offset"}) || !empty($children -> {"col-md-offset"})
+                                        || !empty($children -> {"col-sm-offset"}) || !empty($children -> {"col-xs-offset"})
+                                        || !empty($children -> {"customclass"}) || $children -> responsiveclass){
+                                        $childRows[] = '<div class="'
+                                            .(!empty($children -> {"col-lg"})?'col-lg-'.$children -> {"col-lg"}:'')
+                                            .(!empty($children -> {"col-md"})?' col-md-'.$children -> {"col-md"}:'')
+                                            .(!empty($children -> {"col-sm"})?' col-sm-'.$children -> {"col-sm"}:'')
+                                            .(!empty($children -> {"col-xs"})?' col-xs-'.$children -> {"col-xs"}:'')
+                                            .(!empty($children -> {"col-lg-offset"})?' col-lg-offset-'.$children -> {"col-lg-offset"}:'')
+                                            .(!empty($children -> {"col-md-offset"})?' col-md-offset-'.$children -> {"col-md-offset"}:'')
+                                            .(!empty($children -> {"col-sm-offset"})?' col-sm-offset-'.$children -> {"col-sm-offset"}:'')
+                                            .(!empty($children -> {"col-xs-offset"})?' col-xs-offset-'.$children -> {"col-xs-offset"}:'')
+                                            .(!empty($children -> {"customclass"})?' '.$children -> {"customclass"}:'')
+                                            .($children -> responsiveclass?' '.$children -> responsiveclass:'').'">';
+                                    }
 
-                                if( !empty($children -> children) and is_array($children -> children) ){
-                                    $this -> _childrenLayout($rows,$children,$article,$params,$dispatcher);
-                                }
+                                    $childRows[] = $html;
 
-                                if(!empty($children -> {"col-lg"}) || !empty($children -> {"col-md"})
-                                    || !empty($children -> {"col-sm"}) || !empty($children -> {"col-xs"})
-                                    || !empty($children -> {"col-lg-offset"}) || !empty($children -> {"col-md-offset"})
-                                    || !empty($children -> {"col-sm-offset"}) || !empty($children -> {"col-xs-offset"})
-                                    || !empty($children -> {"customclass"}) || $children -> responsiveclass){
-                                    $rows[] = '</div>'; // Close col tag
+                                    if( !empty($children -> children) and is_array($children -> children) ){
+                                        $this -> _childrenLayout($childRows,$children,$article,$params,$dispatcher);
+                                    }
+
+                                    if(!empty($children -> {"col-lg"}) || !empty($children -> {"col-md"})
+                                        || !empty($children -> {"col-sm"}) || !empty($children -> {"col-xs"})
+                                        || !empty($children -> {"col-lg-offset"}) || !empty($children -> {"col-md-offset"})
+                                        || !empty($children -> {"col-sm-offset"}) || !empty($children -> {"col-xs-offset"})
+                                        || !empty($children -> {"customclass"}) || $children -> responsiveclass){
+                                        $childRows[] = '</div>'; // Close col tag
+                                    }
                                 }
                             }
                         }
 
-                        if(isset($tplItems -> containertype) && $tplItems -> containertype){
+
+                        if(count($childRows)) {
+                            if (isset($tplItems->backgroundcolor) && $tplItems->backgroundcolor
+                                && !preg_match('/^rgba\([0-9]+\,\s+?[0-9]+\,\s+?[0-9]+\,\s+?0\)$/i',
+                                    trim($tplItems->backgroundcolor))
+                            ) {
+                                $background = 'background: ' . $tplItems->backgroundcolor . ';';
+                            }
+                            if (isset($tplItems->textcolor) && $tplItems->textcolor
+                                && !preg_match('/^rgba\([0-9]+\,\s+?[0-9]+\,\s+?[0-9]+\,\s+?0\)$/i',
+                                    trim($tplItems->textcolor))
+                            ) {
+                                $color = 'color: ' . $tplItems->textcolor . ';';
+                            }
+                            if (isset($tplItems->margin) && !empty($tplItems->margin)) {
+                                $margin = 'margin: ' . $tplItems->margin . ';';
+                            }
+                            if (isset($tplItems->padding) && !empty($tplItems->padding)) {
+                                $padding = 'padding: ' . $tplItems->padding . ';';
+                            }
+                            if ($background || $color || $margin || $padding) {
+                                $this->document->addStyleDeclaration('
+                            #tz-portfolio-template-' . JApplication::stringURLSafe($tplItems->name) . '{
+                                ' . $background . $color . $margin . $padding . '
+                            }
+                        ');
+                            }
+                            if (isset($tplItems->linkcolor) && $tplItems->linkcolor
+                                && !preg_match('/^rgba\([0-9]+\,\s+?[0-9]+\,\s+?[0-9]+\,\s+?0\)$/i', trim($tplItems->linkcolor))
+                            ) {
+                                $this->document->addStyleDeclaration('
+                                #tz-portfolio-template-' . JApplication::stringURLSafe($tplItems->name) . ' a{
+                                    color: ' . $tplItems->linkcolor . ';
+                                }
+                            ');
+                            }
+                            if (isset($tplItems->linkhovercolor) && $tplItems->linkhovercolor
+                                && !preg_match('/^rgba\([0-9]+\,\s+?[0-9]+\,\s+?[0-9]+\,\s+?0\)$/i', trim($tplItems->linkhovercolor))
+                            ) {
+                                $this->document->addStyleDeclaration('
+                                #tz-portfolio-template-' . JApplication::stringURLSafe($tplItems->name) . ' a:hover{
+                                    color: ' . $tplItems->linkhovercolor . ';
+                                }
+                            ');
+                            }
+                            $rows[] = '<div id="tz-portfolio-template-' . (isset($tplItems->name) ? JApplication::stringURLSafe($tplItems->name) : '') . '"'
+                                . ' class="' . ($tplItems->{"class"} ? ' ' . $tplItems->{"class"} : '')
+                                . ((isset($tplItems->responsive) && $tplItems->responsive) ? ' ' . $tplItems->responsive : '') . '">';
+                            if (isset($tplItems->containertype) && $tplItems->containertype) {
+                                $rows[] = '<div class="' . $tplItems->containertype . '">';
+                            }
+
+                            $rows[] = '<div class="row">';
+
+                            $rows = array_merge($rows, $childRows);
+
+                            if (isset($tplItems->containertype) && $tplItems->containertype) {
+                                $rows[] = '</div>';
+                            }
+                            $rows[] = '</div>';
                             $rows[] = '</div>';
                         }
-                        $rows[] = '</div>';
-                        $rows[] = '</div>';
-                        $this -> generateLayout .= implode("\n",$rows);
+                        if($rows) {
+                            $this->generateLayout .= implode("\n", $rows);
+                        }
                     }
                 }
             }
@@ -189,63 +210,10 @@ class TZ_Portfolio_PlusViewLegacy extends JViewLegacy{
             $color      = null;
             $margin     = null;
             $padding    = null;
+            $childRows  = array();
 
-            if($children -> backgroundcolor && !preg_match('/^rgba\([0-9]+\,\s+?[0-9]+\,\s+?[0-9]+\,\s+?0\)$/i',trim($children -> backgroundcolor))){
-                $background  = 'background: '.$children -> backgroundcolor.';';
-            }
-            if($children -> textcolor && !preg_match('/^rgba\([0-9]+\,\s+?[0-9]+\,\s+?[0-9]+\,\s+?0\)$/i',trim($children -> textcolor))){
-                $color      =  'color: '.$children -> textcolor.';';
-            }
-            if(isset($children -> margin) && !empty($children -> margin)){
-                $margin = 'margin: '.$children -> margin.';';
-            }
-            if(isset($children -> padding) && !empty($children -> padding)){
-                $padding = 'padding: '.$children -> padding.';';
-            }
-            if($background || $color){
-                $this -> document -> addStyleDeclaration('
-                    #tz-portfolio-template-'.JApplication::stringURLSafe($children -> name).'-inner{
-                        '.$background.$color.$margin.$padding.'
-                    }
-                ');
-            }
-            if($children -> linkcolor && !preg_match('/^rgba\([0-9]+\,\s+?[0-9]+\,\s+?[0-9]+\,\s+?0\)$/i',trim($children -> linkcolor))){
-                $this -> document -> addStyleDeclaration('
-                        #tz-portfolio-template-'.JApplication::stringURLSafe($children -> name).'-inner a{
-                            color: '.$children -> linkcolor.';
-                        }
-                    ');
-            }
-            if($children -> linkhovercolor && !preg_match('/^rgba\([0-9]+\,\s+?[0-9]+\,\s+?[0-9]+\,\s+?0\)$/i',trim($children -> linkhovercolor))){
-                $this -> document -> addStyleDeclaration('
-                        #tz-portfolio-template-'.JApplication::stringURLSafe($children -> name).'-inner a:hover{
-                            color: '.$children -> linkhovercolor.';
-                        }
-                    ');
-            }
-            $rows[] = '<div id="tz-portfolio-template-'.JApplication::stringURLSafe($children -> name).'-inner" class="'
-                .$children -> {"class"}.($children -> responsive?' '.$children -> responsive:'').'">';
-            $rows[] = '<div class="row">';
             foreach($children -> children as $children){
                 $html   = null;
-
-                if(!empty($children -> {"col-lg"}) || !empty($children -> {"col-md"})
-                    || !empty($children -> {"col-sm"}) || !empty($children -> {"col-xs"})
-                    || !empty($children -> {"col-lg-offset"}) || !empty($children -> {"col-md-offset"})
-                    || !empty($children -> {"col-sm-offset"}) || !empty($children -> {"col-xs-offset"})
-                    || !empty($children -> {"customclass"}) || $children -> responsiveclass){
-                    $rows[] = '<div class="'
-                        .(!empty($children -> {"col-lg"})?'col-lg-'.$children -> {"col-lg"}:'')
-                        .(!empty($children -> {"col-md"})?' col-md-'.$children -> {"col-md"}:'')
-                        .(!empty($children -> {"col-sm"})?' col-sm-'.$children -> {"col-sm"}:'')
-                        .(!empty($children -> {"col-xs"})?' col-xs-'.$children -> {"col-xs"}:'')
-                        .(!empty($children -> {"col-lg-offset"})?' col-lg-offset-'.$children -> {"col-lg-offset"}:'')
-                        .(!empty($children -> {"col-md-offset"})?' col-md-offset-'.$children -> {"col-md-offset"}:'')
-                        .(!empty($children -> {"col-sm-offset"})?' col-sm-offset-'.$children -> {"col-sm-offset"}:'')
-                        .(!empty($children -> {"col-xs-offset"})?' col-xs-offset-'.$children -> {"col-xs-offset"}:'')
-                        .(!empty($children -> {"customclass"})?' '.$children -> {"customclass"}:'')
-                        .($children -> responsiveclass?' '.$children -> responsiveclass:'').'">';
-                }
 
                 if($children -> type && $children -> type !='none'){
                     if(in_array($children -> type, $this -> core_types)) {
@@ -281,23 +249,90 @@ class TZ_Portfolio_PlusViewLegacy extends JViewLegacy{
                     }
                     $html   = trim($html);
                 }
-                $rows[] = $html;
 
-                if( !empty($children -> children) and is_array($children -> children) ){
-                    $this -> _childrenLayout($rows,$children,$article,$params,$dispatcher);
-                }
+                if( !empty($html) || (!empty($children -> children) and is_array($children -> children))){
+                    if(!empty($children -> {"col-lg"}) || !empty($children -> {"col-md"})
+                        || !empty($children -> {"col-sm"}) || !empty($children -> {"col-xs"})
+                        || !empty($children -> {"col-lg-offset"}) || !empty($children -> {"col-md-offset"})
+                        || !empty($children -> {"col-sm-offset"}) || !empty($children -> {"col-xs-offset"})
+                        || !empty($children -> {"customclass"}) || $children -> responsiveclass){
+                        $childRows[] = '<div class="'
+                            .(!empty($children -> {"col-lg"})?'col-lg-'.$children -> {"col-lg"}:'')
+                            .(!empty($children -> {"col-md"})?' col-md-'.$children -> {"col-md"}:'')
+                            .(!empty($children -> {"col-sm"})?' col-sm-'.$children -> {"col-sm"}:'')
+                            .(!empty($children -> {"col-xs"})?' col-xs-'.$children -> {"col-xs"}:'')
+                            .(!empty($children -> {"col-lg-offset"})?' col-lg-offset-'.$children -> {"col-lg-offset"}:'')
+                            .(!empty($children -> {"col-md-offset"})?' col-md-offset-'.$children -> {"col-md-offset"}:'')
+                            .(!empty($children -> {"col-sm-offset"})?' col-sm-offset-'.$children -> {"col-sm-offset"}:'')
+                            .(!empty($children -> {"col-xs-offset"})?' col-xs-offset-'.$children -> {"col-xs-offset"}:'')
+                            .(!empty($children -> {"customclass"})?' '.$children -> {"customclass"}:'')
+                            .($children -> responsiveclass?' '.$children -> responsiveclass:'').'">';
+                    }
+                    $childRows[] = $html;
 
-                if(!empty($children -> {"col-lg"}) || !empty($children -> {"col-md"})
-                    || !empty($children -> {"col-sm"}) || !empty($children -> {"col-xs"})
-                    || !empty($children -> {"col-lg-offset"}) || !empty($children -> {"col-md-offset"})
-                    || !empty($children -> {"col-sm-offset"}) || !empty($children -> {"col-xs-offset"})
-                    || !empty($children -> {"customclass"}) || $children -> responsiveclass){
-                    $rows[] = '</div>'; // Close col tag
+                    if( !empty($children -> children) and is_array($children -> children) ){
+                        $this -> _childrenLayout($childRows,$children,$article,$params,$dispatcher);
+                    }
+
+                    if(!empty($children -> {"col-lg"}) || !empty($children -> {"col-md"})
+                        || !empty($children -> {"col-sm"}) || !empty($children -> {"col-xs"})
+                        || !empty($children -> {"col-lg-offset"}) || !empty($children -> {"col-md-offset"})
+                        || !empty($children -> {"col-sm-offset"}) || !empty($children -> {"col-xs-offset"})
+                        || !empty($children -> {"customclass"}) || $children -> responsiveclass){
+                        $childRows[] = '</div>'; // Close col tag
+                    }
                 }
 
             }
-            $rows[] = '</div>';
-            $rows[] = '</div>';
+
+            if(count($childRows)) {
+                if (isset($children->backgroundcolor) && $children->backgroundcolor
+                    && !preg_match('/^rgba\([0-9]+\,\s+?[0-9]+\,\s+?[0-9]+\,\s+?0\)$/i',
+                        trim($children->backgroundcolor))) {
+                    $background = 'background: ' . $children->backgroundcolor . ';';
+                }
+                if (isset($children->textcolor) && $children->textcolor
+                    && !preg_match('/^rgba\([0-9]+\,\s+?[0-9]+\,\s+?[0-9]+\,\s+?0\)$/i', trim($children->textcolor))) {
+                    $color = 'color: ' . $children->textcolor . ';';
+                }
+                if (isset($children->margin) && !empty($children->margin)) {
+                    $margin = 'margin: ' . $children->margin . ';';
+                }
+                if (isset($children->padding) && !empty($children->padding)) {
+                    $padding = 'padding: ' . $children->padding . ';';
+                }
+                if ($background || $color) {
+                    $this->document->addStyleDeclaration('
+                        #tz-portfolio-template-' . JApplication::stringURLSafe($children->name) . '-inner{
+                            ' . $background . $color . $margin . $padding . '
+                        }
+                    ');
+                }
+                if (isset($children->linkcolor) && $children->linkcolor
+                    && !preg_match('/^rgba\([0-9]+\,\s+?[0-9]+\,\s+?[0-9]+\,\s+?0\)$/i', trim($children->linkcolor))) {
+                    $this->document->addStyleDeclaration('
+                            #tz-portfolio-template-' . JApplication::stringURLSafe($children->name) . '-inner a{
+                                color: ' . $children->linkcolor . ';
+                            }
+                        ');
+                }
+                if (isset($children->linkhovercolor) && $children->linkhovercolor
+                    && !preg_match('/^rgba\([0-9]+\,\s+?[0-9]+\,\s+?[0-9]+\,\s+?0\)$/i', trim($children->linkhovercolor))) {
+                    $this->document->addStyleDeclaration('
+                            #tz-portfolio-template-' . JApplication::stringURLSafe($children->name) . '-inner a:hover{
+                                color: ' . $children->linkhovercolor . ';
+                            }
+                        ');
+                }
+                $rows[] = '<div id="tz-portfolio-template-' .(isset($children->name)?JApplication::stringURLSafe($children->name):'')
+                    . '-inner" class="'. (isset($children->{"class"})?$children->{"class"}:'').
+                    ((isset($children->responsive) && $children->responsive) ? ' ' . $children->responsive : '') . '">';
+                $rows[] = '<div class="row">';
+                $rows   = array_merge($rows, $childRows);
+
+                $rows[] = '</div>';
+                $rows[] = '</div>';
+            }
         }
         return;
     }

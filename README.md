@@ -10,6 +10,13 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 	
+09/15/2016 - 1.0.4
+	
+	- Fix some warning when install first component.
+	- Fix error option "Layout" in Template Style with joomla 3.6.2
+	- Fix warning: added function postDeleteHook to path file libraries/controller/admin.php
+	- Update basic styles for default template of component, modules: TZ Portfolio Plus Articles, TZ Portfolio Plus Tags and TZ Portfolio Plus Categories.
+	
 06/09/2016 - 1.0.3
 	
 	- Fix error upload image from server with add-on image of v1.0.2

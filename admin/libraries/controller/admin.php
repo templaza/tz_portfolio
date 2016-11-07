@@ -319,4 +319,8 @@ class TZ_Portfolio_Plus_AddOnControllerAdmin extends TZ_Portfolio_Plus_AddOnCont
         // Close the application
         JFactory::getApplication()->close();
     }
+
+    protected function postDeleteHook(JModelLegacy $model, $id = null)
+    {
+    }
 }
