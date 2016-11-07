@@ -128,8 +128,6 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
             }
 
             // Load the core and/or local language file(s).
-//            $lang->load('plg_' . $folder . '_' . $element, JPATH_ADMINISTRATOR, null, false, true)
-//            ||
             $lang->load('plg_' . $folder . '_' . $element, COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/' . $folder . '/' . $element, null, false, true);
 
             if (file_exists($formFile))
@@ -481,6 +479,13 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
             $registry = new Registry;
             $registry->loadString($table->params);
             $this->_cache[$pk]->params = $registry->toArray();
+
+            $plugin = TZ_Portfolio_PlusPluginHelper::getInstance($this->_cache[$pk] -> folder, $this->_cache[$pk] -> element);
+
+            $this->_cache[$pk] -> data_manager        = false;
+            if(method_exists($plugin, 'getDataManager')){
+                $this->_cache[$pk] -> data_manager    = $plugin -> getDataManager();
+            }
 
             // Get the plugin XML.
             $path = JPath::clean(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/' . $table->folder . '/'

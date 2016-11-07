@@ -64,16 +64,19 @@ JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
                 </div>
             </form>
             <?php endif;?>
+
+            <div class="TzItemsRow row">
             <?php foreach($items as $i => &$row):
                     $this -> item = &$row;
             ?>
-                <div class="clr"></div>
-                <div class="<?php if($i == 0): echo 'TzItemsLeading'; else: echo 'TzItemsRow row-0'; endif;?>">
-                    <div class="TzLeading leading-0" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="TzItem"
+                         itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
                         <?php echo $this -> loadTemplate('item');?>
                     </div>
                 </div>
             <?php endforeach;?>
+            </div>
 
             <?php if (($params->def('show_pagination', 1) == 1  || ($params->get('show_pagination') == 2)) && ($this->pagination->get('pages.total') > 1)) : ?>
             <div class="pagination">

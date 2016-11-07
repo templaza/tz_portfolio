@@ -21,6 +21,8 @@
 // No direct access
 defined('_JEXEC') or die;
 
+JLoader::import('com_tz_portfolio_plus.includes.framework',JPATH_ADMINISTRATOR.'/components');
+
 class TZ_Portfolio_PlusInstallerAdapterTemplate extends JInstallerAdapterTemplate{
 
     public function __construct(JInstaller $parent, JDatabaseDriver $db, array $options = array())

@@ -20,7 +20,7 @@
 // no direct access
 defined('_JEXEC') or die;
 
-JLoader::import('route', JPATH_ADMINISTRATOR . '/components/com_tz_portfolio_plus/helpers');
+JLoader::import('route', JPATH_SITE . '/components/com_tz_portfolio_plus/helpers');
 
 class modTzPortfolioTagsHelper
 {

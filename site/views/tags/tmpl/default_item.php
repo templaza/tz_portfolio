@@ -240,10 +240,7 @@ if(!isset($item -> mediatypes) || (isset($item -> mediatypes) && !in_array($item
     <?php if ($this->item->state == 0) : ?>
     </div>
     <?php endif; ?>
-
-
-
-    <div class="item-separator"></div>
+    
 <?php endif;
 endif;
 // End Description and some info

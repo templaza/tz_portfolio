@@ -20,6 +20,9 @@
 // No direct access
 defined('_JEXEC') or die('Restricted access');
 
+JLoader::register('TZ_Portfolio_PlusHelperAddon_Datas', COM_TZ_PORTFOLIO_PLUS_ADMIN_HELPERS_PATH
+    .DIRECTORY_SEPARATOR.'addon_datas.php');
+
 class TZ_Portfolio_PlusViewAddon extends JViewLegacy
 {
     protected $item;
@@ -57,7 +60,6 @@ class TZ_Portfolio_PlusViewAddon extends JViewLegacy
     }
 
     protected function addToolbar(){
-
         JFactory::getApplication()->input->set('hidemainmenu', true);
 
         $user		= JFactory::getUser();
@@ -87,6 +89,11 @@ class TZ_Portfolio_PlusViewAddon extends JViewLegacy
                     JToolBarHelper::save('addon.save');
                 }
             }
+        }
+
+        if($this -> getLayout() == 'edit' && $this -> item -> data_manager){
+            JToolbarHelper::link(JRoute::_(TZ_Portfolio_PlusHelperAddon_Datas::getRootURL($this -> item -> id)),
+                JText::_('COM_TZ_PORTFOLIO_PLUS_ADDON_DATA_MANAGER'),'book');
         }
 
         if($this -> getLayout() != 'manager') {

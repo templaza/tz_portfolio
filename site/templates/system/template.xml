@@ -22,6 +22,14 @@
     </files>
     <config>
         <fields name="params">
+            <fieldset name="basic">
+                <field type="radio" name="load_style"
+                       default="0" class="btn-group"
+                       label="TPL_SYSTEM_LOAD_STYLE_LABEL">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+            </fieldset>
         </fields>
     </config>
 </extension>
