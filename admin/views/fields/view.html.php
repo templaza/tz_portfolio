@@ -122,7 +122,7 @@ class TZ_Portfolio_PlusViewFields extends JViewLegacy
             'a.state' => JText::_('JSTATUS'),
             'f.title' => JText::_('COM_TZ_PORTFOLIO_PLUS_HEADING_TITLE'),
             'groupname' => JText::_('COM_TZ_PORTFOLIO_PLUS_GROUP'),
-            'f.type' => JText::_('COM_TZ_PORTFOLIO_PLUS_HEADING_TYPE'),
+            'f.type' => JText::_('COM_TZ_PORTFOLIO_PLUS_TYPE'),
             'f.published' => JText::_('JSTATUS'),
             'f.id' => JText::_('JGRID_HEADING_ID'));
     }

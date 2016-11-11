@@ -21,11 +21,64 @@ defined('_JEXEC') or die;
 
 class TZ_Portfolio_PlusRouter extends JComponentRouterBase
 {
+    protected $addonRouters     = array();
+
+    public function getAddonRouter($addon, $group = 'content'){
+        if (!isset($this->addonRouters[$addon]))
+        {
+            $addonname  = ucfirst($addon);
+            $class      = 'PlgTZ_Portfolio_Plus'.ucfirst($group).$addonname . 'Router';
+
+
+            if (!class_exists($class))
+            {
+                // Use the component routing handler if it exists
+                $path   = JPATH_SITE.'/components/com_tz_portfolio_plus/addons/'.$group.'/'.$addon.'/router.php';
+
+                // Use the custom routing handler if it exists
+                if (file_exists($path))
+                {
+                    require_once $path;
+                }
+            }
+
+            if (class_exists($class))
+            {
+                $reflection = new ReflectionClass($class);
+
+                if (in_array('JComponentRouterInterface', $reflection->getInterfaceNames()))
+                {
+                    $this->addonRouters[$addon] = new $class($this->app, $this->menu);
+                }
+            }
+        }
+
+        if(isset($this->addonRouters[$addon]) && $this -> addonRouters[$addon]) {
+            return $this->addonRouters[$addon];
+        }
+        return false;
+    }
     public function build(&$query)
     {
         $params		= JComponentHelper::getParams('com_tz_portfolio_plus');
         if($params -> get('tzSef',1)) {
-            return $this -> sefBuild($query);
+            $segments   = $this -> sefBuild($query);
+
+            // Build addon router
+            if($query && isset($query['addon_id'])){
+                $addon_id           = $query['addon_id'];
+                $addon              = TZ_Portfolio_PlusPluginHelper::getPluginById($addon_id);
+                $addonSegments[]    = 'addon_' . $query['addon_id'];
+
+                if($router = $this -> getAddonRouter($addon -> name, $addon -> type)) {
+                    $segs = $router->build($query);
+                    $addonSegments = array_merge($addonSegments, $segs);
+                }
+                unset($query['addon_id']);
+
+                $segments = array_merge($segments, $addonSegments);
+            }
+            return $segments;
         }else{
             return $this -> notSefBuild($query);
         }
@@ -34,12 +87,41 @@ class TZ_Portfolio_PlusRouter extends JComponentRouterBase
 
     public function parse(&$segments)
     {
+        $vars   = array();
+        $tmp    = null;
+        $total  = count($segments);
+        for ($i = 0; $i < $total; $i++)
+        {
+            if(strpos($segments[$i],'addon_') !== false) {
+                $tmp    = $i;
+                break;
+            }
+        }
+
+        // Get addon parse router
+        $addonVars  = array();
+        if($tmp){
+            $addonSegments  = array_slice($segments, $tmp, $total);
+            $segments       = array_slice($segments, 0, $tmp);
+            if(count($addonSegments)){
+                $addon_id           = (int) str_replace('addon_','',$addonSegments[0]);
+                $addonVars['addon_id']   = $addon_id;
+                $addon              = TZ_Portfolio_PlusPluginHelper::getPluginById($addon_id);
+                if($router = $this -> getAddonRouter($addon -> name, $addon -> type)) {
+                    $_addonVars = $router->parse($addonSegments);
+                    $addonVars  = array_merge($addonVars, $_addonVars);
+                }
+            }
+        }
+
         $params		= JComponentHelper::getParams('com_tz_portfolio_plus');
         if($params -> get('tzSef',1)) {
-            return $this -> sefParse($segments);
+            $vars   = $this -> sefParse($segments);
         }else{
-            return $this -> notSefParse($segments);
+            $vars   = $this -> notSefParse($segments);
         }
+        $vars   = array_merge($vars, $addonVars);
+        return $vars;
     }
 
     protected function sefBuild(&$query){
@@ -142,7 +224,6 @@ class TZ_Portfolio_PlusRouter extends JComponentRouterBase
             }
 
             $categories = JCategories::getInstance('TZ_Portfolio_Plus');
-//            $categories = TZ_Portfolio_PlusCategories::getInstance('tz_portfolio_plus');
             $category = $categories->get($catid);
 
             if (!$category) {

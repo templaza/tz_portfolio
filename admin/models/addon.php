@@ -547,6 +547,14 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
         return $this->_cache[$storeId];
     }
 
+    public function getReturnLink(){
+        $input  = JFactory::getApplication() -> input;
+        if($return = $input -> get('return', null, 'base64')){
+            return $return;
+        }
+        return false;
+    }
+
     public function prepareTable($table){
         if(isset($table -> params) && is_array($table -> params)){
             $registry   = new Registry;

@@ -21,7 +21,4 @@
 defined('_JEXEC') or die('Restricted access');
 
 ?>
-<textarea name="<?php echo $this -> getGroupName();?>" rows="10" cols="50">
-    <?php echo $value;?>
-</textarea>
-<?php
+<textarea name="<?php echo $this -> getGroupName();?>" rows="10" cols="50"><?php echo $value;?></textarea>

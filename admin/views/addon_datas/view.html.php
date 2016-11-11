@@ -34,8 +34,6 @@ class TZ_Portfolio_PlusViewAddon_Datas extends JViewLegacy{
         }
 
         $this -> state      = $this -> get('State');
-//        var_dump($this -> getName());
-//        var_dump($this -> state -> get('addon_datas.addon_id')); die;
         $this -> addonItem  = $this -> get('AddonItem');
 
         $this->addToolbar();

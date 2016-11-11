@@ -230,7 +230,7 @@ JFactory::getDocument()->addScriptDeclaration('
                                     if($item -> data_manager){
                                     ?>
                                         <a href="<?php echo JRoute::_(TZ_Portfolio_PlusHelperAddon_Datas::getRootURL($item -> id));?>"
-                                           target="_blank" class="btn btn-small hasTooltip"
+                                           class="btn btn-small hasTooltip"
                                            title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ADDON_DATA_MANAGER')?>">
                                             <span class="icon-book"></span><span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ADDON_DATA_MANAGER')?></span>
                                         </a>

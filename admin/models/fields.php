@@ -24,6 +24,17 @@ jimport('joomla.application.component.modellist');
 
 class TZ_Portfolio_PlusModelFields extends JModelList{
     public function __construct($config = array()){
+        if (empty($config['filter_fields']))
+        {
+            $config['filter_fields'] = array(
+                'id', 'f.id',
+                'title', 'f.title',
+                'groupname', 'f.groupname',
+                'type', 'f.type',
+                'published', 'f.published',
+                'ordering', 'f.ordering'
+            );
+        }
         parent::__construct($config);
     }
 

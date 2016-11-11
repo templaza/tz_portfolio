@@ -54,13 +54,23 @@ class TZ_Portfolio_PlusUser extends JUser{
     {
         if (null === $userHelper)
         {
-            $userHelper = new JUserWrapperHelper;
+            if(class_exists('JUserWrapperHelper')) {
+                $userHelper = new JUserWrapperHelper;
+            }else{
+                $userHelper = null;
+            }
         }
 
         // Find the user id
         if (!is_numeric($identifier))
         {
-            if (!$id = $userHelper->getUserId($identifier))
+            $id = null;
+            if($userHelper){
+                $id = $userHelper->getUserId($identifier);
+            }else{
+                $id = JUserHelper::getUserId($identifier);
+            }
+            if (!$id)
             {
                 // If the $identifier doesn't match with any id, just return an empty JUser.
                 return new TZ_Portfolio_PlusUser;

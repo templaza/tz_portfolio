@@ -141,17 +141,12 @@ JFactory::getDocument()->addScriptDeclaration("
         echo JLayoutHelper::render('joomla.edit.params', $this);
         ?>
 
-<!--        --><?php
-//        if($this -> item && isset($this -> item -> manager) && $this -> item -> manager):
-//        ?>
-<!--            --><?php //echo JHtml::_('bootstrap.addTab', 'myTab', 'addon_manager', JText::_('Manager', true)); ?>
-<!--                --><?php //echo $this -> item -> manager;?>
-<!--            --><?php //echo JHtml::_('bootstrap.endTab'); ?>
-<!--        --><?php //endif;?>
-
         <?php echo JHtml::_('bootstrap.endTabSet'); ?>
     </div>
 
     <input type="hidden" name="task" value="" />
+    <?php if($this -> return_link){?>
+    <input type="hidden" name="return" value="<?php echo $this -> return_link;?>" />
+    <?php }?>
     <?php echo JHtml::_('form.token'); ?>
 </form>

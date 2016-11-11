@@ -60,16 +60,6 @@ $doc        = JFactory::getDocument();
                 <?php echo $created_date;?>
             </div>
             <?php endif;?>
-            <?php if($vote = $this -> loadTemplate('vote')):?>
-            <div class="muted">
-                <?php echo $vote;?>
-            </div>
-            <?php endif;?>
-            <?php if($author_name = $this -> loadTemplate('author_name')):?>
-            <div class="muted">
-                <?php echo $author_name;?>
-            </div>
-            <?php endif;?>
             <?php if($category = $this -> loadTemplate('category')):?>
             <div class="muted">
             <?php echo $category;?>
@@ -114,24 +104,14 @@ $doc        = JFactory::getDocument();
                 <?php echo $extrafields;?>
             </div>
             <?php endif;?>
-            <?php if($tag = $this -> loadTemplate('tag')):?>
+            <?php if($tag = $this -> loadTemplate('tags')):?>
             <div class="">
                 <?php echo $tag;?>
             </div>
             <?php endif;?>
-            <?php if($social_networks = $this -> loadTemplate('social_network')):?>
-                <div class="">
-                    <?php echo $social_networks;?>
-                </div>
-            <?php endif;?>
             <?php if($author_info = $this -> loadTemplate('author')):?>
             <div class="">
                 <?php echo $author_info;?>
-            </div>
-            <?php endif;?>
-            <?php if($related = $this -> loadTemplate('related')):?>
-            <div class="">
-                <?php echo $related;?>
             </div>
             <?php endif;?>
 
@@ -139,6 +119,12 @@ $doc        = JFactory::getDocument();
             //Call event onContentAfterDisplayArticleView on plugin
             echo $item->event->contentDisplayArticleView;
             ?>
+
+            <?php if($related = $this -> loadTemplate('related')):?>
+                <div class="">
+                    <?php echo $related;?>
+                </div>
+            <?php endif;?>
 
         <?php }?>
 

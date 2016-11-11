@@ -346,6 +346,7 @@ class TZ_Portfolio_PlusFrontHelperExtraFields{
             }
             $query -> where('c.id = '.$article -> id);
             $query -> where('f.published = 1');
+            $query -> group('f.id');
             $db    -> setQuery($query);
 
             if($fields = $db -> loadObjectList()){

@@ -38,8 +38,15 @@ class TZ_Portfolio_PlusPluginModelItem extends JModelItem{
         $this -> setState($this -> getName().'.article', $this -> article);
         $params    = null;
         if($this -> addon){
-            $params    = new Registry($this -> addon -> params);
+            if(is_string($this -> addon -> params)) {
+                $params = new Registry($this->addon->params);
+            }else{
+                $params = $this -> addon -> params;
+            }
+            $this -> addon -> params    = $params;
         }
+        $this -> setState($this -> getName().'.addon', $this -> addon);
+
         if($trigger_params = $this -> trigger_params){
             if(is_string($trigger_params)){
                 $trigger_params = new Registry($trigger_params);

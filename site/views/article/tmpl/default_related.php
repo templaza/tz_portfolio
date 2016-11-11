@@ -44,7 +44,6 @@ if (!$this->print) :
 
     <?php foreach($lists as $i => $itemR):?>
     <li class="TzItem<?php if($i == 0) echo ' first'; if($i == count($lists) - 1) echo ' last';?>">
-
         <?php
         if($itemR->event->onContentDisplayMediaType && !empty($itemR->event->onContentDisplayMediaType)) {
             echo $itemR->event->onContentDisplayMediaType;

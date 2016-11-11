@@ -22,6 +22,7 @@ defined('JPATH_PLATFORM') or die;
 
 use Joomla\Registry\Registry;
 
+
 /**
  * Content table
  *

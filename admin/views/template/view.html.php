@@ -46,7 +46,7 @@ class TZ_Portfolio_PlusViewTemplate extends JViewLegacy
 
         $bar    = JToolBar::getInstance();
 
-        JToolBarHelper::title(JText::_('COM_TZ_PORTFOLIO_PLUS_TEMPLATES_MANAGER_TASK'),'eye');
+        JToolBarHelper::title(JText::sprintf('COM_TZ_PORTFOLIO_PLUS_TEMPLATES_MANAGER_TASK',JText::_('COM_TZ_PORTFOLIO_PLUS_TEMPLATE_INSTALL_TEMPLATE')),'eye');
         JToolBarHelper::cancel('template.cancel',JText::_('JTOOLBAR_CLOSE'));
 
         JToolBarHelper::divider();
