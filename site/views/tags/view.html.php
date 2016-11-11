@@ -22,6 +22,8 @@ defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.view');
 jimport('joomla.filesystem.file');
 
+JHtml::addIncludePath(COM_TZ_PORTFOLIO_PLUS_PATH_SITE . '/helpers');
+
 class TZ_Portfolio_PlusViewTags extends JViewLegacy
 {
     protected $items        = null;

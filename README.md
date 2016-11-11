@@ -10,6 +10,22 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 	
+11/11/2016 - 1.0.5
+	
+	- Fix error when install in Joomla v3.2.7
+	- Fix error can't use isotope layout (fitRows, straighDown)
+	- Update return link for addon edit when addon data created option link.
+	- Fix error assign categories in group field with first save group field.
+	- Remove block html when columns don't display html.
+	- Add return link when save & close add-on.
+	- Change error message of addon to display in alert box.
+	- Fix error JHtml Icon in view portfolio.
+	- Fix error default value of textarea extrafield addon.
+	- Change language in view template and template style.
+	- Fix error validate in module mod_tz_portfolio_plus_categories.
+	- Remove navigation of core in Single layout builder (change to addon).
+	- Fix error sort template style in template styles view.
+	
 09/15/2016 - 1.0.4
 	
 	- Fix some warning when install first component.

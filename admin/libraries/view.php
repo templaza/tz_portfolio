@@ -56,6 +56,10 @@ class TZ_Portfolio_PlusViewLegacy extends JViewLegacy{
                         $margin     = null;
                         $padding    = null;
                         $childRows  = array();
+                        $rowName    = null;
+                        if(isset($tplItems -> name) && $tplItems -> name){
+                            $rowName    = JApplication::stringURLSafe($tplItems -> name);
+                        }
 
                         if($tplItems && isset($tplItems -> children)){
                             foreach($tplItems -> children as $children){
@@ -155,16 +159,16 @@ class TZ_Portfolio_PlusViewLegacy extends JViewLegacy{
                             }
                             if ($background || $color || $margin || $padding) {
                                 $this->document->addStyleDeclaration('
-                            #tz-portfolio-template-' . JApplication::stringURLSafe($tplItems->name) . '{
-                                ' . $background . $color . $margin . $padding . '
-                            }
-                        ');
+                                    #tz-portfolio-template-' . ($rowName?$rowName:'') . '{
+                                        ' . $background . $color . $margin . $padding . '
+                                    }
+                                ');
                             }
                             if (isset($tplItems->linkcolor) && $tplItems->linkcolor
                                 && !preg_match('/^rgba\([0-9]+\,\s+?[0-9]+\,\s+?[0-9]+\,\s+?0\)$/i', trim($tplItems->linkcolor))
                             ) {
                                 $this->document->addStyleDeclaration('
-                                #tz-portfolio-template-' . JApplication::stringURLSafe($tplItems->name) . ' a{
+                                #tz-portfolio-template-' . ($rowName?$rowName:'') . ' a{
                                     color: ' . $tplItems->linkcolor . ';
                                 }
                             ');
@@ -173,12 +177,12 @@ class TZ_Portfolio_PlusViewLegacy extends JViewLegacy{
                                 && !preg_match('/^rgba\([0-9]+\,\s+?[0-9]+\,\s+?[0-9]+\,\s+?0\)$/i', trim($tplItems->linkhovercolor))
                             ) {
                                 $this->document->addStyleDeclaration('
-                                #tz-portfolio-template-' . JApplication::stringURLSafe($tplItems->name) . ' a:hover{
+                                #tz-portfolio-template-' . ($rowName?$rowName:'') . ' a:hover{
                                     color: ' . $tplItems->linkhovercolor . ';
                                 }
                             ');
                             }
-                            $rows[] = '<div id="tz-portfolio-template-' . (isset($tplItems->name) ? JApplication::stringURLSafe($tplItems->name) : '') . '"'
+                            $rows[] = '<div id="tz-portfolio-template-' . ($rowName?$rowName:'') . '"'
                                 . ' class="' . ($tplItems->{"class"} ? ' ' . $tplItems->{"class"} : '')
                                 . ((isset($tplItems->responsive) && $tplItems->responsive) ? ' ' . $tplItems->responsive : '') . '">';
                             if (isset($tplItems->containertype) && $tplItems->containertype) {
@@ -211,6 +215,58 @@ class TZ_Portfolio_PlusViewLegacy extends JViewLegacy{
             $margin     = null;
             $padding    = null;
             $childRows  = array();
+            $class      = null;
+            $rowName    = null;
+            $responsive = null;
+
+            if(isset($children -> name) && $children -> name){
+                $rowName    = JApplication::stringURLSafe($children -> name);
+            }
+            if(isset($children->{"class"}) && $children->{"class"}){
+                $class  = $children->{"class"};
+            }
+            if(isset($children->responsive) && $children->responsive){
+                $class  = $children->responsive;
+            }
+
+            if (isset($children->backgroundcolor) && $children->backgroundcolor
+                && !preg_match('/^rgba\([0-9]+\,\s+?[0-9]+\,\s+?[0-9]+\,\s+?0\)$/i',
+                    trim($children->backgroundcolor))) {
+                $background = 'background: ' . $children->backgroundcolor . ';';
+            }
+            if (isset($children->textcolor) && $children->textcolor
+                && !preg_match('/^rgba\([0-9]+\,\s+?[0-9]+\,\s+?[0-9]+\,\s+?0\)$/i', trim($children->textcolor))) {
+                $color = 'color: ' . $children->textcolor . ';';
+            }
+            if (isset($children->margin) && !empty($children->margin)) {
+                $margin = 'margin: ' . $children->margin . ';';
+            }
+            if (isset($children->padding) && !empty($children->padding)) {
+                $padding = 'padding: ' . $children->padding . ';';
+            }
+            if ($background || $color) {
+                $this->document->addStyleDeclaration('
+                        #tz-portfolio-template-' . ($rowName?$rowName:'') . '-inner{
+                            ' . $background . $color . $margin . $padding . '
+                        }
+                    ');
+            }
+            if (isset($children->linkcolor) && $children->linkcolor
+                && !preg_match('/^rgba\([0-9]+\,\s+?[0-9]+\,\s+?[0-9]+\,\s+?0\)$/i', trim($children->linkcolor))) {
+                $this->document->addStyleDeclaration('
+                            #tz-portfolio-template-' . ($rowName?$rowName:'') . '-inner a{
+                                color: ' . $children->linkcolor . ';
+                            }
+                        ');
+            }
+            if (isset($children->linkhovercolor) && $children->linkhovercolor
+                && !preg_match('/^rgba\([0-9]+\,\s+?[0-9]+\,\s+?[0-9]+\,\s+?0\)$/i', trim($children->linkhovercolor))) {
+                $this->document->addStyleDeclaration('
+                            #tz-portfolio-template-' . ($rowName?$rowName:'') . '-inner a:hover{
+                                color: ' . $children->linkhovercolor . ';
+                            }
+                        ');
+            }
 
             foreach($children -> children as $children){
                 $html   = null;
@@ -286,47 +342,9 @@ class TZ_Portfolio_PlusViewLegacy extends JViewLegacy{
             }
 
             if(count($childRows)) {
-                if (isset($children->backgroundcolor) && $children->backgroundcolor
-                    && !preg_match('/^rgba\([0-9]+\,\s+?[0-9]+\,\s+?[0-9]+\,\s+?0\)$/i',
-                        trim($children->backgroundcolor))) {
-                    $background = 'background: ' . $children->backgroundcolor . ';';
-                }
-                if (isset($children->textcolor) && $children->textcolor
-                    && !preg_match('/^rgba\([0-9]+\,\s+?[0-9]+\,\s+?[0-9]+\,\s+?0\)$/i', trim($children->textcolor))) {
-                    $color = 'color: ' . $children->textcolor . ';';
-                }
-                if (isset($children->margin) && !empty($children->margin)) {
-                    $margin = 'margin: ' . $children->margin . ';';
-                }
-                if (isset($children->padding) && !empty($children->padding)) {
-                    $padding = 'padding: ' . $children->padding . ';';
-                }
-                if ($background || $color) {
-                    $this->document->addStyleDeclaration('
-                        #tz-portfolio-template-' . JApplication::stringURLSafe($children->name) . '-inner{
-                            ' . $background . $color . $margin . $padding . '
-                        }
-                    ');
-                }
-                if (isset($children->linkcolor) && $children->linkcolor
-                    && !preg_match('/^rgba\([0-9]+\,\s+?[0-9]+\,\s+?[0-9]+\,\s+?0\)$/i', trim($children->linkcolor))) {
-                    $this->document->addStyleDeclaration('
-                            #tz-portfolio-template-' . JApplication::stringURLSafe($children->name) . '-inner a{
-                                color: ' . $children->linkcolor . ';
-                            }
-                        ');
-                }
-                if (isset($children->linkhovercolor) && $children->linkhovercolor
-                    && !preg_match('/^rgba\([0-9]+\,\s+?[0-9]+\,\s+?[0-9]+\,\s+?0\)$/i', trim($children->linkhovercolor))) {
-                    $this->document->addStyleDeclaration('
-                            #tz-portfolio-template-' . JApplication::stringURLSafe($children->name) . '-inner a:hover{
-                                color: ' . $children->linkhovercolor . ';
-                            }
-                        ');
-                }
-                $rows[] = '<div id="tz-portfolio-template-' .(isset($children->name)?JApplication::stringURLSafe($children->name):'')
-                    . '-inner" class="'. (isset($children->{"class"})?$children->{"class"}:'').
-                    ((isset($children->responsive) && $children->responsive) ? ' ' . $children->responsive : '') . '">';
+                $rows[] = '<div id="tz-portfolio-template-' .($rowName?$rowName:'')
+                    . '-inner" class="'. ($class?$class:'').
+                    ($responsive ? ' ' . $responsive : '') . '">';
                 $rows[] = '<div class="row">';
                 $rows   = array_merge($rows, $childRows);
 

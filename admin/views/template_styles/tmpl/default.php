@@ -23,6 +23,10 @@ defined('_JEXEC') or die('Restricted access');
 JHtml::_('formbehavior.chosen', 'select');
 
 $user		= JFactory::getUser();
+
+$listOrder	= $this->escape($this->state->get('list.ordering'));
+$listDirn	= $this->escape($this->state->get('list.direction'));
+
 ?>
 <form action="index.php?option=com_tz_portfolio_plus&view=template_styles" method="post" name="adminForm" id="adminForm">
     <?php if(!empty($this -> sidebar)):?>
@@ -61,19 +65,19 @@ $user		= JFactory::getUser();
             <tr>
                 <th width="1%"></th>
                 <th class="title">
-                    <?php echo JHtml::_('grid.sort','COM_TZ_PORTFOLIO_PLUS_NAME','name',$this -> state -> filter_order_Dir,$this -> state -> filter_order);?>
+                    <?php echo JHtml::_('grid.sort','JGLOBAL_TITLE','title',$listDirn,$listOrder);?>
                 </th>
                 <th width="1%" style="min-width:55px" class="nowrap center">
-                    <?php echo JHtml::_('grid.sort', 'COM_TEMPLATES_HEADING_DEFAULT', 'home', $this -> state -> filter_order_Dir, $this -> state -> filter_order); ?>
+                    <?php echo JHtml::_('grid.sort', 'COM_TEMPLATES_HEADING_DEFAULT', 'home', $listDirn, $listOrder); ?>
                 </th>
                 <th nowrap="nowrap" width="1%">
                     <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_HEADING_ASSIGNED'); ?>
                 </th>
                 <th nowrap="nowrap" class="center" width="15%">
-                    <?php echo JHtml::_('grid.sort', 'COM_TZ_PORTFOLIO_PLUS_TEMPLATE', 'template', $this -> state -> filter_order_Dir, $this -> state -> filter_order); ?>
+                    <?php echo JHtml::_('grid.sort', 'COM_TZ_PORTFOLIO_PLUS_TEMPLATE', 'template', $listDirn, $listOrder); ?>
                 </th>
                 <th nowrap="nowrap" width="1%">
-                    <?php echo JHtml::_('grid.sort','JGRID_HEADING_ID','id',$this -> state -> filter_order_Dir,$this -> state -> filter_order);?>
+                    <?php echo JHtml::_('grid.sort','JGRID_HEADING_ID','id',$listDirn,$listOrder);?>
                 </th>
             </tr>
             </thead>
@@ -137,8 +141,8 @@ $user		= JFactory::getUser();
 
         <input type="hidden" name="task" value="">
         <input type="hidden" name="boxchecked" value="0">
-        <input type="hidden" name="filter_order" value="<?php echo $this -> state -> filter_order;?>">
-        <input type="hidden" name="filter_order_Dir" value="<?php echo $this -> state -> filter_order_Dir;?>">
+        <input type="hidden" name="filter_order" value="<?php echo $listOrder;?>">
+        <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn;?>">
         <?php echo JHtml::_('form.token');?>
 
     </div>

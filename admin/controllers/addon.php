@@ -159,4 +159,60 @@ class TZ_Portfolio_PlusControllerAddon extends JControllerForm
         $this->setRedirect(JRoute::_('index.php?option=com_tz_portfolio_plus&view=addons', false));
     }
 
+    public function cancel($key = null)
+    {
+        JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
+        if($return = $this -> input -> get('return', null, 'base64')){
+            $this -> setRedirect(base64_decode($return));
+            return true;
+        }
+        return parent::cancel($key);
+    }
+
+    public function save($key = null, $urlVar = null)
+    {
+        if (parent::save($key, $urlVar)) {
+            if($return = $this->input->get('return', null, 'base64')){
+                $task   = $this->getTask();
+                $model  = $this->getModel();
+                $table  = $model->getTable();
+
+                // Determine the name of the primary key for the data.
+                if (empty($key))
+                {
+                    $key = $table->getKeyName();
+                }
+
+                // To avoid data collisions the urlVar may be different from the primary key.
+                if (empty($urlVar))
+                {
+                    $urlVar = $key;
+                }
+
+                $recordId = $this->input->getInt($urlVar);
+
+                switch ($task)
+                {
+                    case 'apply':
+                        // Redirect back to the edit screen.
+                        $this->setRedirect(
+                            JRoute::_(
+                                'index.php?option=' . $this->option . '&view=' . $this->view_item
+                                . $this->getRedirectToItemAppend($recordId, $urlVar).'&return='.$return, false
+                            )
+                        );
+                        break;
+                    case 'save':
+                        $this->setRedirect(base64_decode($return));
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
 }

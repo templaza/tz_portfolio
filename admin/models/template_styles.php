@@ -30,7 +30,7 @@ class TZ_Portfolio_PlusModelTemplate_Styles extends JModelList
         {
             $config['filter_fields'] = array(
                 'id', 't.id',
-                'name', 't.name',
+                'title', 't.title',
                 'home', 't.home',
                 'published', 't.published',
                 'template', 't.template',
@@ -42,25 +42,19 @@ class TZ_Portfolio_PlusModelTemplate_Styles extends JModelList
 
     function populateState($ordering = null, $direction = null){
 
-        parent::populateState('id','desc');
+        parent::populateState('template','asc');
 
         $search  = $this -> getUserStateFromRequest('com_tz_portfolio_plus.styles.filter_search','filter_search',null,'string');
         $this -> setState('filter.search',$search);
 
         $template  = $this -> getUserStateFromRequest('com_tz_portfolio_plus.styles.filter.template','filter_template',null,'string');
         $this -> setState('filter.template',$template);
-
-        $order  = $this -> getUserStateFromRequest('com_tz_portfolio_plus.styles.filter_order','filter_order',null,'string');
-        $this -> setState('filter_order',$order);
-
-        $orderDir  = $this -> getUserStateFromRequest('com_tz_portfolio_plus.styles.filter_order_Dir','filter_order_Dir','asc','string');
-        $this -> setState('filter_order_Dir',$orderDir);
     }
 
     function getListQuery(){
         $db     = $this -> getDbo();
         $query  = $db -> getQuery(true);
-        $query -> select('t.*');
+        $query -> select('t.*, e.name');
         $query -> select('(SELECT COUNT(xc2.template_id) FROM #__tz_portfolio_plus_templates AS t2'
             .' INNER JOIN #__tz_portfolio_plus_content AS xc2 ON t2.id = xc2.template_id WHERE t.id = t2.id)'
             .' AS content_assigned');
@@ -99,7 +93,7 @@ class TZ_Portfolio_PlusModelTemplate_Styles extends JModelList
         }
 
         // Add the list ordering clause.
-        $orderCol = $this->getState('list.ordering','t.name');
+        $orderCol = $this->getState('list.ordering','t.template');
         $orderDirn = $this->getState('list.direction','asc');
 
         if(!empty($orderCol) && !empty($orderDirn)){

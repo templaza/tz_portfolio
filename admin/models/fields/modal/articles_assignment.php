@@ -66,10 +66,8 @@ class JFormFieldModal_Articles_Assignment extends JFormFieldCheckboxes
         $script[] = '	};';
 
         $script[] = '	function jSelectArticle_'.$this->id.'(ids, titles, categories) {';
-//        $script[] = '		document.getElementById("'.$this->id.'").value = ids;';
         $script[] = '		var tztable = document.getElementById("'.$this->id.'_table");';
         $script[] = '		var tbody = tztable.getElementsByTagName("tbody");';
-//        $script[] = '		var html = "";';
         $script[] = '		var parser = new DOMParser();';
         $script[] = '		if(ids.length){';
         $script[] = '		for(var i = 0; i < ids.length; i++){
@@ -82,7 +80,6 @@ class JFormFieldModal_Articles_Assignment extends JFormFieldCheckboxes
         $script[] =            'td = td.cloneNode(true);
                                 td.innerHTML = categories[i];
                                 tr.appendChild(td);
-
                                 tbody[0].appendChild(tr);';
 
         $script[] = '           td = td.cloneNode(true);
@@ -90,13 +87,15 @@ class JFormFieldModal_Articles_Assignment extends JFormFieldCheckboxes
         // Edit article button
         if ($allowEdit)
         {
-            $script[]   =       'td.className ="btn-group";';
+            $script[]   =       'td.className = "btn-group";';
+            $script[]   =       'td.style     = "display: table-cell; position: inherit;";';
             $script[]   =       'td.innerHTML = "<a class=\"btn btn-small\" target=\"_blank\" href=\"index.php?option=com_tz_portfolio_plus&task=article.edit&id="+ids[i]+"\"><span class=\"icon-edit\"></span> ' . JText::_('JACTION_EDIT') . '</a> <a href=\"javascript:\" class=\"btn btn-small\" onclick=\"'.$this->id.'Remove(this);\"><i class=\"icon-remove\"></i> '.JText::_('JTOOLBAR_REMOVE').'</a>"';
         }
         $script[] =            'tr.appendChild(td);';
 
 
         $script[] =            'td = td.cloneNode(true);
+                                td.className ="";
                                 td.innerHTML = ids[i]+"<input type=\"hidden\" name=\"'.$this -> name.'\"'
             .' id=\"'.$this -> id.'\" value=\""+ids[i]+"\">";
                                 tr.appendChild(td);
@@ -105,7 +104,6 @@ class JFormFieldModal_Articles_Assignment extends JFormFieldCheckboxes
 
                             }';
         $script[] = '       }';
-//        $script[] = '       tbody[0].innerHTML = html;';
         if ($allowClear)
         {
             $script[] = '		var tzclear = document.getElementById("' . $this->id . '_clear");';
@@ -113,13 +111,6 @@ class JFormFieldModal_Articles_Assignment extends JFormFieldCheckboxes
                                     tzclear.setAttribute("class",tzclear.getAttribute("class").replace(/\shidden/,""));
                                 };';
         }
-//        if ($allowEdit)
-//        {
-//            $script[] = '		var tzedit = document.getElementById("' . $this->id . '_edit");';
-//            $script[] = '		if(tzedit.getAttribute("class").match(/(.*?)\shidden\s?(.*?)/)){
-//                                    tzedit.setAttribute("class",tzedit.getAttribute("class").replace(/\shidden/,""));
-//                                };';
-//        }
 
         $script[] = '		SqueezeBox.close();';
         $script[] = '	}';
@@ -135,8 +126,6 @@ class JFormFieldModal_Articles_Assignment extends JFormFieldCheckboxes
             $script[] = '	    var tztable = document.getElementById(id+"_table");';
             $script[] = '		var tbody = tztable.getElementsByTagName("tbody");';
             $script[] = '		tbody[0].innerHTML = "";';
-//            $script[] = '		document.getElementById(id + "_id").value = "";';
-//            $script[] = '		document.getElementById(id + "_name").value = "' . htmlspecialchars(JText::_('COM_TZ_PORTFOLIO_PLUS_SELECT_AN_ARTICLE', true), ENT_COMPAT, 'UTF-8') . '";';
             $script[] = '		jQuery("#"+id + "_clear").addClass("hidden");';
             $script[] = '		if (document.getElementById(id + "_edit")) {';
             $script[] = '			jQuery("#"+id + "_edit").addClass("hidden");';
@@ -158,18 +147,6 @@ class JFormFieldModal_Articles_Assignment extends JFormFieldCheckboxes
             $link .= '&amp;forcedLanguage=' . $this->element['language'];
         }
 
-//        $db	= JFactory::getDBO();
-//        $db->setQuery(
-//            'SELECT title' .
-//            ' FROM #__tz_portfolio_plus_content' .
-//            ' WHERE id = '.(int) $this->value
-//        );
-//        $title = $db->loadResult();
-
-//        if ($error = $db->getErrorMsg()) {
-//            JError::raiseWarning(500, $error);
-//        }
-
         if (empty($title)) {
             $title = JText::_('COM_TZ_PORTFOLIO_PLUS_SELECT_AN_ARTICLE');
         }
@@ -178,8 +155,6 @@ class JFormFieldModal_Articles_Assignment extends JFormFieldCheckboxes
         // The current user display field.
         // The current tag display field.
         $html[] = '<div class="input-append">';
-
-//        $html[] = '  <input type="text" id="'.$this->id.'_name" value="'.$title.'" disabled="disabled" size="35" />';
 
         $title      = JText::_('COM_TZ_PORTFOLIO_PLUS_CHANGE_ARTICLES');
         $textLink   = '<i class="icon-copy"></i>&nbsp;'.JText::_('COM_TZ_PORTFOLIO_PLUS_FIELD_SELECT_ARTICLES');
@@ -221,15 +196,19 @@ class JFormFieldModal_Articles_Assignment extends JFormFieldCheckboxes
         $old    = null;
         if($values){
             if($items = $this -> _getItems($values)){
+                $allowEdit		= ((string) $this->element['edit'] == 'true') ? true : false;
+
                 ob_start();
                 foreach($items as $item){
                     ?>
                     <tr>
                         <td><?php echo $item -> title;?></td>
                         <td><?php echo $item -> category_title;?></td>
-                        <td class="btn-group">
+                        <td class="btn-group" style="display: table-cell; position: inherit;">
+                            <?php if ($allowEdit){ ?>
                             <a class="btn btn-small" target="_blank"
                                href="index.php?option=com_tz_portfolio_plus&task=article.edit&id=<?php echo $item -> id;?>"><span class="icon-edit"></span> <?php echo JText::_('JACTION_EDIT')?></a>
+                            <?php }?>
                             <a href="javascript:" class="btn btn-small"
                                onclick="<?php echo $id;?>Remove(this);"><i class="icon-remove"></i> <?php echo JText::_('JTOOLBAR_REMOVE');?></a>
                         </td>
@@ -250,19 +229,21 @@ class JFormFieldModal_Articles_Assignment extends JFormFieldCheckboxes
         ob_start();
         ?>
         <div class="clearfix"></div>
-        <table id="<?php echo $id.'_table';?>" class="table table-striped">
-            <thead>
-                <tr>
-                    <th><?php echo JText::_('JGLOBAL_TITLE');?></th>
-                    <th><?php echo JText::_('JCATEGORY');?></th>
-                    <th style="text-align:center; width: 18%;"><?php echo JText::_('JSTATUS');?></th>
-                    <th style="width: 5%;"><?php echo JText::_('JGRID_HEADING_ID');?></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php echo $tbody;?>
-            </tbody>
-        </table>
+        <div style="max-height: 330px; overflow-y: auto;">
+            <table id="<?php echo $id.'_table';?>" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th><?php echo JText::_('JGLOBAL_TITLE');?></th>
+                        <th><?php echo JText::_('JCATEGORY');?></th>
+                        <th style="text-align:center; width: 18%;"><?php echo JText::_('JSTATUS');?></th>
+                        <th style="width: 5%;"><?php echo JText::_('JGRID_HEADING_ID');?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php echo $tbody;?>
+                </tbody>
+            </table>
+        </div>
 
         <?php
         $html = ob_get_contents();

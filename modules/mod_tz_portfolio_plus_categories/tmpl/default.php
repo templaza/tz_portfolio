@@ -34,6 +34,10 @@ if ($list):
                 $subLevel = (int)$list[$i + 1]->level - (int)$list[$i]->level;
             else
                 $subLevel = 0;
+
+            if(($i == count($list) - 1) && $item -> level > 1){
+                $subLevel   = - ($item -> level - 1);
+            }
             ?>
             <?php if ($subLevel == 0): ?>
                 <div class="item level<?php echo $item -> level - 1;?>">
@@ -56,7 +60,7 @@ if ($list):
                 <div class="item level<?php echo $item -> level -1;?> haschild">
 
                 <a id="category-btn-<?php echo $item->id; ?>" href="#category-<?php echo $item->id; ?>"
-                   data-toggle="collapse" data-toggle="button" class=" ">
+                   data-toggle="collapse" class=" ">
                     <span class="tz_button plus"></span>
                 </a>
 
@@ -76,7 +80,7 @@ if ($list):
                 } ?>
 
                 <div class="sub-menu-category sub-menu-category-<?php echo $subLevel ?> collapse fade" id="category-<?php echo $item->id; ?>">
-            <?php elseif ($subLevel < 0): ?>
+            <?php elseif ($subLevel < 0):?>
                 <div class="item level<?php echo $item -> level -1;?>">
                     <?php if ($params -> get('show_image',1) && $item->images) {
                         echo '<a href="' . $item->link . '"><img src="' . JUri::base() . $item->images . '" alt="' . $item->title . '"/></a>';
@@ -93,9 +97,10 @@ if ($list):
                         echo '<div class="tz_desc">' . $item->description . '</div>';
                     } ?>
                 </div>
-                <?php for ($k = 0; $k > $subLevel; $k--): ?>
+
+                <?php for ($k = 0; $k > $subLevel; $k--):?>
                     </div>
-                    </div>
+                </div>
                 <?php endfor; ?>
             <?php endif; ?>
 

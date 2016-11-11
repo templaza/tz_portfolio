@@ -121,6 +121,7 @@ class TZ_Portfolio_PlusExtraFieldTextArea extends TZ_Portfolio_PlusExtraField
     }
 
     public function getInputDefault($group = null){
+        $this -> group  = $group?$group:$this -> group;
 
         $fieldValues    = $this -> getFieldValues();
 
@@ -130,7 +131,9 @@ class TZ_Portfolio_PlusExtraFieldTextArea extends TZ_Portfolio_PlusExtraField
         }
         $this->setVariable('value', $fieldValues);
 
-        return $this -> loadTmplFile('input_default',__CLASS__);
+        if($html = $this -> loadTmplFile('input_default', __CLASS__)){
+            return $html;
+        }
     }
 
 }

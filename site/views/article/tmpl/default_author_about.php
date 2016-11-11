@@ -32,7 +32,6 @@ if(!empty($item) && $item -> author):
         $target = ' target="_blank"';
     endif;
 ?>
-<div class="clr"></div>
 <div class="tz_portfolio_plus_user">
     <h3 class="TzArticleAuthorTitle"><?php echo JText::_('ARTICLE_AUTHOR_TITLE'); ?></h3>
     <div class="media">

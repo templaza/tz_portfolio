@@ -73,13 +73,14 @@ class TZ_Portfolio_PlusModelGroup extends JModelAdmin
 
             // Assign categories with this group;
             if(!empty($categoriesAssignment) && count($categoriesAssignment)){
+                $id = (int) $this->getState($this->getName() . '.id');
 
                 // Update the mapping for category items that this field's group IS assigned to.
                 $query = $db->getQuery(true)
                     ->update('#__tz_portfolio_plus_categories')
-                    ->set('groupid = ' . (int) $data['id'])
+                    ->set('groupid = ' . $id)
                     ->where('id IN (' . implode(',', $categoriesAssignment) . ')')
-                    ->where('groupid != ' . (int) $data['id']);
+                    ->where('groupid != ' . $id);
                 $db->setQuery($query);
                 $db->execute();
 
@@ -100,7 +101,7 @@ class TZ_Portfolio_PlusModelGroup extends JModelAdmin
                     $query -> insert($db -> quoteName('#__tz_portfolio_plus_categories'));
                     $query ->columns('id,groupid');
                     foreach($insertIds as $cid){
-                        $query -> values($cid.',0,'.$data['id']);
+                        $query -> values($cid.',0,'.$id);
                     }
                     $db -> setQuery($query);
                     $db -> execute();
@@ -118,7 +119,7 @@ class TZ_Portfolio_PlusModelGroup extends JModelAdmin
                 $query->where('id NOT IN (' . implode(',', $categoriesAssignment) . ')');
             }
 
-            $query->where('groupid = ' . (int) $data['id']);
+            $query->where('groupid = ' . $id);
             $db->setQuery($query);
             $db->execute();
             return true;

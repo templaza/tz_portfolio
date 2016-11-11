@@ -22,6 +22,7 @@ defined('_JEXEC') or die;
 JLoader::import('framework',JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/includes');
 tzportfolioplusimport('plugin.modeladmin');
 tzportfolioplusimport('model.admin');
+tzportfolioplusimport('route');
 
 class TZ_Portfolio_PlusPlugin extends JPlugin{
     protected $special              = false;
@@ -306,23 +307,25 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
     // Display form upload image to add or edit of portfolio's article view
     public function onMediaTypeDisplayArticleForm($data=null){
         $html           = null;
-        if($model = $this -> getModel()) {
-            $model -> set('data', $data);
+        if($this -> _type == 'mediatype'){
+            if($model = $this -> getModel()) {
+                $model -> set('data', $data);
 
-            if(method_exists($model, 'getForm')) {
-                $this->form = $model->getForm();
+                if(method_exists($model, 'getForm')) {
+                    $this->form = $model->getForm();
+                }
+
+                $this -> item   = $data;
+                $path           = TZ_Portfolio_PlusPluginHelper::getLayoutPath($this -> _type, $this -> _name, 'admin');
+
+                if(JFile::exists($path)) {
+                    ob_start();
+                    require_once($path);
+                    $html = ob_get_contents();
+                    ob_end_clean();
+                }
+
             }
-
-            $this -> item   = $data;
-            $path           = TZ_Portfolio_PlusPluginHelper::getLayoutPath($this -> _type, $this -> _name, 'admin');
-
-            if(JFile::exists($path)) {
-                ob_start();
-                require_once($path);
-                $html = ob_get_contents();
-                ob_end_clean();
-            }
-
         }
         return $html;
     }
@@ -464,7 +467,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
             $result = true;
             // Check task with format: addon_name.addon_view.addon_task (example image.default.display);
             $adtask     = $input -> get('addon_task');
-            if($adtask && strpos($adtask,'.') > 0){
+            if($adtask && strpos($adtask,'.') > 0 && !$addon_id){
                 list($plgname,$adtask) = explode('.',$adtask,2);
                 if($plgname == $this -> _name){
                     $result = true;
@@ -485,7 +488,8 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
                 $controller -> set('trigger_params', $params);
 
                 $task   = $input->get('addon_task');
-                if(!$task) {
+
+                if(!$task && !$addon_id) {
                     $input->set('addon_view', $vName);
                     $input->set('addon_layout', 'default');
                     if($layout) {
@@ -494,11 +498,17 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
                 }
 
                 $html   = null;
-                ob_start();
-                $controller->execute($task);
-                $controller->redirect();
-                $html   = ob_get_contents();
-                ob_end_clean();
+                try {
+                    ob_start();
+                    $controller->execute($task);
+                    $controller->redirect();
+                    $html = ob_get_contents();
+                    ob_end_clean();
+                }catch (Exception $e){
+                    if($e -> getMessage()) {
+                        JFactory::getApplication() ->enqueueMessage('Addon '.$this -> _name.': '.$e -> getMessage(), 'warning');
+                    }
+                }
 
                 if($html){
                     $html   = trim($html);

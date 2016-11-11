@@ -27,7 +27,7 @@ $saveOrder	= $this -> state -> filter_order == 'f.ordering';
 if ($saveOrder)
 {
     $saveOrderingUrl = 'index.php?option=com_tz_portfolio_plus&task=fields.saveOrderAjax&tmpl=component';
-    JHtml::_('sortablelist.sortable', 'articleList', 'adminForm', strtolower($this -> state -> filter_order_Dir), $saveOrderingUrl);
+    JHtml::_('sortablelist.sortable', 'extraFieldList', 'adminForm', strtolower($this -> state -> filter_order_Dir), $saveOrderingUrl);
 }
 $sortFields = array('f.ordering' => JText::_('JGRID_HEADING_ORDERING'),
     'a.state' => JText::_('JSTATUS'),
@@ -102,11 +102,13 @@ $sortFields = array('f.ordering' => JText::_('JGRID_HEADING_ORDERING'),
     <div class="clearfix"> </div>
 
 
-    <table class="table table-striped" id="articleList">
+    <table class="table table-striped" id="extraFieldList">
         <thead>
         <tr>
             <th width="1%" class="nowrap center hidden-phone">
-                <?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'f.ordering', $this -> state -> filter_order_Dir, $this -> state -> filter_order, null, 'asc', 'JGRID_HEADING_ORDERING'); ?>
+                <?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'f.ordering',
+                    $this -> state -> filter_order_Dir, $this -> state -> filter_order, null,
+                    'asc', 'JGRID_HEADING_ORDERING'); ?>
             </th>
             <th width="1%">
                 <input type="checkbox" name="checkall-toggle"
@@ -193,7 +195,6 @@ $sortFields = array('f.ordering' => JText::_('JGRID_HEADING_ORDERING'),
         </tbody>
 
     </table>
-<!--    <input type="hidden" value="com" name="option">-->
     <input type="hidden" value="" name="task">
     <input type="hidden" value="0" name="boxchecked">
     <input type="hidden" value="<?php echo $this -> state -> filter_order;?>" name="filter_order">

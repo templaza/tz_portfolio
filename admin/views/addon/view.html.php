@@ -30,11 +30,13 @@ class TZ_Portfolio_PlusViewAddon extends JViewLegacy
     protected $form;
     protected $state;
     protected $addonItems;
+    protected $return_link;
 
     public function display($tpl = null)
     {
-        $this->state        = $this->get('State');
-        $this->item         = $this->get('Item');
+        $this->state            = $this->get('State');
+        $this->item             = $this->get('Item');
+        $this -> return_link    = $this -> get('ReturnLink');
 
         if($this -> getLayout() == 'manager') {
             $this->addonItem = $this->get('AddonItem');

@@ -13,6 +13,11 @@
 .tzpp_bootstrap3 .btn-default{
     border-color: #ddd;
 }
+.tzpp_bootstrap3 .modal{
+    width: auto;
+    background: none;
+    margin: 0;
+}
 #TzContent .TzPortfolioTitle,
 .TzTag .TzBlogTitle,
 .TzUser .TzBlogTitle,

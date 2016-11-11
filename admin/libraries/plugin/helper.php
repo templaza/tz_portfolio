@@ -152,6 +152,28 @@ class TZ_Portfolio_PlusPluginHelper extends JPluginHelper{
         return $result;
     }
 
+    public static function getPluginById($id, $enabled=true)
+    {
+        $result = array();
+        $plugins = static::load($enabled);
+
+        // Find the correct plugin(s) to return.
+        if ($id)
+        {
+            foreach ($plugins as $p)
+            {
+                // Is this plugin in the right group?
+                if ($p->id == $id)
+                {
+                    $result = $p;
+                    break;
+                }
+            }
+        }
+
+        return $result;
+    }
+
     public static function importPlugin($type, $plugin = null, $autocreate = true, JEventDispatcher $dispatcher = null)
     {
         static $loaded = array();
@@ -207,7 +229,6 @@ class TZ_Portfolio_PlusPluginHelper extends JPluginHelper{
         , 'introtext' => JText::_('COM_TZ_PORTFOLIO_PLUS_FIELD_INTROTEXT')
         , 'fulltext' => JText::_('COM_TZ_PORTFOLIO_PLUS_FIELD_FULLTEXT')
         , 'category' => JText::_('JCATEGORY')
-        , 'navigation' => JText::_('COM_TZ_PORTFOLIO_PLUS_NAVIGATION')
         , 'created_date' => JText::_('JGLOBAL_FIELD_CREATED_LABEL')
         , 'modified_date' => JText::_('COM_TZ_PORTFOLIO_PLUS_MODIFIED_DATE')
         , 'related' => JText::_('COM_TZ_PORTFOLIO_PLUS_FIELD_RELATED_ARTICLE')
