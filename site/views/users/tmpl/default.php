@@ -63,16 +63,27 @@ JHtml::_('behavior.framework');
             <?php endif;?>
 
             <div class="TzItemsRow row">
-                <?php foreach($items as $i => &$item):
+                <?php
+                $col        = $params -> get('article_columns', 1);
+                $cols       = TZ_Portfolio_PlusContentHelper::getBootstrapColumns($col);
+                $colCounter = 0;
+
+                foreach($items as $i => &$item):
                     $this -> item   = &$item;
                 ?>
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="<?php echo ($cols && isset($cols[$colCounter]))?'col-md-'.$cols[$colCounter]
+                        .(($i != 0 && $i % $col == 0)?' clr':''):'col-md-12'; ?>">
                         <div class="TzItem"
                              itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
                         <?php echo $this -> loadTemplate('item');?>
                         </div>
                     </div>
-                <?php endforeach;?>
+                <?php
+                    $colCounter++;
+                    if($i % $col == 0){
+                        $colCounter = 0;
+                    }
+                endforeach;?>
             </div>
 
             <?php if (($this->params->def('show_pagination', 1) == 1

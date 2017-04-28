@@ -52,7 +52,12 @@ JHtml::addIncludePath(JPATH_COMPONENT.'/helpers');
 
 
             <div class="TzItemsRow row">
-                <?php foreach ($this->items as $key => &$item) : ?>
+                <?php
+                $col        = $this->params -> get('article_columns', 1);
+                $cols       = TZ_Portfolio_PlusContentHelper::getBootstrapColumns($col);
+                $colCounter = 0;
+
+                foreach ($this->items as $key => &$item) : ?>
 
                     <?php if(isset($item -> date_group) AND !empty($item -> date_group)
                         AND $date != strtotime(date(JText::_('COM_TZ_PORTFOLIO_PLUS_DATE_FORMAT_LC3'),strtotime($item -> date_group))) ):?>
@@ -61,7 +66,8 @@ JHtml::addIncludePath(JPATH_COMPONENT.'/helpers');
                         <h2 class="text-info date"><?php echo JHtml::_('date',$item -> date_group,JText::_('COM_TZ_PORTFOLIO_PLUS_DATE_FORMAT_LC3'));?></h2>
                     </div>
                     <?php endif;?>
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="<?php echo ($cols && isset($cols[$colCounter]))?'col-md-'.$cols[$colCounter]
+                            .(($i != 0 && $i % $col == 0)?' clr':''):'col-md-12'; ?>">
                             <div class="TzItem <?php echo $item->state == 0 ? ' system-unpublished' : null; ?>"
                                  itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
                                 <?php

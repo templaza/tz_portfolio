@@ -26,22 +26,24 @@ JLoader::import('article',COM_TZ_PORTFOLIO_PLUS_SITE_HELPERS_PATH);
 
 class TZ_Portfolio_PlusExtraField{
 
-    protected $id               = null;
-    protected $id_suffix        = null;
-    protected $name             = null;
-    protected $field            = null;
-    protected $fieldtype        = null;
-    protected $multiple         = false;
-    protected $multiple_option  = false;
-    protected $params           = null;
-    private $head               = false;
-    protected $attributes       = array();
-    protected $formcontrol      = 'jform';
-    protected $group            = 'extrafields';
-    protected $vars             = array();
-    protected $article          = array();
-    protected $plugin_params    = null;
-    protected static $cache     = array();
+    protected $id                   = null;
+    protected $id_suffix            = null;
+    protected $name                 = null;
+    protected $field                = null;
+    protected $fieldtype            = null;
+    protected $multiple             = false;
+    protected $multiple_option      = false;
+    protected $params               = null;
+    private   $head                 = false;
+    protected $attributes           = array();
+    protected $formcontrol          = 'jform';
+    protected $group                = 'extrafields';
+    protected $vars                 = array();
+    protected $article              = array();
+    protected $plugin_params        = null;
+    protected static $cache         = array();
+    protected $fieldvalue_column    = null;
+    protected $dataSearch           = array();
 
     public function __construct($field = null, $article = null, $option = array())
     {
@@ -89,6 +91,16 @@ class TZ_Portfolio_PlusExtraField{
 
         if($this -> multiple){
             $this -> name   .= '[]';
+        }
+
+        // Create search field name
+        $this->fieldvalue_column = "field_values_" . $this->id . ".value";
+
+        // Create datasearch if it have
+        $app    = JFactory::getApplication();
+        $input  = $app -> input;
+        if($datasearch = $input -> get('fields', array(), 'array')){
+            $this -> dataSearch = $datasearch;
         }
 
         $this -> field  = $field;
@@ -177,8 +189,6 @@ class TZ_Portfolio_PlusExtraField{
                             . ($group ? $group : $this->group) . '][default]" value="$i"/>';
                     }
                     $html           .= '</td>';
-//                    $html           .= '<td class="center"><input type="checkbox" name="'.$this -> formcontrol.'['
-//                                        .($group?$group:$this -> group).'][$i][disabled]" value="1"/></td>';
                     $html           .= '<td><button type="button" class="btn btn-danger btn-mini tz_remove-option"><i class="icon-minus"></i>';
                     $html           .= JText::_('COM_TZ_PORTFOLIO_PLUS_REMOVE').'</button></td>';
                     $html       .= '</tr>';
@@ -236,6 +246,7 @@ class TZ_Portfolio_PlusExtraField{
 
                 $html   = '<button type="button" class="btn btn-mini tz_add-option"><i class="icon-plus"></i>';
                 $html   .= JText::_('COM_TZ_PORTFOLIO_PLUS_ADD_AN_OPTION').'</button>';
+                $html   .= '<div class="max-height-300">';
                 $html   .= '<table class="table table-striped table-bordered">';
                 $html   .= '<thead>';
                 $html       .= '<tr>';
@@ -252,9 +263,6 @@ class TZ_Portfolio_PlusExtraField{
                 $html           .= '<th>';
                 $html               .= JText::_('JDEFAULT');
                 $html           .= '</th>';
-//                $html           .= '<th>';
-//                $html               .= JText::_('JDISABLED');
-//                $html           .= '</th>';
                 $html           .= '<th>';
                 $html               .= JText::_('JSTATUS');
                 $html           .= '</th>';
@@ -298,10 +306,6 @@ class TZ_Portfolio_PlusExtraField{
                         }
                         $html           .= '</td>';
 
-//                        $html           .= '<td class="center"><input type="checkbox" name="'.$this -> formcontrol.'['
-//                                            .($group?$group:$this -> group).']['.$key.'][disabled]"'
-//                                            .' value="1"'.((isset($value ->disabled) && $value ->disabled == 1)
-//                                            ?'checked="checked"':'').'/></td>';
                         $html           .= '<td><button type="button" class="btn btn-danger btn-mini tz_remove-option"><i class="icon-minus"></i>';
                         $html           .= JText::_('COM_TZ_PORTFOLIO_PLUS_REMOVE').'</button></td>';
                         $html       .= '</tr>';
@@ -310,6 +314,7 @@ class TZ_Portfolio_PlusExtraField{
 
                 $html   .= '</tbody>';
                 $html   .= '</table>';
+                $html   .= '</div>';
             }else{
                 $html   = '<input type="text" name="'.$this -> formcontrol.'['.($group?$group:$this -> group).']"'
                     .' value="'. htmlspecialchars($this -> getDefaultValues()).'"/>';
@@ -573,6 +578,59 @@ class TZ_Portfolio_PlusExtraField{
         return $html;
     }
 
+    public function getListing($options = array()){
+
+        if (!$this->isPublished())
+        {
+            return '';
+        }
+
+        $html   = '';
+
+        $value = $this -> getVariable('value');
+        if(!$value || ($value && empty($value))) {
+            $this->setVariable('value', $this -> value);
+        }
+        $_options = $this -> getVariable('options');
+        if(!$_options || ($_options && empty($_options))) {
+            $_options   = $this -> getFieldValues();
+            if(count($options)){
+                $_options   = $options;
+            }
+            $this->setVariable('options', $_options);
+        }
+
+        if($html = $this -> loadTmplFile('listing')){
+            return $html;
+        }
+
+        $value = $this -> getVariable('value');
+        if($this -> multiple_option) {
+            if (count($_options)) {
+                if($this->multiple) {
+                    $html .= '<ul class="value-list">';
+                }
+                foreach ($_options as $option) {
+                    if ($this->multiple) {
+                        if((is_array($value) && in_array($option->value, $value))
+                            || (!is_array($value) && $option->value == $value)){
+                            $html .= '<li ' . $this->getAttribute(null, null, "listing") . '>' . $option->text . '</li>';
+                        }
+                    }elseif(!$this->multiple && $option->value == $value){
+                        $html   .= $option -> text;
+                    }
+                }
+                if($this->multiple) {
+                    $html .= '</ul>';
+                }
+            }
+        } else {
+            $html .= '<div '. $this->getAttribute(null, null, "listing") . '>'.$value.'</div>';
+        }
+
+        return $html;
+    }
+
     public function getInputClass()
     {
         $class = array();
@@ -581,11 +639,6 @@ class TZ_Portfolio_PlusExtraField{
         {
             $class[] = 'required';
         }
-
-//        if ($this->params->get('auto_suggest', 0))
-//        {
-//            $class[] = 'autosuggest';
-//        }
 
         if ($class)
         {
@@ -660,12 +713,6 @@ class TZ_Portfolio_PlusExtraField{
         return false;
     }
 
-//    public function getDescription(){
-//        if(isset($this -> field -> description)) {
-//            return trim($this->field->description);
-//        }
-//    }
-
     protected function getTmplFile($file = 'output', $class = null)
     {
         $folder = null;
@@ -681,8 +728,40 @@ class TZ_Portfolio_PlusExtraField{
             if(stripos($file,'.') == false){
                 $file   .= '.php';
             }
-            $tmpPath = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . DIRECTORY_SEPARATOR . 'extrafields'
+            $tmpPath = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . DIRECTORY_SEPARATOR . $this -> group
                 . DIRECTORY_SEPARATOR .$folder.DIRECTORY_SEPARATOR.'tmpl'.DIRECTORY_SEPARATOR.$file;
+
+            // Create template path of tz_portfolio_plus
+            $template = TZ_Portfolio_PlusTemplate::getTemplate(true);
+            $tplparams = $template->params;
+
+            // Create default template of tz_portfolio_plus
+            if(isset($template -> home_path) && $template -> home_path){
+                $_tmpPath    = $template -> home_path. DIRECTORY_SEPARATOR
+                    . 'plg_'.$this -> group.'_'. $this -> type. DIRECTORY_SEPARATOR . $file;
+                if(JFile::exists($_tmpPath)){
+                    $tmpPath    = $_tmpPath;
+                }
+            }
+            if(isset($template -> base_path) && $template -> base_path){
+                $_tmpPath    = $template -> base_path. DIRECTORY_SEPARATOR
+                    .'plg_'.$this -> group.'_'.$this -> type. DIRECTORY_SEPARATOR . $file;
+
+                if(JFile::exists($_tmpPath)){
+                    $tmpPath    = $_tmpPath;
+                }
+            }
+
+            // Create template path from template site
+            if ($tplparams->get('override_html_template_site', 0)) {
+                $_template = JFactory::getApplication()->getTemplate();
+                $_tmpPath    = JPATH_SITE . '/templates/' . $_template . '/html/com_tz_portfolio_plus/plg_'
+                    .$this -> group.'_' . $this -> type. DIRECTORY_SEPARATOR.$file;
+                if(JFile::exists($_tmpPath)){
+                    $tmpPath    = $_tmpPath;
+                }
+            }
+
             if (JFile::exists($tmpPath))
             {
                 return $tmpPath;
@@ -757,7 +836,9 @@ class TZ_Portfolio_PlusExtraField{
         }
         else
         {
-            $value  = trim($value);
+            if(is_string($value)) {
+                $value = trim($value);
+            }
             return $this -> attributes[$type] -> set($name, $value);
         }
     }
@@ -903,10 +984,6 @@ class TZ_Portfolio_PlusExtraField{
                     if(trim($val['text']) != '' && $val['value'] == ''){
                         $val['value']   = $val['text'];
                     }
-//                    if($val['value']  != "") {
-//                        $val['value'] = JFilterOutput::stringURLUnicodeSlug($val['value']);
-//                        $val['value'] = str_replace('-', '_', $val['value']);
-//                    }
 
                     if (($val["value"] == "" && $i > 0)) {
                         unset($val[$key]);
@@ -1003,5 +1080,124 @@ class TZ_Portfolio_PlusExtraField{
         }
 
         return $result;
+    }
+
+    protected function removeDefaultOption($options){
+        if($options && is_array($options)){
+            foreach($options as $i => &$option){
+                if(isset($option ->default) && $option ->default){
+                    unset($options[$i] ->default);
+                }
+            }
+        }
+        return $options;
+    }
+
+    public function getSearchName(){
+        if($this -> multiple){
+            return 'fields['.$this -> id.'][]';
+        }
+        return 'fields['.$this -> id.']';
+    }
+
+    public function getSearchId(){
+        return 'fields_'.$this -> id;
+    }
+
+    public function getSearchInput($defaultValue = '')
+    {
+        if (!$this->isPublished())
+        {
+            return '';
+        }
+
+        if ($this->getAttribute('type', '', 'search') == '')
+        {
+            $this->setAttribute('type', 'text', 'search');
+        }
+
+        if ((int) $this->params->get('size', 32))
+        {
+            $this->setAttribute('size', (int) $this->params->get('size', 32), 'search');
+        }
+
+        if(isset($this -> dataSearch[$this -> id])){
+            $defaultValue  = $this -> dataSearch[$this -> id];
+        }
+
+        $this->setVariable('defaultValue', $defaultValue);
+        $this -> setAttribute('value', $defaultValue, 'search');
+
+        $value      = !is_null($defaultValue) ? $defaultValue : $this->value;
+        if($this -> multiple){
+            $value  = (array) $value;
+        }
+
+        if($this -> multiple_option) {
+            $options    = $this->getFieldValues();
+
+            $this->setVariable('options', $options);
+        }
+        $this->setVariable('value', $value);
+
+        if($html = $this -> loadTmplFile('searchinput')){
+            return $html;
+        }
+
+        $html   = '<label class="group-label">'.$this -> getTitle().'</label>';
+
+        $this -> setAttribute('class', 'form-control', 'search');
+
+        $html  .= '<input name="'.$this -> getSearchName().'" id="'.$this -> getSearchId().'" '
+            .($this -> isRequired()?' required=""':''). $this->getAttribute(null, null, 'search') .'/>';
+
+        return $html;
+    }
+
+    public function onSearch(&$query, &$where, $search, $forceModifyQuery = false){
+        if ($search === '' || empty($search) || !$this -> isPublished())
+        {
+            return '';
+        }
+
+        $storeId = md5(__METHOD__ . "::" . $this->id);
+        if (!isset(self::$cache[$storeId]) || $forceModifyQuery)
+        {
+            $query -> join('LEFT', '#__tz_portfolio_plus_field_content_map AS field_values_'.$this -> id
+                . ' ON (c.id = field_values_' . $this -> id . '.contentid AND field_values_' . $this -> id
+                . '.fieldsid = ' . $this -> id . ')');
+
+            self::$cache[$storeId] = true;
+        }
+
+        $db     = JFactory::getDbo();
+
+        if (is_string($search))
+        {
+            $where[] = $this->fieldvalue_column . ' LIKE "%' . $db->escape($search, true) . '%"';
+        }elseif(is_array($search) && count($search)){
+            $_where = array();
+            foreach ($search AS $value)
+            {
+                if ($value !== '')
+                {
+                    if($this -> multiple_option){
+                        $_where[] = "( " . $this->fieldvalue_column . " = " . $db->quote($value) .
+                            " OR " . $this->fieldvalue_column . " LIKE '" . $db->escape($value, true) . "|%'" .
+                            " OR " . $this->fieldvalue_column . " LIKE '%|" . $db->escape($value, true) . "|%'" .
+                            " OR " . $this->fieldvalue_column . " LIKE '%|" . $db->escape($value, true) . "' )";
+                    }else {
+                        $_where[] = $this->fieldvalue_column . ' = ' . $db->quote($value);
+                    }
+                }
+            }
+
+            if (!empty($_where))
+            {
+
+
+                $where[] = '(' . implode(" OR ", $_where) . ')';
+            }
+        }
     }
 }

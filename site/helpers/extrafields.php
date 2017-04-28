@@ -28,7 +28,7 @@ class TZ_Portfolio_PlusFrontHelperExtraFields{
 
     protected static $cache     = array();
 
-    public static function getExtraField($field, $article = null, $resetArticleCache = false)
+    public static function getExtraField($field, $article = null, $resetArticleCache = false, $options = array())
     {
         if (!$field)
         {
@@ -44,7 +44,18 @@ class TZ_Portfolio_PlusFrontHelperExtraFields{
             $fieldId = $field;
         }
 
-        $storeId = md5("TZ_Portfolio_PlusCTField::" . $fieldId);
+        // Create storeId key
+        $storeId    = "TZ_Portfolio_PlusCTField::" . $fieldId;
+
+        $context    = null;
+        if(count($options)){
+            if(isset($options['context']) && $options['context']) {
+                $storeId   .= '::' . $options['context'];
+            }
+        }
+
+        $storeId = md5($storeId);
+
         if (!isset(self::$cache['fields'][$storeId]))
         {
 
@@ -75,7 +86,7 @@ class TZ_Portfolio_PlusFrontHelperExtraFields{
             $fieldClass = null;
             if (class_exists($fieldClassName))
             {
-                $fieldClass = new $fieldClassName($_fieldObj);
+                $fieldClass = new $fieldClassName($_fieldObj, null, $options);
             }
 
             self::$cache['fields'][$storeId] = $fieldClass;
@@ -96,21 +107,22 @@ class TZ_Portfolio_PlusFrontHelperExtraFields{
         }
     }
 
-    public static function getExtraFields($article, $params = null, $group = false){
+    public static function getExtraFields($article, $params = null, $group = false, $options = array()){
         $fields     = null;
         if($group){
             $groupobj   = self::getFieldGroupsByArticleId($article -> id);
             $groupid    = JArrayHelper::getColumn($groupobj, 'id');
             $fields     = self::getExtraFieldsByFieldGroupId($groupid);
         }else{
-            $fields = self::getExtraFieldsByArticle($article, $params);
+            $fields = self::getExtraFieldsByArticle($article, $params, $options);
         }
+
         if($fields){
             if(count($fields)){
                 $fieldsObject   = array();
                 foreach($fields as $field){
                     if($field -> published == 1) {
-                        $fieldsObject[] = self::getExtraField($field, $article);
+                        $fieldsObject[] = self::getExtraField($field, $article, false, $options);
                     }
                 }
                 return $fieldsObject;
@@ -253,21 +265,27 @@ class TZ_Portfolio_PlusFrontHelperExtraFields{
             {
                 $db    = JFactory::getDbo();
                 $query = $db->getQuery(true);
-                $query->select('field.*')
+                $query->select('field.*, fg.id AS groupid')
                     ->from('#__tz_portfolio_plus_fields AS field');
+                $query -> join('INNER', '#__tz_portfolio_plus_field_fieldgroup_map AS fm ON fm.fieldsid = field.id');
+                $query -> join('INNER', '#__tz_portfolio_plus_fieldgroups AS fg ON fg.id = fm.groupid');
 
                 $query -> join('INNER', '#__tz_portfolio_plus_extensions AS e ON e.element = field.type')
                     -> where('e.type = '.$db -> quote('tz_portfolio_plus-plugin'))
                     -> where('e.folder = '.$db -> quote('extrafields'))
                     -> where('e.published = 1');
 
-                if($fieldId) {
-                    $query->where('field.id = ' . $fieldId);
+                if($fieldId){
+                    $query->where('field.id = ' . (int) $fieldId);
                 }
 
                 $db->setQuery($query);
 
-                $fieldObj = $db->loadObject();
+                if($fieldObj = $db->loadObject()){
+                    self::$cache[$storeId] = $fieldObj;
+                    return $fieldObj;
+                }
+                self::$cache[$storeId] = false;
             }
 
             self::$cache[$storeId] = $fieldObj;
@@ -316,25 +334,33 @@ class TZ_Portfolio_PlusFrontHelperExtraFields{
         return false;
     }
 
-    public static function getExtraFieldsByArticle($article, $params = null){
+    public static function getExtraFieldsByArticle($article, $params = null, $options = array()){
         if (is_numeric($article))
         {
             $article = TZ_Portfolio_PlusContentHelper::getArticleById($article);
         }
+        $storeId    = __METHOD__;
 
-        $groupid    = self::getFieldGroupsByArticleId($article -> id);
-        $groupid    = JArrayHelper::getColumn($groupid, 'id');
+        if($groupid    = self::getFieldGroupsByArticleId($article -> id)) {
+            $groupid = JArrayHelper::getColumn($groupid, 'id');
+            $storeId    .= '::'.implode(',',$groupid);
+        }
 
-        $storeId    = md5(__METHOD__.'::'.implode(',',$groupid).'::'.$article -> id);
+        $storeId    .= '::'.$article -> id;
+        $storeId    .= json_encode($options);
+
+        $storeId    = md5($storeId);
+
         if(!isset(self::$cache[$storeId])){
             $db         = JFactory::getDbo();
             $query      = $db -> getQuery(true);
 
-            $query -> select('f.*');
+            $query -> select('f.*, fm.groupid');
             $query -> from('#__tz_portfolio_plus_fields AS f');
             $query -> join('INNER', '#__tz_portfolio_plus_field_content_map AS m ON m.fieldsid = f.id');
             $query -> join('INNER', '#__tz_portfolio_plus_content AS c ON c.id = m.contentid');
             $query -> join('INNER', '#__tz_portfolio_plus_field_fieldgroup_map AS fm ON fm.fieldsid = f.id');
+            $query -> join('INNER', '#__tz_portfolio_plus_fieldgroups AS fg ON fg.id = fm.groupid');
 
             $query -> join('INNER', '#__tz_portfolio_plus_extensions AS e ON e.element = f.type')
                 -> where('e.type = '.$db -> quote('tz_portfolio_plus-plugin'))
@@ -346,13 +372,248 @@ class TZ_Portfolio_PlusFrontHelperExtraFields{
             }
             $query -> where('c.id = '.$article -> id);
             $query -> where('f.published = 1');
+
+            // Filter detail, list, search view
+            if(isset($options['filter.detail_view'])){
+                if($options['filter.detail_view']) {
+                    $query -> where('f.detail_view = 1');
+                }else{
+                    $query -> where('f.detail_view = 0');
+                }
+            }
+            if(isset($options['filter.list_view'])){
+                if($options['filter.list_view']) {
+                    $query -> where('f.list_view = 1');
+                }else{
+                    $query -> where('f.list_view = 0');
+                }
+            }
+            if(isset($options['filter.advanced_search'])){
+                if($options['filter.advanced_search']) {
+                    $query -> where('f.advanced_search = 1');
+                }else{
+                    $query -> where('f.advanced_search = 0');
+                }
+            }
+
+            if(isset($options['filter.group']) && $orderGroup = $options['filter.group']){
+                switch ($orderGroup){
+                    default:
+                        $query -> order('fg.id DESC');
+                        break;
+                    case 'date':
+                        $query -> order('fg.id ASC');
+                        break;
+                    case 'alpha':
+                        $query -> order('fg.name ASC');
+                        break;
+                    case 'ralpha':
+                        $query -> order('fg.name DESC');
+                        break;
+                    case 'order':
+                        $query -> order('fg.ordering ASC');
+                        break;
+                }
+            }
+
+            // Ordering by default : core fields, then extra fields
+            $query -> order('IF(fg.field_ordering_type = 2, '.$db -> quoteName('fm.ordering')
+                .',IF(fg.field_ordering_type = 1,'.$db -> quoteName('f.ordering').',NULL))');
+
             $query -> group('f.id');
+
             $db    -> setQuery($query);
 
             if($fields = $db -> loadObjectList()){
                 self::$cache[$storeId]  = $fields;
                 return $fields;
             }
+            self::$cache[$storeId]  = false;
+        }
+        return self::$cache[$storeId];
+    }
+
+    public static function getExtraFieldsByIds($fieldId, $fieldObj = null)
+    {
+        if (!$fieldId)
+        {
+            return null;
+        }
+
+        if (is_array($fieldId)) {
+            $storeId = md5(__METHOD__ . '::' . implode(',', $fieldId));
+        } else {
+            $storeId = md5(__METHOD__ . '::' . $fieldId);
+        }
+
+        if (!isset(self::$cache[$storeId]))
+        {
+            if (!is_object($fieldObj))
+            {
+                $db    = JFactory::getDbo();
+                $query = $db->getQuery(true);
+                $query->select('field.*, fg.id AS groupid')
+                    ->from('#__tz_portfolio_plus_fields AS field');
+                $query -> join('INNER', '#__tz_portfolio_plus_field_fieldgroup_map AS fm ON fm.fieldsid = field.id');
+                $query -> join('INNER', '#__tz_portfolio_plus_fieldgroups AS fg ON fg.id = fm.groupid');
+
+                $query -> join('INNER', '#__tz_portfolio_plus_extensions AS e ON e.element = field.type')
+                    -> where('e.type = '.$db -> quote('tz_portfolio_plus-plugin'))
+                    -> where('e.folder = '.$db -> quote('extrafields'))
+                    -> where('e.published = 1');
+
+                if (is_array($fieldId)) {
+                    $query->where('field.id IN('.implode(',', $fieldId).')');
+                } else {
+                    $query->where('field.id = ' . (int) $fieldId);
+                }
+
+                $db->setQuery($query);
+
+                if($fieldObjs = $db->loadObjectList()){
+                    self::$cache[$storeId]  = $fieldObjs;
+                    return $fieldObjs;
+                }
+            }
+
+            self::$cache[$storeId] = false;
+        }
+
+        return self::$cache[$storeId];
+    }
+
+    public static function getExtraFieldObjectById($fieldId, $fieldObj = null)
+    {
+        if (!$fieldId) {
+            return null;
+        }
+
+        if (is_array($fieldId)) {
+            $storeId = md5(__METHOD__ . '::' . implode(',', $fieldId));
+        } else {
+            $storeId = md5(__METHOD__ . '::' . $fieldId);
+        }
+
+        if (!isset(self::$cache[$storeId]))
+        {
+            if($fields = self::getExtraFieldsByIds($fieldId)){
+                foreach($fields as $field){
+                    if($fieldObj = self::getExtraField($field)){
+                        self::$cache[$storeId][] = $fieldObj;
+                    }
+                }
+                return self::$cache[$storeId];
+            }
+            self::$cache[$storeId]  = false;
+        }
+
+        return self::$cache[$storeId];
+
+    }
+
+    public static function getAdvFilterFields($fieldids = null, $options = array('group' => true))
+    {
+        $opt    = json_encode($options);
+
+        if (is_array($fieldids)) {
+            $storeId = md5(__METHOD__ . '::' . implode(',', $fieldids).'::'.$opt);
+        } else {
+            $storeId = md5(__METHOD__ . '::' . $fieldids.'::'.$opt);
+        }
+
+        if (!isset(self::$cache[$storeId]))
+        {
+            $app      = JFactory::getApplication();
+            $db       = JFactory::getDbo();
+            $query    = $db->getQuery(true);
+            $query->select('e.folder, f.*, fg.name AS field_group_name, fg.id AS groupid');
+            $query->from('#__tz_portfolio_plus_fields AS f');
+            $query -> where('f.published = 1');
+
+            $query->join('', '#__tz_portfolio_plus_extensions AS e ON e.element = f.type')
+                -> where('e.type = '.$db -> quote('tz_portfolio_plus-plugin'))
+                -> where('e.folder = '.$db -> quote('extrafields'))
+                -> where('e.published = 1');
+
+            $query -> join('INNER', '#__tz_portfolio_plus_field_fieldgroup_map AS fm ON fm.fieldsid = f.id');
+            $query->join('', '#__tz_portfolio_plus_fieldgroups AS fg ON fg.id = fm.groupid');
+
+            if(isset($options['filter.groupid']) && $options['filter.groupid']){
+                $groupIds   = $options['filter.groupid'];
+                if(is_array($groupIds) && count($groupIds)) {
+                    $query->where('fg.id IN(' .implode(',', $groupIds).')');
+                }elseif(is_numeric($groupIds)){
+                    $query -> where('fg.id = '. $groupIds);
+                }
+            }
+
+            $query -> group('f.id');
+            if ($app->isSite())
+            {
+                $query->where('f.advanced_search = 1');
+            }
+
+            if(is_array($fieldids)){
+                $fieldids   = array_filter($fieldids);
+                if(count($fieldids)) {
+                    $query->where('f.id IN(' . implode(',', $fieldids) . ')');
+                }
+            }elseif(is_numeric($fieldids)){
+                $query -> where('f.id = '. (int) $fieldids);
+            }
+
+            if(isset($options['filter.group']) && $orderGroup = $options['filter.group']){
+                switch ($orderGroup){
+                    default:
+                        $query -> order('fg.id DESC');
+                        break;
+                    case 'date':
+                        $query -> order('fg.id ASC');
+                        break;
+                    case 'alpha':
+                        $query -> order('fg.name ASC');
+                        break;
+                    case 'ralpha':
+                        $query -> order('fg.name DESC');
+                        break;
+                    case 'order':
+                        $query -> order('fg.ordering ASC');
+                        break;
+                }
+            }
+
+            // Ordering by default : core fields, then extra fields
+            if($fieldids) {
+                $query->order("FIELD(f.id, " . implode(",", $fieldids) . ")");
+            }else{
+                $query -> order('IF(fg.field_ordering_type = 2, '.$db -> quoteName('fm.ordering')
+                    .',IF(fg.field_ordering_type = 1,'.$db -> quoteName('f.ordering').',NULL))');
+            }
+
+            $db -> setQuery($query);
+            if($fields = $db -> loadObjectList()){
+                $fieldGroups = array();
+                foreach($fields as $field){
+                    $fieldClass = self::getExtraField($field);
+                    if(count($options)) {
+                        if(!isset($options['group']) || (isset($options['group']) && $options['group'])) {
+                            if (!isset($fieldGroups[$field->groupid])) {
+                                $fieldGroups[$field->groupid] = new stdClass();
+                                $fieldGroups[$field->groupid]->name = $field->field_group_name;
+                                $fieldGroups[$field->groupid]->id = $field->groupid;
+                                $fieldGroups[$field->groupid]->fields = array();
+                            }
+
+                            $fieldGroups[$field->groupid]->fields[] = $fieldClass;
+                        }else{
+                            $fieldGroups[]  = $fieldClass;
+                        }
+                    }
+                }
+                self::$cache[$storeId]  = $fieldGroups;
+                return $fieldGroups;
+            }
+
             self::$cache[$storeId]  = false;
         }
         return self::$cache[$storeId];

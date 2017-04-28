@@ -22,6 +22,15 @@
             <option value="0">JUNPUBLISHED</option>
         </field>
 
+        <field type="list" name="field_ordering_type"
+               default="0"
+               label="COM_TZ_PORTFOLIO_PLUS_FIELD_ORDERING_TYPE_LABEL"
+               description="COM_TZ_PORTFOLIO_PLUS_FIELD_ORDERING_TYPE_DESC">
+            <option value="0">JGLOBAL_NO_ORDER</option>
+            <option value="1">COM_TZ_PORTFOLIO_PLUS_ORDER_BY_FIELD</option>
+            <option value="2">COM_TZ_PORTFOLIO_PLUS_ORDER_BY_GROUP</option>
+        </field>
+
         <field type="categoriesassignment" name="categories_assignment" class="checkbox"/>
 
         <field name="description" type="editor" class="inputbox"

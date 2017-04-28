@@ -21,7 +21,8 @@
 #TzContent .TzPortfolioTitle,
 .TzTag .TzBlogTitle,
 .TzUser .TzBlogTitle,
-.TzBlog .TzBlogTitle{
+.TzBlog .TzBlogTitle,
+.tz-search .title{
     font-size: 20px;
     line-height: 26px;
     margin-top: 0;
@@ -29,7 +30,8 @@
 .tzpp_bootstrap3 .TzPortfolioTitle a,
 .TzTag .TzBlogTitle a,
 .TzUser .TzBlogTitle a,
-.TzBlog .TzBlogTitle a{
+.TzBlog .TzBlogTitle a,
+.tz-search .title a{
     color: #3b3b3b;
 }
 .tzpp_bootstrap3 .TzPortfolioReadmore{

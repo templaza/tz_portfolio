@@ -211,6 +211,8 @@ if(!isset($item -> mediatypes) || (isset($item -> mediatypes) && !in_array($item
 
 <?php echo $item -> event -> contentDisplayListView; ?>
 
+    <?php echo $this -> loadTemplate('extrafields');?>
+
     <?php if($params -> get('show_user_readmore',1)):?>
     <a class="btn btn-default TzReadmore<?php echo $params -> get('tz_use_lightbox', 1)?' fancybox fancybox.iframe':'';?>"
      href="<?php echo $link; ?>"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_READ_MORE');?></a>

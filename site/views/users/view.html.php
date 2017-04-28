@@ -22,6 +22,9 @@ defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.view');
 jimport('joomla.filesystem.file');
 
+JLoader::import('com_tz_portfolio_plus.helpers.article', JPATH_SITE.DIRECTORY_SEPARATOR.'components');
+JLoader::import('com_tz_portfolio_plus.helpers.extrafields', JPATH_SITE.DIRECTORY_SEPARATOR.'components');
+
 use Joomla\Registry\Registry;
 
 class TZ_Portfolio_PlusViewUsers extends JViewLegacy
@@ -140,13 +143,13 @@ class TZ_Portfolio_PlusViewUsers extends JViewLegacy
 
                     // Check general edit permission first.
                     if ($user->authorise('core.edit', $asset)) {
-                        $item -> params ->set('access-edit', true);
+                        $item -> params ->set('access-edit', false);
                     }
                     // Now check if edit.own is available.
                     elseif (!empty($userId) && $user->authorise('core.edit.own', $asset)) {
                         // Check for a valid user and that they are the owner.
                         if ($userId == $item->created_by) {
-                            $item -> params ->set('access-edit', true);
+                            $item -> params ->set('access-edit', false);
                         }
                     }
                 }
@@ -215,6 +218,11 @@ class TZ_Portfolio_PlusViewUsers extends JViewLegacy
                 }else{
                     unset($items[$i]);
                 }
+
+                // Get article's extrafields
+                $extraFields    = TZ_Portfolio_PlusFrontHelperExtraFields::getExtraFields($item, $item -> params,
+                    false, array('filter.list_view' => true, 'filter.group' => $params -> get('order_fieldgroup', 'rdate')));
+                $item -> extrafields    = $extraFields;
             }
         }
 

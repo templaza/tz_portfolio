@@ -139,8 +139,6 @@ if($this -> items):
             </div>
             <?php endif; ?>
 
-            <div class="TzSeparator"></div>
-
             <?php
             //-- Start display some information --//
             if ($params->get('show_cat_author',0) or $params->get('show_cat_category',0)
@@ -251,6 +249,8 @@ if($this -> items):
             ?>
 
             <?php echo $item -> event -> contentDisplayListView; ?>
+
+            <?php echo $this -> loadTemplate('extrafields');?>
 
             <?php if($params -> get('show_cat_readmore',1)):?>
             <a class="btn btn-primary TzPortfolioReadmore<?php if($params -> get('tz_use_lightbox', 1)){

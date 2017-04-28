@@ -65,5 +65,61 @@ abstract class JHtmlFields
         }
         return $data;
     }
+
+    public static function action($i, $task, $prefix = '', $text = '', $active_title = '', $inactive_title = '', $tip = false, $active_class = '',
+                                  $inactive_class = '', $enabled = true, $translate = true, $checkbox = 'cb')
+    {
+        if (is_array($prefix))
+        {
+            $options = $prefix;
+            $active_title = array_key_exists('active_title', $options) ? $options['active_title'] : $active_title;
+            $inactive_title = array_key_exists('inactive_title', $options) ? $options['inactive_title'] : $inactive_title;
+            $tip = array_key_exists('tip', $options) ? $options['tip'] : $tip;
+            $active_class = array_key_exists('active_class', $options) ? $options['active_class'] : $active_class;
+            $inactive_class = array_key_exists('inactive_class', $options) ? $options['inactive_class'] : $inactive_class;
+            $enabled = array_key_exists('enabled', $options) ? $options['enabled'] : $enabled;
+            $translate = array_key_exists('translate', $options) ? $options['translate'] : $translate;
+            $checkbox = array_key_exists('checkbox', $options) ? $options['checkbox'] : $checkbox;
+            $prefix = array_key_exists('prefix', $options) ? $options['prefix'] : '';
+        }
+
+        if ($tip)
+        {
+            JHtml::_('bootstrap.tooltip');
+
+            $title = $enabled ? $active_title : $inactive_title;
+            $title = $translate ? JText::_($title) : $title;
+            $title = JHtml::tooltipText($title, '', 0);
+        }
+
+        if ($enabled)
+        {
+            $html[] = '<a class="btn btn-micro' . ($active_class == 'publish' ? ' active' : '') . ($tip ? ' hasTooltip' : '') . '"';
+            $html[] = ' href="javascript:void(0);" onclick="return listItemTask(\'' . $checkbox . $i . '\',\'' . $prefix . $task . '\')"';
+            $html[] = $tip ? ' title="' . $title . '"' : '';
+            $html[] = '>';
+            $html[] = '<span class="icon-' . $active_class . '"></span>';
+            $html[] = '</a>';
+        }
+        else
+        {
+            $html[] = '<a class="btn btn-micro disabled jgrid' . ($tip ? ' hasTooltip' : '') . '"';
+            $html[] = $tip ? ' title="' . $title . '"' : '';
+            $html[] = '>';
+
+            if ($active_class == "protected")
+            {
+                $html[] = '<span class="icon-lock"></span>';
+            }
+            else
+            {
+                $html[] = '<span class="icon-' . $inactive_class . '"></span>';
+            }
+
+            $html[] = '</a>';
+        }
+
+        return implode($html);
+    }
 }
  

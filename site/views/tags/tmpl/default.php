@@ -66,10 +66,16 @@ JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
             <?php endif;?>
 
             <div class="TzItemsRow row">
-            <?php foreach($items as $i => &$row):
+            <?php
+            $col        = $params -> get('article_columns', 1);
+            $cols       = TZ_Portfolio_PlusContentHelper::getBootstrapColumns($col);
+            $colCounter = 0;
+
+            foreach($items as $i => &$row):
                     $this -> item = &$row;
             ?>
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="<?php echo ($cols && isset($cols[$colCounter]))?'col-md-'.$cols[$colCounter]
+                    .(($i != 0 && $i % $col == 0)?' clr':''):'col-md-12'; ?>">
                     <div class="TzItem"
                          itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
                         <?php echo $this -> loadTemplate('item');?>

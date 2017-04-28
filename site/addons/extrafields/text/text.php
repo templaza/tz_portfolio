@@ -131,4 +131,95 @@ class TZ_Portfolio_PlusExtraFieldText extends TZ_Portfolio_PlusExtraField{
 
         return true;
     }
+
+    public function onSearch(&$query, &$where, $search, $forceModifyQuery = false)
+    {
+        if ($search === '' || empty($search))
+        {
+            return '';
+        }
+
+        $storeId = md5(__METHOD__ . "::" . $this->id);
+        if (!isset(self::$cache[$storeId]) || $forceModifyQuery)
+        {
+            $query -> join('LEFT', '#__tz_portfolio_plus_field_content_map AS field_values_'.$this -> id
+                . ' ON (c.id = field_values_' . $this -> id . '.contentid AND field_values_' . $this -> id
+                . '.fieldsid = ' . $this -> id . ')');
+
+            self::$cache[$storeId] = true;
+        }
+
+        if (is_string($search))
+        {
+
+            if ($this->params->get("is_numeric", 0))
+            {
+                $search = (int) $search;
+
+                $where[] = "(CONVERT(" . $this->fieldvalue_column . ", DECIMAL(" . $this->params->get("digits_in_total", 11) . "," . $this->params->get("digits_after_decimal", 2) . ") ) = $search )";
+            }
+
+            else
+            {
+                $db = JFactory::getDbo();
+
+                $where[] = $this->fieldvalue_column . " LIKE '%" . $db->escape($search, true) . "%'";
+            }
+        }
+
+        elseif (is_array($search))
+        {
+
+            if ($this->params->get("is_numeric", 0))
+            {
+                if ($search['from'] !== "" && $search['to'] !== "")
+                {
+                    $from = (int) $search['from'];
+                    $to   = (int) $search['to'];
+                    if ($from > $to)
+                    {
+                        $this->swap($from, $to);
+                    }
+
+                    $where[] = "(CONVERT(" . $this->fieldvalue_column . ", DECIMAL(" . $this->params->get("digits_in_total", 11) . "," . $this->params->get("digits_after_decimal", 2) . ") ) BETWEEN $from AND $to )";
+                }
+                elseif ($search['from'] !== "")
+                {
+                    $from = (int) $search['from'];
+
+                    $where[] = "(CONVERT(" . $this->fieldvalue_column . ", DECIMAL(" . $this->params->get("digits_in_total", 11) . "," . $this->params->get("digits_after_decimal", 2) . ") ) >= $from )";
+                }
+                elseif ($search['to'] !== "")
+                {
+                    $to = (int) $search['to'];
+
+                    $where[] = "(CONVERT(" . $this->fieldvalue_column . ", DECIMAL(" . $this->params->get("digits_in_total", 11) . "," . $this->params->get("digits_after_decimal", 2) . ") ) <= $to )";
+                }
+            }
+
+            else
+            {
+                $db     = JFactory::getDbo();
+                $_where = array();
+                foreach ($search AS $value)
+                {
+                    if ($value !== "")
+                    {
+
+                        $_where[] = "( " . $this->fieldvalue_column . " = " . $db->quote($value) .
+                            " OR " . $this->fieldvalue_column . " LIKE '" . $db->escape($value, true) . "|%'" .
+                            " OR " . $this->fieldvalue_column . " LIKE '%|" . $db->escape($value, true) . "|%'" .
+                            " OR " . $this->fieldvalue_column . " LIKE '%|" . $db->escape($value, true) . "' )";
+                    }
+                }
+
+                if (!empty($_where))
+                {
+
+                    $search_operator = " " . $this->params->get("search_operator", "OR") . " ";
+                    $where[]         = "(" . implode($search_operator, $_where) . ")";
+                }
+            }
+        }
+    }
 }

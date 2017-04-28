@@ -30,7 +30,7 @@ class TZ_Portfolio_PlusModelTemplate_Styles extends JModelList
         {
             $config['filter_fields'] = array(
                 'id', 't.id',
-                'title', 't.title',
+                'name', 't.name',
                 'home', 't.home',
                 'published', 't.published',
                 'template', 't.template',
@@ -42,7 +42,7 @@ class TZ_Portfolio_PlusModelTemplate_Styles extends JModelList
 
     function populateState($ordering = null, $direction = null){
 
-        parent::populateState('template','asc');
+        parent::populateState('id','desc');
 
         $search  = $this -> getUserStateFromRequest('com_tz_portfolio_plus.styles.filter_search','filter_search',null,'string');
         $this -> setState('filter.search',$search);
@@ -54,7 +54,7 @@ class TZ_Portfolio_PlusModelTemplate_Styles extends JModelList
     function getListQuery(){
         $db     = $this -> getDbo();
         $query  = $db -> getQuery(true);
-        $query -> select('t.*, e.name');
+        $query -> select('t.*');
         $query -> select('(SELECT COUNT(xc2.template_id) FROM #__tz_portfolio_plus_templates AS t2'
             .' INNER JOIN #__tz_portfolio_plus_content AS xc2 ON t2.id = xc2.template_id WHERE t.id = t2.id)'
             .' AS content_assigned');
@@ -93,7 +93,7 @@ class TZ_Portfolio_PlusModelTemplate_Styles extends JModelList
         }
 
         // Add the list ordering clause.
-        $orderCol = $this->getState('list.ordering','t.template');
+        $orderCol = $this->getState('list.ordering','t.name');
         $orderDirn = $this->getState('list.direction','asc');
 
         if(!empty($orderCol) && !empty($orderDirn)){

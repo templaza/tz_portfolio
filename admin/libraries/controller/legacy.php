@@ -54,8 +54,6 @@ class TZ_Portfolio_Plus_AddOnControllerLegacy extends JControllerLegacy{
         if($view = $this->getView($viewName, $viewType, '', array('base_path' => $this->basePath,
             'layout' => $viewLayout))){
 
-//            $coreViews  = array('article', 'categories', 'date', 'form', 'portfolio', 'tags', 'users');
-
             if($addon = $this -> addon){
                 $plugin_path = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . DIRECTORY_SEPARATOR
                     . $addon -> type . DIRECTORY_SEPARATOR
@@ -68,9 +66,7 @@ class TZ_Portfolio_Plus_AddOnControllerLegacy extends JControllerLegacy{
                 // Create default template of tz_portfolio_plus
                 $defaultPath = null;
                 $tpath = null;
-//                if(!in_array($viewName, $coreViews)){
-//                    $viewName   = null;
-//                }
+
                 if(isset($template -> home_path) && $template -> home_path){
                     $defaultPath    = $template -> home_path. DIRECTORY_SEPARATOR
                         .($viewName?$viewName . DIRECTORY_SEPARATOR:''). 'plg_'

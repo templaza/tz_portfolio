@@ -223,7 +223,9 @@ CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_fieldgroups` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `published` tinyint(4) NOT NULL,
+  `field_ordering_type` tinyint(4) NOT NULL DEFAULT '0',
   `description` text NOT NULL,
+  `ordering` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
@@ -235,7 +237,6 @@ CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_fieldgroups` (
 
 CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_fields` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `groupid` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `title` varchar(255) NOT NULL,
   `type` varchar(255) NOT NULL,
@@ -243,6 +244,9 @@ CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_fields` (
   `default_value` text NOT NULL,
   `ordering` int(11) NOT NULL,
   `published` tinyint(4) NOT NULL DEFAULT '1',
+  `advanced_search` tinyint(4) NOT NULL DEFAULT '0',
+  `list_view` tinyint(4) NOT NULL DEFAULT '0',
+  `detail_view` tinyint(4) NOT NULL DEFAULT '1',
   `params` text NOT NULL,
   `description` text NOT NULL,
   `access` int(10) NOT NULL,
@@ -276,6 +280,7 @@ CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_field_fieldgroup_map` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `fieldsid` int(11) NOT NULL,
   `groupid` int(11) NOT NULL,
+  `ordering` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 

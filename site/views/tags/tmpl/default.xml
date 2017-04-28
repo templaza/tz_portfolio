@@ -55,6 +55,9 @@
                 <option value="0">JHIDE</option>
                 <option value="1">JSHOW</option>
             </field>
+            <field type="text" name="article_columns"
+                   label="COM_TZ_PORTFOLIO_PLUS_LISTING_ARTICLE_COLUMNS_LABEL"
+                   description="COM_TZ_PORTFOLIO_PLUS_LISTING_ARTICLE_COLUMNS_DESC"/>
 
             <!-- Start pagination options -->
             <field type="spacer" name="spacer_pagination_hr" hr="true"/>
@@ -116,6 +119,15 @@
                 <option value="rauthor">JGLOBAL_AUTHOR_REVERSE_ALPHABETICAL</option>
                 <option value="hits">JGLOBAL_MOST_HITS</option>
                 <option value="rhits">JGLOBAL_LEAST_HITS</option>
+                <option value="order">JGLOBAL_ARTICLE_MANAGER_ORDER</option>
+            </field>
+            <field type="list" name="order_fieldgroup"
+                   label="COM_TZ_PORTFOLIO_PLUS_FIELD_GROUP_ORDER_LABEL">
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="rdate">JGLOBAL_MOST_RECENT_FIRST</option>
+                <option value="date">JGLOBAL_OLDEST_FIRST</option>
+                <option value="alpha">JGLOBAL_TITLE_ALPHABETICAL</option>
+                <option value="ralpha">JGLOBAL_TITLE_REVERSE_ALPHABETICAL</option>
                 <option value="order">JGLOBAL_ARTICLE_MANAGER_ORDER</option>
             </field>
             <!-- End order options -->

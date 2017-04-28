@@ -79,6 +79,18 @@ Joomla.submitbutton = function(task) {
                         <div class="controls"><?php echo $form -> getInput('published');?></div>
                     </div>
                     <div class="control-group">
+                        <div class="control-label"><?php echo $form -> getLabel('list_view');?></div>
+                        <div class="controls"><?php echo $form -> getInput('list_view');?></div>
+                    </div>
+                    <div class="control-group">
+                        <div class="control-label"><?php echo $form -> getLabel('detail_view');?></div>
+                        <div class="controls"><?php echo $form -> getInput('detail_view');?></div>
+                    </div>
+                    <div class="control-group">
+                        <div class="control-label"><?php echo $form -> getLabel('advanced_search');?></div>
+                        <div class="controls"><?php echo $form -> getInput('advanced_search');?></div>
+                    </div>
+                    <div class="control-group">
                         <div class="control-label"><?php echo $form -> getLabel('id');?></div>
                         <div class="controls"><?php echo $form -> getInput('id');?></div>
                     </div>
@@ -115,14 +127,10 @@ Joomla.submitbutton = function(task) {
                     <p class="tip"><?php echo $this->escape(JText::_($fieldSet->description));?></p>
                 <?php endif; ?>
 
-                <fieldset>
-                    <?php foreach ($fields as $field) : ?>
-                    <div class="control-group">
-                        <div class="control-label"><?php echo $field->label; ?></div>
-                        <div class="controls"><?php echo $field->input; ?></div>
-                    </div>
-                    <?php endforeach;?>
-                </fieldset>
+                <?php foreach ($fields as $field) {
+                    echo $field->renderField();
+                } ?>
+
                 <?php echo JHtml::_('bootstrap.endSlide');?>
             <?php
                 endif;

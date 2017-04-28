@@ -41,4 +41,16 @@ class TZ_Portfolio_PlusExtraFieldCheckboxes extends TZ_Portfolio_PlusExtraField{
 
         return $this->loadTmplFile('input.php', __CLASS__);
     }
+
+    public function getSearchInput($defaultValue = ''){
+
+        if (!$this->isPublished())
+        {
+            return '';
+        }
+
+        $this->setAttribute('type', 'checkbox', 'search');
+
+        return parent::getSearchInput($defaultValue);
+    }
 }

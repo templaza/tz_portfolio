@@ -260,7 +260,6 @@ class com_tz_portfolio_plusInstallerScript{
 
     function update($adapter){
         $db     = JFactory::getDbo();
-        $arr    = null;
         $listTable  = array(
             $db -> replacePrefix('#__tz_portfolio_plus_addon_data'),
             $db -> replacePrefix('#__tz_portfolio_plus_categories'),
@@ -285,7 +284,9 @@ class com_tz_portfolio_plusInstallerScript{
             $installer ->parseSQLFiles($sql -> install->sql);
         }
 
+        // Add fields for table tz_portfolio_plus_templates;
         $fields = $db -> getTableColumns('#__tz_portfolio_plus_templates');
+        $arr    = array();
         if(!array_key_exists('preset',$fields)){
             $arr[]  = 'ADD `preset` VARCHAR( 255 ) NOT NULL';
         }
@@ -294,6 +295,63 @@ class com_tz_portfolio_plusInstallerScript{
             $arr    = implode(',',$arr);
             if($arr){
                 $query  = 'ALTER TABLE `#__tz_portfolio_plus_templates` '.$arr;
+                $db -> setQuery($query);
+                $db -> execute();
+            }
+        }
+
+        // Add fields for table tz_portfolio_plus_fields;
+        $fields = $db -> getTableColumns('#__tz_portfolio_plus_fields');
+        $arr    = array();
+        if(!array_key_exists('advanced_search',$fields)){
+            $arr[]  = 'ADD `advanced_search` tinyint(4) NOT NULL DEFAULT \'0\'';
+        }
+        if(!array_key_exists('list_view',$fields)){
+            $arr[]  = 'ADD `list_view` tinyint(4) NOT NULL DEFAULT \'0\'';
+        }
+        if(!array_key_exists('detail_view',$fields)){
+            $arr[]  = 'ADD `detail_view` tinyint(4) NOT NULL DEFAULT \'1\'';
+        }
+
+        if($arr && count($arr)>0){
+            $arr    = implode(',',$arr);
+            if($arr){
+                $query  = 'ALTER TABLE `#__tz_portfolio_plus_fields` '.$arr;
+                $db -> setQuery($query);
+                $db -> execute();
+            }
+        }
+
+        // Add fields for table tz_portfolio_plus_field_content_map
+        $fields = $db -> getTableColumns('#__tz_portfolio_plus_field_fieldgroup_map');
+        $arr    = array();
+        if(!array_key_exists('ordering',$fields)){
+            $arr[]  = 'ADD `ordering` int(11) NOT NULL';
+        }
+
+        if($arr && count($arr)>0){
+            $arr    = implode(',',$arr);
+            if($arr){
+                $query  = 'ALTER TABLE `#__tz_portfolio_plus_field_fieldgroup_map` '.$arr;
+                $db -> setQuery($query);
+                $db -> execute();
+            }
+        }
+
+        // Add fields for table tz_portfolio_plus_fieldgroups
+        $fields = $db -> getTableColumns('#__tz_portfolio_plus_fieldgroups');
+        $arr    = array();
+        if(!array_key_exists('field_ordering_type',$fields)){
+            $arr[]  = 'ADD `field_ordering_type` tinyint(4) NOT NULL DEFAULT \'0\'';
+        }
+        if(!array_key_exists('ordering',$fields)){
+            $arr[]  = 'ADD `ordering` int(11) NOT NULL DEFAULT \'0\'';
+        }
+
+        if($arr && count($arr)>0){
+            $arr    = implode(',',$arr);
+            if($arr){
+                $query  = 'ALTER TABLE `#__tz_portfolio_plus_fieldgroups` '.$arr;
                 $db -> setQuery($query);
                 $db -> execute();
             }

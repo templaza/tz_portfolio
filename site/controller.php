@@ -58,14 +58,12 @@ class TZ_Portfolio_PlusController extends TZ_Portfolio_PlusControllerLegacy
 	 */
 	public function display($cachable = false, $urlparams = false)
 	{
-
-//        JFactory::getLanguage() -> load('com_content');
-
 		$app		= JFactory::getApplication('site');
 		$doc    	= JFactory::getDocument();
 		$params     = $app -> getParams();
 		$cachable 	= true;
 
+		$user = JFactory::getUser();
 
 		JHtml::_('behavior.caption');
 
@@ -77,8 +75,10 @@ class TZ_Portfolio_PlusController extends TZ_Portfolio_PlusControllerLegacy
 
         $this->input->set('view', $vName);
 
-		$user = JFactory::getUser();
-
+		if ($user->get('id') || strtoupper($_SERVER['REQUEST_METHOD']) == 'POST' || $vName == 'search')
+		{
+			$cachable = false;
+		}
 
         $safeurlparams = array('catid' => 'INT', 'id' => 'INT', 'cid' => 'ARRAY', 'year' => 'INT', 'month' => 'INT', 'limit' => 'UINT', 'limitstart' => 'UINT',
         			'showall' => 'INT', 'return' => 'BASE64', 'filter' => 'STRING', 'filter_order' => 'CMD', 'filter_order_Dir' => 'CMD', 'filter-search' => 'STRING', 'print' => 'BOOLEAN', 'lang' => 'CMD', 'Itemid' => 'INT');
@@ -119,8 +119,6 @@ class TZ_Portfolio_PlusController extends TZ_Portfolio_PlusControllerLegacy
 			');
 		}
 
-		parent::display($cachable, $safeurlparams);
-
-		return $this;
+		return parent::display($cachable, $safeurlparams);
 	}
 }

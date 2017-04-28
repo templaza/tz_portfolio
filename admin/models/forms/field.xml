@@ -31,6 +31,33 @@
                 JUNPUBLISHED</option>
         </field>
 
+        <field type="radio" name="list_view"
+               default="0"
+               class="btn-group" filter="intval"
+               label="COM_TZ_PORTFOLIO_PLUS_LIST_VIEW_LABEL"
+               description="COM_TZ_PORTFOLIO_PLUS_LIST_VIEW_DESC">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+
+        <field type="radio" name="detail_view"
+               default="1"
+               class="btn-group" filter="intval"
+               label="COM_TZ_PORTFOLIO_PLUS_DETAILS_VIEW_LABEL"
+               description="COM_TZ_PORTFOLIO_PLUS_DETAILS_VIEW_DESC">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+
+        <field type="radio" name="advanced_search"
+               default="0"
+               class="btn-group" filter="intval"
+               label="COM_TZ_PORTFOLIO_PLUS_ADVANCED_SEARCH_LABEL"
+               description="COM_TZ_PORTFOLIO_PLUS_ADVANCED_SEARCH_DESC">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+
         <field type="tzextrafieldtypes" name="type"
                required="true"
                label="COM_TZ_PORTFOLIO_PLUS_TYPE"
