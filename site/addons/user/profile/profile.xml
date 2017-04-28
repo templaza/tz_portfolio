@@ -7,7 +7,7 @@
     <license>GNU/GPL v2 or later http://www.gnu.org/licenses/gpl-2.0.html</license>
     <authorEmail>support@templaza.com</authorEmail>
     <authorUrl>www.templaza.com/</authorUrl>
-    <version>1.0.5</version>
+    <version>1.0.6</version>
     <description>PLG_USER_PROFILE_XML_DESCRIPTION</description>
 
     <files>
@@ -22,7 +22,7 @@
 
                 <field type="spacer" name="spacer_article_name"
                        class="alert alert-warning btn-block"
-                       label="PLG_USER_PROFILE_SPACER_ARTICLES_OPTIONS"/>
+                       label="COM_TZ_PORTFOLIO_PLUS_ATTRIBS_FIELDSET_LABEL"/>
                 <field name="show_gender_user"
                        type="radio"
                        class="btn-group"
@@ -63,7 +63,7 @@
                 <field type="spacer" name="spacer_article_detail" hr="true"/>
                 <field type="spacer" name="spacer_article_detail_name"
                        class="alert alert-warning btn-block"
-                       label="PLG_USER_PROFILE_SPACER_USER_ARTICLES_OPTIONS_IN_CATEGORY_LISTINGS"/>
+                       label="COM_TZ_PORTFOLIO_PLUS_SPACER_ARTICLE_OPTIONS_IN_CATEGORY_LISTINGS"/>
                 <field name="show_cat_user"
                        type="radio"
                        class="btn-group"

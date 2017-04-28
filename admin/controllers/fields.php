@@ -33,7 +33,15 @@ class TZ_Portfolio_PlusControllerFields extends JControllerAdmin
     public function __construct($config = array())
     {
         $this -> input  = JFactory::getApplication()->input;
+
         parent::__construct($config);
+
+        $this->registerTask('listview', 'updatestate');
+        $this->registerTask('unlistview', 'updatestate');
+        $this->registerTask('detailview', 'updatestate');
+        $this->registerTask('undetailview', 'updatestate');
+        $this->registerTask('advsearch', 'updatestate');
+        $this->registerTask('unadvsearch', 'updatestate');
     }
     public function getModel($name = 'Field', $prefix = 'TZ_Portfolio_PlusModel', $config = array('ignore_request' => true))
     {
@@ -74,5 +82,91 @@ class TZ_Portfolio_PlusControllerFields extends JControllerAdmin
         }
 
         $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
+    }
+
+    public function updateState(){
+        // Check for request forgeries
+        JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
+        $cid    = JFactory::getApplication()->input->get('cid', array(), 'array');
+        $data = array('listview' => 1, 'unlistview' => 0,
+            'detailview' => 1, 'undetailview' => 0,
+            'advsearch' => 1, 'unadvsearch' => 0);
+        $task   = $this->getTask();
+        $value  = JArrayHelper::getValue($data, $task, 0, 'int');
+
+        if (empty($cid))
+        {
+            JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
+        }
+        else
+        {
+            // Get the model.
+            $model = $this->getModel();
+
+            // Make sure the item ids are integers
+            JArrayHelper::toInteger($cid);
+
+            // Publish the items.
+            try
+            {
+                $model->updateState($cid, $value, $task);
+                $errors = $model->getErrors();
+
+                if ($value == 1)
+                {
+                    if ($errors)
+                    {
+                        $app = JFactory::getApplication();
+                        $app->enqueueMessage(JText::plural($this->text_prefix . '_N_ITEMS_FAILED_PUBLISHING', count($cid)), 'error');
+                    }
+                    else
+                    {
+                        $ntext = $this->text_prefix . '_N_ITEMS_UPDATESTATE';
+                    }
+                }
+                elseif ($value == 0)
+                {
+                    $ntext = $this->text_prefix . '_N_ITEMS_UPDATESTATE';
+                }
+
+                $this->setMessage(JText::plural($ntext, count($cid)));
+            }
+            catch (Exception $e)
+            {
+                $this->setMessage($e->getMessage(), 'error');
+            }
+        }
+
+        $extension = $this->input->get('extension');
+        $extensionURL = ($extension) ? '&extension=' . $extension : '';
+        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list . $extensionURL, false));
+
+    }
+
+    public function saveOrderAjax()
+    {
+        // Get the input
+        $pks    = $this->input->post->get('cid', array(), 'array');
+        $order  = $this->input->post->get('order', array(), 'array');
+        $group  = $this->input->post->get('filter_group');
+
+        // Sanitize the input
+        JArrayHelper::toInteger($pks);
+        JArrayHelper::toInteger($order);
+
+        // Get the model
+        $model = $this->getModel();
+
+        // Save the ordering
+        $return = $model->saveOrderAjax($pks, $order, $group);
+
+        if ($return)
+        {
+            echo "1";
+        }
+
+        // Close the application
+        JFactory::getApplication()->close();
     }
 }

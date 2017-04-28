@@ -291,4 +291,39 @@ class TZ_Portfolio_PlusHelperCategories
 		}
 		return true;
 	}
+
+	public static function getCategoriesByGroupId($groupid){
+		if(!$groupid){
+			return false;
+		}
+		$storeId	= __METHOD__;
+		if(is_array($groupid) || is_object($groupid)){
+			$storeId	.= '::'.json_encode($groupid);
+		}else{
+			$storeId	.= '::'.$groupid;
+		}
+
+		$storeId	= md5($storeId);
+
+		if(!isset(self::$cache[$storeId])) {
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query -> select('c.*');
+			$query -> from('#__tz_portfolio_plus_categories AS c');
+			$query -> join('INNER', '#__tz_portfolio_plus_fieldgroups AS fg ON c.groupid = fg.id');
+			if (is_numeric($groupid)) {
+				$query -> where('fg.id = '.$groupid);
+			}elseif(is_array($groupid) && count($groupid)){
+				$query -> where('fg.id IN('.implode(',', $groupid).')');
+			}
+
+			$db -> setQuery($query);
+			if($data = $db -> loadObjectList()){
+				self::$cache[$storeId]	= $data;
+				return $data;
+			}
+			self::$cache[$storeId]	= false;
+		}
+		return self::$cache[$storeId];
+	}
 }

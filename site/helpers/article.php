@@ -55,4 +55,50 @@ class TZ_Portfolio_PlusContentHelper{
 
         return self::$cache[$storeId];
     }
+
+    public static function getBootstrapColumns($numOfColumns)
+    {
+        switch ($numOfColumns)
+        {
+            case 1:
+                return array(12);
+                break;
+            case 2:
+                return array(6, 6);
+                break;
+            case 3:
+                return array(4, 4, 4);
+                break;
+            case 4:
+                return array(3, 3, 3, 3);
+                break;
+            case 5:
+                return array(3, 3, 2, 2, 2);
+                break;
+            case 6:
+                return array(2, 2, 2, 2, 2, 2);
+                break;
+            case 7:
+                return array(2, 2, 2, 2, 2, 1, 1);
+                break;
+            case 8:
+                return array(2, 2, 2, 2, 1, 1, 1, 1);
+                break;
+            case 9:
+                return array(2, 2, 2, 1, 1, 1, 1, 1, 1);
+                break;
+            case 10:
+                return array(2, 2, 1, 1, 1, 1, 1, 1, 1, 1);
+                break;
+            case 11:
+                return array(2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+                break;
+            case 12:
+                return array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+                break;
+            default:
+                return array(12);
+                break;
+        }
+    }
 }

@@ -991,6 +991,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
                 $query->select("field.*, m.groupid");
                 $query->from("#__tz_portfolio_plus_fields AS field");
                 $query -> join('LEFT','#__tz_portfolio_plus_field_fieldgroup_map AS m ON field.id = m.fieldsid');
+                $query -> join('INNER', '#__tz_portfolio_plus_fieldgroups AS fg ON fg.id = m.groupid');
 
                 $query -> join('INNER', '#__tz_portfolio_plus_extensions AS e ON e.element = field.type')
                     -> where('e.type = '.$db -> quote('tz_portfolio_plus-plugin'))
@@ -999,7 +1000,11 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
 
                 $query->where("field.published = 1");
                 $query->where("m.groupid = " . $fieldGroup->id);
-                $query->order("field.ordering ASC");
+
+                // Ordering by default : core fields, then extra fields
+                $query -> order('IF(fg.field_ordering_type = 2, '.$db -> quoteName('m.ordering')
+                    .',IF(fg.field_ordering_type = 1,'.$db -> quoteName('field.ordering').',NULL))');
+
                 $db->setQuery($query);
                 $_fields = $db->loadObjectList();
                 if ($_fields)

@@ -10,6 +10,22 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 	
+30/12/2016 - 1.0.6
+	
+	- Fix error in router when the addon has have router (Fix in router.php file)
+	- Fix error when create group field first. (Fix of file models/group.php file in admin).
+	- Added filter module.
+	- Added options: List View (Show this field in article list view)
+		,  Details View (Show this field in article details view), Advanced Search (This field is searchable in advanced search mode)
+		in extrafield.
+	- Added search view.
+	- Display extrafield info in portfolio view, search view.
+	- Fix error sort article by ordering and by category order. (The script in file tz_portfolio_plus.js changed code).
+	- Fix error sort categories in back-end.
+	- Added option "Filter Secondary Category"
+	- Added sort extrafield by group field.
+	- Display Categories Assignment & Total fields for Field Groups in back-end.
+	
 11/11/2016 - 1.0.5
 	
 	- Fix error when install in Joomla v3.2.7

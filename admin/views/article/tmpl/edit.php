@@ -94,44 +94,7 @@ $assoc = JLanguageAssociations::isEnabled();
                 <?php echo $this->form->getField('articletext')->save(); ?>
                 Joomla.submitform(task, document.getElementById('item-form'));
             }
-//            else {
-////                alert('<?php ////echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED'));?>////');
-//                if($('#jform_type_of_media').hasClass('invalid')){
-//                    $('#jform_type_of_media_chzn a').css('border','1px solid red');
-//                }
-//                else{
-//                    $('#jform_type_of_media_chzn a').removeClass('invalid');
-//                }
-//            }
         }
-
-        $(document).ready(function(){
-
-            $('#jform_groupid').bind('change',function(e){
-                e.preventDefault();
-                $('#tz_fieldsid_content').parent('div').css('display','none');
-                $('#jform_attribs_tz_fieldsid_content-lbl').parent('div').css('display','none');
-            });
-
-            var $second = $('#jform_second_catid').clone();
-            $('#jform_catid').bind("change",function(e){
-                e.preventDefault();
-                var $this   = $(this);
-
-                var $second2 = $second.clone();
-                if($second2.find("option[value="+ $this.val() +"]").length){
-                    $second2.find("option[value="+ $this.val() +"]").remove();
-                    $('#jform_second_catid')
-                        .html($second2.html())
-                        .trigger("liszt:updated.chosen");
-                }
-
-            });
-            $('#jform_catid').trigger("change");
-            // End Extrafield
-
-        });
-
     })(jQuery);
     </script>
 
@@ -177,9 +140,6 @@ $assoc = JLanguageAssociations::isEnabled();
                                     <label><?php echo $this->form->getLabel('tags');?></label>
                                 </div>
                                 <div class="controls">
-<!--                                    <input type="text" name="tz_tags[]" class="suggest"-->
-<!---->
-<!--                                           data-provide="typeahead"/>-->
                                     <?php echo $this -> form -> getInput('tags');?>
                                     <div><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_FORM_TAGS_DESC');?></div>
                                 </div>
@@ -382,19 +342,9 @@ $assoc = JLanguageAssociations::isEnabled();
                             <p class="tip"><?php echo $this->escape(JText::_($fieldSet->description));?></p>
                         <?php endif; ?>
                         <fieldset>
-                            <?php foreach ($this->form->getFieldset($name) as $field) : ?>
-                                <div class="control-group">
-                                    <?php if($field -> name != 'jform[attribs][tz_fieldsid_content]'):?>
-                                        <div class="control-label"><?php echo $field->label; ?></div>
-                                        <div class="controls"><?php echo $field->input; ?></div>
-                                    <?php else: ?>
-                                        <div class="control-label"><?php echo $field->label; ?></div>
-                                        <div class="controls">
-                                            <div id="tz_fieldsid_content"></div>
-                                        </div>
-                                    <?php endif;?>
-                                </div>
-                            <?php endforeach; ?>
+                            <?php foreach ($this->form->getFieldset($name) as $field){
+                                echo $field -> renderField();
+                            } ?>
                         </fieldset>
                         <?php echo JHtml::_('bootstrap.endSlide');?>
                     <?php endif ?>
@@ -409,38 +359,6 @@ $assoc = JLanguageAssociations::isEnabled();
             
             <?php // The url and images fields only show if the configuration is set to allow them.  ?>
             <?php // This is for legacy reasons. ?>
-
-            <?php if ($params['show_urls_images_backend']): ?>
-                <?php echo JHtml::_('bootstrap.addSlide', 'articleOptions', JText::_('COM_TZ_PORTFOLIO_PLUS_FIELDSET_URLS_AND_IMAGES'), 'urls_and_images-options' ); ?>
-                <fieldset class="panelform">
-                    <div class="control-group">
-                        <div class="control-label"><?php echo $this->form->getLabel('images'); ?></div>
-                        <div class="controls"><?php echo $this->form->getInput('images'); ?></div>
-                    </div>
-
-                    <?php foreach($this->form->getGroup('images') as $field): ?>
-                        <div class="control-group">
-                            <div class="control-label">
-                                <?php if (!$field->hidden): ?>
-                                    <?php echo $field->label; ?>
-                                <?php endif; ?>
-                            </div>
-                            <div class="controls"><?php echo $field->input; ?></div>
-                        </div>
-                    <?php endforeach; ?>
-                    <?php foreach($this->form->getGroup('urls') as $field): ?>
-                        <div class="control-group">
-                            <div class="control-label">
-                                <?php if (!$field->hidden): ?>
-                                    <?php echo $field->label; ?>
-                                <?php endif; ?>
-                            </div>
-                            <div class="controls"><?php echo $field->input; ?></div>
-                        </div>
-                    <?php endforeach; ?>
-                </fieldset>
-                <?php echo JHtml::_('bootstrap.endSlide');?>
-            <?php endif; ?>
 
             <?php echo JHtml::_('bootstrap.addSlide', 'articleOptions', JText::_('JGLOBAL_FIELDSET_METADATA_OPTIONS'), 'meta-options' ); ?>
             <fieldset class="panelform">

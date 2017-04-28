@@ -36,8 +36,13 @@ class TZ_Portfolio_PlusExtraFieldMultipleSelect extends TZ_Portfolio_PlusExtraFi
         return parent::getInput($fieldValue);
     }
 
+    public function getSearchInput($defaultValue = "")
+    {
+        $this->setAttribute('type', 'checkbox', 'search');
 
-//    public function getOutput($options = array()){
-//        var_dump($this -> value); die();
-//    }
+        $this -> setAttribute('multiple', 'multiple', 'search');
+
+        return parent::getSearchInput($defaultValue);
+    }
+
 }

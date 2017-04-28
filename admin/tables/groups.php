@@ -22,15 +22,6 @@ defined('_JEXEC') or die('Restricted access');
 
 class TZ_Portfolio_PlusTableGroups extends JTable
 {
-//     /** @var int Primary key */
-//    var $id 				= 0;
-//    /** @var string */
-//    var $name 				= null;
-//    /** @var int */
-//    var $published 				= null;
-//    /** @var string*/
-//    var $description		= null;
-
     function __construct(&$db) {
         parent::__construct('#__tz_portfolio_plus_fieldgroups','id',$db);
 

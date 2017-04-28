@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.0" type="module" client="site" method="upgrade">
+    <name>mod_tz_portfolio_plus_filter</name>
+    <author>DuongTVTemplaza</author>
+    <creationDate>November 09th 2016</creationDate>
+    <copyright>Copyright (C) 2016 TemPlaza. All rights reserved.</copyright>
+    <license>GNU/GPL v2 or later http://www.gnu.org/licenses/gpl-2.0.html</license>
+    <authorEmail>support@templaza.com</authorEmail>
+    <authorUrl>www.tzportfolio.com/</authorUrl>
+    <version>1.0.6</version>
+    <description>MOD_TZ_PORTFOLIO_PLUS_FILTER_XML_DESCRIPTION</description>
+    <files>
+        <filename module="mod_tz_portfolio_plus_filter">mod_tz_portfolio_plus_filter.php</filename>
+        <folder>admin</folder>
+        <folder>css</folder>
+        <folder>tmpl</folder>
+        <filename>helper.php</filename>
+        <filename>index.html</filename>
+        <filename>mod_tz_portfolio_plus_filter.xml</filename>
+    </files>
+    <languages folder="languages">
+        <language tag="en-GB">en-GB/en-GB.mod_tz_portfolio_plus_filter.ini</language>
+        <language tag="en-GB">en-GB/en-GB.mod_tz_portfolio_plus_filter.sys.ini</language>
+    </languages>
+    <config>
+        <fields name="params" addfieldpath="modules/mod_tz_portfolio_plus_filter/admin/fields">
+            <fieldset name="basic" addfieldpath="administrator/components/com_tz_portfolio_plus/models/fields">
+
+                <field type="radio" name="show_search_word"
+                       default="1" class="btn-group btn-group-yesno"
+                       label="MOD_TZ_PORTFOLIO_PLUS_FIELDS_SHOW_SEARCH_WORD_LABEL">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+
+                <field type="radio" name="show_box_label"
+                       default="1" class="btn-group"
+                       showon="show_search_word:1"
+                       label="MOD_TZ_PORTFOLIO_PLUS_FIELDS_SHOW_BOX_LABEL">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+
+                <field type="label" name="label"
+                       showon="show_search_word:1"
+                        label="MOD_TZ_PORTFOLIO_PLUS_FILTER_FIELD_LABEL_TEXT_LABEL"
+                        description="MOD_TZ_PORTFOLIO_PLUS_FILTER_FIELD_LABEL_TEXT_DESC"/>
+
+                <field type="text" name="width"
+                       showon="show_search_word:1"
+                        label="MOD_TZ_PORTFOLIO_PLUS_FILTER_FIELD_BOXWIDTH_LABEL"
+                        description="MOD_TZ_PORTFOLIO_PLUS_FILTER_FIELD_BOXWIDTH_DESC"/>
+
+                <field type="text" name="text"
+                       showon="show_search_word:1"
+                        label="MOD_TZ_PORTFOLIO_PLUS_FILTER_FIELD_TEXT_LABEL"
+                        description="MOD_TZ_PORTFOLIO_PLUS_FILTER_FIELD_TEXT_DESC"/>
+
+                <field type="radio" name="button"
+                        label="MOD_TZ_PORTFOLIO_PLUS_FILTER_FIELD_BUTTON_LABEL"
+                        description="MOD_TZ_PORTFOLIO_PLUS_FILTER_FIELD_BUTTON_DESC"
+                        default="0"
+                        class="btn-group btn-group-yesno">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+
+                <field type="radio" name="imagebutton"
+                        label="MOD_TZ_PORTFOLIO_PLUS_FILTER_FIELD_IMAGEBUTTON_LABEL"
+                        description="MOD_TZ_PORTFOLIO_PLUS_FILTER_FIELD_IMAGEBUTTON_DESC"
+                        default="0"
+                        class="btn-group btn-group-yesno"
+                        showon="button:1">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+                <field type="media" name="icon"
+                       label="MOD_TZ_PORTFOLIO_PLUS_FIELD_ICON_LABEL"
+                        showon="imagebutton:1"/>
+                <field type="text" name="icon_class"
+                       label="MOD_TZ_PORTFOLIO_PLUS_FIELD_ICON_CLASS_LABEL"
+                        showon="imagebutton:1"/>
+
+                <field type="text" name="button_text"
+                        label="MOD_TZ_PORTFOLIO_PLUS_FILTER_FIELD_BUTTONTEXT_LABEL"
+                        description="MOD_TZ_PORTFOLIO_PLUS_FILTER_FIELD_BUTTONTEXT_DESC"
+                        showon="button:1"/>
+                <field type="radio" name="show_category"
+                       default="0" class="btn-group btn-group-yesno"
+                       label="JGLOBAL_SHOW_CATEGORY_LABEL">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+                <field type="text" name="category_text"
+                       showon="show_category:1"
+                       label="MOD_TZ_PORTFOLIO_PLUS_FILTER_CATEGORY_TEXT_LABEL"/>
+                <field type="radio" name="show_category_text"
+                       default="1" class="btn-group"
+                       showon="show_category:1"
+                       label="MOD_TZ_PORTFOLIO_PLUS_FILTER_SHOW_CATEGORY_TEXT_LABEL">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+                <field type="tzcategory" name="parent_cat"
+                       show_root="true"
+                       showon="show_category:1"
+                       label="MOD_TZ_PORTFOLIO_PLUS_FILTER_PARENT_CAT_LABEL"
+                       description="MOD_TZ_PORTFOLIO_PLUS_FILTER_PARENT_CAT_DESC"/>
+                <field type="radio" name="show_parent_root"
+                       default="1" class="btn-group"
+                       showon="show_category:1"
+                       label="MOD_TZ_PORTFOLIO_PLUS_SHOW_PARENT_ROOT_LABEL">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+
+                <field type="radio" name="show_fields"
+                       default="1" class="btn-group btn-group-yesno"
+                       label="MOD_TZ_PORTFOLIO_PLUS_FIELDS_SHOW_FIELDS_LABEL">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+                <field type="tzextrafields" name="fields"
+                       multiple="true"
+                       showon="show_fields:1"
+                       label="MOD_TZ_PORTFOLIO_PLUS_FIELDS_LABEL"
+                       description="MOD_TZ_PORTFOLIO_PLUS_FIELDS_DESC">
+                    <option value="">MOD_TZ_PORTFOLIO_PLUS_SELECT_FIELDS</option>
+                </field>
+                <field type="radio" name="show_group_title"
+                       default="0" class="btn-group"
+                       label="MOD_TZ_PORTFOLIO_PLUS_SHOW_GROUP_TITLE_LABEL">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+
+                <field type="menuitem" name="set_itemid"
+                        label="MOD_TZ_PORTFOLIO_PLUS_FILTER_FIELD_SETITEMID_LABEL"
+                        description="MOD_TZ_PORTFOLIO_PLUS_FILTER_FIELD_SETITEMID_DESC"
+                        default="0">
+                    <option value="0">MOD_TZ_PORTFOLIO_PLUS_FILTER_SELECT_MENU_ITEMID</option>
+                </field>
+            </fieldset>
+
+            <fieldset name="advanced">
+
+                <field type="modulelayout" name="layout"
+                       label="JFIELD_ALT_LAYOUT_LABEL"
+                       description="JFIELD_ALT_MODULE_LAYOUT_DESC"/>
+                <field type="text" name="moduleclass_sfx"
+                       label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL"
+                       description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC"/>
+                <field type="list" name="cache"
+                       default="1"
+                       label="COM_MODULES_FIELD_CACHING_LABEL"
+                       description="COM_MODULES_FIELD_CACHING_DESC">
+                    <option value="1">JGLOBAL_USE_GLOBAL</option>
+                    <option value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
+                </field>
+                <field type="text" name="cache_time"
+                       default="900"
+                       label="COM_MODULES_FIELD_CACHE_TIME_LABEL"
+                       description="COM_MODULES_FIELD_CACHE_TIME_DESC"/>
+                <field type="hidden" name="cachemode"
+                       default="static">
+                    <option value="static"></option>
+                </field>
+            </fieldset>
+        </fields>
+    </config>
+</extension>

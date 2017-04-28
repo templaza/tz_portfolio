@@ -320,7 +320,8 @@ class TZ_Portfolio_PlusViewArticle extends TZ_Portfolio_PlusViewLegacy
 
         // Get article's extrafields
         JLoader::import('extrafields', COM_TZ_PORTFOLIO_PLUS_SITE_HELPERS_PATH);
-        $extraFields    = TZ_Portfolio_PlusFrontHelperExtraFields::getExtraFields($this -> item, $params);
+        $extraFields    = TZ_Portfolio_PlusFrontHelperExtraFields::getExtraFields($this -> item, $params,
+            false, array('filter.detail_view' => true));
         $this -> item -> extrafields    = $extraFields;
 
 		//Escape strings for HTML output

@@ -24,7 +24,6 @@ if($item = $this -> item):
     if(isset($item -> extrafields) && !empty($item -> extrafields)):
 ?>
 <div class="TzArticleExtraField">
-    <h3 class="ExtraFieldTitle"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ADDITIONAL_INFO');?></h3>
     <ul class="list-striped TzExtraFields">
     <?php foreach($item -> extrafields as $field):?>
         <li class="tz_extrafield-item">

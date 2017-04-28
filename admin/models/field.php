@@ -153,4 +153,106 @@ class TZ_Portfolio_PlusModelField extends JModelAdmin
         }
         return true;
     }
+
+    public function updateState(&$pks,$value=1, $task = null){
+        if($table  = $this -> getTable()){
+            switch($task){
+                default:
+                    break;
+                case 'listview':
+                case 'unlistview':
+                    $table -> setColumnAlias('updatestate', 'list_view');
+                    break;
+                case 'detailview':
+                case 'undetailview':
+                    $table -> setColumnAlias('updatestate', 'detail_view');
+                    break;
+                case 'advsearch':
+                case 'unadvsearch':
+                    $table -> setColumnAlias('updatestate', 'advanced_search');
+                    break;
+            }
+
+            if(!$table -> updateState($pks,$value)){
+                $this -> setError($table -> getError());
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public function saveOrderAjax($pks = array(), $order = null, $group = null)
+    {
+        if(!$group){
+            return parent::saveorder($pks, $order);
+        }
+
+        $table = $this->getTable('Field_Group_Map');
+        $tableClassName = get_class($table);
+        $contentType = new JUcmType;
+        $type = $contentType->getTypeByTable($tableClassName);
+        $tagsObserver = $table->getObserverOfClass('JTableObserverTags');
+        $conditions = array();
+
+        if (empty($pks))
+        {
+            return JError::raiseWarning(500, JText::_($this->text_prefix . '_ERROR_NO_ITEMS_SELECTED'));
+        }
+
+        // Update ordering values
+        foreach ($pks as $i => $pk)
+        {
+            $table->load(array('fieldsid' => (int) $pk, 'groupid' => $group));
+
+            // Access checks.
+            if (!$this->canEditState($table))
+            {
+                // Prune items that you can't change.
+                unset($pks[$i]);
+                JLog::add(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'), JLog::WARNING, 'jerror');
+            }
+            elseif ($table->ordering != $order[$i])
+            {
+                $table->ordering = $order[$i];
+
+                if (!$table->store())
+                {
+                    $this->setError($table->getError());
+
+                    return false;
+                }
+
+                // Remember to reorder within position and client_id
+                $condition = $this->getReorderConditions($table);
+                $found = false;
+
+                foreach ($conditions as $cond)
+                {
+                    if ($cond[1] == $condition)
+                    {
+                        $found = true;
+                        break;
+                    }
+                }
+
+                if (!$found)
+                {
+                    $key = $table->getKeyName();
+                    $conditions[] = array($table->$key, $condition);
+                }
+            }
+        }
+
+        // Execute reorder for each category.
+        foreach ($conditions as $cond)
+        {
+            $table->load($cond[0]);
+            $table->reorder($cond[1]);
+        }
+
+        // Clear the component's cache
+        $this->cleanCache();
+
+        return true;
+    }
 }

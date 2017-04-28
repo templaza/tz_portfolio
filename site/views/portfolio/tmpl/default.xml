@@ -77,6 +77,13 @@
                 <option value="tags">COM_TZ_PORTFOLIO_PLUS_TAGS</option>
                 <option value="categories">COM_TZ_PORTFOLIO_PLUS_CATEGORIES</option>
             </field>
+            <field type="list" name="filter_second_category"
+                   label="COM_TZ_PORTFOLIO_PLUS_FILTER_SECONDARY_CATEGORY_LABEL"
+                   description="COM_TZ_PORTFOLIO_PLUS_FILTER_SECONDARY_CATEGORY_DESC">
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
             <field name="filter_tags_categories_order" type="list"
                    label="COM_TZ_PORTFOLIO_PLUS_TAGS_CATEGORIES_ORDER"
                    description="COM_TZ_PORTFOLIO_PLUS_TAGS_CATEGORIES_ORDER_DESC">

@@ -136,4 +136,14 @@ class TZ_Portfolio_PlusExtraFieldTextArea extends TZ_Portfolio_PlusExtraField
         }
     }
 
+    public function getSearchInput($defaultValue = '')
+    {
+
+        if ($this->getAttribute("type", "", "sear") == "")
+        {
+            $this->setAttribute("type", "textarea", "search");
+        }
+        return parent::getSearchInput($defaultValue);
+    }
+
 }

@@ -51,7 +51,7 @@ $extension	= $this->escape($this->state->get('filter.extension'));
 					<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_CATEGORIES_BATCH_CATEGORY_LABEL'); ?>
 				</label>
 				<div id="batch-choose-action" class="combo controls">
-					<select name="batch[category_id]" class="inputbox" id="batch-category-id">
+					<select name="batch[category_id]" class="inputbox" id="batch-category-id">z
 						<option value=""><?php echo JText::_('JSELECT') ?></option>
 						<?php echo JHtml::_('select.options', JHtml::_('tzcategory.categories', $extension, array('filter.published' => $published)));?>
 					</select>

@@ -25,8 +25,87 @@ use Joomla\Registry\Registry;
 class TZ_Portfolio_PlusFrontHelperCategories{
     protected static $cache = array();
 
+    public static function getMainCategoriesByArticleId($articleId, $options = array()){
+        if($articleId) {
+            $_options   = '';
+            $config     = array('condition' => null, 'reverse_contentid' => false);
+            if(count($options)) {
+                $config     = array_merge($config,$options);
+                $_options   = implode(',',$config);
+            }
+            if(is_array($articleId)) {
+                $storeId = md5(__METHOD__ . '::'.implode(',', $articleId).'::'.$_options);
+            }else{
+                $storeId = md5(__METHOD__ . '::'.$articleId.'::'.$_options);
+            }
+
+            if(!isset(self::$cache[$storeId])){
+                $db     =  JFactory::getDbo();
+                $query  =  $db -> getQuery(true);
+
+                $query  -> select('c.*, m.contentid AS contentid');
+                $query  -> from('#__tz_portfolio_plus_categories AS c');
+                $query  -> join('INNER', '#__tz_portfolio_plus_content_category_map AS m ON m.catid = c.id AND m.main = 1');
+                $query  -> join('INNER', '#__tz_portfolio_plus_content AS cc ON cc.id = m.contentid');
+                $query -> group('c.id');
+
+
+                if(is_array($articleId)) {
+                    $query -> where('cc.id IN('.implode(',', $articleId) .')');
+                }else{
+                    $query -> where('cc.id = '.$articleId);
+                }
+
+                if(count($config)){
+                    if(isset($config['condition']) && $config['condition']){
+                        $query -> where($config['condition']);
+                    }
+                    if(isset($config['orderby']) && $config['orderby']){
+                        $query->order($config['orderby']);
+                    }
+                }
+
+                $db -> setQuery($query);
+                if($data = $db -> loadObjectList()){
+                    $categories     = array();
+                    $categoryIds    = array();
+                    foreach($data as $i => &$item){
+                        $item -> order	= $i;
+                        $item -> link	= JRoute::_(TZ_Portfolio_PlusHelperRoute::getCategoryRoute($item -> id));
+
+                        // Create article's id is array's key with value are tags
+                        if(count($config) && (isset($config['reverse_contentid']) && $config['reverse_contentid'])){
+                            if(!isset($categories[$item -> contentid])){
+                                $categories[$item -> contentid]    = array();
+                            }
+                            if(!isset($categoryIds[$item -> contentid])){
+                                $categoryIds[$item -> contentid]    = array();
+                            }
+                            if(!in_array($item -> id, $categoryIds[$item -> contentid])) {
+                                $categories[$item->contentid][] = $item;
+                                $categoryIds[$item -> contentid][]  = $item -> id;
+                            }
+                        }
+                    }
+                    if(!count($categories)){
+                        $categories   = $data;
+                    }
+
+                    self::$cache[$storeId]  = $categories;
+                    return $categories;
+                }
+
+                self::$cache[$storeId]  = false;
+            }
+
+            return self::$cache[$storeId];
+        }
+        return false;
+    }
+
     public static function getCategoriesByArticleId($articleId, $options =
                             array('main' => null, 'condition' => null, 'reverse_contentid' => true)){
+
         if($articleId) {
             $_options   = '';
             $config     = array('main' => null, 'condition' => null, 'reverse_contentid' => true);
@@ -48,6 +127,7 @@ class TZ_Portfolio_PlusFrontHelperCategories{
                 $query  -> from('#__tz_portfolio_plus_categories AS c');
                 $query  -> join('INNER', '#__tz_portfolio_plus_content_category_map AS m ON m.catid = c.id');
                 $query  -> join('INNER', '#__tz_portfolio_plus_content AS cc ON cc.id = m.contentid');
+                $query  -> wher('extension = '.$db -> quote('com_tz_portfolio_plus'));
 
                 if(is_array($articleId)) {
                     $query -> where('cc.id IN('.implode(',', $articleId) .')');
@@ -64,10 +144,10 @@ class TZ_Portfolio_PlusFrontHelperCategories{
                     if(isset($config['condition']) && $config['condition']){
                         $query -> where($config['condition']);
                     }
-                    if(isset($config['orderby']) && isset($config['orderby'])){
+                    if(isset($config['orderby']) && $config['orderby']){
                         $query->order($config['orderby']);
                     }
-                    if(isset($config['groupby']) && isset($config['groupby'])){
+                    if(isset($config['groupby']) && $config['groupby']){
                         $query->group($config['groupby']);
                     }
                 }
@@ -81,7 +161,8 @@ class TZ_Portfolio_PlusFrontHelperCategories{
                         $item -> link	= JRoute::_(TZ_Portfolio_PlusHelperRoute::getCategoryRoute($item -> id));
 
                         // Create article's id is array's key with value are tags
-                        if(count($config) && isset($config['reverse_contentid']) && $config['reverse_contentid']){
+                        if(count($config) && (!isset($config['reverse_contentid'])
+                                || (isset($config['reverse_contentid']) && $config['reverse_contentid']))){
                             if(!isset($categories[$item -> contentid])){
                                 $categories[$item -> contentid]    = array();
                             }
@@ -134,10 +215,12 @@ class TZ_Portfolio_PlusFrontHelperCategories{
                 $query -> from('#__tz_portfolio_plus_categories AS c');
 
                 $query -> where('c.published = 1');
+                $query -> where('extension = '.$db -> quote('com_tz_portfolio_plus'));
+                $query->join('INNER', '#__tz_portfolio_plus_content_category_map AS m ON m.catid = c.id');
+                $query->join('INNER', '#__tz_portfolio_plus_content AS cc ON cc.id = m.contentid');
 
                 if(count($options) && isset($options['second_by_article']) && $options['second_by_article']) {
-                    $query->join('INNER', '#__tz_portfolio_plus_content_category_map AS m ON m.catid = c.id');
-                    $query->join('INNER', '#__tz_portfolio_plus_content AS cc ON cc.id = m.contentid');
+                    $query -> where('m.main = 0 OR m.main = 1');
 
                     $subquery->select('DISTINCT c2.id');
                     $subquery->from('#__tz_portfolio_plus_content AS c2');
@@ -154,6 +237,7 @@ class TZ_Portfolio_PlusFrontHelperCategories{
 
                     $query->group('c.id');
                 }else{
+                    $query -> where('m.main = 1');
                     if (is_array($id)) {
                         $query -> where('c.id IN(' . implode(',', $id) . ')');
                     } else {
@@ -177,9 +261,54 @@ class TZ_Portfolio_PlusFrontHelperCategories{
                         $category -> link   = JRoute::_(TZ_Portfolio_PlusHelperRoute::getCategoryRoute($category -> id));
                     }
                 }else{
-                    $categories = $db -> loadObject();
-                    $categories -> link   = JRoute::_(TZ_Portfolio_PlusHelperRoute::getCategoryRoute($categories -> id));
+                    if($categories = $db -> loadObject()) {
+                        $categories->link = JRoute::_(TZ_Portfolio_PlusHelperRoute::getCategoryRoute($categories->id));
+                    }
                 }
+                if($categories){
+                    self::$cache[$storeId]  = $categories;
+                    return $categories;
+                }
+                self::$cache[$storeId]  = false;
+            }
+            return self::$cache[$storeId];
+
+        }
+        return false;
+    }
+
+    public static function getSubCategoriesByParentId($parentid){
+        if($parentid){
+            if(is_array($parentid)){
+                $storeId    = md5(__METHOD__ . '::' . implode(',',$parentid));
+            }else {
+                $storeId    = md5(__METHOD__ . '::' . $parentid);
+            }
+
+            if(!isset(self::$cache[$storeId])){
+                $db         = JFactory::getDbo();
+                $query      = $db -> getQuery(true);
+
+                $query -> select('c.*');
+                $query -> from('#__tz_portfolio_plus_categories AS c, #__tz_portfolio_plus_categories AS parent');
+                $query -> where('c.lft BETWEEN parent.lft AND parent.rgt');
+                if (is_array($parentid)) {
+                    $query->where('parent.id IN(' . implode(',', $parentid) . ')');
+                } else {
+                    $query->where('parent.id = ' . $parentid);
+                }
+                $query -> where('c.published = 1');
+                $query -> order('c.lft ASC');
+
+                $db -> setQuery($query);
+
+                $categories = null;
+
+                $categories = $db -> loadObjectList();
+                foreach($categories as &$category){
+                    $category -> link   = JRoute::_(TZ_Portfolio_PlusHelperRoute::getCategoryRoute($category -> id));
+                }
+
                 if($categories){
                     self::$cache[$storeId]  = $categories;
                     return $categories;
@@ -200,10 +329,18 @@ class TZ_Portfolio_PlusFrontHelperCategories{
             $query -> select('c.*');
             $query -> from('#__tz_portfolio_plus_categories AS c');
             $query -> where('c.published = 1');
+            $query -> where('extension = '.$db -> quote('com_tz_portfolio_plus'));
+            $query -> join('INNER', '#__tz_portfolio_plus_content_category_map AS m ON m.catid = c.id');
+            $query -> join('INNER', '#__tz_portfolio_plus_content AS cc ON cc.id = m.contentid');
             if(count($options)){
                 if(isset($options['second_by_article']) && $options['second_by_article']){
-                    $query -> join('INNER', '#__tz_portfolio_plus_content_category_map AS m ON m.catid = c.id');
-                    $query -> join('INNER', '#__tz_portfolio_plus_content AS cc ON cc.id = m.contentid');
+                    $query -> where('m.main = 0 OR m.main = 1');
+                }else{
+                    $query -> where('m.main = 1');
+                }
+                if(isset($options['filter.parent']) && $options['filter.parent']){
+                    $query->join('LEFT', $db->quoteName('#__tz_portfolio_plus_categories') . ' AS p ON p.id = ' . (int) $options['filter.parent'])
+                        ->where('NOT(a.lft >= p.lft AND a.rgt <= p.rgt)');
                 }
                 if(isset($options['orderby']) && $options['orderby']){
                     $query -> order($options['orderby']);
@@ -220,64 +357,4 @@ class TZ_Portfolio_PlusFrontHelperCategories{
         }
         return false;
     }
-
-//    public static function getMainCategoriesByArticleId($articleId, $options = array()){
-//        if($articleId) {
-//            $_options   = '';
-//            $config     = array('condition' => null, 'reverse_contentid' => true);
-//            if(count($options)) {
-//                $registry = new Registry();
-//                $registry -> loadArray($config);
-//                $registry -> merge($options);
-//                $config     = $registry -> toArray();
-//                $_options   = $registry -> toString('ini');
-//            }
-//            if(is_array($articleId)) {
-//                $storeId    = md5(__METHOD__ . '::'.implode(',', $articleId).'::'.$_options);
-//            }else{
-//                $storeId    = md5(__METHOD__ . '::'.$articleId.'::'.$_options);
-//            }
-//
-//            if(!isset(self::$cache[$storeId])){
-//                $db     =  JFactory::getDbo();
-//                $query  =  $db -> getQuery(true);
-//
-//                $query  -> select('c.*, m.contentid AS contentid');
-//                $query  -> from('#__tz_portfolio_plus_categories AS c');
-//                $query  -> join('INNER', '#__tz_portfolio_plus_content_category_map AS m ON m.catid = c.id');
-//                $query  -> join('INNER', '#__tz_portfolio_plus_content AS cc ON cc.id = m.contentid');
-//
-//                if(is_array($articleId)) {
-//                    $query -> where('cc.id IN('.implode(',', $articleId) .')');
-//                }else{
-//                    $query -> where('cc.id = '.$articleId);
-//                }
-//
-//                $query -> where('m.main = 1');
-//
-//                if(count($config)){
-//                    if(isset($config['condition']) && $config['condition']){
-//                        $query -> where($config['condition']);
-//                    }
-//                    if(isset($config['orderby']) && isset($config['orderby'])){
-//                        $query->order($config['orderby']);
-//                    }
-//                }
-//
-//                $db -> setQuery($query);
-//
-//                if($category = $db -> loadObject()){
-//
-//                    $category -> link	= TZ_Portfolio_PlusHelperRoute::getCategoryRoute($category -> id);
-//
-//                    self::$cache[$storeId]  = $category;
-//                    return $category;
-//                }
-//
-//                self::$cache[$storeId]  = false;
-//            }
-//            return self::$cache[$storeId];
-//        }
-//        return false;
-//    }
 }

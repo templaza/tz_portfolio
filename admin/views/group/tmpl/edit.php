@@ -53,6 +53,10 @@ JFactory::getDocument()->addScriptDeclaration('
                 <div class="controls"><?php echo $form -> getInput('published');?></div>
             </div>
             <div class="control-group">
+                <div class="control-label"><?php echo $form -> getLabel('field_ordering_type');?></div>
+                <div class="controls"><?php echo $form -> getInput('field_ordering_type');?></div>
+            </div>
+            <div class="control-group">
                 <div class="control-label"><?php echo $form -> getLabel('id');?></div>
                 <div class="controls"><?php echo $form -> getInput('id');?></div>
             </div>

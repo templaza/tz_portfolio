@@ -26,7 +26,6 @@ $user		= JFactory::getUser();
 
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
-
 ?>
 <form action="index.php?option=com_tz_portfolio_plus&view=template_styles" method="post" name="adminForm" id="adminForm">
     <?php if(!empty($this -> sidebar)):?>
@@ -65,7 +64,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
             <tr>
                 <th width="1%"></th>
                 <th class="title">
-                    <?php echo JHtml::_('grid.sort','JGLOBAL_TITLE','title',$listDirn,$listOrder);?>
+                    <?php echo JHtml::_('grid.sort','COM_TZ_PORTFOLIO_PLUS_NAME','name',$listDirn,$listOrder);?>
                 </th>
                 <th width="1%" style="min-width:55px" class="nowrap center">
                     <?php echo JHtml::_('grid.sort', 'COM_TEMPLATES_HEADING_DEFAULT', 'home', $listDirn, $listOrder); ?>

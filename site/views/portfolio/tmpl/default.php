@@ -24,10 +24,11 @@ JHtml::addIncludePath(JPATH_COMPONENT.'/helpers');
 $doc    = JFactory::getDocument();
 $app        = JFactory::getApplication('site');
 $input      = $app -> input;
+$params = &$this -> params;
 $doc -> addScriptDeclaration('
 jQuery(document).ready(function(){
     jQuery("#portfolio").tzPortfolioPlusIsotope({
-        "params": '.$this -> params .'
+        "params": '.$this -> params .'        
     });
 });
 ');

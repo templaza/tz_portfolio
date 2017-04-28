@@ -70,10 +70,10 @@ class TZ_Portfolio_PlusModelGroup extends JModelAdmin
         }
         if(parent::save($data)){
             $db = $this -> getDbo();
+            $id = (int) $this->getState($this->getName() . '.id');
 
             // Assign categories with this group;
             if(!empty($categoriesAssignment) && count($categoriesAssignment)){
-                $id = (int) $this->getState($this->getName() . '.id');
 
                 // Update the mapping for category items that this field's group IS assigned to.
                 $query = $db->getQuery(true)

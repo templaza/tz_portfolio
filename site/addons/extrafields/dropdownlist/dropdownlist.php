@@ -91,4 +91,76 @@ class TZ_Portfolio_PlusExtraFieldDropDownList extends TZ_Portfolio_PlusExtraFiel
 
         return $this -> loadTmplFile('input', __CLASS__);
     }
+
+    public function getSearchName(){
+        $params = $this -> params;
+        if($params -> get('search_type', 'dropdownlist') == 'checkbox'
+            || $params -> get('search_type', 'dropdownlist') == 'multiselect') {
+            return 'fields[' . $this->id . '][]';
+        }
+        return 'fields['.$this -> id.']';
+    }
+
+    public function getSearchInput($defaultValue = '')
+    {
+        if (!$this->isPublished())
+        {
+            return '';
+        }
+
+        $this->setVariable('defaultValue', $defaultValue);
+
+        if($this -> multiple_option) {
+            $options    = $this->getFieldValues();
+
+            $app    = JFactory::getApplication();
+            $input  = $app -> input;
+            if($datasearch = $input -> get('fields', array(), 'array')){
+                if(isset($datasearch[$this -> id]) && !empty($datasearch[$this -> id])){
+                    $defaultValue  = $datasearch[$this -> id];
+                }
+            }
+
+            $value      = !is_null($defaultValue) ? $defaultValue : $this->value;
+            $params     = $this -> params;
+
+            if($this -> multiple){
+                $value  = (array) $value;
+            }
+
+            if($params -> get('search_type', 'dropdownlist') == 'dropdownlist'
+                || $params -> get('search_type', 'dropdownlist') == 'multiselect') {
+                $firstOption = new stdClass();
+
+                $lang = JFactory::getLanguage();
+                $lang->load('com_tz_portfolio_plus', JPATH_SITE);
+
+                $firstOption->text = JText::sprintf('COM_TZ_PORTFOLIO_PLUS_OPTION_SELECT', $this->getTitle());
+                $firstOption->value = '';
+
+                array_unshift($options, $firstOption);
+                if($params -> get('search_type', 'dropdownlist') == 'multiselect'){
+                    $this -> setAttribute('multiple', 'multiple', 'search');
+                }
+            }else{
+                $this->setAttribute('type', 'checkbox', 'search');
+            }
+
+            $this->setVariable('options', $options);
+            $this->setVariable('value', $value);
+        }
+
+        if($html = $this -> loadTmplFile('searchinput', __CLASS__)){
+            return $html;
+        }
+
+        $this -> setAttribute('class', 'form-control', 'search');
+
+        $html   = '<label class="group-label">'.$this -> getTitle().'</label>';
+
+        $html  .= '<input name="'.$this -> getSearchName().'" id="'.$this -> getSearchId().'" '
+            .($this -> isRequired()?' required=""':''). $this->getAttribute(null, null, 'search') .'/>';
+
+        return $html;
+    }
 }

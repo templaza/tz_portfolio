@@ -23,6 +23,9 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.view');
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
 
+JLoader::import('com_tz_portfolio_plus.helpers.article', JPATH_SITE.DIRECTORY_SEPARATOR.'components');
+JLoader::import('com_tz_portfolio_plus.helpers.extrafields', JPATH_SITE.DIRECTORY_SEPARATOR.'components');
+
 class TZ_Portfolio_PlusViewDate extends JViewLegacy{
 
     protected $items    = null;
@@ -221,6 +224,11 @@ class TZ_Portfolio_PlusViewDate extends JViewLegacy{
                     unset($items[$i]);
                 }
             }
+
+            // Get article's extrafields
+            $extraFields    = TZ_Portfolio_PlusFrontHelperExtraFields::getExtraFields($item, $item -> params,
+                false, array('filter.list_view' => true, 'filter.group' => $params -> get('order_fieldgroup', 'rdate')));
+            $item -> extrafields    = $extraFields;
         }
 
         //Escape strings for HTML output

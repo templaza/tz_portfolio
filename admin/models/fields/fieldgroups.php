@@ -21,8 +21,7 @@
 defined('_JEXEC') or die;
 
 JFormHelper::loadFieldClass('list');
-
-JModelList::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_jvisualcontent/models');
+JLoader::import('com_tz_portfolio_plus.helpers.groups', JPATH_ADMINISTRATOR.DIRECTORY_SEPARATOR.'components');
 
 class JFormFieldFieldGroups extends JFormFieldList
 {
@@ -31,21 +30,11 @@ class JFormFieldFieldGroups extends JFormFieldList
     protected function getOptions(){
         $options    = array();
 
-        $model      = JModelList::getInstance('Groups','TZ_Portfolio_PlusModel',array('ignore_request' => true));
-//        $model -> setState('filter.published','*');
-        if($items  = $model -> getItems()){
-            foreach($items as $i => $item){
-                $options[$i]                = new stdClass();
-                $options[$i] -> value       = $item -> id;
-
-//                if ($item -> published == 1)
-//                {
-                    $options[$i] -> text = $item -> name;
-//                }
-//                else
-//                {
-//                    $options[$i] -> text = '[' .$item -> title . ']';
-//                }
+        if($items = TZ_Portfolio_PlusHelperGroups::getGroups()) {
+            foreach ($items as $i => $item) {
+                $options[$i] = new stdClass();
+                $options[$i]->value = $item->id;
+                $options[$i]->text = $item->name;
             }
         }
 

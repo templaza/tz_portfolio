@@ -78,7 +78,6 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
         // Check for addon_datas
         if($vName == 'addon_datas' && !$this -> input -> getInt('addon_id')){
             $response = 500;
-            $app = JFactory::getApplication();
 
             if ($app->get('sef_rewrite'))
             {

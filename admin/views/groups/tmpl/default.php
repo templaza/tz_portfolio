@@ -25,6 +25,16 @@ JHtml::_('dropdown.init');
 JHtml::_('formbehavior.chosen', 'select');
 $sortFields = array('name' => JText::_('COM_TZ_PORTFOLIO_PLUS_NAME'),
     'id' => JText::_('JGRID_HEADING_ID'));
+
+$listOrder	= $this->escape($this->state->get('list.ordering'));
+$listDirn	= $this->escape($this->state->get('list.direction'));
+$saveOrder	= $listOrder == 'g.ordering';
+
+if ($saveOrder)
+{
+    $saveOrderingUrl = 'index.php?option=com_tz_portfolio_plus&task=groups.saveOrderAjax&tmpl=component';
+    JHtml::_('sortablelist.sortable', 'groups', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
+}
 ?>
 
 <?php if(COM_TZ_PORTFOLIO_PLUS_JVERSION_COMPARE): //If the joomla's version is 3.0 ?>
@@ -33,7 +43,7 @@ $sortFields = array('name' => JText::_('COM_TZ_PORTFOLIO_PLUS_NAME'),
         table = document.getElementById("sortTable");
         direction = document.getElementById("directionTable");
         order = table.options[table.selectedIndex].value;
-        if (order != '<?php echo $this -> state -> filter_order; ?>') {
+        if (order != '<?php echo $listOrder; ?>') {
             dirn = 'asc';
         } else {
             dirn = direction.options[direction.selectedIndex].value;
@@ -78,36 +88,44 @@ $sortFields = array('name' => JText::_('COM_TZ_PORTFOLIO_PLUS_NAME'),
             <label for="directionTable" class="element-invisible"><?php echo JText::_('JFIELD_ORDERING_DESC');?></label>
             <select name="directionTable" id="directionTable" class="input-medium" onchange="Joomla.orderTable()">
                 <option value=""><?php echo JText::_('JFIELD_ORDERING_DESC');?></option>
-                <option value="asc" <?php if ($this -> state -> filter_order_Dir == 'asc') echo 'selected="selected"'; ?>><?php echo JText::_('JGLOBAL_ORDER_ASCENDING');?></option>
-                <option value="desc" <?php if ($this -> state -> filter_order_Dir == 'desc') echo 'selected="selected"'; ?>><?php echo JText::_('JGLOBAL_ORDER_DESCENDING');?></option>
+                <option value="asc" <?php if ($listDirn == 'asc') echo 'selected="selected"'; ?>><?php echo JText::_('JGLOBAL_ORDER_ASCENDING');?></option>
+                <option value="desc" <?php if ($listDirn == 'desc') echo 'selected="selected"'; ?>><?php echo JText::_('JGLOBAL_ORDER_DESCENDING');?></option>
             </select>
         </div>
         <div class="btn-group pull-right">
             <label for="sortTable" class="element-invisible"><?php echo JText::_('JGLOBAL_SORT_BY');?></label>
             <select name="sortTable" id="sortTable" class="input-medium" onchange="Joomla.orderTable()">
                 <option value=""><?php echo JText::_('JGLOBAL_SORT_BY');?></option>
-                <?php echo JHtml::_('select.options', $sortFields, 'value', 'text', $this -> state -> filter_order);?>
+                <?php echo JHtml::_('select.options', $sortFields, 'value', 'text', $listOrder);?>
             </select>
         </div>
         <?php endif;?>
     </div>
 
-    <table class="table table-striped">
+    <table class="table table-striped" id="groups">
         <thead>
         <tr>
-            <th width="1%">#</th>
+            <th width="1%" class="nowrap center hidden-phone">
+                <?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'g.ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING'); ?>
+            </th>
             <th width="1%" class="hidden-phone">
                 <input type="checkbox" name="checkall-toggle"
                        title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)"/>
             </th>
             <th width="1%" style="min-width:55px" class="nowrap center">
-                <?php echo JHtml::_('grid.sort', 'JSTATUS', 'f.published', $this -> state -> filter_order_Dir, $this -> state -> filter_order); ?>
+                <?php echo JHtml::_('grid.sort', 'JSTATUS', 'g.published', $listDirn, $listOrder); ?>
             </th>
             <th class="title">
-                <?php echo JHTML::_('grid.sort','COM_TZ_PORTFOLIO_PLUS_NAME','name',$this -> state -> filter_order_Dir,$this -> state -> filter_order);?>
+                <?php echo JHTML::_('grid.sort','COM_TZ_PORTFOLIO_PLUS_NAME','name',$listDirn,$listOrder);?>
+            </th>
+            <th class="title">
+                <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_CATEGORIES_ASSIGNMENT');?>
+            </th>
+            <th class="title">
+                <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_TOTAL_FIELDS');?>
             </th>
             <th width="1%" nowrap="nowrap">
-                <?php echo JHTML::_('grid.sort','JGRID_HEADING_ID','id',$this -> state -> filter_order_Dir,$this -> state -> filter_order);?>
+                <?php echo JHTML::_('grid.sort','JGRID_HEADING_ID','id',$listDirn,$listOrder);?>
             </th>
         </tr>
         </thead>
@@ -125,10 +143,21 @@ $sortFields = array('name' => JText::_('COM_TZ_PORTFOLIO_PLUS_NAME'),
         if($this -> items):
             foreach($this -> items as $i => $item):
                 ?>
-            <tr class="row<?php echo ($i%2==1)?'1':$i;?>" sortable-group-id="<?php echo $item -> id;?>">
-                <td>
-                    <?php echo $i+1;?>
-                    <input type="hidden" name="order[]">
+            <tr class="row<?php echo ($i%2==1)?'1':$i;?>">
+                <td class="order nowrap center hidden-phone">
+                    <?php
+                    $disableClassName = '';
+                    $disabledLabel	  = '';
+
+                    if (!$saveOrder) :
+                        $disabledLabel    = JText::_('JORDERINGDISABLED');
+                        $disableClassName = 'inactive tip-top';
+                    endif;
+                    ?>
+                    <span class="sortable-handler hasTooltip <?php echo $disableClassName?>" title="<?php echo $disabledLabel?>">
+                        <i class="icon-menu"></i>
+                    </span>
+                    <input type="text" style="display:none" name="order[]" size="5" value="<?php echo $item->ordering;?>" class="width-20 text-area-order " />
                 </td>
                 <td>
                     <?php echo JHtml::_('grid.id', $i, $item->id); ?>
@@ -153,6 +182,23 @@ $sortFields = array('name' => JText::_('COM_TZ_PORTFOLIO_PLUS_NAME'),
                         ?>
                     </div>
                 </td>
+                <td><?php
+                    if(isset($item -> categories) && $item -> categories){
+                        foreach($item -> categories as $j => $cat){
+                            ?>
+                            <a href="index.php?option=com_tz_portfolio_plus&task=category.edit&id=<?php echo $cat -> id;?>">
+                                <?php echo $cat -> title;?>
+                            </a>
+                            <?php if($j < count($item -> categories) - 1) { ?>
+                                <span>,</span>
+                                <?php
+                            }
+                        }
+                    }
+                    ?>
+                </td>
+                <td><?php echo $item -> total;?>
+                </td>
                 <td align="center"><?php echo $item -> id;?></td>
             </tr>
                 <?php
@@ -165,8 +211,8 @@ $sortFields = array('name' => JText::_('COM_TZ_PORTFOLIO_PLUS_NAME'),
 
     <input type="hidden" value="" name="task">
     <input type="hidden" value="0" name="boxchecked">
-    <input type="hidden" value="<?php echo $this -> state -> filter_order;?>" name="filter_order">
-    <input type="hidden" value="<?php echo $this -> state -> filter_order_Dir;?>" name="filter_order_Dir">
+    <input type="hidden" value="<?php echo $listOrder;?>" name="filter_order">
+    <input type="hidden" value="<?php echo $listDirn;?>" name="filter_order_Dir">
     <input type="hidden" name="return" value="<?php echo base64_encode(JUri::getInstance() -> toString())?>">
     <?php echo JHTML::_('form.token');?>
 </div>

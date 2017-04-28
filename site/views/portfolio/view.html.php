@@ -71,13 +71,6 @@ class TZ_Portfolio_PlusViewPortfolio extends JViewLegacy
             .'&amp;layout=default:item'.(($state -> get('filter.char'))?'&amp;char='.$state -> get('filter.char'):'')
             .($state -> get('filter.category_id')?'&amp;catid='.$state -> get('filter.category_id'):'');
 
-//        // If your site has used multilanguage
-//        if($lang = $input -> get('lang')){
-//            if(isset($language[$lang])) {
-//                $this->lang_sef = $lang;
-//                $this -> ajaxLink   .= '&amp;lang='.$lang;
-//            }
-//        }
         if($active) {
             $this->ajaxLink .= '&amp;Itemid=' . $active->id;
         }

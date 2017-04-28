@@ -27,8 +27,6 @@ jimport('joomla.html.pagination');
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
 
-tzportfolioplusimport('phpclass.autocuttext');
-
 class TZ_Portfolio_PlusModelPortfolio extends JModelList
 {
     protected $pagNav                   = null;
@@ -115,7 +113,7 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
 
         $query -> from($db -> quoteName('#__tz_portfolio_plus_content').' AS c');
 
-        $query -> join('INNER',$db -> quoteName('#__tz_portfolio_plus_content_category_map').' AS m ON m.contentid=c.id');
+        $query -> join('INNER',$db -> quoteName('#__tz_portfolio_plus_content_category_map').' AS m ON m.contentid=c.id AND m.main = 1');
         $query -> join('LEFT',$db -> quoteName('#__tz_portfolio_plus_categories').' AS cc ON cc.id=m.catid');
         $query -> join('LEFT',$db -> quoteName('#__tz_portfolio_plus_tag_content_map').' AS x ON x.contentid=c.id');
         $query -> join('LEFT',$db -> quoteName('#__tz_portfolio_plus_tags').' AS t ON t.id=x.tagsid');
@@ -169,7 +167,8 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
             if(count($catids)){
                 $query -> where('m.catid IN('.implode(',',$catids).')');
             }
-        }else{
+        }
+        elseif(!empty($catids)){
             $query -> where('m.catid IN('.$catids.')');
         }
 
@@ -205,7 +204,7 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
                 break;
 
             case 'order' :
-                $cateOrder = 'cc.lft, ';
+                $cateOrder = 'cc.lft ASC, ';
                 break;
         }
 
@@ -299,6 +298,7 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
                 // Get the global params
                 $globalParams = JComponentHelper::getParams('com_tz_portfolio_plus', true);
 
+                JLoader::import('extrafields', COM_TZ_PORTFOLIO_PLUS_SITE_HELPERS_PATH);
 
                 foreach($items as $i => &$item){
 
@@ -386,13 +386,13 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
 
                         // Check general edit permission first.
                         if ($user->authorise('core.edit', $asset)) {
-                            $item->params->set('access-edit', true);
+                            $item->params->set('access-edit', false);
                         }
                         // Now check if edit.own is available.
                         elseif (!empty($userId) && $user->authorise('core.edit.own', $asset)) {
                             // Check for a valid user and that they are the owner.
                             if ($userId == $item->created_by) {
-                                $item->params->set('access-edit', true);
+                                $item->params->set('access-edit', false);
                             }
                         }
                     }
@@ -472,6 +472,11 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
                     if($item && strlen(trim($item -> introtext)) && $introLimit = $params -> get('tz_article_intro_limit')){
                         $item -> introtext   = '<p>'.JHtml::_('string.truncate', $item->introtext, $introLimit, true, false).'</p>';
                     }
+
+                    // Get article's extrafields
+                    $extraFields    = TZ_Portfolio_PlusFrontHelperExtraFields::getExtraFields($item, $item -> params,
+                        false, array('filter.list_view' => true, 'filter.group' => $params -> get('order_fieldgroup', 'rdate')));
+                    $item -> extrafields    = $extraFields;
 
                 }
 
@@ -668,8 +673,12 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
                     break;
             }
 
-            return TZ_Portfolio_PlusFrontHelperCategories::getCategoriesByArticleId($contentId,
-                array('orderby' => $orderby, 'reverse_contentid' => false, 'groupby' => 'c.id'));
+            $options    = array('orderby' => $orderby, 'reverse_contentid' => false, 'groupby' => 'c.id');
+            if(!$params -> get('filter_second_category', 1)){
+                return TZ_Portfolio_PlusFrontHelperCategories::getMainCategoriesByArticleId($contentId);
+            }
+
+            return TZ_Portfolio_PlusFrontHelperCategories::getCategoriesByArticleId($contentId, $options);
         }
         return false;
     }
@@ -697,12 +706,15 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
             $catid  = array_unique($catid);
             $catid  = array_filter($catid);
 
-            if(count($catid) && $categories = TZ_Portfolio_PlusFrontHelperCategories::getCategoriesById($catid,
-                array('second_by_article' => true, 'orderby' => $orderby))){
+            $options    = array('second_by_article' => true, 'orderby' => $orderby);
+            if(!$params -> get('filter_second_category', 1)){
+                $options['second_by_article']   = false;
+            }
+
+            if(count($catid) && $categories = TZ_Portfolio_PlusFrontHelperCategories::getCategoriesById($catid, $options)){
                 return $categories;
             }else{
-                return TZ_Portfolio_PlusFrontHelperCategories::getAllCategories(array('second_by_article' => true,
-                    'orderby' => $orderby));
+                return TZ_Portfolio_PlusFrontHelperCategories::getAllCategories($options);
             }
 
         }
