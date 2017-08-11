@@ -971,6 +971,10 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
             }
         }
 
+        // Insert parameter from extrafield
+        JLoader::import('extrafields', COM_TZ_PORTFOLIO_PLUS_ADMIN_HELPERS_PATH);
+        TZ_Portfolio_PlusHelperExtraFields::prepareForm($form, $data);
+
         parent::preprocessForm($form, $data, $group);
     }
 

@@ -32,17 +32,14 @@ class TZ_Portfolio_PlusViewField extends JViewLegacy
         $this -> form   = $this -> get('Form');
         $this -> item   = $this -> get('Item');
 
-        $buttons_plugin = JPluginHelper::getPlugin('editors-xtd');
-
-        if($buttons_plugin){
-
-        }
-
+        JModelLegacy::addIncludePath(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.DIRECTORY_SEPARATOR.'models','TZ_Portfolio_PlusModel');
         $groupModel = JModelLegacy::getInstance('Groups','TZ_Portfolio_PlusModel',array('ignore_request' => true));
-        $groupModel -> setState('filter_order','name');
-        $groupModel -> setState('filter_order_Dir','ASC');
+        if($groupModel) {
+            $groupModel->setState('filter_order', 'name');
+            $groupModel->setState('filter_order_Dir', 'ASC');
 
-        $this -> groups = $groupModel -> getItems();
+            $this->groups = $groupModel->getItems();
+        }
 
         $editor = JFactory::getEditor();
         $this -> assign('editor',$editor);

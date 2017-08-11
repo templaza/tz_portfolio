@@ -10,6 +10,13 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 	
+11/08/2017 - 1.0.7
+	
+	- Fix error Layout default_extrafields not found in view users.
+	- Fix error placeholder for text and textarea search addons.
+	- Added parameters from extrafields for article and category edit form if extrafield support xml files.
+	- Fix error addon_task submit.
+	
 30/12/2016 - 1.0.6
 	
 	- Fix error in router when the addon has have router (Fix in router.php file)

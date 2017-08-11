@@ -464,26 +464,6 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 		jimport('joomla.filesystem.path');
 		$name = 'category' . ($section ? ('.' . $section) : '');
 
-//		// Looking first in the component models/forms folder
-//		$path = JPath::clean(JPATH_ADMINISTRATOR . "/components/$component/models/forms/$name.xml");
-//
-//		// Old way: looking in the component folder
-//		if (!file_exists($path))
-//		{
-//			$path = JPath::clean(JPATH_ADMINISTRATOR . "/components/$component/$name.xml");
-//		}
-//
-//		if (file_exists($path))
-//		{
-//			$lang->load($component, JPATH_BASE, null, false, false);
-//			$lang->load($component, JPATH_BASE, $lang->getDefault(), false, false);
-//
-//			if (!$form->loadFile($path, false))
-//			{
-//				throw new Exception(JText::_('JERROR_LOADFILE_FAILED'));
-//			}
-//		}
-
 		// Try to find the component helper.
 		$eName = str_replace('com_', '', $component);
 		$path = JPath::clean(JPATH_ADMINISTRATOR . "/components/$component/helpers/category.php");
@@ -551,6 +531,10 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 				$form->load($addform, false);
 			}
 		}
+
+        // Insert parameter from extrafield
+        JLoader::import('extrafields', COM_TZ_PORTFOLIO_PLUS_ADMIN_HELPERS_PATH);
+        TZ_Portfolio_PlusHelperExtraFields::prepareForm($form, $data);
 
 		// Trigger the default form events.
 		parent::preprocessForm($form, $data, $group);

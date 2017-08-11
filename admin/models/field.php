@@ -142,6 +142,7 @@ class TZ_Portfolio_PlusModelField extends JModelAdmin
             if(JFile::exists($core_f_xml_path)){
                 $form -> loadFile($core_f_xml_path, false, '/form/fields[@name="params"]');
             }
+            parent::preprocessForm($form, $data, $group);
         }
     }
 

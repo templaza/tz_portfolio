@@ -20,6 +20,8 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\Registry\Registry;
+
 class TZ_Portfolio_PlusHelperExtraFields{
 
     public static function getExtraFields($groupid=null,$catid=null){
@@ -160,5 +162,25 @@ class TZ_Portfolio_PlusHelperExtraFields{
             }
         }
         return false;
+    }
+
+    public static function prepareForm(&$form, $data){
+        JLoader::import('addons', COM_TZ_PORTFOLIO_PLUS_ADMIN_HELPERS_PATH);
+        if($addons = TZ_Portfolio_PlusHelperAddons::getAddons(array('published' => 1, 'folder' => 'extrafields'))){
+            require_once COM_TZ_PORTFOLIO_PLUS_SITE_HELPERS_PATH.DIRECTORY_SEPARATOR.'extrafields.php';
+            foreach($addons as $addon){
+                $field          = new stdClass();
+                $field -> id    = $addon -> id;
+                $field -> params    = new Registry();
+                if(isset($addon -> params) && !is_object($addon -> params)){
+                    $field -> params    = new Registry($addon -> params);
+                }else{
+                    $field -> params    = $addon -> params;
+                }
+                $field -> type      = $addon -> element;
+                $fieldObj   = TZ_Portfolio_PlusFrontHelperExtraFields::getExtraField($field);
+                $fieldObj -> prepareForm($form, $data);
+            }
+        }
     }
 }

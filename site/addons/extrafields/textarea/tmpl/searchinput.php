@@ -25,4 +25,5 @@ $params = $this -> params;
 if($params -> get('show_label', 1)){ ?>
     <label class="group-label"><?php echo $this -> getTitle();?></label>
 <?php } ?>
-<textarea name="<?php echo $this -> getSearchName();?>" id="<?php echo $this -> getSearchId();?>" rows="10" cols="50"><?php echo $value;?></textarea>
+<textarea name="<?php echo $this -> getSearchName();?>" id="<?php echo $this -> getSearchId();?>" rows="10" cols="50"<?php
+ echo $this->getAttribute(null, null, 'search');?>><?php echo $value;?></textarea>

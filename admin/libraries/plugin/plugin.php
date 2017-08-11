@@ -467,7 +467,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
             $result = true;
             // Check task with format: addon_name.addon_view.addon_task (example image.default.display);
             $adtask     = $input -> get('addon_task');
-            if($adtask && strpos($adtask,'.') > 0 && !$addon_id){
+            if($adtask && strpos($adtask,'.') > 0 && substr_count($adtask,'.') > 1){
                 list($plgname,$adtask) = explode('.',$adtask,2);
                 if($plgname == $this -> _name){
                     $result = true;

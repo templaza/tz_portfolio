@@ -132,6 +132,17 @@ class TZ_Portfolio_PlusExtraFieldText extends TZ_Portfolio_PlusExtraField{
         return true;
     }
 
+    public function getSearchInput($defaultValue = '')
+    {
+        if ($this->params->get("placeholder", ""))
+        {
+            $placeholder = htmlspecialchars($this->params->get("placeholder", ""), ENT_COMPAT, 'UTF-8');
+            $this->setAttribute("placeholder", $placeholder, "search");
+        }
+
+        return parent::getSearchInput($defaultValue);
+    }
+
     public function onSearch(&$query, &$where, $search, $forceModifyQuery = false)
     {
         if ($search === '' || empty($search))

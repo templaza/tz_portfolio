@@ -1200,4 +1200,17 @@ class TZ_Portfolio_PlusExtraField{
             }
         }
     }
+
+    public function prepareForm(&$form, $data){
+        $path   = JPath::clean(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.'/'.$this -> group.'/'.$this -> type );
+        $name   = $form -> getName();
+        JForm::addFormPath($path . '/admin/models/forms');
+        JForm::addFormPath($path . '/admin/model/form');
+        if($name == 'com_tz_portfolio_plus.article') {
+            $form -> loadFile('article', false);
+        }
+        if($name == 'com_tz_portfolio_plus.category') {
+            $form -> loadFile('category', false);
+        }
+    }
 }

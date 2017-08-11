@@ -123,8 +123,8 @@ class TZ_Portfolio_PlusModelAddons extends JModelList
             }
             else
             {
-                $query->where('protected = 0')
-                    ->where('published=' . (int) $status);
+//                $query->where('protected = 0')
+                $query->where('published=' . (int) $status);
             }
         }
 

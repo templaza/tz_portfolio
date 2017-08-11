@@ -143,6 +143,13 @@ class TZ_Portfolio_PlusExtraFieldTextArea extends TZ_Portfolio_PlusExtraField
         {
             $this->setAttribute("type", "textarea", "search");
         }
+
+        if ($this->params->get("placeholder", ""))
+        {
+            $placeholder = htmlspecialchars($this->params->get("placeholder", ""), ENT_COMPAT, 'UTF-8');
+            $this->setAttribute("placeholder", $placeholder, "search");
+        }
+		
         return parent::getSearchInput($defaultValue);
     }
 
