@@ -45,7 +45,7 @@ JFactory::getDocument()->addScriptDeclaration('
 ');
 ?>
 
-<form method="post" name="adminForm" id="item-form" class="form-validate form-horizontal" enctype="multipart/form-data"
+<form method="post" name="adminForm" id="item-form" class="form-validate form-horizontal tpArticle" enctype="multipart/form-data"
 	action="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&extension='.JFactory::getApplication()->input->getCmd('extension', 'com_tz_portfolio_plus').'&layout=edit&id='.(int) $this->item->id); ?>">
     <div class="span8">
 	<?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'details')); ?>

@@ -252,13 +252,10 @@ class TZ_Portfolio_PlusViewUsers extends JViewLegacy
             $author_info -> email           = $author -> email;
             $author_info -> gender          = $author_registry -> get('tz_portfolio_plus_user_gender');
             $author_info -> avatar          = $author_registry -> get('tz_portfolio_plus_user_avatar');
-            $author_info -> social_links    = null;
-            if($social_links = $author_registry -> get('tz_portfolio_plus_user_social_link')) {
-                foreach($social_links as &$social_link){
-                    $social_link    = json_decode($social_link);
-                }
-                $author_info -> social_links    = $social_links;
-            }
+            $author_info -> twitter         = $author_registry -> get('tz_portfolio_plus_user_twitter');
+            $author_info -> facebook        = $author_registry -> get('tz_portfolio_plus_user_facebook');
+            $author_info -> instagram       = $author_registry -> get('tz_portfolio_plus_user_instagram');
+            $author_info -> googleplus      = $author_registry -> get('tz_portfolio_plus_user_googleplus');
             $author_info -> description     = $author_registry -> get('tz_portfolio_plus_user_description');
             $author_info -> author          = $author -> name;
             $author_info -> author_link     = JRoute::_(TZ_Portfolio_PlusHelperRoute::getUserRoute($state -> get('users.id'),

@@ -29,6 +29,12 @@
                     <option value="1">JYES</option>
                     <option value="0">JNO</option>
                 </field>
+                <field type="radio" name="use_single_layout_builder"
+                       default="1" class="btn-group"
+                       label="TPL_SYSTEM_LOAD_STYLE_LABEL">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
             </fieldset>
         </fields>
     </config>

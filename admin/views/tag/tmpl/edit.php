@@ -38,7 +38,7 @@ JFactory::getDocument()->addScriptDeclaration('
 ');
 ?>
 
-<form name="adminForm" method="post" class="form-validate" id="tag-form"
+<form name="adminForm" method="post" class="form-validate tpArticle" id="tag-form"
       action="index.php?option=com_tz_portfolio_plus&view=tag&layout=edit&id=<?php echo $this -> item -> id?>">
 
     <div class="form-horizontal">

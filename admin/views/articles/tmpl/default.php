@@ -64,9 +64,9 @@ $assoc		= JLanguageAssociations::isEnabled();
         <div id="j-sidebar-container" class="span2">
             <?php echo $this->sidebar; ?>
         </div>
-        <div id="j-main-container" class="span10">
+        <div id="j-main-container" class="span10 tpContainer">
     <?php else : ?>
-        <div id="j-main-container">
+        <div id="j-main-container" class="tpContainer">
     <?php endif;?>
             <div id="filter-bar" class="btn-toolbar">
                 <div class="filter-search btn-group pull-left">
@@ -188,6 +188,14 @@ $assoc		= JLanguageAssociations::isEnabled();
                                 <div class="btn-group">
                                     <?php echo JHtml::_('jgrid.published', $item->state, $i, 'articles.', $canChange, 'cb', $item->publish_up, $item->publish_down); ?>
                                     <?php echo JHtml::_('contentadministrator.featured', $item->featured, $i, $canChange); ?>
+                                    <?php // Create dropdown items and render the dropdown list.
+                                    if ($canChange)
+                                    {
+//                                        JHtml::_('actionsdropdown.' . ((int) $item->state === 2 ? 'un' : '') . 'archive', 'cb' . $i, 'articles');
+                                        JHtml::_('actionsdropdown.' . ((int) $item->state === -2 ? 'un' : '') . 'trash', 'cb' . $i, 'articles');
+                                        echo JHtml::_('actionsdropdown.render', $this->escape($item->title));
+                                    }
+                                    ?>
                                 </div>
                             </td>
                             <td class="nowrap has-context">
@@ -201,10 +209,10 @@ $assoc		= JLanguageAssociations::isEnabled();
                                     <?php else : ?>
                                         <?php echo $this->escape($item->title); ?>
                                     <?php endif; ?>
-                                    <span class="small">
-                                        <?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
-                                    </span>
                                     <div class="small">
+                                        <div class="clearfix">
+                                            <?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
+                                        </div>
                                         <div class="clearfix">
                                             <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_MAIN_CATEGORY') . ": " ?>
                                             <a href="index.php?option=com_tz_portfolio_plus&task=category.edit&id=<?php echo $item -> catid;?>"><?php echo $this->escape($item->category_title); ?></a>
@@ -223,39 +231,6 @@ $assoc		= JLanguageAssociations::isEnabled();
                                         </div>
                                         <?php endif;?>
                                     </div>
-                                </div>
-                                <div class="pull-left">
-                                    <?php
-                                        // Create dropdown items
-                                        JHtml::_('dropdown.edit', $item->id, 'article.');
-                                        JHtml::_('dropdown.divider');
-                                        if ($item->state) :
-                                            JHtml::_('dropdown.unpublish', 'cb' . $i, 'articles.');
-                                        else :
-                                            JHtml::_('dropdown.publish', 'cb' . $i, 'articles.');
-                                        endif;
-
-                                        if ($item->featured) :
-                                            JHtml::_('dropdown.unfeatured', 'cb' . $i, 'articles.');
-                                        else :
-                                            JHtml::_('dropdown.featured', 'cb' . $i, 'articles.');
-                                        endif;
-
-                                        JHtml::_('dropdown.divider');
-
-                                        if ($item->checked_out) :
-                                            JHtml::_('dropdown.checkin', 'cb' . $i, 'articles.');
-                                        endif;
-
-                                        if ($trashed) :
-                                            JHtml::_('dropdown.untrash', 'cb' . $i, 'articles.');
-                                        else :
-                                            JHtml::_('dropdown.trash', 'cb' . $i, 'articles.');
-                                        endif;
-
-                                        // Render dropdown list
-                                        echo JHtml::_('dropdown.render');
-                                    ?>
                                 </div>
                             </td>
                             <td class="small hidden-phone">
@@ -300,9 +275,9 @@ $assoc		= JLanguageAssociations::isEnabled();
                     endif;
                     ?>
                     </tbody>
-
             </table>
             <?php echo $this->pagination->getListFooter(); ?>
+
             <?php //Load the batch processing form. ?>
             <?php echo $this->loadTemplate('batch'); ?>
             <input type="hidden" name="task" value="" />

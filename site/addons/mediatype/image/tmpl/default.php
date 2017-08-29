@@ -50,15 +50,15 @@ if($this -> item && isset($this -> item -> media)){
     </div>
 </div>
 <div class="control-group">
-    <div class="control-label"><?php echo $form -> getLabel('url_hover',$group);?></div>
+    <div class="control-label"><?php echo $form -> getLabel('url_detail',$group);?></div>
     <div class="controls">
-        <?php echo $form -> getInput('url_hover',$group);?>
+        <?php echo $form -> getInput('url_detail',$group);?>
         <?php
-        if($image && isset($image['url_hover']) && !empty($image['url_hover'])){
+        if($image && isset($image['url_detail']) && !empty($image['url_detail'])){
             ?>
             <div class="control-group">
                 <?php
-                echo $form -> getInput('url_hover_remove',$group);
+                echo $form -> getInput('url_detail_remove',$group);
                 ?>
             </div>
             <?php

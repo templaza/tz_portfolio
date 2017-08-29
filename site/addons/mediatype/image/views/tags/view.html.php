@@ -55,13 +55,6 @@ class PlgTZ_Portfolio_PlusMediaTypeImageViewTags extends JViewLegacy{
                                     . $image_url_ext, $image->url);
                                 $image->url = JURI::root() . $image_url;
                             }
-
-                            if (isset($image->url_hover) && !empty($image->url_hover)) {
-                                $image_url_ext = JFile::getExt($image->url_hover);
-                                $image_url = str_replace('.' . $image_url_ext, '_' . $size . '.'
-                                    . $image_url_ext, $image->url_hover);
-                                $image->url_hover = JURI::root() . $image_url;
-                            }
                         }
                         $this->image = $image;
                     }

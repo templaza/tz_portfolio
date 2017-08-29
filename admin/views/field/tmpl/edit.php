@@ -22,7 +22,6 @@ defined('_JEXEC') or die('Restricted access');
 //$fields = $this -> item -> defvalue;
 
 $form   = $this -> form;
-
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.tooltip');
 JHtml::_('formbehavior.chosen', 'select');
@@ -37,7 +36,7 @@ Joomla.submitbutton = function(task) {
     }
 }
 </script>
-<form name="adminForm" method="post" id="field-form"
+<form name="adminForm" method="post" id="field-form" class="tpArticle"
       action="index.php?option=com_tz_portfolio_plus&view=field&layout=edit&id=<?php echo $this -> item -> id?>">
 
     <!-- Begin Content -->

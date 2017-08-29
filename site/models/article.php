@@ -377,19 +377,16 @@ class TZ_Portfolio_PlusModelArticle extends JModelItem
         $author_registry -> loadString($item -> author_params);
         $author_info    = new stdClass();
 
-        $author_info -> url             = $author_registry -> get('tz_portfolio_plus_user_url');
-        $author_info -> email           = $item -> author_email;
-        $author_info -> gender          = $author_registry -> get('tz_portfolio_plus_user_gender');
-        $author_info -> avatar          = $author_registry -> get('tz_portfolio_plus_user_avatar');
-        $author_info -> social_links    = null;
-        if($social_links = $author_registry -> get('tz_portfolio_plus_user_social_link')) {
-            foreach($social_links as &$social_link){
-                $social_link    = json_decode($social_link);
-            }
-            $author_info -> social_links    = $social_links;
-        }
-        $author_info -> description     = $author_registry -> get('tz_portfolio_plus_user_description');
-        $item -> author_info            = $author_info;
+        $author_info -> url                                 = $author_registry -> get('tz_portfolio_plus_user_url');
+        $author_info -> email                               = $item -> author_email;
+        $author_info -> gender                              = $author_registry -> get('tz_portfolio_plus_user_gender');
+        $author_info -> avatar                              = $author_registry -> get('tz_portfolio_plus_user_avatar');
+        $author_info -> twitter                             = $author_registry -> get('tz_portfolio_plus_user_twitter');
+        $author_info -> facebook                            = $author_registry -> get('tz_portfolio_plus_user_facebook');
+        $author_info -> instagram                           = $author_registry -> get('tz_portfolio_plus_user_instagram');
+        $author_info -> googleplus                          = $author_registry -> get('tz_portfolio_plus_user_googleplus');
+        $author_info -> description                         = $author_registry -> get('tz_portfolio_plus_user_description');
+        $item -> author_info                                = $author_info;
 
         $this -> _item[$pk] = $item;
 

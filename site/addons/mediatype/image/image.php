@@ -32,6 +32,7 @@ class PlgTZ_Portfolio_PlusMediaTypeImage extends TZ_Portfolio_PlusPlugin
                 if(isset($media -> image)){
                     $image  = clone($media -> image);
 
+
                     if(isset($image -> url) && $image -> url) {
                         if ($size = $params->get('mt_image_size', 'o')) {
                             if (isset($image->url) && !empty($image->url)) {
@@ -41,11 +42,11 @@ class PlgTZ_Portfolio_PlusMediaTypeImage extends TZ_Portfolio_PlusPlugin
                                 $image->url = JURI::root() . $image_url;
                             }
 
-                            if (isset($image->url_hover) && !empty($image->url_hover)) {
-                                $image_url_ext = JFile::getExt($image->url_hover);
+                            if (isset($image->url_detail) && !empty($image->url_detail)) {
+                                $image_url_ext = JFile::getExt($image->url_detail);
                                 $image_url = str_replace('.' . $image_url_ext, '_' . $size . '.'
-                                    . $image_url_ext, $image->url_hover);
-                                $image->url_hover = JURI::root() . $image_url;
+                                    . $image_url_ext, $image->url_detail);
+                                $image->url_detail = JURI::root() . $image_url;
                             }
                         }
                     }

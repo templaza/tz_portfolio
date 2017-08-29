@@ -60,9 +60,9 @@ $sortFields = array('f.ordering' => JText::_('JGRID_HEADING_ORDERING'),
     <div id="j-sidebar-container" class="span2">
         <?php echo $this -> sidebar; ?>
     </div>
-    <div id="j-main-container" class="span10">
+    <div id="j-main-container" class="span10 tpContainer">
     <?php else:?>
-        <div id="j-main-container">
+        <div id="j-main-container" class="tpContainer">
     <?php endif;?>
 
     <div id="filter-bar" class="btn-toolbar">

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="3.0" method="upgrade">
 	<name>com_tz_portfolio_plus</name>
-	<author>DuongTVTemPlaza</author>
+	<author>TZ Portfolio+</author>
 	<creationDate>January 25th 2013</creationDate>
-	<copyright>Copyright (C) 2015 TemPlaza. All rights reserved.</copyright>
+	<copyright>Copyright (C) 2017 TemPlaza. All rights reserved.</copyright>
 	<license>GNU/GPL v2 or later http://www.gnu.org/licenses/gpl-2.0.html</license>
 	<authorEmail>support@templaza.com</authorEmail>
 	<authorUrl>www.templaza.com/</authorUrl>
-	<version>1.0.7</version>
+	<version>1.1.0</version>
     
     <scriptfile>script.php</scriptfile>
 
@@ -59,7 +59,6 @@
 	    	<folder>models</folder>
 	    	<folder>tables</folder>
 	    	<folder>views</folder>
-
             <filename>access.xml</filename>
             <filename>config.xml</filename>
             <filename>tz_portfolio_plus.php</filename>
@@ -69,6 +68,7 @@
 
         <menu>com_tz_portfolio_plus</menu>
         <submenu>
+            <menu link="option=com_tz_portfolio_plus&amp;view=dashboard">com_tz_portfolio_plus_dashboard</menu>
             <menu link="option=com_tz_portfolio_plus&amp;view=articles">com_tz_portfolio_plus_articles</menu>
             <menu link="option=com_tz_portfolio_plus&amp;view=categories">com_tz_portfolio_plus_categories</menu>
             <menu link="option=com_tz_portfolio_plus&amp;view=fields">com_tz_portfolio_plus_fields</menu>

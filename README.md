@@ -9,6 +9,19 @@ Documentation: http://tzportfolio.com/document.html
 Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
+
+29/08/2017 - 1.1.0
+
+	- [frontend] Fix warning when user logged in at Date View
+	- [frontend] Add project link in project detail
+	- [frontend] Add new default style - Elegant
+	- [frontend] Fix error with addon attachment
+	- [backend] Add Dashboard View
+	- [backend] Fix style at Template
+	- [backend] Fix problem of Main Category and Sub-Categories
+	- [backend] New look on all view
+	- [backend] Change input type of Social link at User edit.
+	- [backend] Fix problem with trash feature
 	
 11/08/2017 - 1.0.7
 	

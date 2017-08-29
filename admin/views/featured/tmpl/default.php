@@ -28,25 +28,25 @@ JHtml::_('dropdown.init');
 JHtml::_('formbehavior.chosen', 'select');
 
 $user		= JFactory::getUser();
-$userId		= $user->get('id');
-$listOrder	= $this->escape($this->state->get('list.ordering'));
-$listDirn	= $this->escape($this->state->get('list.direction'));
-$archived	= $this->state->get('filter.published') == 2 ? true : false;
-$trashed	= $this->state->get('filter.published') == -2 ? true : false;
-$saveOrder	= $listOrder == 'a.ordering';
-if ($saveOrder)
-{
-	$saveOrderingUrl = 'index.php?option=com_tz_portfolio_plus&task=articles.saveOrderAjax&tmpl=component';
-	JHtml::_('sortablelist.sortable', 'articleList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
-}
+        $userId		= $user->get('id');
+        $listOrder	= $this->escape($this->state->get('list.ordering'));
+        $listDirn	= $this->escape($this->state->get('list.direction'));
+        $archived	= $this->state->get('filter.published') == 2 ? true : false;
+        $trashed	= $this->state->get('filter.published') == -2 ? true : false;
+        $saveOrder	= $listOrder == 'a.ordering';
+        if ($saveOrder)
+        {
+            $saveOrderingUrl = 'index.php?option=com_tz_portfolio_plus&task=articles.saveOrderAjax&tmpl=component';
+            JHtml::_('sortablelist.sortable', 'articleList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
+        }
 
-$sortFields = $this->getSortFields();
-?>
-<script type="text/javascript">
-	Joomla.orderTable = function() {
-		table = document.getElementById("sortTable");
-		direction = document.getElementById("directionTable");
-		order = table.options[table.selectedIndex].value;
+        $sortFields = $this->getSortFields();
+        ?>
+        <script type="text/javascript">
+        Joomla.orderTable = function() {
+            table = document.getElementById("sortTable");
+            direction = document.getElementById("directionTable");
+            order = table.options[table.selectedIndex].value;
 		if (order != '<?php echo $listOrder; ?>') {
 			dirn = 'asc';
 		} else {
@@ -60,9 +60,9 @@ $sortFields = $this->getSortFields();
         <div id="j-sidebar-container" class="span2">
             <?php echo $this->sidebar; ?>
         </div>
-        <div id="j-main-container" class="span10">
+        <div id="j-main-container" class="span10 tpContainer">
     <?php else : ?>
-        <div id="j-main-container">
+        <div id="j-main-container" class="tpContainer">
     <?php endif;?>
         <div id="filter-bar" class="btn-toolbar">
             <div class="filter-search btn-group pull-left">

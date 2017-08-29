@@ -69,7 +69,7 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
 		$document -> addStyleSheet(JURI::base(true).'/components/com_tz_portfolio_plus/css/style.min.css');
 
         // Set the default view name and format from the Request.
-        $vName		= $this -> input -> get('view', 'articles');
+        $vName		= $this -> input -> get('view', 'dashboard');
 
         $vFormat	= $document->getType();
         $lName		= $this -> input -> get('layout', 'default');

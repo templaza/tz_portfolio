@@ -37,7 +37,7 @@ JFactory::getDocument()->addScriptDeclaration('
 	};
 ');
 ?>
-<form name="adminForm" method="post" class="form-validate" id="group-form"
+<form name="adminForm" method="post" class="form-validate tpArticle" id="group-form"
       action="index.php?option=com_tz_portfolio_plus&view=group&layout=edit&id=<?php echo (int) $this -> item -> id?>">
     <div class="form-horizontal">
         <fieldset class="adminform">

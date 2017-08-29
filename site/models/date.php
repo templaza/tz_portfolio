@@ -619,7 +619,11 @@ class TZ_Portfolio_PlusModelDate extends JModelList{
     protected function getStoreId($id = '')
     {
         // Compile the store id.
-        $id .= ':'.$this->getState('filter.published');
+        if (is_array($this->getState('filter.published'))) {
+        	$id .= ':'.implode(',', $this->getState('filter.published'));
+        } else {
+        	$id .= ':'.$this->getState('filter.published');
+        }
         $id .= ':'.$this->getState('filter.access');
         $id .= ':'.$this->getState('filter.featured');
 //        $id .= ':'.$this->getState('filter.article_id');

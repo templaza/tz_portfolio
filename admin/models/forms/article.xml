@@ -155,7 +155,13 @@
 	</fields>
     
 	<fields name="attribs">
-
+        <fieldset name="article_project_link"
+                  label="COM_TZ_PORTFOLIO_PLUS_SPACER_ARTICLE_OPTIONS_PROJECT_LINK">
+            <field name="project_link" type="text" label="COM_TZ_PORTFOLIO_PLUS_PROJECT_LINK_LABEL"
+                   description="COM_TZ_PORTFOLIO_PLUS_PROJECT_LINK_DESC" class="inputbox" size="30" />
+            <field name="project_link_title" type="text" label="COM_TZ_PORTFOLIO_PLUS_PROJECT_LINK_TITLE_LABEL"
+                   description="COM_TZ_PORTFOLIO_PLUS_PROJECT_LINK_TITLE_DESC" class="inputbox" size="30" />
+        </fieldset>
 		<!-- Start article options in category listings -->
 		<fieldset name="article_category_listing"
 				  label="COM_TZ_PORTFOLIO_PLUS_SPACER_ARTICLE_OPTIONS_IN_CATEGORY_LISTINGS">

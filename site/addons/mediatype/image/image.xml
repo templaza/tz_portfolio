@@ -113,12 +113,6 @@
                        description="PLG_MEDIATYPE_IMAGE_SIZE_DESC">
                     <option value="o">PLG_MEDIATYPE_IMAGE_ORIGINAL</option>
                 </field>
-                <field type="radio" name="mt_show_image_hover"
-                       default="1" class="btn-group"
-                       label="PLG_MEDIATYPE_IMAGE_SHOW_IMAGE_HOVER_LABEL">
-                    <option value="0">JHIDE</option>
-                    <option value="1">JSHOW</option>
-                </field>
                 <field type="radio" name="mt_image_use_cloud"
                        class="btn-group" default="0"
                        label="PLG_MEDIATYPE_IMAGE_USE_CLOUD_ZOOM_LABEL">

@@ -253,7 +253,7 @@
         </field>
         <field name="tz_column_width"
                 type="text"
-                default="233"
+                default="360"
                 label="COM_TZ_PORTFOLIO_PLUS_TZ_COLUMN_WIDTH"/>
         <!--<field type="text" name="column_count"-->
                <!--default="4-1200,3-1024,2-768,1-480"-->
@@ -781,7 +781,15 @@
               label="COM_TZ_PORTFOLIO_PLUS_FIELDSET_SEARCH_LABEL"
               description="COM_TZ_PORTFOLIO_PLUS_FIELDSET_SEARCH_DESC">
 
-        <field type="radio" name="show_search_category"
+        <field name="show_search_intro" type="radio"
+               class="btn-group"
+               default="1"
+               label="JGLOBAL_SHOW_INTRO_LABEL"
+               description="JGLOBAL_SHOW_INTRO_DESC">
+            <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
+        </field>
+        <field type="radio" name="show_search_category_filter"
                default="0" class="btn-group btn-group-yesno"
                label="JGLOBAL_SHOW_CATEGORY_LABEL">
             <option value="1">JYES</option>
@@ -812,6 +820,112 @@
                label="COM_TZ_PORTFOLIO_PLUS_SEARCH_SHOW_GROUP_FIELD_TITLE_LABEL">
             <option value="1">JYES</option>
             <option value="0">JNO</option>
+        </field>
+        <field type="spacer" hr="true"/>
+        <field type="radio" name="show_search_category"
+               default="0" class="btn-group btn-group-yesno"
+               label="JGLOBAL_SHOW_CATEGORY_LABEL">
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+        <field name="show_search_author" type="radio"
+               class="btn-group"
+               default="1"
+               label="JGLOBAL_SHOW_AUTHOR_LABEL"
+               description="JGLOBAL_SHOW_AUTHOR_DESC">
+            <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
+        </field>
+        <field name="search_link_author"
+               type="radio" class="btn-group"
+               default="1"
+               label="JGLOBAL_LINK_AUTHOR_LABEL"
+               description="JGLOBAL_LINK_AUTHOR_DESC">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field name="show_search_create_date"
+               type="radio" class="btn-group"
+               default="1"
+               label="JGLOBAL_SHOW_CREATE_DATE_LABEL"
+               description="JGLOBAL_SHOW_CREATE_DATE_DESC">
+            <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
+        </field>
+        <field name="show_search_modify_date"
+               type="radio" class="btn-group"
+               default="0"
+               label="JGLOBAL_SHOW_MODIFY_DATE_LABEL"
+               description="JGLOBAL_SHOW_MODIFY_DATE_DESC">
+            <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
+        </field>
+        <field name="show_search_publish_date"
+               type="radio" class="btn-group"
+               default="0"
+               label="JGLOBAL_SHOW_PUBLISH_DATE_LABEL"
+               description="JGLOBAL_SHOW_PUBLISH_DATE_DESC">
+            <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
+        </field>
+        <field name="show_search_readmore"
+               type="radio" class="btn-group"
+               default="1"
+               label="JGLOBAL_SHOW_READMORE_LABEL"
+               description="JGLOBAL_SHOW_READMORE_DESC">
+            <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
+        </field>
+        <field name="show_search_hits"
+               type="radio" class="btn-group"
+               default="1"
+               label="JGLOBAL_SHOW_HITS_LABEL"
+               description="JGLOBAL_SHOW_HITS_DESC">
+            <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
+        </field>
+        <field name="show_search_tags"
+               type="radio"
+               class="btn-group"
+               default="1"
+               label="COM_TZ_PORTFOLIO_PLUS_SHOW_TAGS"
+               description="COM_TZ_PORTFOLIO_PLUS_SHOW_TAGS_DESC">
+            <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
+        </field>
+        <field name="show_search_item_media"
+               type="radio"
+               class="btn-group"
+               default="1"
+               label="COM_TZ_PORTFOLIO_PLUS_SHOW_MEDIA"
+               description="COM_TZ_PORTFOLIO_PLUS_SHOW_MEDIA_DESC">
+            <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
+        </field>
+        <field type="spacer" hr="true" />
+        <field name="show_search_icons"
+               type="radio" class="btn-group"
+               default="1"
+               label="JGLOBAL_SHOW_ICONS_LABEL"
+               description="JGLOBAL_SHOW_ICONS_DESC">
+            <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
+        </field>
+        <field name="show_search_print_icon"
+               type="radio" class="btn-group"
+               default="0"
+               label="COM_TZ_PORTFOLIO_PLUS_SHOW_PRINT_LABEL"
+               description="COM_TZ_PORTFOLIO_PLUS_SHOW_PRINT_DESC">
+            <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
+        </field>
+        <field name="show_search_email_icon"
+               type="radio" class="btn-group"
+               default="0"
+               label="COM_TZ_PORTFOLIO_PLUS_SHOW_EMAIL_LABEL"
+               description="COM_TZ_PORTFOLIO_PLUS_SHOW_EMAIL_DESC">
+            <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
         </field>
     </fieldset>
     <!-- END PARAMETERS FOR THE SEARCH LISTINGS -->

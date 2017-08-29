@@ -38,6 +38,9 @@ class TZ_Portfolio_PlusHelper
 	{
         $class  = 'JHtmlSidebar';
 
+        call_user_func_array($class.'::addEntry',array(JText::_('COM_TZ_PORTFOLIO_PLUS_DASHBOARD'),
+            'index.php?option=com_tz_portfolio_plus&view=dashboard',
+            $vName == 'dashboard'));
         call_user_func_array($class.'::addEntry',array(JText::_('COM_TZ_PORTFOLIO_PLUS_ARTICLES'),
                     'index.php?option=com_tz_portfolio_plus&view=articles',
                     $vName == 'articles'));

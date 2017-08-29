@@ -73,18 +73,16 @@ if($item && $image && isset($image -> url) && !empty($image -> url)):
         <?php if($params -> get('mt_image_use_cloud',1)):?>
         <a<?php if($class) echo ' class="'.$class.'"'?> href="<?php echo $image -> url_cloud_zoom;?>"<?php if($rel) echo $rel?>>
         <?php endif;?>
+            <?php if(isset($image -> url_detail) && trim($image -> url_detail)):?>
+                <img src="<?php echo $image -> url_detail;?>"
+                     alt="<?php echo ($image -> caption)?($image -> caption):$item -> title;?>"
+                     title="<?php echo ($image -> caption)?($image -> caption):$item -> title;?>" itemprop="image"/>
+            <?php else : ?>
+                <img src="<?php echo $image -> url;?>" alt="<?php if(isset($image -> caption)) echo $image -> caption;?>"
+                     title="<?php if(isset($image -> caption)) echo $image -> caption;?>"
+                     itemprop="image">
+            <?php endif; ?>
 
-            <img src="<?php echo $image -> url;?>" alt="<?php if(isset($image -> caption)) echo $image -> caption;?>"
-                 title="<?php if(isset($image -> caption)) echo $image -> caption;?>"
-                 itemprop="thumbnailUrl">
-            <?php if($params -> get('mt_show_image_hover',1) && !$params -> get('mt_image_use_cloud',1)):?>
-                <?php if(isset($image -> url_hover)):?>
-                    <img class="tz_image_hover"
-                         src="<?php echo $image -> url_hover;?>"
-                         alt="<?php echo ($image -> caption)?($image -> caption):$item -> title;?>"
-                         title="<?php echo ($image -> caption)?($image -> caption):$item -> title;?>"/>
-                <?php endif;?>
-            <?php endif;?>
         <?php if($params -> get('mt_image_use_cloud',1)):?>
         </a>
     <?php endif;?>

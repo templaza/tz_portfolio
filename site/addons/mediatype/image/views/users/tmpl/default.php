@@ -35,15 +35,7 @@ if($item && $image && isset($image -> url) && !empty($image -> url)):
         <img src="<?php echo $image -> url;?>"
              alt="<?php echo isset($image -> caption)?$image -> caption:$item -> title;?>"
              title="<?php echo isset($image -> caption)?$image -> caption:$item -> title;?>"
-             itemprop="thumbnailUrl"/>
-        <?php if($params -> get('mt_show_cat_image_hover',1)):?>
-            <?php if(isset($image -> url_hover)):?>
-                <img class="tz_image_hover"
-                     src="<?php echo $image -> url_hover;?>"
-                     alt="<?php echo ($image -> caption)?($image -> caption):$item -> title;?>"
-                     title="<?php echo ($image -> caption)?($image -> caption):$item -> title;?>"/>
-            <?php endif;?>
-        <?php endif;?>
+             itemprop="image"/>
     </a>
 </div>
 <?php endif;?>

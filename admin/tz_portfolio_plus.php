@@ -22,7 +22,7 @@ defined('_JEXEC') or die;
 
 $input			= JFactory::getApplication() -> input;
 $option         = $input -> getCmd('option','com_tz_portfolio_plus');
-$view           = $input -> getCmd('view','articles');
+$view           = $input -> getCmd('view','dashboard');
 $task           = $input -> getCmd('task',null);
 
 JLoader::import('com_tz_portfolio_plus.includes.framework',JPATH_ADMINISTRATOR.'/components');

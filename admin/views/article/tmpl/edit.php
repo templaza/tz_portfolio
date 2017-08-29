@@ -95,6 +95,16 @@ $assoc = JLanguageAssociations::isEnabled();
                 Joomla.submitform(task, document.getElementById('item-form'));
             }
         }
+        $(document).ready(function(){
+            $('#jform_second_catid option[value="'+$('#jform_catid').val()+'"]').attr('disabled','disabled');
+            $('#jform_second_catid').trigger('liszt:updated');
+            $('#jform_catid').on('change',function(){
+                $('#jform_second_catid option:selected').removeAttr('selected');
+                $('#jform_second_catid option:disabled').removeAttr('disabled');
+                $('#jform_second_catid option[value="'+this.value+'"]').attr('disabled','disabled');
+                $('#jform_second_catid').trigger('liszt:updated');
+            });
+        });
     })(jQuery);
     </script>
 
@@ -103,7 +113,7 @@ $assoc = JLanguageAssociations::isEnabled();
           method="post"
           name="adminForm"
           id="item-form"
-          class="form-validate"
+          class="form-validate tpArticle"
           enctype="multipart/form-data">
         <div class="span8 form-horizontal">
             <ul class="nav nav-tabs">

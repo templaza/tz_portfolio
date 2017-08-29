@@ -34,7 +34,7 @@ if($item && $image && isset($image -> url) && !empty($image -> url)):
         <img src="<?php echo $image -> related_url;?>"
              alt="<?php echo isset($image -> caption)?$image -> caption:$item -> title;?>"
              title="<?php echo isset($image -> caption)?$image -> caption:$item -> title;?>"
-             itemprop="thumbnailUrl"/>
+             itemprop="image"/>
     </a>
 </div>
 <?php

@@ -13,21 +13,16 @@
             </field>
             <field type="media" name="tz_portfolio_plus_user_avatar"
                     label="PLG_USER_PROFILE_AVATAR_LABEL"/>
-            <field type="tzmultiplefield" name="tz_portfolio_plus_user_social_link"
-                   label="PLG_USER_PROFILE_SOCIAL_LINKS_LABEL">
-                <field type="text" name="title" table_required="true"
-                       field_required="true"
-                       label="JGLOBAL_TITLE"/>
-                <field type="text" name="icon_class"
-                       label="PLG_USER_PROFILE_ICON_CLASS_LABEL"/>
-                <field type="media" name="icon" default=""
-                        label="PLG_USER_PROFILE_ICON_LABEL"/>
-                <field type="text" name="url" table_required="true"
-                       field_required="true"
-                       label="PLG_USER_PROFILE_URL_LABEL"/>
-            </field>
+            <field type="text" name="tz_portfolio_plus_user_twitter"
+                   label="PLG_USER_PROFILE_YOUR_TWITTER_LABEL"/>
+            <field type="text" name="tz_portfolio_plus_user_facebook"
+                   label="PLG_USER_PROFILE_YOUR_FACEBOOK_LABEL"/>
+            <field type="text" name="tz_portfolio_plus_user_instagram"
+                   label="PLG_USER_PROFILE_YOUR_INSTAGRAM_LABEL"/>
+            <field type="text" name="tz_portfolio_plus_user_googleplus"
+                   label="PLG_USER_PROFILE_YOUR_GOOGLEPLUS_LABEL"/>
             <field type="editor" name="tz_portfolio_plus_user_description"
-                    label="JGLOBAL_DESCRIPTION"/>
+                    label="PLG_USER_PROFILE_BIO_LABEL"/>
         </fieldset>
     </fields>
 </form>

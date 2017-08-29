@@ -25,14 +25,26 @@ JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
 JHtml::_('behavior.tabstate');
 JHtml::_('formbehavior.chosen', '#menuOptions select');
-
-JHtmlBootstrap::startTabSet()
-
+JHtmlBootstrap::startTabSet();
 ?>
-<form name="adminForm" method="post" id="template-form"
+<script>
+    jQuery(function($) {
+        "use strict";
+        $('input[type=radio][name="jform[params][use_single_layout_builder]"]').change(function() {
+            if (this.value == '1') {
+                $('#layout_params').css('display', 'block');
+                $('#layout_disable').css('display', 'none');
+            }
+            else {
+                $('#layout_params').css('display', 'none');
+                $('#layout_disable').css('display', 'block');
+            }
+        });
+    });
+</script>
+<form name="adminForm" method="post" id="template-form" class="tpArticle"
       action="index.php?option=com_tz_portfolio_plus&view=template_style&layout=edit&id=<?php echo $this -> item -> id?>">
     <div class="container-fluid" id="plazart_layout_builder">
-
         <div class="form-horizontal">
             <div class="row-fluid">
                 <div class="span8 form-horizontal">
@@ -70,7 +82,7 @@ JHtmlBootstrap::startTabSet()
                         <?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'layout')); ?>
 
                         <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'layout', JText::_('COM_TZ_PORTFOLIO_PLUS_LAYOUT', true)); ?>
-                        <div id="layout_params">
+                        <div id="layout_params" style="<?php echo intval($this->item->params->use_single_layout_builder) ? 'display: block;' : 'display: none;'; ?>">
                             <div id="plazart-admin-device">
                                 <div class="pull-left plazart-admin-layout-header"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_LAYOUTBUIDER_HEADER')?></div>
                                 <div class="pull-right">
@@ -94,6 +106,9 @@ JHtmlBootstrap::startTabSet()
                             </div>
                             <?php echo $this -> loadTemplate('column_settings');?>
                             <?php echo $this -> loadTemplate('generator');?>
+                        </div>
+                        <div id="layout_disable" style="<?php echo intval($this->item->params->use_single_layout_builder) ? 'display: none;' : 'display: block;'; ?>">
+                            <h3 style="text-align: center;"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_LAYOUT_DISABLED');?></h3>
                         </div>
                         <?php echo JHtml::_('bootstrap.endTab'); ?>
 
