@@ -80,7 +80,7 @@ $xml	= simplexml_load_file(JPATH_ROOT . '/administrator/components/com_tz_portfo
                     $this->_quickIcon('index.php?option=com_tz_portfolio_plus&view=groups', 'icon-64-groups.png', 'COM_TZ_PORTFOLIO_PLUS_FIELD_GROUPS');
                     $this->_quickIcon('index.php?option=com_tz_portfolio_plus&view=tags', 'icon-64-tags.png', 'COM_TZ_PORTFOLIO_PLUS_TAGS');
                     $this->_quickIcon('index.php?option=com_tz_portfolio_plus&view=addons', 'icon-64-addons.png', 'COM_TZ_PORTFOLIO_PLUS_ADDONS');
-                    $this->_quickIcon('index.php?option=com_tz_portfolio_plus&view=styles', 'icon-64-styles.png', 'COM_TZ_PORTFOLIO_PLUS_TEMPLATE_STYLES');
+                    $this->_quickIcon('index.php?option=com_tz_portfolio_plus&view=template_styles', 'icon-64-styles.png', 'COM_TZ_PORTFOLIO_PLUS_TEMPLATE_STYLES');
                     $this->_quickIcon('index.php?option=com_tz_portfolio_plus&view=templates', 'icon-64-templates.png', 'COM_TZ_PORTFOLIO_PLUS_TEMPLATES');
                     $this->_quickIcon('index.php?option=com_config&view=component&component=com_tz_portfolio_plus&return=' . urlencode(base64_encode(JUri::getInstance())), 'icon-64-configure.png', 'COM_TZ_PORTFOLIO_PLUS_CONFIGURE');
                     ?>

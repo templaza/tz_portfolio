@@ -10,6 +10,10 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+30/08/2017 - 1.1.1
+
+	- [backend] Fix error link with Styles in Dashboard
+
 29/08/2017 - 1.1.0
 
 	- [frontend] Fix warning when user logged in at Date View
