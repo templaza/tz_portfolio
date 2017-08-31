@@ -1,4 +1,4 @@
-# TZ Portfolio+ - Joomla 3.x
+# TZ Portfolio+ | Joomla 3.x
 
 TZ Portfolio is a really good portfolio developing extensions for Joomla that allows users to display, style and manage their portfolio easily.
 
@@ -9,6 +9,11 @@ Documentation: http://tzportfolio.com/document.html
 Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
+
+31/08/2017 - 1.1.2
+
+	- [frontend] Fix error notice when show all categories in filter
+	- [backend] Fix style of Layout Builder in version 1.1.1
 
 30/08/2017 - 1.1.1
 

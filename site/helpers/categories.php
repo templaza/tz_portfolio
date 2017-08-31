@@ -257,11 +257,13 @@ class TZ_Portfolio_PlusFrontHelperCategories{
 
                 if(is_array($id)){
                     $categories = $db -> loadObjectList();
-                    foreach($categories as &$category){
+                    foreach($categories as $i => &$category){
+                        $category -> order  = $i;
                         $category -> link   = JRoute::_(TZ_Portfolio_PlusHelperRoute::getCategoryRoute($category -> id));
                     }
                 }else{
                     if($categories = $db -> loadObject()) {
+                        $categories -> order    = 0;
                         $categories->link = JRoute::_(TZ_Portfolio_PlusHelperRoute::getCategoryRoute($categories->id));
                     }
                 }
@@ -350,6 +352,9 @@ class TZ_Portfolio_PlusFrontHelperCategories{
             }
             $db -> setQuery($query);
             if($categories = $db -> loadObjectList()){
+                foreach($categories as $i => $item){
+                    $item -> order	= $i;
+                }
                 self::$cache[$storeId]  = $categories;
                 return $categories;
             }
