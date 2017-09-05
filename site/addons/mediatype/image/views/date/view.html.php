@@ -52,6 +52,9 @@ class PlgTZ_Portfolio_PlusMediaTypeImageViewDate extends JViewLegacy{
                         if ($size = $params->get('mt_cat_image_size', 'o')) {
                             if (isset($image->url) && !empty($image->url)) {
                                 $image_url_ext = JFile::getExt($image->url);
+                                if ($params->get('mt_show_original_gif',1) && $image_url_ext == 'gif') {
+                                    $size = 'o';
+                                }
                                 $image_url = str_replace('.' . $image_url_ext, '_' . $size . '.'
                                     . $image_url_ext, $image->url);
                                 $image->url = JURI::root() . $image_url;

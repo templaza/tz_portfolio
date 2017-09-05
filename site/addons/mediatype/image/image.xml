@@ -2,12 +2,12 @@
 <extension version="3.0" type="tz_portfolio_plus-plugin" group="mediatype" method="upgrade">
     <name>plg_mediatype_image</name>
     <author>DuongTVTemPlaza</author>
-    <creationDate>September 17th 2015</creationDate>
-    <copyright>Copyright (C) 2015 TemPlaza. All rights reserved.</copyright>
+    <creationDate>September 5th 2017</creationDate>
+    <copyright>Copyright (C) 2017 TemPlaza. All rights reserved.</copyright>
     <license>GNU/GPL v2 or later http://www.gnu.org/licenses/gpl-2.0.html</license>
     <authorEmail>support@templaza.com</authorEmail>
     <authorUrl>www.templaza.com/</authorUrl>
-    <version>1.0.7</version>
+    <version>1.0.8</version>
     <description>PLG_MEDIATYPE_IMAGE_XML_DESCRIPTION</description>
 
     <files>

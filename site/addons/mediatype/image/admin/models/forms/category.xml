@@ -25,6 +25,12 @@
                 <option value="">JGLOBAL_USE_GLOBAL</option>
                 <option value="o">PLG_MEDIATYPE_IMAGE_ORIGINAL</option>
             </field>
+            <field type="radio" name="mt_show_original_gif"
+                   default="1" class="btn-group"
+                   label="PLG_MEDIATYPE_IMAGE_SHOW_ORIGINAL_GIF_LABEL">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
         </fieldset>
         <!-- End article options in category listings -->
 
