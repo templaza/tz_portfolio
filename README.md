@@ -10,6 +10,11 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+07/09/2017 - 1.1.3
+
+	- [frontend] Update Image Addon v1.0.8 - Accept gif image
+	- [backend] Fix error can not add extrafield
+
 31/08/2017 - 1.1.2
 
 	- [frontend] Fix error notice when show all categories in filter

@@ -44,8 +44,17 @@ class TZ_Portfolio_PlusFrontHelperExtraFields{
             $fieldId = $field;
         }
 
+        if (is_object($article))
+        {
+            $articleId = $article->id;
+        }
+        else
+        {
+            $articleId = $article;
+        }
+
         // Create storeId key
-        $storeId    = "TZ_Portfolio_PlusCTField::" . $fieldId;
+        $storeId    = "TZ_Portfolio_PlusCTField::" . $fieldId.($articleId?'_'.$articleId:'');
 
         $context    = null;
         if(count($options)){
