@@ -14,6 +14,7 @@ Demo: http://demo.tzportfolio.com/
 
 	- [frontend] Update Image Addon v1.0.8 - Accept gif image
 	- [backend] Fix error can not add extrafield
+	- [language] Update Brasil and Vietnamese Language
 
 31/08/2017 - 1.1.2
 
