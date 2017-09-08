@@ -21,6 +21,10 @@
     <languages folder="languages">
         <language tag="en-GB">en-GB/en-GB.mod_tz_portfolio_plus_articles.ini</language>
         <language tag="en-GB">en-GB/en-GB.mod_tz_portfolio_plus_articles.sys.ini</language>
+        <language tag="pt-BR">pt-BR/pt-BR.mod_tz_portfolio_plus_articles.ini</language>
+        <language tag="pt-BR">pt-BR/pt-BR.mod_tz_portfolio_plus_articles.sys.ini</language>
+        <language tag="vi-VN">vi-VN/vi-VN.mod_tz_portfolio_plus_articles.ini</language>
+        <language tag="vi-VN">vi-VN/vi-VN.mod_tz_portfolio_plus_articles.sys.ini</language>
     </languages>
     <config>
         <fields name="params">

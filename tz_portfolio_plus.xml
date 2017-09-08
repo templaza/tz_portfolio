@@ -43,6 +43,8 @@
     </files>
     <languages folder="site/languages">
         <language tag="en-GB">en-GB/en-GB.com_tz_portfolio_plus.ini</language>
+        <language tag="pt-BR">pt-BR/pt-BR.com_tz_portfolio_plus.ini</language>
+        <language tag="vi-VN">vi-VN/vi-VN.com_tz_portfolio_plus.ini</language>
     </languages>
 
 	<administration>
@@ -81,6 +83,10 @@
         <languages folder="admin/languages">
             <language tag="en-GB">en-GB/en-GB.com_tz_portfolio_plus.ini</language>
             <language tag="en-GB">en-GB/en-GB.com_tz_portfolio_plus.sys.ini</language>
+            <language tag="pt-BR">pt-BR/pt-BR.com_tz_portfolio_plus.ini</language>
+            <language tag="pt-BR">pt-BR/pt-BR.com_tz_portfolio_plus.sys.ini</language>
+            <language tag="vi-VN">vi-VN/vi-VN.com_tz_portfolio_plus.ini</language>
+            <language tag="vi-VN">vi-VN/vi-VN.com_tz_portfolio_plus.sys.ini</language>
         </languages>
  	</administration>
     <config>

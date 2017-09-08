@@ -19,6 +19,10 @@
 	<languages folder="languages">
 		<language tag="en-GB">en-GB/en-GB.mod_tz_portfolio_plus_articles_archive.ini</language>
 		<language tag="en-GB">en-GB/en-GB.mod_tz_portfolio_plus_articles_archive.sys.ini</language>
+        <language tag="pt-BR">pt-BR/pt-BR.mod_tz_portfolio_plus_articles_archive.ini</language>
+        <language tag="pt-BR">pt-BR/pt-BR.mod_tz_portfolio_plus_articles_archive.sys.ini</language>
+        <language tag="vi-VN">vi-VN/vi-VN.mod_tz_portfolio_plus_articles_archive.ini</language>
+        <language tag="vi-VN">vi-VN/vi-VN.mod_tz_portfolio_plus_articles_archive.sys.ini</language>
 	</languages>
 	<help key="JHELP_EXTENSIONS_MODULE_MANAGER_ARTICLES_ARCHIVE" />
 	<config>
