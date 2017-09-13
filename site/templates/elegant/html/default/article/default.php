@@ -91,44 +91,45 @@ $doc        = JFactory::getDocument();
                 <?php if($extrafields = $this -> loadTemplate('extrafields')):?>
                     <?php echo $extrafields;?>
                 <?php endif;?>
+                <?php if (trim($this->item->params ->get('project_link'))) : ?>
+                    <div class="tpPortfolioLink"><a href="<?php echo $this->item->params ->get('project_link'); ?>" title="<?php echo $this->item->params ->get('project_link_title'); ?>" target="_blank" itemprop="url"><?php echo $this->item->params ->get('project_link_title'); ?></a></div>
+                <?php endif; ?>
+                <?php
+                $plugins = array('hikashop_checkout','attachment','vote');
+                $dispatcher = new JEventDispatcher();
+                $html = '';
+                foreach ($plugins as $plugin) {
+
+                    if ($plugin_obj = TZ_Portfolio_PlusPluginHelper::getPlugin('content', $plugin)) {
+                        $className = 'PlgTZ_Portfolio_PlusContent' . ucfirst($plugin);
+
+                        if (!class_exists($className)) {
+                            TZ_Portfolio_PlusPluginHelper::importPlugin('content', $plugin);
+                        }
+                        if (class_exists($className)) {
+                            $registry = new JRegistry($plugin_obj->params);
+
+                            $plgClass = new $className($dispatcher, array('type' => ($plugin_obj->type)
+                            , 'name' => ($plugin_obj->name), 'params' => $registry));
+
+                            if (method_exists($plgClass, 'onContentDisplayArticleView')) {
+                                $html .= $plgClass->onContentDisplayArticleView('com_tz_portfolio_plus.'
+                                    . $this->getName(), $this->item, $this->item->params
+                                    , $this->state->get('list.offset'), '');
+                            }
+                        }
+                        if (is_array($html)) {
+                            $html .= implode("\n", $html);
+                        }
+                    }
+                }
+                echo $html;
+                ?>
                 <?php if($tag = $this -> loadTemplate('tags')):?>
                     <?php echo $tag;?>
                 <?php endif;?>
             </div>
-            <?php
-            $plugins = array('vote','attachment');
-            $dispatcher = new JEventDispatcher();
-            $html = '';
-            foreach ($plugins as $plugin) {
 
-                if ($plugin_obj = TZ_Portfolio_PlusPluginHelper::getPlugin('content', $plugin)) {
-                    $className = 'PlgTZ_Portfolio_PlusContent' . ucfirst($plugin);
-
-                    if (!class_exists($className)) {
-                        TZ_Portfolio_PlusPluginHelper::importPlugin('content', $plugin);
-                    }
-                    if (class_exists($className)) {
-                        $registry = new JRegistry($plugin_obj->params);
-
-                        $plgClass = new $className($dispatcher, array('type' => ($plugin_obj->type)
-                        , 'name' => ($plugin_obj->name), 'params' => $registry));
-
-                        if (method_exists($plgClass, 'onContentDisplayArticleView')) {
-                            $html .= $plgClass->onContentDisplayArticleView('com_tz_portfolio_plus.'
-                                . $this->getName(), $this->item, $this->item->params
-                                , $this->state->get('list.offset'), '');
-                        }
-                    }
-                    if (is_array($html)) {
-                        $html .= implode("\n", $html);
-                    }
-                }
-            }
-            echo $html;
-            ?>
-            <?php if (trim($this->item->params ->get('project_link'))) : ?>
-                <div class="tpPortfolioLink"><a href="<?php echo $this->item->params ->get('project_link'); ?>" title="<?php echo $this->item->params ->get('project_link_title'); ?>" target="_blank" itemprop="url"><?php echo $this->item->params ->get('project_link_title'); ?></a></div>
-            <?php endif; ?>
         </div>
         <?php
         $plugins = array('music','charity','googlemap');

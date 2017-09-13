@@ -10,6 +10,11 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+13/09/2017 - 1.1.4
+
+	- [backend] Fix issue addon display
+	- [frontend] Update elegant template version 1.1 in default.
+
 07/09/2017 - 1.1.3
 
 	- [frontend] Update Image Addon v1.0.8 - Accept gif image

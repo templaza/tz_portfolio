@@ -53,7 +53,7 @@ if(!isset($item -> mediatypes) || (isset($item -> mediatypes) && !in_array($item
         <?php if ($params->get('show_date_print_icon', 0) || $params->get('show_date_email_icon', 0) || $canEdit) : ?>
             <div class="tp-item-tools row-table">
                 <div class="btn-group pull-right">
-                    <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+                    <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"<?php echo $params->get('enable_bootstrap',1) ? ' href="javascript: void(0)"' :''; ?>>
                         <i class="icon-cog"></i> <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">

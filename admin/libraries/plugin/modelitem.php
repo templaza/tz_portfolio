@@ -43,7 +43,7 @@ class TZ_Portfolio_PlusPluginModelItem extends JModelItem{
             }else{
                 $params = $this -> addon -> params;
             }
-            $this -> addon -> params    = $params;
+            $this -> addon -> params    = clone($params);
         }
         $this -> setState($this -> getName().'.addon', $this -> addon);
 

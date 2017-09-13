@@ -43,7 +43,7 @@ if($item = $this -> item):
         <div class="TzIcon">
             <div class="btn-group dropdown pull-right" role="presentation">
                 <a class="btn btn-default btn-sm dropdown-toggle"
-                   data-target="#" data-toggle="dropdown">
+                   data-target="#" data-toggle="dropdown"<?php echo $params->get('enable_bootstrap',1) ? ' href="javascript: void(0)"' :''; ?>>
                     <i class="icon-cog"></i> <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
