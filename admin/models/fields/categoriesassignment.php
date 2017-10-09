@@ -34,7 +34,6 @@ class JFormFieldCategoriesAssignment extends JFormFieldCheckboxes
         $query -> select('c.title AS text, c.id AS value,c.template_id');
         $query -> from('#__tz_portfolio_plus_categories AS c');
         $query -> where('extension = "com_tz_portfolio_plus"');
-//        $query -> join('LEFT','#__tz_portfolio_plus_categories AS tc ON tc.catid = c.id');
 
         $db -> setQuery($query);
         if($rows = $db -> loadObjectList()){

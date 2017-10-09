@@ -138,13 +138,15 @@ class TZ_Portfolio_PlusPluginHelper extends JPluginHelper{
         }
         else
         {
-            foreach ($plugins as $p)
-            {
-                // Is this plugin in the right group?
-                if ($p->type == $type && $p->name == $plugin)
+            if($plugins){
+                foreach ($plugins as $p)
                 {
-                    $result = $p;
-                    break;
+                    // Is this plugin in the right group?
+                    if ($p->type == $type && $p->name == $plugin)
+                    {
+                        $result = $p;
+                        break;
+                    }
                 }
             }
         }

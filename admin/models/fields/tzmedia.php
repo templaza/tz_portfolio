@@ -22,10 +22,8 @@ defined('JPATH_PLATFORM') or die;
 class JFormFieldTZMedia extends JFormFieldMedia{
     protected $type = 'TZMedia';
 
-//    public function __construct($form = null)
-//    {
-//        parent::__construct($form);
-//    }
+    protected $layout = 'joomla.form.field.media';
+
     protected function getName($fieldName)
     {
         $name   = parent::getName($fieldName);
@@ -100,10 +98,11 @@ class JFormFieldTZMedia extends JFormFieldMedia{
         $html[] = '<div style="padding-top: 5px;">'.parent::getInput();
 
         if($value && !empty($value) && is_string($value)){
+            JHtml::_('behavior.modal','.tp-image-preview__modal');
             $html[] = '<a href="'.JUri::root().str_replace('.'
                     .JFile::getExt($value),($this -> element['img_prefix']?'_'.$this -> element['img_prefix']:'')
                     .'.'.JFile::getExt($value),$value).'?time='.time().'"'
-                .' class="tz-image-preview modal" rel="{handler: \'image\'}" style="display: table; padding-top: 5px;">';
+                .' class="tp-image-preview tp-image-preview__modal" rel="{handler: \'image\'}" style="display: table; padding-top: 5px;">';
 
             $html[] = '<img src="' . JUri::root() . str_replace('.' . JFile::getExt($value),
                     ($this->element['img_prefix'] ? '_' . $this->element['img_prefix'] : '')

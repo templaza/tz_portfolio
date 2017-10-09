@@ -53,7 +53,7 @@ if(!isset($item -> mediatypes) || (isset($item -> mediatypes) && !in_array($item
         <?php if ($params->get('show_date_print_icon', 0) || $params->get('show_date_email_icon', 0) || $canEdit) : ?>
             <div class="tp-item-tools row-table">
                 <div class="btn-group pull-right">
-                    <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"<?php echo $params->get('enable_bootstrap',1) ? ' href="javascript: void(0)"' :''; ?>>
+                    <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"<?php echo $params->get('enable_bootstrap',1) ? ' href="#"' :''; ?>>
                         <i class="icon-cog"></i> <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
@@ -120,7 +120,7 @@ if(!isset($item -> mediatypes) || (isset($item -> mediatypes) && !in_array($item
                         <?php $author = $this->item->author; ?>
                         <?php $author = ($this->item->created_by_alias ? $this->item->created_by_alias : $author); ?>
                         <?php $author = '<span itemprop="name">' . $author . '</span>'; ?>
-                        <?php if ($params->get('cat_link_author', 1)): ?>
+                        <?php if ($params->get('date_link_author', 1)): ?>
                             <?php echo JHtml::_('link', $this->item->author_link, $author, array('itemprop' => 'url')); ?>
                         <?php else : ?>
                             <?php echo $author; ?>

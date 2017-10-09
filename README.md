@@ -10,6 +10,13 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+09/10/2017 - 1.1.5
+
+	- [backend] Disable "Save & Close" button of edit article form.
+	- [backend] Fix warning when disable all add-on of addon list view in backend.
+	- [frontend] Update create and edit article in front-end.
+	- [frontend] Fix error display icon font of elegant style.
+
 13/09/2017 - 1.1.4
 
 	- [backend] Fix issue addon display

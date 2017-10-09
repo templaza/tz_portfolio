@@ -175,8 +175,6 @@ class JFormFieldCategoryEdit extends JFormFieldList
 			 * option to change the category parent for a category or the category for a content item,
 			 * but you should be able to save in that category.
 			 */
-//			if(!is_array($oldCat)){
-//			}
 			foreach ($options as $i => $option)
 			{
 				if(!is_array($oldCat)){

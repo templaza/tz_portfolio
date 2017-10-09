@@ -23,149 +23,137 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.view');
 tzportfolioplusimport('user.user');
 
-/**
- * HTML Article View class for the Content component.
- */
 class TZ_Portfolio_PlusViewForm extends JViewLegacy
 {
-	protected $form;
-	protected $item;
-	protected $return_page;
-	protected $state;
+    protected $form;
+
+    protected $item;
+
+    protected $return_page;
+
+    protected $state;
+    protected $params;
+    protected $listTags;
+    protected $tagsSuggest;
+    protected $plgTabs      = array();
+    protected $extraFields  = array();
 
 	public function display($tpl = null)
 	{
 		// Initialise variables.
 		$app		= JFactory::getApplication();
-        $doc        = JFactory::getDocument();
 		$user		= TZ_Portfolio_PlusUser::getUser();
 
-		// Get model data.
-		$this->state		= $this->get('State');
-		$this->item			= $this->get('Item');
-		$this->form			= $this->get('Form');
-		$this->return_page	= $this->get('ReturnPage');
+        // Get model data.
+        $this->state        = $this->get('State');
+        $this->item         = $this->get('Item');
+        $this->form         = $this->get('Form');
+        $this->return_page  = $this->get('ReturnPage');
 
-		if (empty($this->item->id)) {
-			$authorised = $user->authorise('core.create', 'com_tz_portfolio_plus') || (count($user->getAuthorisedCategories('com_tz_portfolio_plus', 'core.create')));
-		}
-		else {
-			$authorised = $this->item->params->get('access-edit');
-		}
-
-		if ($authorised !== true) {
-			JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
-			return false;
-		}
-
-		if (!empty($this->item)) {
-			$this->item->images = json_decode($this->item->images);
-			$this->item->urls = json_decode($this->item->urls);
-
-			$this->form->bind($this->item);
-			$this->form->bind($this->item->urls);
-			$this->form->bind($this->item->images);
-
-		}
-
-		// Check for errors.
-		if (count($errors = $this->get('Errors'))) {
-			JError::raiseWarning(500, implode("\n", $errors));
-			return false;
-		}
-
-		// Create a shortcut to the parameters.
-		$params	= &$this->state->params;
-
-		//Escape strings for HTML output
-		$this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx'));
-
-		$this->params	= $params;
-		$this->user		= $user;
-
-		if ($this->params->get('enable_category') == 1) {
-			$catid = $app -> input -> getInt('catid');
-			$category = JCategories::getInstance('Content')->get($this->params->get('catid', 1));
-			$this->category_title = $category->title;
-		}
-
-		$this->_prepareDocument();
-
-//        $model  = Jmodel::getInstance('Article','TZ_Portfolio_PlusModel');
-//        $groupFields    = $model -> getGroups();
-//        $this -> assign('listsGroup',$groupFields);
-
-        $this -> assign('listsGroup',$this -> get('Groups'));
-        $this -> assign('listsTags',json_encode($this -> get('Tags')));
-        $this -> assign('listAttach',$this -> get('Attachment'));
-        $this -> assign('listEdit',$this -> get('FieldsContent'));
-        JModelLegacy::addIncludePath('administrator/components/com_tz_portfolio_plus/models','TZ_Portfolio_PlusModel');
-        $modelTag   = JModelLegacy::getInstance('Tags','TZ_Portfolio_PlusModel');
-        $this -> assign('tagsSuggest',$modelTag -> getTagsName());
-
-        $csscompress    = null;
-        if($params -> get('css_compression',0)){
-            $csscompress    = '.min';
+        if (empty($this->item->id))
+        {
+            $authorised = $user->authorise('core.create', 'com_tz_portfolio_plus') || count($user->getAuthorisedCategories('com_tz_portfolio_plus', 'core.create'));
+        }
+        else
+        {
+            $authorised = $this->item->params->get('access-edit');
         }
 
-        $jscompress         = new stdClass();
-        $jscompress -> extfile  = null;
-        $jscompress -> folder   = null;
-        if($params -> get('js_compression',1)){
-            $jscompress -> extfile  = '.min';
-            $jscompress -> folder   = '/packed';
+        if ($authorised !== true)
+        {
+            $app->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
+            $app->setHeader('status', 403, true);
+
+            return false;
         }
 
-        $doc -> addStyleSheet('components/com_tz_portfolio_plus/css/tzportfolioplus.min.css');
-        
+        $this -> extraFields	= $this -> get('ExtraFields');
+        $this -> listTags      = json_encode($this -> get('Tags'));
+        $this -> tagsSuggest   = TZ_Portfolio_PlusHelperTags::getTagsSuggestToArticle();
+
+
+        // Create a shortcut to the parameters.
+        $params = &$this->state->params;
+
+        // Escape strings for HTML output
+        $this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx'));
+
+        $this->params = $params;
+
+        // Load Tabs's title from plugin group tz_portfolio_plus_mediatype
+        $dispatcher	= JDispatcher::getInstance();
+        TZ_Portfolio_PlusPluginHelper::importPlugin('mediatype');
+        if($mediaType  = $dispatcher -> trigger('onAddMediaType')){
+            $mediaForm	= $dispatcher -> trigger('onMediaTypeDisplayArticleForm',array($this -> item));
+            if(count($mediaType)){
+                $plugin	= array();
+                foreach($mediaType as $i => $type){
+                    $plugin[$i]			= new stdClass();
+                    $plugin[$i] -> type	= $type;
+                    $plugin[$i] -> html	= '';
+                    if($mediaForm && count($mediaForm) && isset($mediaForm[$i])) {
+                        $plugin[$i]->html = $mediaForm[$i];
+                    }
+                    $this -> plgTabs[$i]	= $plugin[$i];
+                }
+            }
+        }
+
+        $this->_prepareDocument();
 		parent::display($tpl);
 	}
 
 	/**
 	 * Prepares the document
 	 */
-	protected function _prepareDocument()
-	{
-		$app		= JFactory::getApplication();
-		$menus		= $app->getMenu();
-		$pathway	= $app->getPathway();
-		$title 		= null;
+    protected function _prepareDocument()
+    {
+        $app   = JFactory::getApplication();
+        $menus = $app->getMenu();
+        $title = null;
 
-		// Because the application sets a default page title,
-		// we need to get it from the menu item itself
-		$menu = $menus->getActive();
-		if ($menu)
-		{
-			$this->params->def('page_heading', $this->params->get('page_title', $menu->title));
-		} else {
-			$this->params->def('page_heading', JText::_('COM_CONTENT_FORM_EDIT_ARTICLE'));
-		}
+        // Because the application sets a default page title,
+        // we need to get it from the menu item itself
+        $menu = $menus->getActive();
 
-		$title = $this->params->def('page_title', JText::_('COM_CONTENT_FORM_EDIT_ARTICLE'));
-		if ($app->getCfg('sitename_pagetitles', 0) == 1) {
-			$title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
-		}
-		elseif ($app->getCfg('sitename_pagetitles', 0) == 2) {
-			$title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
-		}
-		$this->document->setTitle($title);
+        if ($menu)
+        {
+            $this->params->def('page_heading', $this->params->get('page_title', $menu->title));
+        }
+        else
+        {
+            $this->params->def('page_heading', JText::_('COM_CONTENT_FORM_EDIT_ARTICLE'));
+        }
 
-		$pathway = $app->getPathWay();
-		$pathway->addItem($title, '');
+        $title = $this->params->def('page_title', JText::_('COM_CONTENT_FORM_EDIT_ARTICLE'));
 
-		if ($this->params->get('menu-meta_description'))
-		{
-			$this->document->setDescription($this->params->get('menu-meta_description'));
-		}
+        if ($app->get('sitename_pagetitles', 0) == 1)
+        {
+            $title = JText::sprintf('JPAGETITLE', $app->get('sitename'), $title);
+        }
+        elseif ($app->get('sitename_pagetitles', 0) == 2)
+        {
+            $title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
+        }
 
-		if ($this->params->get('menu-meta_keywords'))
-		{
-			$this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
-		}
+        $this->document->setTitle($title);
 
-		if ($this->params->get('robots'))
-		{
-			$this->document->setMetadata('robots', $this->params->get('robots'));
-		}
-	}
+        $pathway = $app->getPathWay();
+        $pathway->addItem($title, '');
+
+        if ($this->params->get('menu-meta_description'))
+        {
+            $this->document->setDescription($this->params->get('menu-meta_description'));
+        }
+
+        if ($this->params->get('menu-meta_keywords'))
+        {
+            $this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
+        }
+
+        if ($this->params->get('robots'))
+        {
+            $this->document->setMetadata('robots', $this->params->get('robots'));
+        }
+    }
 }

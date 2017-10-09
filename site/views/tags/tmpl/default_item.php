@@ -48,7 +48,7 @@ if(!isset($item -> mediatypes) || (isset($item -> mediatypes) && !in_array($item
 <?php if ($params->get('show_tag_print_icon', 0) || $params->get('show_tag_email_icon', 0) || $canEdit) : ?>
 <div class="TzIcon">
     <div class="btn-group pull-right">
-        <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" href="javascript: void(0)">
+        <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" href="#">
             <i class="icon-cog"></i> <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">

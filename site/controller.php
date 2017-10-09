@@ -95,27 +95,55 @@ class TZ_Portfolio_PlusController extends TZ_Portfolio_PlusControllerLegacy
 			$doc -> addScript(TZ_Portfolio_PlusUri::base(true).'/js/jquery-noconflict.min.js');
 			$doc -> addScript(TZ_Portfolio_PlusUri::base(true).'/js/jquery-migrate-1.2.1.js');
 		}
-		if($params -> get('enable_bootstrap',1)){
+		if($params -> get('enable_bootstrap',1)) {
+            $doc->addStyleSheet(TZ_Portfolio_PlusUri::base(true) . '/bootstrap/css/bootstrap.min.css');
 			$doc -> addScript(TZ_Portfolio_PlusUri::base(true).'/bootstrap/js/bootstrap.min.js');
-			$doc -> addStyleSheet(TZ_Portfolio_PlusUri::base(true).'/bootstrap/css/bootstrap.min.css');
 			$doc -> addScriptDeclaration('
-				(function($){
-					$(document).off(\'click.modal.data-api\')
-					.on(\'click.modal.data-api\', \'[data-toggle="modal"]\', function (e) {
-						var $this = $(this)
-						  , href = $this.attr(\'href\')
-						  , $target = $($this.attr(\'data-target\') || (href && href.replace(/.*(?=#[^\s]+$)/, \'\'))) //strip for ie7
-						  , option = $target.data(\'modal\') ? \'toggle\' : $.extend({ remote:!/#/.test(href) && href }, $target.data(), $this.data())
-					
-						e.preventDefault();
-					
-						$target
-						  .modal(option)
-						  .one(\'hide\', function () {
-							$this.focus()
-						  });
-					  });
-				})(jQuery);
+            (function($){
+                $(document).off("click.modal.data-api")
+                .on("click.modal.data-api", "[data-toggle=modal]", function (e) {
+                    var $this = $(this)
+                      , href = $this.attr("href")
+                      , $target = $($this.attr("data-target") || (href && href.replace(/.*(?=#[^\s]+$)/, ""))) //strip for ie7
+                      , option = $target.data("modal") ? "toggle" : $.extend({ remote:!/#/.test(href) && href }, $target.data(), $this.data());
+                
+                    e.preventDefault();
+                
+                    $target
+                      .modal(option)
+                      .one("hide", function () {
+                        $this.focus()
+                      });
+                  });
+                  
+                $(document).off("click.bs.tab.data-api")
+                            .on("click.bs.tab.data-api", "[data-toggle=tab]", function (e) {
+                    e.preventDefault();
+                      $(this).tab("show");
+                });
+                
+                $(document).off("click.bs.dropdown.data-api")
+                            .on("click.bs.dropdown.data-api", "[data-toggle=dropdown]", function (e) {
+                    e.preventDefault();
+                    var $this   = $(this)
+                    ,data    = $this.data("bs.dropdown")
+                    ,option  = data ? "toggle" : $this.data();            
+                    $(this).dropdown(option);
+                });                
+                
+                $(document).off("click.bs.collapse.data-api")
+                        .on("click.bs.collapse.data-api", "[data-toggle=collapse]", function (e) {
+                        
+                    var $this   = $(this), href = $this.attr("href");
+                    var $target = $($this.attr("data-target")
+                      || (href = $this.attr("href")) && href.replace(/.*(?=#[^\s]+$)/, "")); // strip for ie7
+                    var data    = $target.data("bs.collapse");
+                    var option  = data ? "toggle" : $this.data();
+                    if (!$this.attr("data-target")) e.preventDefault();
+        
+                    $target.collapse(option);
+                });
+            })(jQuery);
 			');
 		}
 

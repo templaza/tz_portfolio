@@ -67,12 +67,10 @@ class JFormFieldTZCategory extends JFormFieldList
             if ($published)
             {
                 $config['filter.published'] = explode(',', $published);
-//                $options = JHtml::_('tzcategory.options', $extension, array('filter.published' => explode(',', $published)));
             }
             else
             {
                 $config['filter.published'] = array(0, 1);
-//                $options = JHtml::_('tzcategory.options', $extension);
             }
 
             if(isset($this -> element['parent'])){

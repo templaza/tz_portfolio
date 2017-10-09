@@ -82,7 +82,7 @@ if($this -> items):
             <div class="tp-item-tools">
                 <div class="btn-group dropdown pull-right" role="presentation">
                     <a class="btn btn-default btn-sm dropdown-toggle"
-                       data-target="#" data-toggle="dropdown"<?php echo $params->get('enable_bootstrap',1) ? ' href="javascript: void(0)"' :''; ?>>
+                       data-target="#" data-toggle="dropdown"<?php echo $params->get('enable_bootstrap',1) ? ' href="#"' :''; ?>>
                         <i class="icon-cog"></i> <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">

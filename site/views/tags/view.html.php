@@ -134,13 +134,13 @@ class TZ_Portfolio_PlusViewTags extends JViewLegacy
 
                     // Check general edit permission first.
                     if ($user->authorise('core.edit', $asset)) {
-                        $item -> params -> set('access-edit', false);
+                        $item -> params -> set('access-edit', true);
                     }
                     // Now check if edit.own is available.
                     elseif (!empty($userId) && $user->authorise('core.edit.own', $asset)) {
                         // Check for a valid user and that they are the owner.
                         if ($userId == $item->created_by) {
-                            $item -> params -> set('access-edit', false);
+                            $item -> params -> set('access-edit', true);
                         }
                     }
                 }

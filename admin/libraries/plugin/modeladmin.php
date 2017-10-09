@@ -35,12 +35,12 @@ class TZ_Portfolio_PlusPluginModelAdmin extends JModelAdmin
     {
         $name   = $this -> getName();
 
-        JForm::addFormPath(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH. DIRECTORY_SEPARATOR.$this -> plugin_type
-            . DIRECTORY_SEPARATOR. $name. DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR . 'form');
-        JForm::addFormPath(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.DIRECTORY_SEPARATOR.$this -> plugin_type
-            . DIRECTORY_SEPARATOR. $name. DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR . 'forms');
+        JForm::addFormPath(JPath::clean(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.'/'.$this -> plugin_type
+            .'/'.$name.'/admin/models/form'));
+        JForm::addFormPath(JPath::clean(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.'/'.$this -> plugin_type
+            .'/'.$name.'/admin/models/forms'));
 
-        $form = $this->loadForm('plg_'.$this -> plugin_type.'.'.$name, $name,
+        $form = $this->loadForm('plg_'.$this -> plugin_type.$name.'.'.$name, $name,
             array('control' => 'jform', 'load_data' => $loadData));
 
         if (empty($form)) {

@@ -145,4 +145,51 @@
 .rating > .rating-item:hover ~ .rating-item::before{
     color: #f5d608;
 }
+
+.tzpp_bootstrap3 select,
+.tzpp_bootstrap3 textarea,
+.tzpp_bootstrap3 input[type="text"],
+.tzpp_bootstrap3 input[type="password"],
+.tzpp_bootstrap3 input[type="datetime"],
+.tzpp_bootstrap3 input[type="datetime-local"],
+.tzpp_bootstrap3 input[type="date"],
+.tzpp_bootstrap3 input[type="month"],
+.tzpp_bootstrap3 input[type="time"],
+.tzpp_bootstrap3 input[type="week"],
+.tzpp_bootstrap3 input[type="number"],
+.tzpp_bootstrap3 input[type="email"],
+.tzpp_bootstrap3 input[type="url"],
+.tzpp_bootstrap3 input[type="search"],
+.tzpp_bootstrap3 input[type="tel"],
+.tzpp_bootstrap3 input[type="color"],
+.tzpp_bootstrap3 .uneditable-input{
+    height: auto;
+}
+.tzpp_bootstrap3 .chzn-container-multi .tz_chzn-choices li.search-field input[type=text]{
+    height: 24px;
+}
+.tzpp_bootstrap3 .input-append .add-on,
+.tzpp_bootstrap3 .input-prepend .add-on{
+    height: auto;
+}
+.tzpp_bootstrap3 .input-append .add-on.button-clear,
+.tzpp_bootstrap3 .input-prepend .add-on.button-clear{
+    padding-bottom: 3px;
+}
+.tzpp_bootstrap3.tp-edit-page .nav{
+    margin-bottom: 15px;
+}
+.tzpp_bootstrap3.tp-edit-page .form-horizontal .control-label{
+    text-align: left;
+}
+.tzpp_bootstrap3 .modal.in{
+    display: block !important;
+}
+.tzpp_bootstrap3 .modal-header{
+    background: #fff;
+}
+.tzpp_bootstrap3 .modal-body{
+    width: 100%;
+    background: #fff;
+}
 /* End styles for article view */

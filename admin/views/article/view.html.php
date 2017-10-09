@@ -69,7 +69,7 @@ class TZ_Portfolio_PlusViewArticle extends JViewLegacy
                 JError::raiseError(500, implode("\n", $errors));
                 return false;
             }
-//            $this -> assign('listsGroup',$this -> get('Groups')); // v3.3.2
+
             $this -> assign('listsTags',json_encode($this -> get('Tags')));
             $this -> assign('listAttach',$this -> get('Attachment'));
             $this -> assign('listEdit',$this -> get('FieldsContent'));
@@ -119,7 +119,7 @@ class TZ_Portfolio_PlusViewArticle extends JViewLegacy
 		// For new records, check the create permission.
 		if ($isNew && (count($user->getAuthorisedCategories('com_tz_portfolio_plus', 'core.create')) > 0)) {
 			JToolBarHelper::apply('article.apply');
-			JToolBarHelper::save('article.save');
+//			JToolBarHelper::save('article.save');
 			JToolBarHelper::save2new('article.save2new');
 			JToolBarHelper::cancel('article.cancel');
 		}
@@ -129,7 +129,7 @@ class TZ_Portfolio_PlusViewArticle extends JViewLegacy
 				// Since it's an existing record, check the edit permission, or fall back to edit own if the owner.
 				if ($canDo->get('core.edit') || ($canDo->get('core.edit.own') && $this->item->created_by == $userId)) {
 					JToolBarHelper::apply('article.apply');
-					JToolBarHelper::save('article.save');
+//					JToolBarHelper::save('article.save');
 
 					// We can save this record, but check the create permission to see if we can return to make a new one.
 					if ($canDo->get('core.create')) {

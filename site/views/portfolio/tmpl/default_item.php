@@ -80,9 +80,9 @@ if($this -> items):
             if ($params->get('show_cat_print_icon', 0) || $params->get('show_cat_email_icon', 0)
                     || $params -> get('access-edit')) : ?>
             <div class="TzIcon">
-                <div class="btn-group dropdown pull-right" role="presentation">
+                <div class="btn-group pull-right" role="presentation">
                     <a class="btn btn-default btn-sm dropdown-toggle"
-                       data-target="#" data-toggle="dropdown" href="javascript: void(0);">
+                       data-target="#" data-toggle="dropdown" href="#">
                         <i class="icon-cog"></i> <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">

@@ -115,9 +115,10 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
 
     // Prepare form of the plugin ~ onContentPrepareForm of joomla
     public function onContentPrepareForm($form, $data){
-        $app = JFactory::getApplication();
-        if ($app->isAdmin()) {
-            $name           = $form -> getName();
+        $app    = JFactory::getApplication();
+        $name   = $form -> getName();
+
+        if ($app->isAdmin() || ($app -> isSite() && $name == 'com_tz_portfolio_plus.form')) {
 
             $component_id   = null;
             if(!empty($data)){
@@ -141,7 +142,8 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
             }
 
             // Load form for article and category create or edit form.
-            if($name == 'com_tz_portfolio_plus.article' || $name == 'com_tz_portfolio_plus.category') {
+            if($name == 'com_tz_portfolio_plus.article' || $name == 'com_tz_portfolio_plus.category'
+                || $name == 'com_tz_portfolio_plus.form') {
                 $this -> contentPrepareForm($form, $data);
             }
         }
@@ -171,9 +173,10 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
 
     // Load xml form file for article view of the plugin (this trigger called in system tz_portfolio_plus plugin)
     protected function contentPrepareForm($form, $data){
-        $app            = JFactory::getApplication();
-        if($app -> isAdmin()){
-            $context    = $form -> getName();
+        $app        = JFactory::getApplication();
+        $context    = $form -> getName();
+
+        if($app -> isAdmin() || ($app -> isSite() && $context  == 'com_tz_portfolio_plus.form')){
             list($option, $viewName)    = explode('.', $context);
 
             // Load plugin's language
@@ -187,8 +190,16 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
             JForm::addFieldPath(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.'/'.$this -> _type.'/'.$this -> _name.'/admin/models/field');
             JForm::addFieldPath(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.'/'.$this -> _type.'/'.$this -> _name.'/admin/models/fields');
 
+            if($app -> isSite() && $context  == 'com_tz_portfolio_plus.form') {
+                JForm::addFormPath(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/' . $this->_type . '/' . $this->_name . '/models/form');
+                JForm::addFormPath(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/' . $this->_type . '/' . $this->_name . '/models/forms');
+
+                JForm::addFieldPath(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/' . $this->_type . '/' . $this->_name . '/models/field');
+                JForm::addFieldPath(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/' . $this->_type . '/' . $this->_name . '/models/fields');
+            }
+
             // Load xml form file from above path
-            if($viewName == 'article') {
+            if($viewName == 'article' || $viewName == 'form') {
                 $form->loadFile($viewName, false, '/form/fields[@name="attribs"]');
             }else{
                 $form->loadFile($viewName, false, '/form/fields[@name="params"]');
@@ -314,7 +325,6 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
                 if(method_exists($model, 'getForm')) {
                     $this->form = $model->getForm();
                 }
-
                 $this -> item   = $data;
                 $path           = TZ_Portfolio_PlusPluginHelper::getLayoutPath($this -> _type, $this -> _name, 'admin');
 
@@ -560,7 +570,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
 
     // Upload image and store data (from image form) in add or edit of portfolio's article view
     public function onContentAfterSave($context, $data, $isnew){
-        if($context == 'com_tz_portfolio_plus.article') {
+        if($context == 'com_tz_portfolio_plus.article' || $context == 'com_tz_pỏ') {
             if($model  = $this -> getModel()) {
                 if(method_exists($model,'save')) {
                     $model->save($data);

@@ -37,34 +37,10 @@ JLoader::import('com_tz_portfolio_plus.helpers.association',JPATH_ADMINISTRATOR.
  */
 class TZ_Portfolio_PlusModelArticle extends JModelAdmin
 {
-    /**
-     * @var        string    The prefix to use with controller messages.
-     * @since   1.6
-     */
     protected $text_prefix = 'COM_CONTENT';
-
-    /**
-     * The type alias for this content type (for example, 'com_content.article').
-     *
-     * @var      string
-     * @since    3.2
-     */
-
     public $typeAlias = 'com_tz_portfolio_plus.article';
-
     protected $associationsContext = 'com_tz_portfolio_plus.article.item';
 
-    /**
-     * Batch copy items to a new category or current.
-     *
-     * @param   integer  $value     The new category.
-     * @param   array    $pks       An array of row IDs.
-     * @param   array    $contexts  An array of item contexts.
-     *
-     * @return  mixed  An array of new IDs on success, boolean false on failure.
-     *
-     * @since   11.1
-     */
     protected function batchCopy($value, $pks, $contexts)
     {
         $categoryId = (int) $value;
@@ -333,8 +309,6 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
 
             if ($item->id != null)
             {
-//                $associations = JLanguageAssociations::getAssociations('com_tz_portfolio_plus',
-//                    '#__tz_portfolio_plus_content', 'com_tz_portfolio_plus.item', $item->id);
                 $associations    = TZ_Portfolio_PlusBackEndHelperAssociation::getArticleAssociations($item->id);
 
 
@@ -361,7 +335,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
     public function getForm($data = array(), $loadData = true)
     {
         // Get the form.
-        $form = $this->loadForm('com_tz_portfolio_plus.article', 'article', array('control' => 'jform', 'load_data' => $loadData));
+        $form = $this->loadForm($this -> option.'.'.$this -> getName(), 'article', array('control' => 'jform', 'load_data' => $loadData));
         if (empty($form))
         {
             return false;
@@ -982,7 +956,9 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
     public function getExtraFields()
     {
         $app        = JFactory::getApplication();
-        $articleId  = $app->input->getInt('id', 0);
+        $jinput     = $app -> input;
+
+        $articleId  = $jinput->get('a_id', $jinput->get('id', 0));
         $db         = $this -> getDbo();
         $query      = $db -> getQuery(true);
 
@@ -1050,4 +1026,22 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
         parent::cleanCache('mod_tz_portfolio_plus_categories');
         parent::cleanCache('mod_tz_portfolio_plus_articles');
     }
+
+//    public function getName()
+//    {
+////        return parent::getName();
+//        if (empty($this->name))
+//        {
+//            $r = null;
+//
+//            if (!preg_match('/Model(.*)/i', get_class($this), $r))
+//            {
+//                throw new \Exception(\JText::_('JLIB_APPLICATION_ERROR_MODEL_GET_NAME'), 500);
+//            }
+//
+//            $this->name = strtolower($r[1]);
+//        }
+//
+//        return $this->name;
+//    }
 }

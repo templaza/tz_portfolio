@@ -51,7 +51,7 @@ if(!isset($item -> mediatypes) || (isset($item -> mediatypes) && !in_array($item
   ?>
 <div class="TzIcon">
     <div class="btn-group pull-right">
-        <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" href="javascript: void(0)">
+        <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" href="#">
             <i class="icon-cog"></i> <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">

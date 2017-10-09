@@ -35,8 +35,7 @@ if($this -> items):
         foreach($this -> items as $i => $item) {
             $this->item = $item;
         ?>
-            <div class="<?php echo ($cols && isset($cols[$colCounter]))?'col-md-'.$cols[$colCounter]
-                .(($i != 0 && $i % $col == 0)?' clr':''):'col-md-12'; ?>">
+            <div class="<?php echo ($cols && isset($cols[$colCounter]))?'col-md-'.$cols[$colCounter]:'col-md-12'; ?>">
                 <div class="TzItem" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
                 <?php echo $this->loadTemplate('item'); ?>
                 </div>

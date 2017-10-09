@@ -26,8 +26,7 @@ $params = &$this->item->params;
 $images = json_decode($this->item->images);
 $canEdit	= $this->item->params->get('access-edit');
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
-//JHtml::_('behavior.tooltip');
-JHtml::_('behavior.framework');
+//JHtml::_('behavior.framework');
 
 $blogLink   = $this -> item ->link;
 $item   = $this -> item;
@@ -48,7 +47,7 @@ if(!isset($item -> mediatypes) || (isset($item -> mediatypes) && !in_array($item
 <?php if ($params->get('show_date_print_icon', 0) || $params->get('show_date_email_icon', 0) || $canEdit) : ?>
 <div class="TzIcon">
     <div class="btn-group pull-right">
-        <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" href="javascript: void(0)">
+        <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" href="#">
             <i class="icon-cog"></i> <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
@@ -119,7 +118,7 @@ if(!isset($item -> mediatypes) || (isset($item -> mediatypes) && !in_array($item
         <?php $author = ($this->item->created_by_alias ? $this->item->created_by_alias : $author);?>
         <?php $author = '<span itemprop="name">' . $author . '</span>'; ?>
 
-        <?php if ($params->get('cat_link_author', 1)):?>
+        <?php if ($params->get('date_link_author', 1)):?>
             <?php 	echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_WRITTEN_BY' ,
              JHtml::_('link', $this -> item -> author_link, $author, array('itemprop' => 'url'))); ?>
         <?php else :?>

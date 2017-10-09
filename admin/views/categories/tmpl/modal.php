@@ -77,6 +77,9 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 	<table class="table table-striped" id="categoryList">
 		<thead>
 			<tr>
+                <th width="1%" class="nowrap center">
+                    <?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'a.published', $listDirn, $listOrder); ?>
+                </th>
 				<th>
 					<?php echo JHtml::_('grid.sort', 'JGLOBAL_TITLE', 'a.title', $listDirn, $listOrder); ?>
 				</th>
@@ -107,6 +110,14 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 			</tr>
 		</tfoot>
 		<tbody>
+        <?php
+        $iconStates = array(
+            -2 => 'icon-trash',
+            0  => 'icon-unpublish',
+            1  => 'icon-publish',
+            2  => 'icon-archive',
+        );
+        ?>
 			<?php foreach ($this->items as $i => $item) : ?>
 				<?php if ($item->language && JLanguageMultilang::isEnabled())
 				{
@@ -130,6 +141,9 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 				}
 				?>
 				<tr class="row<?php echo $i % 2; ?>">
+                    <td class="center">
+                        <span class="<?php echo $iconStates[$this->escape($item->published)]; ?>" aria-hidden="true"></span>
+                    </td>
 					<td>
 						<?php echo str_repeat('<span class="gi">&mdash;</span>', $item->level - 1) ?>
 						<a href="javascript:void()"

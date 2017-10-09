@@ -38,7 +38,6 @@ class JFormFieldTZText extends JFormFieldText{
         if($element && isset($element['data-provide'])){
             $str    = '" data-provide="'.(string) $element['data-provide'];
             $this -> id = $this->id.$str;
-//            $this -> __set('id', $this->id.$str);
         }
         $html   = parent::getInput();
         return $html;

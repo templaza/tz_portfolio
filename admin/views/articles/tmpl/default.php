@@ -284,7 +284,6 @@ $assoc		= JLanguageAssociations::isEnabled();
             <input type="hidden" name="boxchecked" value="0" />
             <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
             <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
-            <input type="hidden" name="return" value="<?php echo base64_encode(JUri::getInstance() -> toString())?>">
             <?php echo JHtml::_('form.token'); ?>
         </div>
 </form>

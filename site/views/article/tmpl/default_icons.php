@@ -22,17 +22,20 @@ defined('_JEXEC') or die;
 
 $params = $this -> item -> params;
 $canEdit	= $this->item->params->get('access-edit');
+
 ?>
 
 <?php if (!$this->print) : ?>
     <?php if ($canEdit ||  $params->get('show_print_icon', 1) || $params->get('show_email_icon', 1)) : ?>
         <div class="TzIcon">
             <div class="btn-group pull-right">
-                <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" href="javascript: void(0)">
+                <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" id="dropdownMenuButton-<?php
+                echo $this -> item -> id; ?>" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                     <i class="icon-cog"></i> <span class="caret"></span>
                 </a>
                 <?php // Note the actions class is deprecated. Use dropdown-menu instead. ?>
-                <ul class="dropdown-menu actions">
+                <ul class="dropdown-menu actions" aria-labelledby="dropdownMenuButton-<?php
+                echo $this -> item -> id; ?>">
                     <?php if ($params->get('show_print_icon', 1)) : ?>
                         <li class="print-icon"> <?php echo JHtml::_('icon.print_popup',  $this->item, $params); ?> </li>
                     <?php endif; ?>
