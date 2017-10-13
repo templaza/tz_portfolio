@@ -33,13 +33,6 @@ if ($saveOrder)
     $saveOrderingUrl = 'index.php?option=com_tz_portfolio_plus&task=fields.saveOrderAjax&tmpl=component';
     JHtml::_('sortablelist.sortable', 'extraFieldList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
 }
-$sortFields = array('f.ordering' => JText::_('JGRID_HEADING_ORDERING'),
-    'a.state' => JText::_('JSTATUS'),
-    'f.title' => JText::_('COM_TZ_PORTFOLIO_PLUS_HEADING_TITLE'),
-    'groupname' => JText::_('COM_TZ_PORTFOLIO_PLUS_GROUP'),
-    'f.type' => JText::_('COM_TZ_PORTFOLIO_PLUS_HEADING_TYPE'),
-    'f.published' => JText::_('JSTATUS'),
-    'f.id' => JText::_('JGRID_HEADING_ID'));
 ?>
 <script type="text/javascript">
     Joomla.orderTable = function() {
@@ -98,7 +91,7 @@ $sortFields = array('f.ordering' => JText::_('JGRID_HEADING_ORDERING'),
             <label for="sortTable" class="element-invisible"><?php echo JText::_('JGLOBAL_SORT_BY');?></label>
             <select name="sortTable" id="sortTable" class="input-medium" onchange="Joomla.orderTable()">
                 <option value=""><?php echo JText::_('JGLOBAL_SORT_BY');?></option>
-                <?php echo JHtml::_('select.options', $sortFields, 'value', 'text', $listOrder);?>
+                <?php echo JHtml::_('select.options', $this -> getSortFields(), 'value', 'text', $listOrder);?>
             </select>
         </div>
     </div>

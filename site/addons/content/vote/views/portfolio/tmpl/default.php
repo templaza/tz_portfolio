@@ -1,12 +1,20 @@
 <?php
 /*------------------------------------------------------------------------
-# plg_extravote - ExtraVote Plugin
+
+# TZ Portfolio Plus Extension
+
 # ------------------------------------------------------------------------
-# author    Joomla!Vargas
-# copyright Copyright (C) 2010 joomla.vargas.co.cr. All Rights Reserved.
-# @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
-# Websites: http://joomla.vargas.co.cr
-# Technical Support:  Forum - http://joomla.vargas.co.cr/forum
+
+# Author:    DuongTVTemPlaza
+
+# Copyright: Copyright (C) 2015 templaza.com. All Rights Reserved.
+
+# @License - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
+
+# Websites: http://www.templaza.com
+
+# Technical Support:  Forum - http://templaza.com/Forum
+
 -------------------------------------------------------------------------*/
 
 // No direct access

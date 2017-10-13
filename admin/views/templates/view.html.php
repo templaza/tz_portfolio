@@ -124,6 +124,11 @@ class TZ_Portfolio_PlusViewTemplates extends JViewLegacy
                 true
             )
         );
+    }
 
+    protected function getSortFields()
+    {
+        return array('name' => JText::_('COM_TZ_PORTFOLIO_PLUS_TEMPLATE_LABEL'),
+            'published' => JText::_('JSTATUS'));
     }
 }

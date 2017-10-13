@@ -21,23 +21,24 @@
 defined('_JEXEC') or die('Restricted access');
 
 $params = $this -> item -> params;
-
-?>
-<?php if ($this->item->parent_slug != '1:root') : ?>
-<span class="TzArticleParentCategory">
+if($params -> get('show_parent_category',1)) {
+    ?>
+    <?php if ($this->item->parent_slug != '1:root'){ ?>
+        <span class="TzArticleParentCategory">
     <?php
     $title = $this->escape($this->item->parent_title);
-    $url    = $title;
+    $url = $title;
     $target = '';
-    if(isset($tmpl) AND !empty($tmpl)):
+    if (isset($tmpl) AND !empty($tmpl)) {
         $target = ' target="_blank"';
-    endif;
+    }
     $url = '<a href="' . $this->item->parent_link . '"' . $target . ' itemprop="genre">' . $title . '</a>';
     ?>
-    <?php if ($params->get('link_parent_category', 1) and $this->item->parent_slug) : ?>
+    <?php if ($params->get('link_parent_category', 1) and $this->item->parent_slug){ ?>
         <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_PARENT', $url); ?>
-    <?php else : ?>
-        <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_PARENT',  '<span itemprop="genre">' . $title . '</span>'); ?>
-    <?php endif; ?>
+    <?php }else{ ?>
+        <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_PARENT', '<span itemprop="genre">' . $title . '</span>'); ?>
+    <?php } ?>
 </span>
-<?php endif;
+    <?php }
+}

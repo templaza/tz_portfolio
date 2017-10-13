@@ -7,7 +7,7 @@
     <license>GNU/GPL v2 or later http://www.gnu.org/licenses/gpl-2.0.html</license>
     <authorEmail>support@templaza.com</authorEmail>
     <authorUrl>www.templaza.com/</authorUrl>
-    <version>1.0.8</version>
+    <version>1.1.6</version>
     <description>PLG_MEDIATYPE_IMAGE_XML_DESCRIPTION</description>
 
     <files>
@@ -81,12 +81,6 @@
                 <field type="spacer" name="spacer_image_article_category_listing_name"
                        class="alert alert-warning btn-block"
                        label="COM_TZ_PORTFOLIO_PLUS_SPACER_ARTICLE_OPTIONS_IN_CATEGORY_LISTINGS"/>
-                <field type="radio" name="mt_show_cat_image_hover"
-                       default="1" class="btn-group"
-                       label="PLG_MEDIATYPE_IMAGE_SHOW_IMAGE_HOVER_LABEL">
-                    <option value="0">JHIDE</option>
-                    <option value="1">JSHOW</option>
-                </field>
                 <field type="tzimagesizelist" addon="image"
                        addon_group="mediatype"
                        param_name="image_size"

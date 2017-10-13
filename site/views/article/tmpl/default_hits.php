@@ -21,9 +21,12 @@
 defined('_JEXEC') or die;
 
 $params = $this -> item -> params;
+
+if($params -> get('show_hits',1)){
 ?>
 
 <span class="TzHits">
     <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_ARTICLE_HITS',$this->item->hits); ?>
     <meta itemprop="interactionCount" content="UserPageVisits:<?php echo $this->item->hits; ?>" />
 </span>
+<?php }?>

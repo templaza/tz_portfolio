@@ -21,12 +21,13 @@
 defined('_JEXEC') or die;
 
 $params = $this -> item -> params;
-?>
+if($params -> get('show_title',1)) {
+    ?>
 <h1 class="tpTitle reset-heading" itemprop="name headline">
     <?php echo $this->escape($this->item->title); ?>
 </h1>
-
 <?php
+}
 //Call event onContentAfterTitle on plugin
 echo $this->item->event->afterDisplayTitle;
 ?>

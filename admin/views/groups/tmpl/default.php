@@ -23,8 +23,7 @@ JHtml::_('behavior.tooltip');
 JHtml::_('bootstrap.tooltip');
 JHtml::_('dropdown.init');
 JHtml::_('formbehavior.chosen', 'select');
-$sortFields = array('name' => JText::_('COM_TZ_PORTFOLIO_PLUS_NAME'),
-    'id' => JText::_('JGRID_HEADING_ID'));
+$sortFields = $this -> getSortFields();
 
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));

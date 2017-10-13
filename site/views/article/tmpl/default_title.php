@@ -21,12 +21,13 @@
 defined('_JEXEC') or die;
 
 $params = $this -> item -> params;
-?>
-<h2 class="TzArticleTitle" itemprop="name">
-    <?php echo $this->escape($this->item->title); ?>
-</h2>
-
-<?php
+if($params -> get('show_title',1)) {
+    ?>
+    <h2 class="TzArticleTitle" itemprop="name">
+        <?php echo $this->escape($this->item->title); ?>
+    </h2>
+    <?php
+}
 //Call event onContentAfterTitle on plugin
-echo $this->item->event->afterDisplayTitle;
+    echo $this->item->event->afterDisplayTitle;
 ?>

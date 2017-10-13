@@ -22,7 +22,8 @@ defined('_JEXEC') or die('Restricted access');
 
 $params = $this -> item -> params;
 
-if(isset($this -> item -> modified)) {
+if($params -> get('show_modify_date',1)){
+    if(isset($this -> item -> modified)) {
     ?>
     <div class="tpModified">
         <i class="tp tp-pencil-square-o"></i>
@@ -31,4 +32,5 @@ if(isset($this -> item -> modified)) {
         </time>
     </div>
     <?php
+    }
 }

@@ -21,6 +21,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 $params = $this -> item -> params;
+if($params -> get('show_category',1)){
 ?>
 
 <span class="TzArticleCategory">
@@ -55,3 +56,4 @@ $params = $this -> item -> params;
         <?php echo JText::sprintf($lang_text,  '<span itemprop="genre">' . $title . '</span>'); ?>
     <?php endif; ?>
 </span>
+<?php } ?>

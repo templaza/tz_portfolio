@@ -21,18 +21,19 @@
 defined('_JEXEC') or die;
 
 $params = $this -> item -> params;
+if($params -> get('show_author',1)) {
 ?>
 
-<?php if (!empty($this->item->author )) : ?>
+<?php if (!empty($this->item->author )){ ?>
     <span class="TzCreatedby" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <?php $author = $this->item->created_by_alias ? $this->item->created_by_alias : $this->item->author; ?>
     <?php $author = '<span itemprop="name">' . $author . '</span>'; ?>
-    <?php if ($params->get('link_author', 1)): ?>
+    <?php if ($params->get('link_author', 1)){ ?>
         <?php
         $target = '';
-        if(isset($tmpl) AND !empty($tmpl)):
+        if(isset($tmpl) AND !empty($tmpl)) {
             $target = ' target="_blank"';
-        endif;
+        }
         $needle = 'index.php?option=com_tz_portfolio_plus&view=users&id=' . $this->item->created_by;
         $item = JMenu::getInstance('site')->getItems('link', $needle, true);
         if(!$userItemid = '&Itemid='.$this -> FindUserItemId($this->item->created_by)){
@@ -41,8 +42,9 @@ $params = $this -> item -> params;
         $cntlink = $needle.$userItemid;
         ?>
         <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_WRITTEN_BY', JHtml::_('link', JRoute::_($cntlink), $author,$target.' itemprop="url"')); ?>
-    <?php else: ?>
+    <?php }else{ ?>
         <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_WRITTEN_BY', $author); ?>
-    <?php endif; ?>
+    <?php } ?>
 </span>
-<?php endif; ?>
+<?php }
+} ?>

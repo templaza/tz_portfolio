@@ -21,14 +21,17 @@
 defined('_JEXEC') or die;
 
 $params = $this -> item -> params;
-if(isset($this -> item -> created)){
-    ?>
-    <div class="tpDate">
-        <i class="tp tp-clock-o"></i>
+
+if($params -> get('show_create_date',1)) {
+    if (isset($this->item->created)) {
+        ?>
+        <div class="tpDate">
+            <i class="tp tp-clock-o"></i>
             <time class="tpCreated" itemprop="datePublished">
-            <?php echo JHtml::_('date', $this->item->created, JText::_('DATE_FORMAT_LC')); ?>
-        </time>
-    </div>
+                <?php echo JHtml::_('date', $this->item->created, JText::_('DATE_FORMAT_LC')); ?>
+            </time>
+        </div>
 
 
-<?php }
+    <?php }
+}

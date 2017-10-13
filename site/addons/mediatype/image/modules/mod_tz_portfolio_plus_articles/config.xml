@@ -4,12 +4,6 @@
         <fieldset name="mediatype_image"
                   addfieldpath="/components/com_tz_portfolio_plus/addons/mediatype/image/models/fields"
                   label="PLG_MEDIATYPE_IMAGE_FIELDSET_LABEL">
-            <field type="radio" name="mt_show_image_hover"
-                   default="1" class="btn-group"
-                   label="PLG_MEDIATYPE_IMAGE_SHOW_IMAGE_HOVER_LABEL">
-                <option value="0">JHIDE</option>
-                <option value="1">JSHOW</option>
-            </field>
             <field type="tzimagesizelist" addon="image"
                    addon_group="mediatype"
                    param_name="image_size"

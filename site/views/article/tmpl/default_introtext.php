@@ -27,5 +27,7 @@ $params = $this -> item -> params;
     //Call event onContentBeforeDisplay on plugin
     echo $this->item->event->beforeDisplayContent;
 
-    echo $this -> item -> introtext;
+    if($params -> get('show_intro', 1)) {
+        echo $this->item->introtext;
+    }
 ?>

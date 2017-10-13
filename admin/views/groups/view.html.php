@@ -95,4 +95,10 @@ class TZ_Portfolio_PlusViewGroups extends JViewLegacy
                 ,'value','text', $this->state->get('filter.published'), true)
         );
     }
+
+    protected function getSortFields()
+    {
+        return array('name' => JText::_('COM_TZ_PORTFOLIO_PLUS_NAME'),
+            'id' => JText::_('JGRID_HEADING_ID'));
+    }
 }

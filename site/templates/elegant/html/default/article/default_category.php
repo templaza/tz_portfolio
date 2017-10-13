@@ -21,6 +21,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 $params = $this -> item -> params;
+if($params -> get('show_category',1)){
 ?>
 
 <div class="tpArticleCategory">
@@ -56,3 +57,4 @@ $params = $this -> item -> params;
         <?php echo '<span itemprop="genre">' . $title . '</span>'; ?>
     <?php endif; ?>
 </div>
+<?php }?>

@@ -28,12 +28,29 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 $user		= JFactory::getUser();
 $lang       = JFactory::getLanguage();
 $lang -> load('com_installer');
+
+$listOrder	= $this->escape($this->state->get('list.ordering'));
+$listDirn	= $this->escape($this->state->get('list.direction'));
 ?>
 <style>
     .tz_portfolio_plus-templates .thumbnail > img{
         max-width: 80px;
     }
 </style>
+
+<script type="text/javascript">
+    Joomla.orderTable = function() {
+        table = document.getElementById("sortTable");
+        direction = document.getElementById("directionTable");
+        order = table.options[table.selectedIndex].value;
+        if (order != '<?php echo $listOrder; ?>') {
+            dirn = 'asc';
+        } else {
+            dirn = direction.options[direction.selectedIndex].value;
+        }
+        Joomla.tableOrdering(order, dirn, '');
+    }
+</script>
 <form action="index.php?option=com_tz_portfolio_plus&view=templates" method="post" name="adminForm"
       class="tz_portfolio_plus-templates"
       id="adminForm">
@@ -79,7 +96,7 @@ $lang -> load('com_installer');
                     <label for="sortTable" class="element-invisible"><?php echo JText::_('JGLOBAL_SORT_BY');?></label>
                     <select name="sortTable" id="sortTable" class="input-medium" onchange="Joomla.orderTable()">
                         <option value=""><?php echo JText::_('JGLOBAL_SORT_BY');?></option>
-                        <?php echo JHtml::_('select.options', $sortFields, 'value', 'text', $this -> state -> filter_order);?>
+                        <?php echo JHtml::_('select.options', $this -> getSortFields(), 'value', 'text', $this -> state -> filter_order);?>
                     </select>
                 </div>
             <?php endif;?>
@@ -133,9 +150,7 @@ $lang -> load('com_installer');
                         </td>
                         <td class="nowrap has-context">
                             <div class="pull-left">
-<!--                                <a href="index.php?option=com_tz_portfolio_plus&task=template.edit&id=--><?php //echo $item -> id;?><!--">-->
-                                    <?php echo $item->name; ?>
-<!--                                </a>-->
+                                <?php echo $item->name; ?>
                             </div>
                         </td>
 

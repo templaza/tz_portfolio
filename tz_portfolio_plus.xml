@@ -7,7 +7,7 @@
 	<license>GNU/GPL v2 or later http://www.gnu.org/licenses/gpl-2.0.html</license>
 	<authorEmail>support@templaza.com</authorEmail>
 	<authorUrl>www.templaza.com/</authorUrl>
-	<version>1.1.5</version>
+	<version>1.1.6</version>
     
     <scriptfile>script.php</scriptfile>
 
@@ -38,13 +38,10 @@
         <filename>tz_portfolio_plus.php</filename>
         <filename>controller.php</filename>
         <filename>router.php</filename>
-        <filename>metadata.xml</filename>
         <filename>index.html</filename>
     </files>
     <languages folder="site/languages">
         <language tag="en-GB">en-GB/en-GB.com_tz_portfolio_plus.ini</language>
-        <language tag="pt-BR">pt-BR/pt-BR.com_tz_portfolio_plus.ini</language>
-        <language tag="vi-VN">vi-VN/vi-VN.com_tz_portfolio_plus.ini</language>
     </languages>
 
 	<administration>
@@ -83,10 +80,6 @@
         <languages folder="admin/languages">
             <language tag="en-GB">en-GB/en-GB.com_tz_portfolio_plus.ini</language>
             <language tag="en-GB">en-GB/en-GB.com_tz_portfolio_plus.sys.ini</language>
-            <language tag="pt-BR">pt-BR/pt-BR.com_tz_portfolio_plus.ini</language>
-            <language tag="pt-BR">pt-BR/pt-BR.com_tz_portfolio_plus.sys.ini</language>
-            <language tag="vi-VN">vi-VN/vi-VN.com_tz_portfolio_plus.ini</language>
-            <language tag="vi-VN">vi-VN/vi-VN.com_tz_portfolio_plus.sys.ini</language>
         </languages>
  	</administration>
     <config>

@@ -10,6 +10,14 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+13/10/2017 - 1.1.6
+
+	- Removed Brasil and Vietnamese Language from the main package (Compressed to Brasil and Vietnamese language package).
+	- Added options: show title, show introtext... in "Article View Options" for category and article edit form (Used for article view in front-end).
+	- Added option filter type and added categories filter of layout portfolio in module TZ Portfolio Plus Articles.
+	- [backend] Fix error language of sort table by in fields manager.
+
+
 09/10/2017 - 1.1.5
 
 	- [backend] Disable "Save & Close" button of edit article form.

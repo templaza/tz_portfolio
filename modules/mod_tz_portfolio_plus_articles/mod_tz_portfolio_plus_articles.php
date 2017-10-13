@@ -29,6 +29,7 @@ $tags = modTZ_Portfolio_PlusArticlesHelper::getTagsByArticle($params);
 $show_filter = $params->get('show_filter',1);
 if($show_filter) {
     $filter_tag = modTZ_Portfolio_PlusArticlesHelper::getTagsByCategory($params);
+    $filter_cat = modTZ_Portfolio_PlusArticlesHelper::getCategoriesGroupByArticle($params);
 }
 $moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'));
 require JModuleHelper::getLayoutPath('mod_tz_portfolio_plus_articles', $params->get('layout', 'default'));

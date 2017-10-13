@@ -7,7 +7,7 @@
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<authorEmail>support@templaza.com</authorEmail>
 	<authorUrl>www.templaza.com</authorUrl>
-	<version>1.1.5</version>
+	<version>1.1.6</version>
 	<description>PLG_CONTENT_VOTE_XML_DESCRIPTION</description>
 
 	<files>
@@ -59,6 +59,13 @@
 				<field type="spacer" name="spacer_article_name"
 					   class="alert alert-warning btn-block"
 					   label="COM_TZ_PORTFOLIO_PLUS_ATTRIBS_FIELDSET_LABEL"/>
+				<field type="radio" name="show_vote"
+					   default="1" class="btn-group"
+					   label="JGLOBAL_SHOW_VOTE_LABEL"
+					   description="JGLOBAL_SHOW_VOTE_DESC">
+					<option value="0">JHIDE</option>
+					<option value="1">JSHOW</option>
+				</field>
 				<field name="show_counter" type="radio"
 					default="1" class="btn-group"
 					label="PLG_CONTENT_VOTE_SHOW_COUNTER_LABEL"

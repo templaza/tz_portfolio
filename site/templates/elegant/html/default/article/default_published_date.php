@@ -22,6 +22,7 @@ defined('_JEXEC') or die('Restricted access');
 
 $params = $this -> item -> params;
 
+if($params -> get('show_publish_date',1)){
 ?>
 <div class="tpDate">
     <i class="tp tp-calendar"></i>
@@ -29,3 +30,4 @@ $params = $this -> item -> params;
         <?php echo JHtml::_('date', $this->item->publish_up, JText::_('DATE_FORMAT_LC')); ?>
     </time>
 </div>
+<?php } ?>

@@ -7,7 +7,7 @@
     <license>GNU/GPL v2 or later http://www.gnu.org/licenses/gpl-2.0.html</license>
     <authorEmail>support@templaza.com</authorEmail>
     <authorUrl>www.templaza.com/</authorUrl>
-    <version>1.1.5</version>
+    <version>1.1.6</version>
     <description>MOD_TZ_PORTFOLIO_PLUS_ARTICLES_XML_DESCRIPTION</description>
     <files>
         <filename module="mod_tz_portfolio_plus_articles">mod_tz_portfolio_plus_articles.php</filename>
@@ -21,10 +21,6 @@
     <languages folder="languages">
         <language tag="en-GB">en-GB/en-GB.mod_tz_portfolio_plus_articles.ini</language>
         <language tag="en-GB">en-GB/en-GB.mod_tz_portfolio_plus_articles.sys.ini</language>
-        <language tag="pt-BR">pt-BR/pt-BR.mod_tz_portfolio_plus_articles.ini</language>
-        <language tag="pt-BR">pt-BR/pt-BR.mod_tz_portfolio_plus_articles.sys.ini</language>
-        <language tag="vi-VN">vi-VN/vi-VN.mod_tz_portfolio_plus_articles.ini</language>
-        <language tag="vi-VN">vi-VN/vi-VN.mod_tz_portfolio_plus_articles.sys.ini</language>
     </languages>
     <config>
         <fields name="params">
@@ -149,6 +145,13 @@
                        label="MOD_TZ_PORTFOLIO_PLUS_ARTICLES_SHOW_FILTER_LABEL">
                     <option value="0">JHIDE</option>
                     <option value="1">JSHOW</option>
+                </field>
+                <field type="list" name="tz_filter_type"
+                       default="categories"
+                       showon="show_filter:1"
+                       label="MOD_TZ_PORTFOLIO_PLUS_FILTER_TYPE">
+                    <option value="tags">MOD_TZ_PORTFOLIO_PLUS_TAGS</option>
+                    <option value="categories">MOD_TZ_PORTFOLIO_PLUS_CATEGORIES</option>
                 </field>
                 <field type="radio" name="enable_resize_image"
                        class="btn-group" default="0"

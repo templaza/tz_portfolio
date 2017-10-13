@@ -245,6 +245,15 @@ class modTZ_Portfolio_PlusArticlesHelper
         return false;
     }
 
+    public static function getCategoriesGroupByArticle($params)
+    {
+        if ($articles = modTZ_Portfolio_PlusArticlesHelper::getList($params)) {
+            $contentId = modTZ_Portfolio_PlusArticlesHelper::__getArticleByKey($articles, 'content_id');
+            return TZ_Portfolio_PlusFrontHelperCategories::getCategoriesByArticleId($contentId, array('reverse_contentid' => true, 'groupby' => 'id'));
+        }
+        return false;
+    }
+
     public static function getTagsByArticle($params)
     {
         if ($articles = modTZ_Portfolio_PlusArticlesHelper::getList($params)) {
