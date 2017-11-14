@@ -149,7 +149,7 @@ class modTZ_Portfolio_PlusArticlesHelper
 
             foreach ($items as $i => &$item) {
                 $item->link = JRoute::_(TZ_Portfolio_PlusHelperRoute::getArticleRoute($item->slug, $item->catslug));
-                $item->fullLink = JRoute::_(TZ_Portfolio_PlusHelperRoute::getArticleRoute($item->slug, $item->catslug), true, -1);
+                $item->fullLink = JRoute::_(TZ_Portfolio_PlusHelperRoute::getArticleRoute($item->slug, $item->catslug));
                 $item->author_link = JRoute::_(TZ_Portfolio_PlusHelperRoute::getUserRoute($item->user_id, $params->get('usermenuitem', 'auto')));
 
                 $media      = $item -> media;
@@ -177,9 +177,6 @@ class modTZ_Portfolio_PlusArticlesHelper
                 if($introtext_limit = $params -> get('introtext_limit')){
                     $item -> introtext  = '<p>'.JHtml::_('string.truncate', $item->introtext, $introtext_limit, true, false).'</p>';
                 }
-
-//                $results = $dispatcher->trigger('onContentAfterTitle', array('modules.mod_tz_portfolio_plus_articles', &$item, &$params, 0));
-//                $item->event->afterDisplayTitle = trim(implode("\n", $results));
 //
                 $results = $dispatcher->trigger('onContentBeforeDisplay', array('modules.mod_tz_portfolio_plus_articles',
                     &$item, &$params, 0, $params->get('layout', 'default')));
@@ -278,4 +275,12 @@ class modTZ_Portfolio_PlusArticlesHelper
         }
     }
 
+    public static function getTagsFilterByArticle($params)
+    {
+        if ($articles = modTZ_Portfolio_PlusArticlesHelper::getList($params)) {
+            $contentId = modTZ_Portfolio_PlusArticlesHelper::__getArticleByKey($articles, 'content_id');
+            return TZ_Portfolio_PlusFrontHelperTags::getTagsFilterByArticleId($contentId);
+        }
+        return false;
+    }
 }

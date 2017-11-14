@@ -10,6 +10,11 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+14/11/2017 - 1.1.7
+
+	- Fix warning in plugin libraries back-end file.
+	- Fix error filter in module TZ Portfolio Plus Articles.
+
 13/10/2017 - 1.1.6
 
 	- Removed Brasil and Vietnamese Language from the main package (Compressed to Brasil and Vietnamese language package).

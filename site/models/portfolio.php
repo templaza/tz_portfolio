@@ -365,15 +365,9 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
                         $tmpl   = '&tmpl=component';
                     }
 
-                    $config = JFactory::getConfig();
-                    $ssl    = -1;
-                    if($config -> get('force_ssl')){
-                        $ssl    = 1;
-                    }
-
                     // Create Article Link
                     $item ->link        = JRoute::_(TZ_Portfolio_PlusHelperRoute::getArticleRoute($item -> slug, $item -> catid).$tmpl);
-                    $item -> fullLink   = JRoute::_(TZ_Portfolio_PlusHelperRoute::getArticleRoute($item -> slug, $item -> catid),true,$ssl);
+                    $item -> fullLink   = JRoute::_(TZ_Portfolio_PlusHelperRoute::getArticleRoute($item -> slug, $item -> catid));
 
                     // Create author Link
                     $item -> author_link    = JRoute::_(TZ_Portfolio_PlusHelperRoute::getUserRoute($item -> created_by,

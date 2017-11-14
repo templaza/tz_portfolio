@@ -121,7 +121,11 @@ if ($list):
             }
 
             if ($params->get('tz_filter_type','') == 'categories' && isset($categories[$item->content_id]) && !empty($categories[$item->content_id])) {
-                $item_filter[] = $categories[$item->content_id][0]->alias;
+                if(isset($categories[$item->content_id])){
+                    $item_filter    = JArrayHelper::getColumn($categories[$item->content_id], 'alias');
+//                    $item_filter[] = $categories[$item->content_id][0]->alias;
+
+                }
             }
             ?>
         <div class="element <?php echo implode(' ', $item_filter)?>">

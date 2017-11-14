@@ -39,9 +39,14 @@ class PlgSystemTZ_Portfolio_Plus extends JPlugin {
 
     public function onAfterRoute(){
         if(class_exists('TZ_Portfolio_PlusPluginHelper')) {
-            TZ_Portfolio_PlusPluginHelper::importPlugin('mediatype');
-            TZ_Portfolio_PlusPluginHelper::importPlugin('content');
-            TZ_Portfolio_PlusPluginHelper::importPlugin('user');
+            $plgGroups  = JFolder::folders(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH);
+            if(count($plgGroups)){
+                foreach($plgGroups as $group){
+                    if($group != 'extrafields') {
+                        TZ_Portfolio_PlusPluginHelper::importPlugin($group);
+                    }
+                }
+            }
         }
 
     }

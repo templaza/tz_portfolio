@@ -395,25 +395,27 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
     }
 
     public function onContentDisplayArticleView($context, &$article, $params, $page = 0, $layout = null){
-        list($extension, $vName)   = explode('.', $context);
+        if($this -> _type != 'mediatype'){
+            list($extension, $vName)   = explode('.', $context);
 
-        $item   = $article;
+            $item   = $article;
 
-        if($extension == 'module' || $extension == 'modules'){
-            if($path = $this -> getModuleLayout($this -> _type, $this -> _name, $extension, $vName, $layout)){
-                // Display html
-                ob_start();
-                include $path;
-                $html = ob_get_contents();
-                ob_end_clean();
-                $html = trim($html);
-                return $html;
-            }
-        }else {
-            tzportfolioplusimport('plugin.modelitem');
+            if($extension == 'module' || $extension == 'modules'){
+                if($path = $this -> getModuleLayout($this -> _type, $this -> _name, $extension, $vName, $layout)){
+                    // Display html
+                    ob_start();
+                    include $path;
+                    $html = ob_get_contents();
+                    ob_end_clean();
+                    $html = trim($html);
+                    return $html;
+                }
+            }else {
+                tzportfolioplusimport('plugin.modelitem');
 
-            if($html = $this -> _getViewHtml($context,$article, $params, $layout)){
-                return $html;
+                if($html = $this -> _getViewHtml($context,$article, $params, $layout)){
+                    return $html;
+                }
             }
         }
     }
