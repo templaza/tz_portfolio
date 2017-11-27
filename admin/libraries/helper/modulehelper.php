@@ -20,11 +20,11 @@
 // No direct access
 defined('_JEXEC') or die;
 
-use Joomla\CMS\Helper\ModuleHelper;
+jimport('joomla.application.module.helper');
 
 JLoader::import('com_tz_portfolio_plus.includes.framework',JPATH_ADMINISTRATOR.'/components');
 
-abstract class TZ_Portfolio_PlusModuleHelper extends ModuleHelper{
+abstract class TZ_Portfolio_PlusModuleHelper extends JModuleHelper{
     public static function getLayoutPath($module, $layout = 'default')
     {
         $_template  = \JFactory::getApplication()->getTemplate(true);
