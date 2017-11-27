@@ -25,6 +25,8 @@ defined('_JEXEC') or die;
 // Include the syndicate functions only once
 require_once dirname(__FILE__) . '/helper.php';
 
+JLoader::import('com_tz_portfolio_plus.libraries.helper.modulehelper', JPATH_ADMINISTRATOR.'/components');
+
 $upper_limit        = $lang->getUpperLimitSearchWord();
 $button             = $params->get('button', 0);
 $imagebutton        = $params->get('imagebutton', 0);
@@ -41,4 +43,4 @@ $mitemid            = $set_Itemid > 0 ? $set_Itemid : $app->input->get('Itemid')
 $advfilter          = modTZ_Portfolio_PlusFilterHelper::getAdvFilterFields($params);
 $categoryOptions    = modTZ_Portfolio_PlusFilterHelper::getCategoriesOptions($params);
 
-require JModuleHelper::getLayoutPath('mod_tz_portfolio_plus_filter', $params->get('layout', 'default'));
+require TZ_Portfolio_PlusModuleHelper::getLayoutPath('mod_tz_portfolio_plus_filter', $params->get('layout', 'default'));

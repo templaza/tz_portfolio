@@ -173,8 +173,14 @@ class TZ_Portfolio_PlusViewArticle extends TZ_Portfolio_PlusViewLegacy
             $tmpl   = '&amp;tmpl=component';
         }
 
+        $config = JFactory::getConfig();
+        $ssl    = 2;
+        if($config -> get('force_ssl')){
+            $ssl    = $config -> get('force_ssl');
+        }
+
         $item ->link        = JRoute::_(TZ_Portfolio_PlusHelperRoute::getArticleRoute($item -> slug,$item -> catid).$tmpl);
-        $item -> fullLink   = JRoute::_(TZ_Portfolio_PlusHelperRoute::getArticleRoute($item -> slug,$item -> catid));
+        $item -> fullLink   = JRoute::_(TZ_Portfolio_PlusHelperRoute::getArticleRoute($item -> slug,$item -> catid), true, $ssl);
 
         $item->parent_link = JRoute::_(TZ_Portfolio_PlusHelperRoute::getCategoryRoute($item->parent_slug));
         $item -> category_link  = JRoute::_(TZ_Portfolio_PlusHelperRoute::getCategoryRoute($item->catslug));

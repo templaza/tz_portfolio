@@ -56,14 +56,14 @@ jQuery(function($){
             "mainElementSelector"       : "#TzContent' . $module->id . '",
             "containerElementSelector"  : "#portfolio' . $module->id . '",
             "sortParentTag"             : "filter'.$module->id.'",
-            "isotope_options"                   : {
-                "core"  : {
-                   "getSortData": null
-                }
+            isotope_options             : {
+                "filterSelector"            : "#tz_options'.$module -> id.' .option-set"
             },
             "params"                    : {
-                "tz_column_width"               : ' . $params->get('width_element') . ',
-                "tz_filter_type"        : "tags"
+                "orderby_sec"           : "'.$params -> get('orderby_sec', 'rdate').'",
+                "tz_column_width"       : ' . $params->get('width_element') . ',
+                "tz_show_filter"        : ' . $params->get('show_filter', 1) . ',
+                "tz_filter_type"        : "'.$params -> get('tz_filter_type', 'categories').'"
             },
             "afterColumnWidth" : function(newColCount,newColWidth){
                 '.($params -> get('enable_resize_image', 0)?'TzPortfolioPlusArticlesResizeImage($("#portfolio' . $module->id . ' > .element .tzpp_media"));':'').'
@@ -85,7 +85,7 @@ if ($list):
     ?>
 <div id="TzContent<?php echo $module->id; ?>" class="tz_portfolio_plus_articles<?php echo $moduleclass_sfx;?> TzContent">
     <?php if($show_filter && isset($filter_tag) && isset($categories)):?>
-    <div id="tz_options" class="clearfix">
+    <div id="tz_options<?php echo $module -> id;?>" class="clearfix">
         <div class="option-combo">
             <div class="filter-title TzFilter"><?php echo JText::_('MOD_TZ_PORTFOLIO_PLUS_ARTICLES_FILTER');?></div>
             <div id="filter<?php echo $module->id;?>" class="option-set clearfix" data-option-key="filter">
@@ -100,7 +100,7 @@ if ($list):
                     <?php endforeach;?>
                 <?php endif;?>
                 <?php if($params->get('tz_filter_type','categories') == 'categories' && $filter_cat): ?>
-                    <?php foreach($filter_cat as $i => $icat): $icat = $icat[0];?>
+                    <?php foreach($filter_cat as $i => $icat):?>
                         <a href="#<?php echo $icat -> alias; ?>"
                            class="btn btn-default btn-small"
                            data-option-value=".<?php echo $icat -> alias; ?>">
@@ -123,12 +123,13 @@ if ($list):
             if ($params->get('tz_filter_type','') == 'categories' && isset($categories[$item->content_id]) && !empty($categories[$item->content_id])) {
                 if(isset($categories[$item->content_id])){
                     $item_filter    = JArrayHelper::getColumn($categories[$item->content_id], 'alias');
-//                    $item_filter[] = $categories[$item->content_id][0]->alias;
-
                 }
             }
             ?>
-        <div class="element <?php echo implode(' ', $item_filter)?>">
+        <div class="element <?php echo implode(' ', $item_filter)?>"
+             data-date="<?php echo strtotime($item -> created); ?>"
+             data-title="<?php echo $item -> title; ?>"
+             data-hits="<?php echo (int) $item -> hits; ?>">
             <div class="TzInner">
                 <?php
                 if(isset($item->event->onContentDisplayMediaType)){

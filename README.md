@@ -10,6 +10,13 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+27/11/2017 - 1.1.8
+
+	- Fix error load articles with Ajax Infinite Scroll in Portfolio view.
+	- Fix error masonry and categories filter display in portfolio layout of module TZ Portfolio Plus Articles.
+	- Fix error display articles of sub categories in portfolio view.
+	- Update feature: Can override module of portfolio+ in portfolio plus's template.
+
 14/11/2017 - 1.1.7
 
 	- Fix warning in plugin libraries back-end file.

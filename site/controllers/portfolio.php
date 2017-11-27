@@ -39,6 +39,15 @@ class TZ_Portfolio_PlusControllerPortfolio extends TZ_Portfolio_PlusControllerLe
         $viewLayout = $this->input->get('layout', 'default', 'string');
         $sublayout  = 'item';
 
+        $input		= JFactory::getApplication() -> input;
+        $Itemid     = $input -> getInt('Itemid');
+
+        $params = JComponentHelper::getParams('com_tz_portfolio_plus');
+        $menu       = JMenu::getInstance('site');
+        $menuParams = $menu -> getParams($Itemid);
+
+        $params -> merge($menuParams);
+
         if(strpos($viewLayout,':')) {
             list($layout, $sublayout) = explode(':',$viewLayout);
         }
@@ -59,77 +68,38 @@ class TZ_Portfolio_PlusControllerPortfolio extends TZ_Portfolio_PlusControllerLe
 
             JHtml::addIncludePath(JPATH_COMPONENT . '/helpers');
 
+            $html   = new stdClass();
             // Display the view
             ob_start();
             $view->display($sublayout);
             $content    = ob_get_contents();
             ob_end_clean();
-            echo str_replace('</script>','<\\/script>',$content);
-        }
-        die();
-    }
 
-    function ajaxtags(){
+            $content    = str_replace('</script>','<\\/script>',$content);
 
-        $document   = JFactory::getDocument();
-        $viewType   = $document->getType();
-
-        if($view = $this->getView('portfolio', $viewType)) {
-
-            // Get/Create the model
-            if ($model = $this->getModel('portfolio')) {
-                if (!$tags = $model -> ajaxtags()) {
-                    die();
+            if($params -> get('tz_show_filter', 1)) {
+                $filter = null;
+                if($params -> get('tz_filter_type', 'categories') == 'tags'){
+                    $filter = $view -> loadTemplate('filter_tags');
                 }
-
-                // Push the model into the view (as default)
-                $view->setModel($model, true);
-
-                $view -> assign('itemTags',$tags);
+                if($params -> get('tz_filter_type', 'categories') == 'categories'){
+                    $filter = $view -> loadTemplate('filter_categories');
+                }
+                if($filter) {
+                    $filter         = trim($filter);
+                    $html -> filter = $filter;
+                }
             }
 
-            $view->document = $document;
-
-            JHtml::addIncludePath(JPATH_COMPONENT . '/helpers');
-
-            // Display the view
-            echo $view->loadTemplate('filter_tags');
+            $html -> articles   = $content;
+            echo json_encode($html);
         }
         die();
     }
 
-    function ajaxcategories(){
-
-        $document   = JFactory::getDocument();
-        $viewType   = $document->getType();
-
-        if($view = $this->getView('portfolio', $viewType)) {
-
-            // Get/Create the model
-            if ($model = $this->getModel('portfolio')) {
-                if (!$catids = $model -> ajaxCategories()) {
-                    die();
-                }
-
-                // Push the model into the view (as default)
-                $view->setModel($model, true);
-
-                $view -> assign('itemCategories',$catids);
-            }
-
-            $view->document = $document;
-
-            JHtml::addIncludePath(JPATH_COMPONENT . '/helpers');
-
-            // Display the view
-            echo $view->loadTemplate('filter_categories');
-        }
-        die();
-    }
-
-    public function ajaxComments(){
-        $model  = $this -> getModel();
-        echo $model -> ajaxComments();
-        die();
-    }
+//    public function ajaxComments(){
+//        $model  = $this -> getModel();
+//        echo $model -> ajaxComments();
+//        die();
+//    }
 }

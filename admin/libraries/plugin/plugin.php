@@ -442,28 +442,88 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
             $layout = 'default';
         }
 
+        $tpTemplate = TZ_Portfolio_PlusTemplate::getTemplate(true);
+        $tplParams  = $tpTemplate->params;
+
         // Build the template and base path for the layout
+        $tpdefPath  = null;
+        $tpPath     = null;
+
+        if(isset($tpTemplate -> home_path) && $tpTemplate -> home_path){
+            $tpdefPath    = $tpTemplate -> home_path.'/' . $module .'/plg_' . $type
+                . '_' . $name . '/' . $layout . '.php';
+        }
+        if(isset($tpTemplate -> base_path) && $tpTemplate -> base_path){
+            $tpPath    = $tpTemplate -> base_path.'/' . $module .'/plg_' . $type
+                . '_' . $name . '/' . $layout . '.php';
+        }
+
         $tPath = JPATH_THEMES . '/' . $template . '/html/'.$module.'/plg_' . $type . '_' . $name . '/' . $layout . '.php';
         $bPath = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/' . $type . '/' . $name . '/'.$folder.'/'.$module
             .$tmpl_folder.'/'. $defaultLayout . '.php';
         $dPath = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/' . $type . '/' . $name . '/'.$folder.'/'.$module
             .$tmpl_folder.'/default.php';
 
-        // If the template has a layout override use it
-        if (file_exists($tPath))
-        {
-            return $tPath;
+        if ($tplParams->get('override_html_template_site', 0)) {
+            // If the template has a layout override use it
+            if(file_exists($tpPath)){
+                return $tpPath;
+            }
+
+            if(file_exists($tpdefPath)){
+                return $tpdefPath;
+            }
+
+            if (file_exists($tPath))
+            {
+                return $tPath;
+            }
+
+        }else{
+            // If the template has a layout override use it
+
+            if (file_exists($tPath))
+            {
+                return $tPath;
+            }
+
+            if(file_exists($tpPath)){
+                return $tpPath;
+            }
+
+            if(file_exists($tpdefPath)){
+                return $tpdefPath;
+            }
         }
-        elseif (file_exists($bPath))
+
+        if (file_exists($bPath))
         {
             return $bPath;
         }
-        else
-        {
-            if(file_exists($dPath)) {
-                return $dPath;
-            }
+
+        if(file_exists($dPath)) {
+            return $dPath;
         }
+
+//        // If the template has a layout override use it
+//        if (file_exists($tPath))
+//        {
+//            return $tPath;
+//        }
+//        if (file_exists($tpPath))
+//        {
+//            return $tpPath;
+//        }
+//        elseif (file_exists($bPath))
+//        {
+//            return $bPath;
+//        }
+//        else
+//        {
+//            if(file_exists($dPath)) {
+//                return $dPath;
+//            }
+//        }
         return false;
     }
 

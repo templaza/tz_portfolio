@@ -113,7 +113,7 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
 
         $query -> from($db -> quoteName('#__tz_portfolio_plus_content').' AS c');
 
-        $query -> join('INNER',$db -> quoteName('#__tz_portfolio_plus_content_category_map').' AS m ON m.contentid=c.id AND m.main = 1');
+        $query -> join('INNER',$db -> quoteName('#__tz_portfolio_plus_content_category_map').' AS m ON m.contentid=c.id');
         $query -> join('LEFT',$db -> quoteName('#__tz_portfolio_plus_categories').' AS cc ON cc.id=m.catid');
         $query -> join('LEFT',$db -> quoteName('#__tz_portfolio_plus_tag_content_map').' AS x ON x.contentid=c.id');
         $query -> join('LEFT',$db -> quoteName('#__tz_portfolio_plus_tags').' AS t ON t.id=x.tagsid');
@@ -365,9 +365,15 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
                         $tmpl   = '&tmpl=component';
                     }
 
+                    $config = JFactory::getConfig();
+                    $ssl    = 2;
+                    if($config -> get('force_ssl')){
+                        $ssl    = $config -> get('force_ssl');
+                    }
+
                     // Create Article Link
                     $item ->link        = JRoute::_(TZ_Portfolio_PlusHelperRoute::getArticleRoute($item -> slug, $item -> catid).$tmpl);
-                    $item -> fullLink   = JRoute::_(TZ_Portfolio_PlusHelperRoute::getArticleRoute($item -> slug, $item -> catid));
+                    $item -> fullLink   = JRoute::_(TZ_Portfolio_PlusHelperRoute::getArticleRoute($item -> slug, $item -> catid), true, $ssl);
 
                     // Create author Link
                     $item -> author_link    = JRoute::_(TZ_Portfolio_PlusHelperRoute::getUserRoute($item -> created_by,
@@ -480,55 +486,6 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
         return false;
     }
 
-    function ajaxtags($limitstart=null) {
-
-		$input		= JFactory::getApplication() -> input;
-        $params     = JComponentHelper::getParams('com_tz_portfolio_plus');
-
-        $Itemid 	= $input -> getInt('Itemid');
-        $page   	= $input -> getInt('page');
-        $char       = $input -> getString('char');
-        $curTags    = stripslashes($input -> getString('tags'));
-        $curTags    = json_decode($curTags);
-
-        $menu       = JMenu::getInstance('site');
-        $menuParams = $menu -> getParams($Itemid);
-
-        $params -> merge($menuParams);
-
-        $limit      =   $params -> get('tz_article_limit', 10);
-        $limitstart =   $limit * ($page-1);
-
-        $offset = (int) $limitstart;
-
-        $user   = JFactory::getUser();
-        if ((!$user->authorise('core.edit.state', 'com_tz_portfolio_plus')) &&  (!$user->authorise('core.edit', 'com_tz_portfolio_plus'))){
-            // limit to published for people who can't edit or edit.state.
-            $this->setState('filter.published', 1);
-        }
-        else {
-            $this->setState('filter.published', array(0, 1, 2));
-        }
-
-        $this -> setState('list.limit',$limit);
-        $this -> setState('list.start',$offset);
-        $this -> setState('params',$params);
-        $this -> setState('filter.char',$char);
-
-        $this -> getItems();
-
-        $newTags    = null;
-        $tags       = null;
-
-        if($curTags && is_array($curTags) && count($curTags)){
-            array_shift($curTags);
-        }
-
-        $newTags    = $this ->getTagsByArticle($curTags);
-
-        return $newTags;
-    }
-
     public function ajax(){
 
         $list   = null;
@@ -536,17 +493,15 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
 
         $params = JComponentHelper::getParams('com_tz_portfolio_plus');
 
-        // Set value again for option tz_portfolio_plus_redirect
-        if($params -> get('tz_portfolio_plus_redirect') == 'default'){
-            $params -> set('tz_portfolio_plus_redirect','article');
-        }
-
 		$input		= JFactory::getApplication() -> input;
         $Itemid     = $input -> getInt('Itemid');
         $page       = $input -> getInt('page');
         $layout     = $input -> getString('layout');
         $char       = $input -> getString('char');
         $catid      = $input -> getInt('id');
+
+        $tags       = stripslashes($input -> getString('tags'));
+        $tags       = json_decode($tags);
 
         $menu       = JMenu::getInstance('site');
         $menuParams = $menu -> getParams($Itemid);
@@ -581,60 +536,6 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
         }
 
         return true;
-    }
-
-    function ajaxCategories(){
-        $params     = JComponentHelper::getParams('com_tz_portfolio_plus');
-
-		$input		= JFactory::getApplication() -> input;
-        $Itemid 	= $input -> getInt('Itemid');
-        $page   	= $input -> getInt('page');
-        $curCatids  = $input -> getString('catIds');
-        $curCatids  = json_decode($curCatids);
-
-        $menu       = JMenu::getInstance('site');
-        $menuParams = $menu -> getParams($Itemid);
-
-        $params -> merge($menuParams);
-
-        $limit      =   $params -> get('tz_article_limit', 10);
-        $limitstart =   $limit * ($page-1);
-
-        $offset = (int) $limitstart;
-
-        $user   = JFactory::getUser();
-        if ((!$user->authorise('core.edit.state', 'com_tz_portfolio_plus')) &&  (!$user->authorise('core.edit', 'com_tz_portfolio_plus'))){
-            // limit to published for people who can't edit or edit.state.
-            $this->setState('filter.published', 1);
-        }
-        else {
-            $this->setState('filter.published', array(0, 1, 2));
-        }
-
-        $this -> setState('list.limit',$limit);
-        $this -> setState('list.start',$offset);
-        $this -> setState('params',$params);
-
-        $newCatids    = null;
-        $catIds       = null;
-
-        $newCatids    = $this -> getCategoriesByArticle();
-
-        // Filter new tags
-        if(isset($newCatids) && $newCatids && count($newCatids)){
-            $count  = count($curCatids);
-            foreach($newCatids as $key => $newCatid){
-                if(isset($curCatids) && count($curCatids) > 0){
-                    if(!in_array($newCatid -> id,$curCatids)){
-                        $newCatid -> order  = $count;
-                        $catIds[] = $newCatid;
-                        $count++;
-                    }
-                }
-            }
-        }
-
-        return $catIds;
     }
 
     protected function __getArticleByKey($article, $key = 'id'){

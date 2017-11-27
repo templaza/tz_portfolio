@@ -23,8 +23,10 @@ defined('_JEXEC') or die;
 // Include the syndicate functions only once
 require_once dirname(__FILE__).'/helper.php';
 
+JLoader::import('com_tz_portfolio_plus.libraries.helper.modulehelper', JPATH_ADMINISTRATOR.'/components');
+
 $params->def('count', 10);
 $moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'));
 $list = modTZ_Portfolio_PlusArchiveHelper::getList($params);
 
-require JModuleHelper::getLayoutPath('mod_tz_portfolio_plus_articles_archive', $params->get('layout', 'default'));
+require TZ_Portfolio_PlusModuleHelper::getLayoutPath('mod_tz_portfolio_plus_articles_archive', $params->get('layout', 'default'));

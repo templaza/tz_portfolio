@@ -21,7 +21,6 @@
 defined('_JEXEC') or die;
 
 if(!$this -> params -> get('load_style', 0)){
-    $doc    = JFactory::getDocument();
     $tpl_path   = TZ_Portfolio_PlusUri::base(true).'/templates/system/css/template.css';
     unset($this -> _styleSheets[$tpl_path]);
 }
