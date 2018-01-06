@@ -54,8 +54,12 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 			}
 			$user = JFactory::getUser();
 
-			return $user->authorise('core.delete', $record->extension . '.category.' . (int) $record->id);
+			$state  = $user->authorise('core.delete', $record->extension . '.category.' . (int) $record->id)
+                || ($user->authorise('core.delete.own', $record->extension . '.category.' . (int) $record->id)
+                    &&  $record -> created_user_id == $user -> id);
+			return $state;
 		}
+		return parent::canDelete($record);
 	}
 
 	/**
@@ -74,152 +78,28 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 		// Check for existing category.
 		if (!empty($record->id))
 		{
-			return $user->authorise('core.edit.state', $record->extension . '.category.' . (int) $record->id);
+		    $state  = $user->authorise('core.edit.state', $record->extension . '.category.' . (int) $record->id)
+                || ($user->authorise('core.edit.state.own', $record->extension . '.category.' . (int) $record->id)
+                    && $record -> created_user_id == $user -> id);
+			return $state;
 		}
 		// New category, so check against the parent.
 		elseif (!empty($record->parent_id))
 		{
-			return $user->authorise('core.edit.state', $record->extension . '.category.' . (int) $record->parent_id);
+			$state  =  $user->authorise('core.edit.state', $record->extension . '.category.' . (int) $record->parent_id)
+                || ($user->authorise('core.edit.state.own', $record->extension . '.category.' . (int) $record->parent_id)
+                    && $record -> created_user_id == $user -> id);
+			return $state;
 		}
 		// Default to component settings if neither category nor parent known.
 		else
 		{
-			return $user->authorise('core.edit.state', $record->extension);
+			$state  = $user->authorise('core.edit.state', $record->extension.'.category')
+                || ($user->authorise('core.edit.state.own', $record->extension.'.category')
+                    && $record -> created_user_id == $user -> id);
+			return $state;
 		}
 	}
-
-    function getExtraFields($groupid=null){
-        $where  = null;
-        if($groupid)
-            $where  = ' WHERE x.groupid='.$groupid;
-
-        $query  = 'SELECT f.id,f.title FROM #__tz_portfolio_plus_fields AS f'
-                  .' LEFT JOIN #__tz_portfolio_plus_field_fieldgroup_map AS x ON x.fieldsid=f.id'
-                  .' LEFT JOIN #__tz_portfolio_plus_categories AS c ON c.groupid=x.groupid'
-                  .$where
-                  .' GROUP BY f.id';
-        $db     = JFactory::getDbo();
-        $db -> setQuery($query);
-        if(!$db -> query()){
-            var_dump($db -> getErrorMsg());
-            die();
-        }
-        if($rows   = $db -> loadObjectList())
-            return $rows;
-        
-        return false;
-    }
-
-    public function extrafields(){
-        $data       = null;
-        $json       = JFactory::getApplication() -> input -> getString('json', null, null, 2);
-        $ob_json    = json_decode($json);
-
-        $fieldsGroup    = $this -> getGroupId($ob_json -> id);
-        $listcat   = $this -> getItem($ob_json -> id);
-
-        $fieldsId   = array(-1);
-
-        if(isset($fieldsGroup)){
-            if(isset($fieldsGroup -> groupid) && $fieldsGroup -> groupid == $ob_json -> groupid){
-                if($listcat){
-                    if($listcat -> params){
-                        $params     = $listcat -> params;
-                        if(isset($params['tz_fieldsid'])){
-                            $fieldsId   = $params['tz_fieldsid'];
-                            if(empty($fieldsId[0]))
-                                $fieldsId[0]    = -1;
-                        }
-                    }
-                }
-            }
-        }
-
-        $list       = $this -> getExtraFields($ob_json -> groupid);
-        ob_start();
-?>
-        <select id="jform_params_tz_fieldsid" multiple="multiple"
-                name="jform[params][tz_fieldsid][]" class="" aria-invalid="false"
-                style="min-width: 130px; min-height: 80px;">
-            <option value=""<?php if(in_array(-1,$fieldsId)) echo ' selected="selected"';?>><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ALL_FIELDS');?></option>
-            <?php if($list):?>
-                <?php foreach($list as $item):?>
-                    <option value="<?php echo $item -> id;?>"<?php if(in_array($item -> id,$fieldsId)) echo ' selected="selected"';?>><?php echo $item -> title;?></option>
-                <?php endforeach;?>
-            <?php endif;?>
-        </select>
-<?php
-        $data   = ob_get_contents();
-        ob_end_clean();
-        return $data;
-    }
-
-    function getGroupId($catid=null){
-        $where  = null;
-        if($catid)
-            $where  = ' WHERE id='.$catid;
-        $query  = 'SELECT groupid FROM #__tz_portfolio_plus_categories'
-                  .$where;
-        $db = JFactory::getDbo();
-        $db -> setQuery($query);
-        if(!$db -> query()){
-            var_dump($db -> getErrorMsg());
-            die();
-        }
-        if($rows = $db -> loadObject())
-            return $rows;
-        
-        return false;
-    }
-
-    public function getGroups(){
-
-        $catid          = JFactory::getApplication() -> input -> getInt('id',null);
-
-        $groups    = '';
-        
-        $dbo            = JFactory::getDbo();
-        $rows           = array();
-        $arr            = array();
-
-        if($catid){
-            $query      = 'SELECT groupid FROM #__tz_portfolio_plus_categories'
-                          .' WHERE id='.$catid;
-            $dbo -> setQuery($query);
-            //$rows   = array();
-            if(!$dbo -> query()){
-                var_dump($dbo -> getErrorMsg());
-                return false;
-            }
-            $rows = $dbo -> loadObjectList();
-            foreach($rows as $row){
-                $arr[]  = $row -> groupid;
-            }
-        }
-
-        $query          = 'SELECT * FROM #__tz_portfolio_plus_fieldgroups';
-        $dbo -> setQuery($query);
-
-        if(!$rows2 = $dbo -> loadObjectList()){
-            $groups  = '<select name="groupid[]" size="1" style="min-width: 130px;" id="groupid">';
-            $groups  .= '<option value="">'.JText::_('COM_TZ_PORTFOLIO_PLUS_OPTION_SELECT_FIELDS_GROUP').'</option>';
-            $groups  .= '</select>';
-            return $groups;
-        }
-
-        $groups  = '<option value="">'.JText::_('COM_TZ_PORTFOLIO_PLUS_OPTION_SELECT_FIELDS_GROUP').'</option>';
-
-        foreach($rows2 as $row){
-            $groups  = $groups.'<option value="'.$row -> id.'"'
-                              .((in_array($row -> id,$arr))?' selected="selected"':'').'>&nbsp;&nbsp;'.$row -> name.'</option>';
-        }
-
-        $groups  = '<select name="groupid[]" size="1" style="min-width: 130px;" id="groupid">'
-                        .$groups
-                        .'</select>';
-
-        return $groups;
-    }
 
 	/**
 	 * Method to get a table object, load it if necessary.
@@ -331,7 +211,7 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 			if ($result->id != null)
 			{
 				$result->associations = TZ_Portfolio_PlusHelperCategories::getAssociations($result->id, $result->extension);
-//				var_dump($result -> associations); die();
+
 				JArrayHelper::toInteger($result->associations);
 			}
 			else
@@ -383,8 +263,9 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 		{
 			$data['extension'] = $extension;
 		}
-		$user = JFactory::getUser();
-		if (!$user->authorise('core.edit.state', 'com_tz_portfolio_plus.category.' . $jinput->get('id')))
+		$user = TZ_Portfolio_PlusUser::getUser();
+		if (!$user->authorise('core.edit.state', 'com_tz_portfolio_plus.category.' . $jinput->get('id'))
+            && !$user->authorise('core.edit.state.own', 'com_tz_portfolio_plus.category.' . $jinput->get('id')))
 		{
 			// Disable fields for display.
 			$form->setFieldAttribute('ordering', 'disabled', 'true');
@@ -432,7 +313,13 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 		}
 
         $template   = JModelLegacy::getInstance('Template_Style','TZ_Portfolio_PlusModel');
-        $data -> set('template_id',$template -> getItemTemplate(null,$this -> getState($this->getName() . '.id')));
+		if($data){
+            if(is_array($data)){
+                $data['template_id']    = $template->getItemTemplate(null, $this->getState($this->getName() . '.id'));
+            }else {
+                $data->set('template_id', $template->getItemTemplate(null, $this->getState($this->getName() . '.id')));
+            }
+        }
 
 		return $data;
 	}
@@ -495,40 +382,31 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 		$form->setFieldAttribute('rules', 'section', $name);
 
         // Association category items
-		$assoc = $this->getAssoc();
-		if ($assoc)
+		if ($assoc = $this->getAssoc())
 		{
-			$languages = JLanguageHelper::getLanguages('lang_code');
-
-			// Force to array (perhaps move to $this->loadFormData())
-			$data = (array) $data;
-
-			$addform = new SimpleXMLElement('<form />');
-			$fields = $addform->addChild('fields');
-			$fields->addAttribute('name', 'associations');
-			$fieldset = $fields->addChild('fieldset');
-			$fieldset->addAttribute('name', 'item_associations');
-			$fieldset->addAttribute('description', 'COM_TZ_PORTFOLIO_PLUS_CATEGORIES_ITEM_ASSOCIATIONS_FIELDSET_DESC');
-			$add = false;
-			foreach ($languages as $tag => $language)
-			{
-				if (empty($data['language']) || $tag != $data['language'])
-				{
-					$add = true;
-					$field = $fieldset->addChild('field');
-					$field->addAttribute('name', $tag);
-					$field->addAttribute('type', 'modal_category');
-					$field->addAttribute('language', $tag);
-					$field->addAttribute('label', $language->title);
-					$field->addAttribute('translate_label', 'false');
-					$field->addAttribute('extension', $extension);
-					$field->addAttribute('edit', 'true');
-					$field->addAttribute('clear', 'true');
-				}
-			}
-			if ($add)
-			{
-				$form->load($addform, false);
+            $languages = JLanguageHelper::getContentLanguages(false, true, null, 'ordering', 'asc');
+            if (count($languages) > 1)
+            {
+                $addform = new SimpleXMLElement('<form />');
+                $fields = $addform->addChild('fields');
+                $fields->addAttribute('name', 'associations');
+                $fieldset = $fields->addChild('fieldset');
+                $fieldset->addAttribute('name', 'item_associations');
+                $fieldset->addAttribute('description', 'COM_TZ_PORTFOLIO_PLUS_CATEGORIES_ITEM_ASSOCIATIONS_FIELDSET_DESC');
+                $add = false;
+                foreach ($languages as $language)
+                {
+                    $field = $fieldset->addChild('field');
+                    $field->addAttribute('name', $language->lang_code);
+                    $field->addAttribute('type', 'modal_category');
+                    $field->addAttribute('language', $language->lang_code);
+                    $field->addAttribute('label', $language->title);
+                    $field->addAttribute('translate_label', 'false');
+                    $field->addAttribute('extension', $extension);
+                    $field->addAttribute('edit', 'true');
+                    $field->addAttribute('clear', 'true');
+                }
+                $form->load($addform, false);
 			}
 		}
 
@@ -572,25 +450,6 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
         return $assoc;
     }
 
-    function getCatImage(){
-        $where  = null;
-        if($catId = $this -> getState($this->getName() . '.id')){
-            $where  = ' WHERE id ='.$catId;
-
-            $query  = 'SELECT * FROM #__tz_portfolio_plus_categories'
-                      .$where;
-            $db     = JFactory::getDbo();
-            $db -> setQuery($query);
-            if(!$db -> query()){
-                echo $db -> getErrorMsg();
-                die();
-            }
-            if($row = $db -> loadObject()){
-                return $row;
-            }
-        }
-        return false;
-    }
     function deleteImages($fileName){
         if($fileName){
             $file   = JPATH_SITE.DIRECTORY_SEPARATOR.str_replace('/',DIRECTORY_SEPARATOR,$fileName);

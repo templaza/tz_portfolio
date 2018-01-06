@@ -3,11 +3,18 @@
 	<name>com_tz_portfolio_plus</name>
 	<author>TZ Portfolio+</author>
 	<creationDate>September 7th, 2017</creationDate>
-	<copyright>Copyright (C) 2017 TemPlaza. All rights reserved.</copyright>
+	<copyright>Copyright (C) 2011 - 2018 TZ Portfolio.com. All rights reserved.</copyright>
 	<license>GNU/GPL v2 or later http://www.gnu.org/licenses/gpl-2.0.html</license>
 	<authorEmail>support@templaza.com</authorEmail>
-	<authorUrl>www.templaza.com/</authorUrl>
-	<version>1.1.8</version>
+	<authorUrl>http://www.tzportfolio.com</authorUrl>
+	<familyUrl>http://www.templaza.com</familyUrl>
+    <guideUrl>https://www.tzportfolio.com/document.html</guideUrl>
+    <forumUrl>https://www.tzportfolio.com/help/forum.html</forumUrl>
+    <transifexUrl>https://www.transifex.com/templaza-com/tz-portfolio-plus</transifexUrl>
+    <jedUrl>https://extensions.joomla.org/extension/tz-portfolio</jedUrl>
+    <facebookUrl>https://www.facebook.com/tzportfolio</facebookUrl>
+    <facebookGroupUrl>https://www.facebook.com/groups/tzportfolio</facebookGroupUrl>
+	<version>1.2.0</version>
     
     <scriptfile>script.php</scriptfile>
 
@@ -54,6 +61,7 @@
             <folder>includes</folder>
             <folder>install</folder>
             <folder>js</folder>
+	    	<folder>layouts</folder>
 	    	<folder>libraries</folder>
 	    	<folder>models</folder>
 	    	<folder>tables</folder>
@@ -76,6 +84,7 @@
             <menu link="option=com_tz_portfolio_plus&amp;view=addons">com_tz_portfolio_plus_addons</menu>
             <menu link="option=com_tz_portfolio_plus&amp;view=template_styles">com_tz_portfolio_plus_template_styles</menu>
             <menu link="option=com_tz_portfolio_plus&amp;view=templates">com_tz_portfolio_plus_templates</menu>
+            <menu link="option=com_tz_portfolio_plus&amp;view=acls">com_tz_portfolio_plus_acl</menu>
         </submenu>
         <languages folder="admin/languages">
             <language tag="en-GB">en-GB/en-GB.com_tz_portfolio_plus.ini</language>

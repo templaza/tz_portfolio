@@ -178,6 +178,10 @@ class TZ_Portfolio_PlusViewArticle extends TZ_Portfolio_PlusViewLegacy
         if($config -> get('force_ssl')){
             $ssl    = $config -> get('force_ssl');
         }
+        $uri    = JUri::getInstance();
+        if($uri -> isSsl()){
+            $ssl    = 1;
+        }
 
         $item ->link        = JRoute::_(TZ_Portfolio_PlusHelperRoute::getArticleRoute($item -> slug,$item -> catid).$tmpl);
         $item -> fullLink   = JRoute::_(TZ_Portfolio_PlusHelperRoute::getArticleRoute($item -> slug,$item -> catid), true, $ssl);

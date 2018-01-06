@@ -53,26 +53,11 @@ JFactory::getDocument()->addScriptDeclaration('
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="details">
-                    <div class="control-group">
-                        <div class="control-label"><?php echo $form -> getLabel('title');?></div>
-                        <div class="controls"><?php echo $form -> getInput('title');?></div>
-                    </div>
-                    <div class="control-group">
-                        <div class="control-label"><?php echo $form -> getLabel('alias');?></div>
-                        <div class="controls"><?php echo $form -> getInput('alias');?></div>
-                    </div>
-                    <div class="control-group">
-                        <div class="control-label"><?php echo $form -> getLabel('published');?></div>
-                        <div class="controls"><?php echo $form -> getInput('published');?></div>
-                    </div>
-                    <div class="control-group">
-                        <div class="control-label"><?php echo $form -> getLabel('id');?></div>
-                        <div class="controls"><?php echo $form -> getInput('id');?></div>
-                    </div>
-                    <div class="control-group">
-                        <div class="control-label"><?php echo $form -> getLabel('description');?></div>
-                        <div class="controls"><?php echo $form -> getInput('description');?></div>
-                    </div>
+                    <?php echo $this -> form -> renderField('title');?>
+                    <?php echo $this -> form -> renderField('alias');?>
+                    <?php echo $this -> form -> renderField('published');?>
+                    <?php echo $this -> form -> renderField('id');?>
+                    <?php echo $this -> form -> renderField('description');?>
                 </div>
 
                 <div class="tab-pane assignment" id="articles_assignment">
@@ -82,7 +67,6 @@ JFactory::getDocument()->addScriptDeclaration('
         </fieldset>
 
     </div>
-    <div class="clr"></div>
 
     <input type="hidden" value="" name="task">
     <?php echo JHTML::_('form.token');?>

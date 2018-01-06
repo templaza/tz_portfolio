@@ -21,6 +21,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
+use Joomla\Utilities\ArrayHelper;
 
 JLoader::register('TZ_Portfolio_PlusHelper', COM_TZ_PORTFOLIO_PLUS_ADMIN_HELPERS_PATH
     .DIRECTORY_SEPARATOR.'tz_portfolio_plus.php');
@@ -174,7 +175,10 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
             }
             $user = JFactory::getUser();
 
-            return $user->authorise('core.delete', 'com_tz_portfolio_plus.article.' . (int) $record->id);
+            $state  = $user->authorise('core.delete', 'com_tz_portfolio_plus.article.' . (int) $record->id)
+                || ($user->authorise('core.delete.own', 'com_tz_portfolio_plus.article.' . (int) $record->id)
+                    && $record -> created_by == $user -> id);
+            return $state;
         }
 
         return false;
@@ -196,17 +200,26 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
         // Check for existing article.
         if (!empty($record->id))
         {
-            return $user->authorise('core.edit.state', 'com_tz_portfolio_plus.article.' . (int) $record->id);
+            $state  = $user->authorise('core.edit.state', 'com_tz_portfolio_plus.article.' . (int) $record->id)
+            || ($user->authorise('core.edit.state.own', 'com_tz_portfolio_plus.article.' . (int) $record->catid)
+            && $record -> created_by == $user -> id);
+            return $state;
         }
         // New article, so check against the category.
         elseif (!empty($record->catid))
         {
-            return $user->authorise('core.edit.state', 'com_tz_portfolio_plus.category.' . (int) $record->catid);
+            $state  = $user->authorise('core.edit.state', 'com_tz_portfolio_plus.category.' . (int) $record->catid)
+                || ($user->authorise('core.edit.state.own', 'com_tz_portfolio_plus.category.' . (int) $record->catid)
+                    && $record -> created_by == $user -> id);
+            return $state;
         }
         // Default to component settings if neither article nor category known.
         else
         {
-            return parent::canEditState('com_tz_portfolio_plus');
+            $state  = parent::canEditState($record) ||
+                ($user->authorise('core.edit.state.own', 'com_tz_portfolio_plus')
+                    && $record -> created_by == $user -> id);
+            return $state;
         }
     }
 
@@ -300,7 +313,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
         }
 
         // Load associated content items
-        $app = JFactory::getApplication();
+        $app    = JFactory::getApplication();
         $assoc = JLanguageAssociations::isEnabled();
 
         if ($assoc)
@@ -341,6 +354,12 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
             return false;
         }
         $jinput = JFactory::getApplication()->input;
+
+//        if (isset($data['catid']))
+//        {
+//            // This is needed that the plugins can determine the type
+//            $this->setState('article.catid', $data['type']);
+//        }
 
         // The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
         if ($jinput->get('a_id'))
@@ -425,7 +444,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
     {
         // Check the session for previously entered form data.
         $app = JFactory::getApplication();
-        $data = $app->getUserState('com_tz_portfolio_plus.edit.article.data', array());
+        $data = $app->getUserState($this -> option. '.edit.'.$this -> getName().'.data', array());
 
         if (empty($data))
         {
@@ -448,7 +467,6 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
                 }
                 $data->set('catid', $catid);
             }
-
 
             // Pre-select some filters (Status, Category, Language, Access) in edit form if those have been selected in Article Manager: Articles
             if ($this->getState($this -> getName().'.id') == 0)
@@ -590,6 +608,8 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
             // Save extrafields
             if(isset($data['extrafields'])) {
                 $this->saveArticleFields($data['extrafields'], $table);
+            }else{
+                $this->saveArticleFields(array(), $table);
             }
 
             if (isset($data['featured']))
@@ -716,7 +736,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
     }
 
     public function saveArticleFields($fieldsData, $table, $isNew = true){
-        if($fieldsData){
+//        if($fieldsData){
             if($fields = TZ_Portfolio_PlusFrontHelperExtraFields::getExtraFields($table, null, true)){
                 if(count($fields) >= count($fieldsData)){
                     foreach($fields as $field){
@@ -731,14 +751,15 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
                     return true;
                 }
             }
-
+        if($fieldsData){
             foreach($fieldsData as $id => $fieldValue){
                 $fieldObj   = TZ_Portfolio_PlusFrontHelperExtraFields::getExtraField($id, $table);
                 $fieldObj -> onSaveArticleFieldValue($fieldValue);
             }
-
-            return true;
         }
+
+//            return true;
+//        }
         return false;
     }
 
@@ -895,7 +916,8 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
 
         if ($assoc)
         {
-            $languages = JLanguageHelper::getLanguages('lang_code');
+            $languages = JLanguageHelper::getContentLanguages(false, true, null, 'ordering', 'asc');
+
             $addform = new SimpleXMLElement('<form />');
             $fields = $addform->addChild('fields');
             $fields->addAttribute('name', 'associations');
@@ -904,15 +926,15 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
             $fieldset->addAttribute('description', 'COM_CONTENT_ITEM_ASSOCIATIONS_FIELDSET_DESC');
             $add = false;
 
-            foreach ($languages as $tag => $language)
+            foreach ($languages as $language)
             {
-                if (empty($data->language) || $tag != $data->language)
+                if (empty($data->language) || $language->lang_code != $data->language)
                 {
                     $add = true;
                     $field = $fieldset->addChild('field');
-                    $field->addAttribute('name', $tag);
+                    $field->addAttribute('name', $language->lang_code);
                     $field->addAttribute('type', 'modal_article');
-                    $field->addAttribute('language', $tag);
+                    $field->addAttribute('language', $language->lang_code);
                     $field->addAttribute('label', $language->title);
                     $field->addAttribute('translate_label', 'false');
                     $field->addAttribute('edit', 'true');
@@ -981,6 +1003,19 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
                 $query->where("field.published = 1");
                 $query->where("m.groupid = " . $fieldGroup->id);
 
+                // Implement View Level Access
+                $user       = JFactory::getUser();
+                $viewlevels = ArrayHelper::toInteger($user->getAuthorisedViewLevels());
+                $viewlevels = implode(',', $viewlevels);
+                $subquery   = $db -> getQuery(true);
+
+                $subquery -> select('subg.id');
+                $subquery -> from('#__tz_portfolio_plus_fieldgroups AS subg');
+                $subquery -> where('subg.access IN('.$viewlevels.')');
+
+                $query -> where('field.access IN('.$viewlevels.')');
+                $query -> where('fg.id IN('.((string) $subquery).')');
+
                 // Ordering by default : core fields, then extra fields
                 $query -> order('IF(fg.field_ordering_type = 2, '.$db -> quoteName('m.ordering')
                     .',IF(fg.field_ordering_type = 1,'.$db -> quoteName('field.ordering').',NULL))');
@@ -1027,21 +1062,4 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
         parent::cleanCache('mod_tz_portfolio_plus_articles');
     }
 
-//    public function getName()
-//    {
-////        return parent::getName();
-//        if (empty($this->name))
-//        {
-//            $r = null;
-//
-//            if (!preg_match('/Model(.*)/i', get_class($this), $r))
-//            {
-//                throw new \Exception(\JText::_('JLIB_APPLICATION_ERROR_MODEL_GET_NAME'), 500);
-//            }
-//
-//            $this->name = strtolower($r[1]);
-//        }
-//
-//        return $this->name;
-//    }
 }

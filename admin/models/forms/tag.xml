@@ -26,8 +26,8 @@
                filter="JComponentHelper::filterText" buttons="true"
                label="JGLOBAL_DESCRIPTION" />
 
-        <field type="modal_articles_assignment" name="articles_assignment"
-               edit = "true"
+        <field type="modal_article" name="articles_assignment"
+               edit="true" multiple="true"
                label="COM_TZ_PORTFOLIO_PLUS_ARTICLES_ASSIGNMENT"/>
     </fieldset>
 </form>

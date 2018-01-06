@@ -256,7 +256,7 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
     public function getItems(){
         if($items = parent::getItems()){
 
-            $user	        = JFactory::getUser();
+            $user	        = TZ_Portfolio_PlusUser::getUser();
             $userId	        = $user->get('id');
             $guest	        = $user->get('guest');
 
@@ -369,6 +369,10 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
                     $ssl    = 2;
                     if($config -> get('force_ssl')){
                         $ssl    = $config -> get('force_ssl');
+                    }
+                    $uri    = JUri::getInstance();
+                    if($uri -> isSsl()){
+                        $ssl    = 1;
                     }
 
                     // Create Article Link

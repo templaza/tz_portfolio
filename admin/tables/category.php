@@ -112,7 +112,7 @@ class TZ_Portfolio_PlusTableCategory extends JTableNested
             $query = $this->_db->getQuery(true)
                 ->select($this->_db->quoteName('id'))
                 ->from($this->_db->quoteName('#__assets'))
-                ->where($this->_db->quoteName('name') . ' = ' . $this->_db->quote($this->extension));
+                ->where($this->_db->quoteName('name') . ' = ' . $this->_db->quote($this->extension.'.category'));
 
             // Get the asset id from the database.
             $this->_db->setQuery($query);

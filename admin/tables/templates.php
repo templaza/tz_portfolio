@@ -89,4 +89,29 @@ class TZ_Portfolio_PlusTableTemplates extends JTable
         }
         return null;
     }
+
+    public function delete($pk = null)
+    {
+        $k = $this->_tbl_key;
+        $pk = is_null($pk) ? $this->$k : $pk;
+
+        if (!is_null($pk))
+        {
+            $query = $this->_db->getQuery(true)
+                ->from($this -> _tbl)
+                ->select('id')
+                ->where('template=' . $this->_db->quote($this->template));
+            $this->_db->setQuery($query);
+            $results = $this->_db->loadColumn();
+
+            if (count($results) == 1 && $results[0] == $pk)
+            {
+                $this->setError(JText::_('COM_TZ_PORTFOLIO_PLUS_TEMPLATE_STYLE_ERROR_CANNOT_DELETE_LAST_STYLE'));
+
+                return false;
+            }
+        }
+
+        return parent::delete($pk);
+    }
 }

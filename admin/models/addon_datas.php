@@ -21,14 +21,21 @@
 defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
+use Joomla\Utilities\ArrayHelper;
 
 class TZ_Portfolio_PlusModelAddon_Datas extends JModelList{
 
     protected $addon_element   = null;
 
-    protected function populateState($ordering = null, $direction = null){
+    protected function populateState($ordering = 'id', $direction = 'desc'){
+
         $addon_id   = JFactory::getApplication()->input->getInt('addon_id');
         $this -> setState($this -> getName().'.addon_id',$addon_id);
+
+        if($addon_id) {
+            $addon  = TZ_Portfolio_PlusPluginHelper::getPluginById($addon_id);
+            $this->setState($this->getName() . '.addon', $addon);
+        }
 
         $published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
         $this->setState('filter.published', $published);
@@ -37,24 +44,39 @@ class TZ_Portfolio_PlusModelAddon_Datas extends JModelList{
         parent::populateState($ordering, $direction);
     }
 
+    protected function getStoreId($id = '')
+    {
+        // Compile the store id.
+        if($access = $this -> getState('filter.access')) {
+            $id .= ':' . $this->getState('filter.access');
+        }
+        $id .= ':' . $this->getState('filter.published');
+
+        return parent::getStoreId($id);
+    }
+
     public function getListQuery(){
         if($addonId = $this -> getState($this -> getName().'.addon_id')){
             $db     = $this -> getDbo();
             $query  = $db -> getQuery(true)
-                -> select('*')
-                -> from($db -> quoteName('#__tz_portfolio_plus_addon_data'))
-                -> where('extension_id ='.$addonId);
+                -> select('d.*')
+                -> from($db -> quoteName('#__tz_portfolio_plus_addon_data').' AS d')
+                -> where('d.extension_id ='.$addonId);
             if($element = $this -> addon_element){
-                $query -> where('element ='.$db -> quote($element));
+                $query -> where('d.element ='.$db -> quote($element));
             }
+
+            // Join over the users for the checked out user.
+            $query->select('uc.name AS editor')
+                ->join('LEFT', '#__users AS uc ON uc.id=d.checked_out');
 
             // Filter by published state
             $published = $this->getState('filter.published');
             if (is_numeric($published)) {
-                $query->where('published = ' . (int) $published);
+                $query->where('d.published = ' . (int) $published);
             }
             elseif ($published === '') {
-                $query->where('(published = 0 OR published = 1 OR published = -1)');
+                $query->where('(d.published = 0 OR d.published = 1 OR d.published = -1)');
             }
 
             // Add the list ordering clause.
@@ -65,7 +87,7 @@ class TZ_Portfolio_PlusModelAddon_Datas extends JModelList{
                 if(strpos($orderCol,'value.') !== false) {
                     $fields     = explode('.',$orderCol);
                     $orderCol   = array_pop($fields);
-                    $query->order('substring_index(value,' . $db->quote('"'.$orderCol.'":') . ',-1) '. $orderDirn);
+                    $query->order('substring_index(d.value,' . $db->quote('"'.$orderCol.'":') . ',-1) '. $orderDirn);
                 }else{
                     $query->order($db->escape($orderCol . ' ' . $orderDirn));
                 }
@@ -123,5 +145,61 @@ class TZ_Portfolio_PlusModelAddon_Datas extends JModelList{
         return $this->cache[$storeId];
     }
 
+    protected function loadForm($name, $source = null, $options = array(), $clear = false, $xpath = false)
+    {
 
+        if($addon = $this -> getState($this->getName() . '.addon')) {
+            // Handle the optional arguments.
+            $options['control'] = ArrayHelper::getValue((array) $options, 'control', false);
+
+            // Create a signature hash.
+            $hash = md5($source . serialize($options));
+
+            // Check if we can use a previously loaded form.
+            if (!$clear && isset($this->_forms[$hash]))
+            {
+                return $this->_forms[$hash];
+            }
+
+            // Get the form.
+            \JForm::addFormPath(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH .'/'.$addon -> type.'/'
+                .$addon -> name. '/admin/models/forms');
+            \JForm::addFieldPath(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH .'/'.$addon -> type.'/'
+                .$addon -> name. '/admin/models/fields');
+
+            try
+            {
+                $form = \JForm::getInstance($name, $source, $options, false, $xpath);
+
+                if (isset($options['load_data']) && $options['load_data'])
+                {
+                    // Get the data for the form.
+                    $data = $this->loadFormData();
+                }
+                else
+                {
+                    $data = array();
+                }
+
+                // Allow for additional modification of the form, and events to be triggered.
+                // We pass the data because plugins may require it.
+                $this->preprocessForm($form, $data);
+
+                // Load the data into the form after the plugins have operated.
+                $form->bind($data);
+            }
+            catch (\Exception $e)
+            {
+                $this->setError($e->getMessage());
+
+                return false;
+            }
+
+            // Store the form for later.
+            $this->_forms[$hash] = $form;
+
+            return $form;
+        }
+        return false;
+    }
 }

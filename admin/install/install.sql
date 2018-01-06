@@ -29,8 +29,28 @@ CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_addon_data` (
   `content_id` int(11) NOT NULL,
   `published` tinyint(4) NOT NULL DEFAULT '0',
   `ordering` int(11) NOT NULL DEFAULT '0',
+  `asset_id` INT UNSIGNED NOT NULL DEFAULT '0',
+  `created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `created_by` INT UNSIGNED NOT NULL,
+  `modified` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `modified_by` INT UNSIGNED NOT NULL,
+  `checked_out` INT NOT NULL DEFAULT '0',
+  `checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `publish_up` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `publish_down` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `access` INT(10) UNSIGNED NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_addon_meta` (
+  `id` int(11) NOT NULL,
+  `data_id` int(11) NOT NULL,
+  `meta_id` int(11) NOT NULL,
+  `meta_key` varchar(255) NOT NULL,
+  `meta_value` longtext NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `#__tz_portfolio_plus_categories`
@@ -133,7 +153,7 @@ CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_content` (
   KEY `idx_featured_catid` (`featured`),
   KEY `idx_language` (`language`),
   KEY `idx_xreference` (`xreference`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -194,6 +214,7 @@ CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_extensions` (
   `published` tinyint(4) NOT NULL,
   `access` int(10) NOT NULL,
   `ordering` int(11) NOT NULL,
+  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20;
 
@@ -222,11 +243,19 @@ INSERT IGNORE INTO `#__tz_portfolio_plus_extensions` (`id`, `name`, `type`, `ele
 
 CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_fieldgroups` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `name` varchar(255) NOT NULL,
   `published` tinyint(4) NOT NULL,
   `field_ordering_type` tinyint(4) NOT NULL DEFAULT '0',
   `description` text NOT NULL,
   `ordering` int(11) NOT NULL DEFAULT '0',
+  `created_by` INT UNSIGNED NOT NULL DEFAULT '0',
+  `created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `modified` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `modified_by` INT UNSIGNED NOT NULL DEFAULT '0',
+  `access` INT(10) UNSIGNED NOT NULL DEFAULT '1',
+  `checked_out` int(10) unsigned NOT NULL DEFAULT '0',
+  `checked_out_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
@@ -250,7 +279,14 @@ CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_fields` (
   `detail_view` tinyint(4) NOT NULL DEFAULT '1',
   `params` text NOT NULL,
   `description` text NOT NULL,
-  `access` int(10) NOT NULL,
+  `access` INT(10) UNSIGNED NOT NULL DEFAULT '1',
+  `asset_id` INT UNSIGNED NOT NULL DEFAULT '1',
+  `created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `created_by` INT UNSIGNED NOT NULL DEFAULT '0',
+  `modified` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `modified_by` INT UNSIGNED NOT NULL DEFAULT '0',
+  `checked_out` int(10) unsigned NOT NULL DEFAULT '0',
+  `checked_out_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
@@ -337,6 +373,6 @@ CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_templates` (
 --
 -- Dumping data for table `#__tz_portfolio_plus_templates`
 --
-INSERT IGNORE INTO `#__tz_portfolio_plus_templates` (`template`, `title`, `home`, `protected`, `layout`, `params`) VALUES
-('system', 'Default', '0', 1, '[{"name":"Media","class":"","responsive":"","backgroundcolor":"rgba(255, 255, 255, 0)","textcolor":"rgba(255, 255, 255, 0)","linkcolor":"rgba(255, 255, 255, 0)","linkhovercolor":"rgba(255, 255, 255, 0)","margin":"","padding":"20px 0","containertype":"container-fluid","children":[{"col-xs":"","col-sm":"","col-md":"","col-lg":"12","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"media","customclass":"","responsiveclass":""}]},{"name":"Title","class":"","responsive":"","backgroundcolor":"rgba(255, 255, 255, 0)","textcolor":"rgba(255, 255, 255, 0)","linkcolor":"rgba(255, 255, 255, 0)","linkhovercolor":"rgba(255, 255, 255, 0)","margin":"","padding":"","containertype":"container-fluid","children":[{"col-xs":"","col-sm":"","col-md":"","col-lg":"10","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"title","customclass":"","responsiveclass":""},{"col-xs":"","col-sm":"","col-md":"","col-lg":"2","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"icons","customclass":"","responsiveclass":""}]},{"name":"Information","class":"","responsive":"","backgroundcolor":"rgba(255, 255, 255, 0)","textcolor":"rgba(255, 255, 255, 0)","linkcolor":"rgba(255, 255, 255, 0)","linkhovercolor":"rgba(255, 255, 255, 0)","margin":"","padding":"","containertype":"container-fluid","children":[{"col-xs":"","col-sm":"","col-md":"","col-lg":"6","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"none","customclass":"muted","responsiveclass":"","children":[{"name":"Information Core","class":"","responsive":"","backgroundcolor":"rgba(255, 255, 255, 0)","textcolor":"rgba(255, 255, 255, 0)","linkcolor":"rgba(255, 255, 255, 0)","linkhovercolor":"rgba(255, 255, 255, 0)","margin":"","padding":"","children":[{"col-xs":"12","col-sm":"12","col-md":"12","col-lg":"12","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"created_date","position":"","style":"","customclass":"","responsiveclass":""},{"col-xs":"","col-sm":"","col-md":"","col-lg":"12","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"vote","position":"","style":"","customclass":"","responsiveclass":""},{"col-xs":"","col-sm":"","col-md":"","col-lg":"12","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"author","position":"","style":"","customclass":"","responsiveclass":""},{"col-xs":"","col-sm":"","col-md":"","col-lg":"12","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"category","position":"","style":"","customclass":"","responsiveclass":""},{"col-xs":"","col-sm":"","col-md":"","col-lg":"12","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"parent_category","position":"","style":"","customclass":"","responsiveclass":""},{"col-xs":"","col-sm":"","col-md":"","col-lg":"12","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"hits","position":"","style":"","customclass":"","responsiveclass":""},{"col-xs":"","col-sm":"","col-md":"","col-lg":"12","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"published_date","position":"","style":"","customclass":"","responsiveclass":""},{"col-xs":"","col-sm":"","col-md":"","col-lg":"12","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"modified_date","position":"","style":"","customclass":"","responsiveclass":""}]}]},{"col-xs":"","col-sm":"","col-md":"","col-lg":"6","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"extrafields","customclass":"","responsiveclass":""}]},{"name":"Introtext","class":"","responsive":"","backgroundcolor":"rgba(255, 255, 255, 0)","textcolor":"rgba(255, 255, 255, 0)","linkcolor":"rgba(255, 255, 255, 0)","linkhovercolor":"rgba(255, 255, 255, 0)","margin":"","padding":"","containertype":"container-fluid","children":[{"col-xs":"12","col-sm":"12","col-md":"12","col-lg":"12","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"introtext","customclass":"","responsiveclass":""}]},{"name":"Fulltext","class":"","responsive":"","backgroundcolor":"rgba(255, 255, 255, 0)","textcolor":"rgba(255, 255, 255, 0)","linkcolor":"rgba(255, 255, 255, 0)","linkhovercolor":"rgba(255, 255, 255, 0)","margin":"","padding":"","containertype":"container-fluid","children":[{"col-xs":"12","col-sm":"12","col-md":"12","col-lg":"12","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"fulltext","customclass":"","responsiveclass":""}]},{"name":"Tags","class":"","responsive":"","backgroundcolor":"rgba(255, 255, 255, 0)","textcolor":"rgba(255, 255, 255, 0)","linkcolor":"rgba(255, 255, 255, 0)","linkhovercolor":"rgba(255, 255, 255, 0)","margin":"","padding":"","containertype":"container-fluid","children":[{"col-xs":"12","col-sm":"12","col-md":"12","col-lg":"12","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"tags","customclass":"","responsiveclass":""}]},{"name":"Author Info","class":"","responsive":"","backgroundcolor":"rgba(255, 255, 255, 0)","textcolor":"rgba(255, 255, 255, 0)","linkcolor":"rgba(255, 255, 255, 0)","linkhovercolor":"rgba(255, 255, 255, 0)","margin":"","padding":"","containertype":"container-fluid","children":[{"col-xs":"12","col-sm":"12","col-md":"12","col-lg":"12","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"author_about","customclass":"","responsiveclass":""}]},{"name":"Related Articles","class":"","responsive":"","backgroundcolor":"rgba(255, 255, 255, 0)","textcolor":"rgba(255, 255, 255, 0)","linkcolor":"rgba(255, 255, 255, 0)","linkhovercolor":"rgba(255, 255, 255, 0)","margin":"","padding":"","containertype":"container-fluid","children":[{"col-xs":"12","col-sm":"12","col-md":"12","col-lg":"12","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"related","customclass":"","responsiveclass":""}]}]', '{"layout":"default","use_single_layout_builder":"1"}'),
-('elegant', 'elegant - Default', '1', 1, '', '{"layout":"default","use_single_layout_builder":"0","load_style":"1"}');
+INSERT IGNORE INTO `#__tz_portfolio_plus_templates` (`id`, `template`, `title`, `home`, `protected`, `layout`, `params`) VALUES
+(1, 'system', 'Default', '0', 1, '[{"name":"Media","class":"","responsive":"","backgroundcolor":"rgba(255, 255, 255, 0)","textcolor":"rgba(255, 255, 255, 0)","linkcolor":"rgba(255, 255, 255, 0)","linkhovercolor":"rgba(255, 255, 255, 0)","margin":"","padding":"20px 0","containertype":"container-fluid","children":[{"col-xs":"","col-sm":"","col-md":"","col-lg":"12","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"media","customclass":"","responsiveclass":""}]},{"name":"Title","class":"","responsive":"","backgroundcolor":"rgba(255, 255, 255, 0)","textcolor":"rgba(255, 255, 255, 0)","linkcolor":"rgba(255, 255, 255, 0)","linkhovercolor":"rgba(255, 255, 255, 0)","margin":"","padding":"","containertype":"container-fluid","children":[{"col-xs":"","col-sm":"","col-md":"","col-lg":"10","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"title","customclass":"","responsiveclass":""},{"col-xs":"","col-sm":"","col-md":"","col-lg":"2","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"icons","customclass":"","responsiveclass":""}]},{"name":"Information","class":"","responsive":"","backgroundcolor":"rgba(255, 255, 255, 0)","textcolor":"rgba(255, 255, 255, 0)","linkcolor":"rgba(255, 255, 255, 0)","linkhovercolor":"rgba(255, 255, 255, 0)","margin":"","padding":"","containertype":"container-fluid","children":[{"col-xs":"","col-sm":"","col-md":"","col-lg":"6","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"none","customclass":"muted","responsiveclass":"","children":[{"name":"Information Core","class":"","responsive":"","backgroundcolor":"rgba(255, 255, 255, 0)","textcolor":"rgba(255, 255, 255, 0)","linkcolor":"rgba(255, 255, 255, 0)","linkhovercolor":"rgba(255, 255, 255, 0)","margin":"","padding":"","children":[{"col-xs":"12","col-sm":"12","col-md":"12","col-lg":"12","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"created_date","position":"","style":"","customclass":"","responsiveclass":""},{"col-xs":"","col-sm":"","col-md":"","col-lg":"12","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"vote","position":"","style":"","customclass":"","responsiveclass":""},{"col-xs":"","col-sm":"","col-md":"","col-lg":"12","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"author","position":"","style":"","customclass":"","responsiveclass":""},{"col-xs":"","col-sm":"","col-md":"","col-lg":"12","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"category","position":"","style":"","customclass":"","responsiveclass":""},{"col-xs":"","col-sm":"","col-md":"","col-lg":"12","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"parent_category","position":"","style":"","customclass":"","responsiveclass":""},{"col-xs":"","col-sm":"","col-md":"","col-lg":"12","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"hits","position":"","style":"","customclass":"","responsiveclass":""},{"col-xs":"","col-sm":"","col-md":"","col-lg":"12","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"published_date","position":"","style":"","customclass":"","responsiveclass":""},{"col-xs":"","col-sm":"","col-md":"","col-lg":"12","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"modified_date","position":"","style":"","customclass":"","responsiveclass":""}]}]},{"col-xs":"","col-sm":"","col-md":"","col-lg":"6","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"extrafields","customclass":"","responsiveclass":""}]},{"name":"Introtext","class":"","responsive":"","backgroundcolor":"rgba(255, 255, 255, 0)","textcolor":"rgba(255, 255, 255, 0)","linkcolor":"rgba(255, 255, 255, 0)","linkhovercolor":"rgba(255, 255, 255, 0)","margin":"","padding":"","containertype":"container-fluid","children":[{"col-xs":"12","col-sm":"12","col-md":"12","col-lg":"12","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"introtext","customclass":"","responsiveclass":""}]},{"name":"Fulltext","class":"","responsive":"","backgroundcolor":"rgba(255, 255, 255, 0)","textcolor":"rgba(255, 255, 255, 0)","linkcolor":"rgba(255, 255, 255, 0)","linkhovercolor":"rgba(255, 255, 255, 0)","margin":"","padding":"","containertype":"container-fluid","children":[{"col-xs":"12","col-sm":"12","col-md":"12","col-lg":"12","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"fulltext","customclass":"","responsiveclass":""}]},{"name":"Tags","class":"","responsive":"","backgroundcolor":"rgba(255, 255, 255, 0)","textcolor":"rgba(255, 255, 255, 0)","linkcolor":"rgba(255, 255, 255, 0)","linkhovercolor":"rgba(255, 255, 255, 0)","margin":"","padding":"","containertype":"container-fluid","children":[{"col-xs":"12","col-sm":"12","col-md":"12","col-lg":"12","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"tags","customclass":"","responsiveclass":""}]},{"name":"Author Info","class":"","responsive":"","backgroundcolor":"rgba(255, 255, 255, 0)","textcolor":"rgba(255, 255, 255, 0)","linkcolor":"rgba(255, 255, 255, 0)","linkhovercolor":"rgba(255, 255, 255, 0)","margin":"","padding":"","containertype":"container-fluid","children":[{"col-xs":"12","col-sm":"12","col-md":"12","col-lg":"12","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"author_about","customclass":"","responsiveclass":""}]},{"name":"Related Articles","class":"","responsive":"","backgroundcolor":"rgba(255, 255, 255, 0)","textcolor":"rgba(255, 255, 255, 0)","linkcolor":"rgba(255, 255, 255, 0)","linkhovercolor":"rgba(255, 255, 255, 0)","margin":"","padding":"","containertype":"container-fluid","children":[{"col-xs":"12","col-sm":"12","col-md":"12","col-lg":"12","col-xs-offset":"","col-sm-offset":"","col-md-offset":"","col-lg-offset":"","type":"related","customclass":"","responsiveclass":""}]}]', '{"layout":"default","use_single_layout_builder":"1"}'),
+(2, 'elegant', 'elegant - Default', '1', 1, '', '{"layout":"default","use_single_layout_builder":"0","load_style":"1"}');

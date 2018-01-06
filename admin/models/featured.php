@@ -86,16 +86,9 @@ class TZ_Portfolio_PlusModelFeatured extends TZ_Portfolio_PlusModelArticles
 
 		$query->from('#__tz_portfolio_plus_content AS a');
 
-        // Join over fields group
-		$query -> select('g.name AS groupname,g.id AS groupid');
-		if($this -> state -> get('filter.group') != 0){
-//            $query -> join('LEFT','#__tz_portfolio_plus_field_content_map AS xc ON xc.contentid=a.id');
-			$query -> join('LEFT','#__tz_portfolio_plus_fieldgroups AS g ON xc.groupid=g.id');
-		}
-		else{
-//            $query -> join('LEFT','#__tz_portfolio_plus_categories AS tc ON tc.id=m.catid');
-			$query -> join('LEFT','#__tz_portfolio_plus_fieldgroups AS g ON a.groupid=g.id');
-		}
+        // Join over fieldgroups
+        $query -> select('g.name AS groupname,g.id AS groupid');
+        $query -> join('LEFT','#__tz_portfolio_plus_fieldgroups AS g ON a.groupid=g.id');
 
 		// Join over the language
 		$query->select('l.title AS language_title');
@@ -129,10 +122,33 @@ class TZ_Portfolio_PlusModelFeatured extends TZ_Portfolio_PlusModelArticles
         if($this -> state -> get('filter.group')!=0)
             $query -> where('g.id ='.$this -> getState('filter.group'));
 
-		// Filter by access level.
-		if ($access = $this->getState('filter.access')) {
-			$query->where('a.access = ' . (int) $access);
-		}
+        // Filter by access level.
+        $access = $this->getState('filter.access');
+        if (is_numeric($access))
+        {
+            $query->where('a.access = ' . (int) $access);
+        }
+        elseif (is_array($access))
+        {
+            $access = ArrayHelper::toInteger($access);
+            $access = implode(',', $access);
+            $query->where('a.access IN (' . $access . ')');
+        }
+
+        // Filter by media type
+        if($type  = $this->getState('filter.type')){
+            if (is_string($type))
+            {
+                $query -> where('a.type = ' . $db -> quote($type));
+            }
+            elseif (is_array($type))
+            {
+                foreach($type as $i => $t) {
+                    $type[$i]  = 'a.type = '.$db -> quote($t);
+                }
+                $query -> andWhere($type);
+            }
+        }
 
 		// Filter by published state
 		$published = $this->getState('filter.published');

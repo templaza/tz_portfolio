@@ -126,6 +126,23 @@ class TZ_Portfolio_PlusControllerAddon extends JControllerForm
         // Check for request forgeries.
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
+        // Access check.
+        if (!$this->allowAdd())
+        {
+            // Set the internal error and also the redirect error.
+            $this->setError(\JText::_('JLIB_APPLICATION_ERROR_CREATE_RECORD_NOT_PERMITTED'));
+            $this->setMessage($this->getError(), 'error');
+
+            $this->setRedirect(
+                \JRoute::_(
+                    'index.php?option=' . $this->option . '&view=' . $this->view_list
+                    . $this->getRedirectToListAppend(), false
+                )
+            );
+
+            return false;
+        }
+
         // Redirect to the edit screen.
         $this->setRedirect(
             JRoute::_(
@@ -139,6 +156,23 @@ class TZ_Portfolio_PlusControllerAddon extends JControllerForm
     public function install(){
         // Check for request forgeries.
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
+        // Access check.
+        if (!$this->allowAdd())
+        {
+            // Set the internal error and also the redirect error.
+            $this->setError(\JText::_('JLIB_APPLICATION_ERROR_CREATE_RECORD_NOT_PERMITTED'));
+            $this->setMessage($this->getError(), 'error');
+
+            $this->setRedirect(
+                \JRoute::_(
+                    'index.php?option=' . $this->option . '&view=' . $this->view_list
+                    . $this->getRedirectToListAppend(), false
+                )
+            );
+
+            return false;
+        }
 
         $model  = $this -> getModel();
         $model -> install();
@@ -172,6 +206,17 @@ class TZ_Portfolio_PlusControllerAddon extends JControllerForm
 
     public function save($key = null, $urlVar = null)
     {
+        $user   = JFactory::getUser();
+
+        $data   = $this->input->get('jform', array(), 'array');
+
+        // Remove the permissions rules data if user isn't allowed to edit them.
+        if (!$user->authorise('core.admin', 'com_tz_portfolio_plus.addon')
+            && isset($data['params']) && isset($data['params']['rules']))
+        {
+            unset($data['params']['rules']);
+        }
+
         if (parent::save($key, $urlVar)) {
             if($return = $this->input->get('return', null, 'base64')){
                 $task   = $this->getTask();
@@ -213,6 +258,105 @@ class TZ_Portfolio_PlusControllerAddon extends JControllerForm
             return true;
         }
         return false;
+    }
+
+    protected function allowAdd($data = array())
+    {
+        $user = TZ_Portfolio_PlusUser::getUser();
+        return ($user->authorise('core.create','com_tz_portfolio_plus.addon'));
+    }
+
+    protected function allowEdit($data = array(), $key = 'id')
+    {
+        $user       = TZ_Portfolio_PlusUser::getUser();
+        $recordId   = (int) isset($data[$key]) ? $data[$key] : 0;
+        $tblAsset   = JTable::getInstance('Asset','JTable');
+
+        // Return the addon edit options permission
+        if($return     = $this -> input -> get('return', null, 'base64')) {
+
+            if(TZ_Portfolio_PlusHelperAddons::checkEditAddonConfigure($recordId, $return)){
+                if($tblAsset -> loadByName('com_tz_portfolio_plus.addon.'.$recordId)) {
+                    return $user->authorise('core.admin', $this -> option.'.addon.'.$recordId)
+                        || $user->authorise('core.options', $this -> option.'.addon.'.$recordId);
+                }elseif($tblAsset -> loadByName('com_tz_portfolio_plus.addon')) {
+                    return $user->authorise('core.admin', $this -> option.'.addon')
+                        || $user->authorise('core.options', $this -> option.'.addon');
+                }
+
+            }
+
+//            $return = base64_decode($return);
+//
+//            $uri = JUri::getInstance($return);
+//            if($uri->isInternal($return)){
+//                if($query  = $uri -> getQuery(true)){
+//                    if(isset($query['option']) && isset($query['view']) && isset($query['addon_id'])){
+//                        if($query['option'] == $this -> option && $query['view'] == 'addon_datas'
+//                            && $query['addon_id'] == $recordId){
+//                            if($tblAsset -> loadByName('com_tz_portfolio_plus.addon.'.$recordId)) {
+//                                return $user->authorise('core.admin', $this -> option.'.addon.'.$recordId)
+//                                    || $user->authorise('core.options', $this -> option.'.addon.'.$recordId);
+//                            }elseif($tblAsset -> loadByName('com_tz_portfolio_plus.addon')) {
+//                                return $user->authorise('core.admin', $this -> option.'.addon')
+//                                    || $user->authorise('core.options', $this -> option.'.addon');
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+        }
+
+        // Zero record (id:0), return component edit permission by calling parent controller method
+        if (!$recordId)
+        {
+            return parent::allowEdit($data, $key);
+        }
+
+        if($tblAsset -> loadByName('com_tz_portfolio_plus.addon.'.$recordId)) {
+            return $user->authorise('core.edit', $this->option . '.addon.'.$recordId);
+        }
+        return $user->authorise('core.edit', $this->option . '.addon');
+    }
+
+    public function edit($key = null, $urlVar = null)
+    {
+        // Do not cache the response to this, its a redirect, and mod_expires and google chrome browser bugs cache it forever!
+        \JFactory::getApplication()->allowCache(false);
+
+        $model = $this->getModel();
+        $table = $model->getTable();
+        $cid = $this->input->post->get('cid', array(), 'array');
+
+        // Determine the name of the primary key for the data.
+        if (empty($key)) {
+            $key = $table->getKeyName();
+        }
+
+        // To avoid data collisions the urlVar may be different from the primary key.
+        if (empty($urlVar)) {
+            $urlVar = $key;
+        }
+
+        // Get the previous record id (if any) and the current record id.
+        $recordId = (int)(count($cid) ? $cid[0] : $this->input->getInt($urlVar));
+
+        // Access check.
+        if (!$this->allowEdit(array($key => $recordId), $key)) {
+            $this->setError(\JText::_('JERROR_ALERTNOAUTHOR'));
+            $this->setMessage($this->getError(), 'error');
+
+            $this->setRedirect(
+                \JRoute::_(
+                    'index.php?option=' . $this->option . '&view=' . $this->view_list
+                    . $this->getRedirectToListAppend(), false
+                )
+            );
+
+            return false;
+        }
+
+        return parent::edit($key, $urlVar);
     }
 
 }

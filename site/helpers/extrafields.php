@@ -21,6 +21,8 @@
 defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
+use Joomla\Utilities\ArrayHelper;
+
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
 
@@ -70,7 +72,7 @@ class TZ_Portfolio_PlusFrontHelperExtraFields{
 
             if (!is_object($field))
             {
-                $field = self::getExtraFieldById($field);
+                $field = self::getExtraFieldById($fieldId);
             }
 
             if (!$field)
@@ -147,14 +149,21 @@ class TZ_Portfolio_PlusFrontHelperExtraFields{
         {
             $db    = JFactory::getDbo();
             $query = $db->getQuery(true);
-            $query->select('*');
-            $query->from('#__tz_portfolio_plus_fieldgroups');
+
+            $query -> select('*');
+            $query -> from('#__tz_portfolio_plus_fieldgroups');
             if(is_array($fieldGroupId)){
                 $query -> where('id IN('.implode(',', $fieldGroupId).')');
             }else {
                 $query->where('id = ' . $fieldGroupId);
             }
             $query -> where('published = 1');
+
+            $user       = JFactory::getUser();
+            $viewlevels = ArrayHelper::toInteger($user->getAuthorisedViewLevels());
+
+            $query -> where('access IN (' . implode(',', $viewlevels) . ')');
+
             $db->setQuery($query);
             self::$cache[$storeId] = $db->loadObjectList();
         }
@@ -187,7 +196,13 @@ class TZ_Portfolio_PlusFrontHelperExtraFields{
                 $query->from('#__tz_portfolio_plus_fieldgroups');
                 $query->where('id IN(' . $subquery . ')');
 
-                $db->setQuery($query);
+                // Implement View Level Access
+                $user       = JFactory::getUser();
+                $viewlevels = ArrayHelper::toInteger($user->getAuthorisedViewLevels());
+
+                $query -> where('access IN (' . implode(',', $viewlevels) . ')');
+
+                $db -> setQuery($query);
                 self::$cache[$storeId] = $db->loadObjectList();
             }else{
                 self::$cache[$storeId]  = false;
@@ -203,18 +218,26 @@ class TZ_Portfolio_PlusFrontHelperExtraFields{
         if (!isset(self::$cache[$storeId]))
         {
             if($catId) {
-                $db = JFactory::getDbo();
-                $query = $db->getQuery(true);
-                $query->select('g.*, c.id AS catid, c.title AS category_title');
-                $query->from('#__tz_portfolio_plus_fieldgroups AS g');
-                $query->join('LEFT', '#__tz_portfolio_plus_categories AS c ON c.groupid = g.id');
+                $db     = JFactory::getDbo();
+                $query  = $db->getQuery(true);
+
+                $query -> select('g.*, c.id AS catid, c.title AS category_title');
+                $query -> from('#__tz_portfolio_plus_fieldgroups AS g');
+                $query -> join('LEFT', '#__tz_portfolio_plus_categories AS c ON c.groupid = g.id');
                 if (is_array($catId)) {
-                    $query->where('c.id IN(' . implode(',', $catId) . ')');
+                    $query -> where('c.id IN(' . implode(',', $catId) . ')');
                 } else {
-                    $query->where('c.id = ' . $catId);
+                    $query -> where('c.id = ' . $catId);
                 }
-                $query->where('g.published = 1');
-                $query->where('c.published = 1');
+                $query -> where('g.published = 1');
+                $query -> where('c.published = 1');
+
+                // Implement View Level Access
+                $user       = JFactory::getUser();
+                $viewlevels = ArrayHelper::toInteger($user->getAuthorisedViewLevels());
+
+                $query -> where('access IN (' . implode(',', $viewlevels) . ')');
+
                 $db->setQuery($query);
                 self::$cache[$storeId] = $db->loadObjectList();
                 return self::$cache[$storeId];
@@ -288,6 +311,20 @@ class TZ_Portfolio_PlusFrontHelperExtraFields{
                     $query->where('field.id = ' . (int) $fieldId);
                 }
 
+                // Implement View Level Access
+                $user       = JFactory::getUser();
+                $viewlevels = ArrayHelper::toInteger($user->getAuthorisedViewLevels());
+                $viewlevels = implode(',', $viewlevels);
+                $subquery   = $db -> getQuery(true);
+
+                $subquery -> select('subg.id');
+                $subquery -> from('#__tz_portfolio_plus_fieldgroups AS subg');
+                $subquery -> where('subg.access IN('.$viewlevels.')');
+
+                $query -> where('field.access IN('.$viewlevels.')');
+                $query -> where('fg.id IN('.((string) $subquery).')');
+                $query -> where('e.access IN('.$viewlevels.')');
+
                 $db->setQuery($query);
 
                 if($fieldObj = $db->loadObject()){
@@ -312,24 +349,39 @@ class TZ_Portfolio_PlusFrontHelperExtraFields{
             }
             if (!isset(self::$cache[$storeId])) {
                 if($groupid){
-                    $db = JFactory::getDbo();
-                    $query = $db->getQuery(true);
+                    $db     = JFactory::getDbo();
+                    $query  = $db->getQuery(true);
 
-                    $query->select('f.*');
-                    $query->from('#__tz_portfolio_plus_fields AS f');
-                    $query->join('INNER', '#__tz_portfolio_plus_field_fieldgroup_map AS m ON m.fieldsid = f.id');
-                    $query->join('INNER', '#__tz_portfolio_plus_fieldgroups AS g ON g.id = m.groupid');
+                    $query -> select('f.*');
+                    $query -> from('#__tz_portfolio_plus_fields AS f');
+                    $query -> join('INNER', '#__tz_portfolio_plus_field_fieldgroup_map AS m ON m.fieldsid = f.id');
+                    $query -> join('INNER', '#__tz_portfolio_plus_fieldgroups AS g ON g.id = m.groupid');
 
-                    $query->join('INNER', '#__tz_portfolio_plus_extensions AS e ON e.element = f.type')
-                        ->where('e.type = ' . $db->quote('tz_portfolio_plus-plugin'))
-                        ->where('e.folder = ' . $db->quote('extrafields'))
-                        ->where('e.published = 1');
+                    $query -> join('INNER', '#__tz_portfolio_plus_extensions AS e ON e.element = f.type')
+                        -> where('e.type = ' . $db->quote('tz_portfolio_plus-plugin'))
+                        -> where('e.folder = ' . $db->quote('extrafields'))
+                        -> where('e.published = 1');
 
                     if (is_array($groupid)) {
-                        $query->where('g.id IN(' . implode(',', $groupid) . ')');
+                        $query -> where('g.id IN(' . implode(',', $groupid) . ')');
                     } else {
-                        $query->where('g.id = ' . $groupid);
+                        $query -> where('g.id = ' . $groupid);
                     }
+
+                    // Implement View Level Access
+                    $user       = JFactory::getUser();
+                    $viewlevels = ArrayHelper::toInteger($user->getAuthorisedViewLevels());
+                    $viewlevels = implode(',', $viewlevels);
+                    $subquery   = $db -> getQuery(true);
+
+                    $subquery -> select('subg.id');
+                    $subquery -> from('#__tz_portfolio_plus_fieldgroups AS subg');
+                    $subquery -> where('subg.access IN('.$viewlevels.')');
+
+                    $query -> where('f.access IN('.$viewlevels.')');
+                    $query -> where('g.id IN('.((string) $subquery).')');
+                    $query -> where('e.access IN('.$viewlevels.')');
+
                     $db->setQuery($query);
                     if ($fields = $db->loadObjectList()) {
                         self::$cache[$storeId] = $fields;
@@ -357,6 +409,14 @@ class TZ_Portfolio_PlusFrontHelperExtraFields{
 
         $storeId    .= '::'.$article -> id;
         $storeId    .= json_encode($options);
+
+        $user       = JFactory::getUser();
+        $viewlevels = ArrayHelper::toInteger($user->getAuthorisedViewLevels());
+        $viewlevels = implode(',', $viewlevels);
+
+        if($viewlevels) {
+            $storeId .= '::'.$viewlevels;
+        }
 
         $storeId    = md5($storeId);
 
@@ -404,6 +464,18 @@ class TZ_Portfolio_PlusFrontHelperExtraFields{
                     $query -> where('f.advanced_search = 0');
                 }
             }
+
+            // Implement View Level Access
+            $subquery   = $db -> getQuery(true);
+
+            $subquery -> select('subg.id');
+            $subquery -> from('#__tz_portfolio_plus_fieldgroups AS subg');
+            $subquery -> where('subg.access IN('.$viewlevels.')');
+
+            $query -> where('f.access IN('.$viewlevels.')');
+            $query -> where('fg.id IN('.((string) $subquery).')');
+            $query -> where('e.access IN('.$viewlevels.')');
+
 
             if(isset($options['filter.group']) && $orderGroup = $options['filter.group']){
                 switch ($orderGroup){
@@ -476,6 +548,20 @@ class TZ_Portfolio_PlusFrontHelperExtraFields{
                 } else {
                     $query->where('field.id = ' . (int) $fieldId);
                 }
+
+                // Implement View Level Access
+                $user       = JFactory::getUser();
+                $viewlevels = ArrayHelper::toInteger($user->getAuthorisedViewLevels());
+                $viewlevels = implode(',', $viewlevels);
+                $subquery   = $db -> getQuery(true);
+
+                $subquery -> select('subg.id');
+                $subquery -> from('#__tz_portfolio_plus_fieldgroups AS subg');
+                $subquery -> where('subg.access IN('.$viewlevels.')');
+
+                $query -> where('field.access IN('.$viewlevels.')');
+                $query -> where('fg.id IN('.((string) $subquery).')');
+                $query -> where('e.access IN('.$viewlevels.')');
 
                 $db->setQuery($query);
 
@@ -570,6 +656,20 @@ class TZ_Portfolio_PlusFrontHelperExtraFields{
             }elseif(is_numeric($fieldids)){
                 $query -> where('f.id = '. (int) $fieldids);
             }
+
+            // Implement View Level Access
+            $user       = JFactory::getUser();
+            $viewlevels = ArrayHelper::toInteger($user->getAuthorisedViewLevels());
+            $viewlevels = implode(',', $viewlevels);
+            $subquery   = $db -> getQuery(true);
+
+            $subquery -> select('subg.id');
+            $subquery -> from('#__tz_portfolio_plus_fieldgroups AS subg');
+            $subquery -> where('subg.access IN('.$viewlevels.')');
+
+            $query -> where('f.access IN('.$viewlevels.')');
+            $query -> where('fg.id IN('.((string) $subquery).')');
+            $query -> where('e.access IN('.$viewlevels.')');
 
             if(isset($options['filter.group']) && $orderGroup = $options['filter.group']){
                 switch ($orderGroup){

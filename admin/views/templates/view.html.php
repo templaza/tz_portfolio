@@ -35,10 +35,12 @@ class TZ_Portfolio_PlusViewTemplates extends JViewLegacy
         if($this -> getLayout() == 'upload') {
             $this->form = $this->get('Form');
         }
-        $this->state        = $this->get('State');
-        $this->items        = $this->get('Items');
-        $this -> templates  = $this -> get('Templates');
-        $this->pagination   = $this->get('pagination');
+        $this->state            = $this->get('State');
+        $this->items            = $this->get('Items');
+        $this -> templates      = $this -> get('Templates');
+        $this->pagination       = $this->get('pagination');
+        $this -> filterForm     = $this -> get('FilterForm');
+        $this -> activeFilters  = $this -> get('ActiveFilters');
 
         JFactory::getLanguage() -> load('com_templates');
 
@@ -56,79 +58,34 @@ class TZ_Portfolio_PlusViewTemplates extends JViewLegacy
 
     protected function addToolbar(){
 
-        $canDo	= JHelperContent::getActions('com_tz_portfolio_plus');
-
-        $bar    = JToolBar::getInstance();
+        // Get the results for each action.
+        $canDo  = TZ_Portfolio_PlusHelper::getActions('com_tz_portfolio_plus', 'template');
+        $user   = TZ_Portfolio_PlusUser::getUser();
 
         JToolBarHelper::title(JText::_('COM_TZ_PORTFOLIO_PLUS_TEMPLATES_MANAGER'),'eye');
-        JToolbarHelper::addNew('template.upload','JTOOLBAR_UPLOAD');
-        JToolBarHelper::divider();
+
+        if($canDo -> get('core.create')) {
+            JToolbarHelper::addNew('template.upload', 'JTOOLBAR_UPLOAD');
+        }
 
         if ($canDo->get('core.delete')){
             JToolBarHelper::deleteList(JText::_('COM_TZ_PORTFOLIO_PLUS_QUESTION_DELETE'),'template.uninstall','JTOOLBAR_UNINSTALL');
-            JToolBarHelper::divider();
         }
 
         if ($canDo->get('core.edit.state')) {
             JToolBarHelper::publish('templates.publish','JENABLED', true);
-        }
-
-        if ($canDo->get('core.edit.state')) {
             JToolBarHelper::unpublish('templates.unpublish','JDISABLED', true);
         }
 
-        if ($canDo->get('core.admin')) {
+        if($user->authorise('core.admin', 'com_tz_portfolio_plus')
+            || $user->authorise('core.options', 'com_tz_portfolio_plus')){
             JToolBarHelper::preferences('com_tz_portfolio_plus');
-            JToolBarHelper::divider();
         }
 
-        $doc    = JFactory::getDocument();
-        // If the joomla is version 3.0
-        if(COM_TZ_PORTFOLIO_PLUS_JVERSION_COMPARE){
-            $doc -> addStyleSheet(JURI::base(true).'/components/com_tz_portfolio_plus/fonts/font-awesome-4.5.0/css/font-awesome.min.css');
-        }
+        JToolBarHelper::help('JHELP_CONTENT_ARTICLE_MANAGER',false,
+            'https://www.tzportfolio.com/document/administration/35-how-to-use-templates-in-tz-portfolio-plus.html?tmpl=component');
 
-        $doc -> addStyleSheet(JURI::base(true).'/components/com_tz_portfolio_plus/css/style.min.css');
-
-        JToolBarHelper::help('JHELP_CONTENT_ARTICLE_MANAGER',false,'http://wiki.templaza.com/TZ_Portfolio_Plus_v3:Administration#Tags');
-
-        // Special HTML workaround to get send popup working
-        $docClass       = ' class="btn btn-small"';
-        $youtubeIcon    = '<i class="tz-icon-youtube tz-icon-14"></i>&nbsp;';
-        $wikiIcon       = '<i class="tz-icon-wikipedia tz-icon-14"></i>&nbsp;';
-
-        $youtubeTitle   = JText::_('COM_TZ_PORTFOLIO_PLUS_VIDEO_TUTORIALS');
-        $wikiTitle      = JText::_('COM_TZ_PORTFOLIO_PLUS_WIKIPEDIA_TUTORIALS');
-
-        $videoTutorial    ='<a'.$docClass.' onclick="Joomla.popupWindow(\'http://www.youtube.com/channel/UCykS6SX6L2GOI-n3IOPfTVQ/videos\', \''
-            .$youtubeTitle.'\', 800, 500, 1)"'.' href="#">'
-            .$youtubeIcon.$youtubeTitle.'</a>';
-
-        $wikiTutorial    ='<a'.$docClass.' onclick="Joomla.popupWindow(\'http://wiki.templaza.com/Main_Page\', \''
-            .$wikiTitle.'\', 800, 500, 1)"'.' href="#">'
-            .$wikiIcon
-            .$wikiTitle.'</a>';
-
-        $bar->appendButton('Custom',$videoTutorial,'youtube');
-        $bar->appendButton('Custom',$wikiTutorial,'wikipedia');
-
-        JHtmlSidebar::addFilter(
-            JText::_('JOPTION_SELECT_PUBLISHED'),
-            'filter_status',
-            JHtml::_(
-                'select.options',
-                array('0' => 'JDISABLED', '1' => 'JENABLED', '2' => 'JPROTECTED', '3' => 'JUNPROTECTED'),
-                'value',
-                'text',
-                $this->state->get('filter.status'),
-                true
-            )
-        );
-    }
-
-    protected function getSortFields()
-    {
-        return array('name' => JText::_('COM_TZ_PORTFOLIO_PLUS_TEMPLATE_LABEL'),
-            'published' => JText::_('JSTATUS'));
+        TZ_Portfolio_PlusToolbarHelper::customHelp('https://www.youtube.com/channel/UCrLN8LMXTyTahwDKzQ-YOqg/videos'
+            ,'COM_TZ_PORTFOLIO_PLUS_VIDEO_TUTORIALS', 'youtube', 'youtube');
     }
 }

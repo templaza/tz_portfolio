@@ -10,6 +10,15 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+06/01/2018 - 1.2.0
+
+	- Fix error sort articles by order.
+	- Fix and update permissions.
+	- Update some style of views in back-end.
+	- Update elegant template v1.3
+	- Added ACL view in back-end.
+	- Support for addon can create permissions.
+
 27/11/2017 - 1.1.8
 
 	- Fix error load articles with Ajax Infinite Scroll in Portfolio view.

@@ -237,4 +237,37 @@ class TZ_Portfolio_PlusModelTag extends JModelAdmin
 
         return array($title, $alias);
     }
+
+    protected function canDelete($record)
+    {
+        if (!empty($record->id))
+        {
+            $user = JFactory::getUser();
+
+            if(isset($record -> asset_id) && !empty($record -> asset_id)) {
+                $state = $user->authorise('core.delete', $this->option . '.tag.' . (int)$record->id);
+            }else{
+                $state = $user->authorise('core.delete', $this->option . '.tag');
+            }
+            return $state;
+        }
+
+        return parent::canDelete($record);
+    }
+
+    protected function canEditState($record)
+    {
+        $user = JFactory::getUser();
+
+        // Check for existing tag.
+        if (!empty($record->id))
+        {
+            if(isset($record -> asset_id) && !empty($record -> asset_id)) {
+                return $user->authorise('core.edit.state', $this->option . '.tag.' . (int)$record->id);
+            }else{
+                return $user->authorise('core.edit.state', $this->option.'.tag');
+            }
+        }
+        return parent::canEditState($record);
+    }
 }

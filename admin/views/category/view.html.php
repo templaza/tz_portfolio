@@ -40,21 +40,31 @@ class TZ_Portfolio_PlusViewCategory extends JViewLegacy
 
         JFactory::getLanguage()->load('com_categories');
 
-		$this->form		= $this->get('Form');
-		$this->item		= $this->get('Item');
-		$this->state	= $this->get('State');
+		$this -> form	= $this->get('Form');
+		$this -> item	= $this->get('Item');
+		$this -> state	= $this->get('State');
+        $this -> assoc  = $this->get('Assoc');
 
-        $this -> assign('groups',$this -> get('Groups'));
-        $this -> assign('listFields',$this -> get('ExtraField'));
-        $this -> assign('listImage',$this -> get('CatImage'));
-
-		$this->canDo	= TZ_Portfolio_PlusHelperCategories::getActions($this->state->get('category.component'));
+		$this -> canDo	= TZ_Portfolio_PlusHelper::getActions('com_tz_portfolio_plus'
+            ,  'category', $this->item->id);
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
 			JError::raiseError(500, implode("\n", $errors));
 			return false;
 		}
+
+        // If we are forcing a language in modal (used for associations).
+        if ($this->getLayout() === 'modal' && $forcedLanguage = JFactory::getApplication()->input->get('forcedLanguage', '', 'cmd'))
+        {
+            // Set the language field to the forcedLanguage and disable changing it.
+            $this->form->setValue('language', null, $forcedLanguage);
+            $this->form->setFieldAttribute('language', 'readonly', 'true');
+
+            // Only allow to select categories with All language or with the forced language.
+            $this->form->setFieldAttribute('parent_id', 'language', '*,' . $forcedLanguage);
+
+        }
 
 		parent::display($tpl);
 		JFactory::getApplication()->input->set('hidemainmenu', true);
@@ -71,19 +81,19 @@ class TZ_Portfolio_PlusViewCategory extends JViewLegacy
 		// Initialise variables.
 		$extension	= JFactory::getApplication() -> input -> getCmd('extension');
 		$user		= TZ_Portfolio_PlusUser::getUser();
-		$userId		= $user->get('id');
+		$userId		= $user->id;
 
 		$isNew		= ($this->item->id == 0);
 		$checkedOut	= !($this->item->checked_out == 0 || $this->item->checked_out == $userId);
 
 		// Avoid nonsense situation.
-		if ($extension == 'com_tz_portfolio_plus') {
+		if ($extension && $extension != 'com_tz_portfolio_plus') {
 			return;
 		}
 
  		// The extension can be in the form com_foo.section
 		$parts = explode('.', $extension);
-		$component = $parts[0];
+		$component = 'com_tz_portfolio_plus';
 		$section = (count($parts) > 1) ? $parts[1] : null;
 
 		// Need to load the menu language file as mod_menu hasn't been loaded yet.
@@ -97,7 +107,7 @@ class TZ_Portfolio_PlusViewCategory extends JViewLegacy
 		require_once JPATH_COMPONENT.'/helpers/categories.php';
 
 		// Get the results for each action.
-		$canDo = TZ_Portfolio_PlusHelperCategories::getActions($component, $this->item->id);
+		$canDo = $this -> canDo;
 
 		// If a component categories title string is present, let's use it.
 		if ($lang->hasKey($component_title_key = $component.($section?"_$section":'').'_CATEGORY_'.($isNew?'ADD':'EDIT').'_TITLE')) {
@@ -116,37 +126,37 @@ class TZ_Portfolio_PlusViewCategory extends JViewLegacy
 		JHtml::_('stylesheet', $component.'/administrator/categories.css', array(), true);
 
 		// Prepare the toolbar.
-		JToolBarHelper::title($title, 'folder category-'.($isNew?'add':'edit').' '.substr($component, 4).($section?"-$section":'').'-category-'.($isNew?'add':'edit'));
+		JToolBarHelper::title($title, 'folder category-'.($isNew?'add':'edit').' '
+            .substr($component, 4).($section?"-$section":'').'-category-'.($isNew?'add':'edit'));
 
 		// For new records, check the create permission.
 		if ($isNew && (count($user->getAuthorisedCategories($component, 'core.create')) > 0)) {
 			JToolBarHelper::apply('category.apply');
 			JToolBarHelper::save('category.save');
 			JToolBarHelper::save2new('category.save2new');
+            JToolBarHelper::cancel('category.cancel');
 		}
-
 		// If not checked out, can save the item.
-		elseif (!$checkedOut && ($canDo->get('core.edit') || ($canDo->get('core.edit.own') && $this->item->created_user_id == $userId))) {
-			JToolBarHelper::apply('category.apply');
-			JToolBarHelper::save('category.save');
-			if ($canDo->get('core.create')) {
-				JToolBarHelper::save2new('category.save2new');
-			}
-		}
+		else{
+            $itemEditable = $canDo->get('core.edit') || ($canDo->get('core.edit.own')
+                    && $this->item->created_user_id == $userId);
 
-		// If an existing item, can save to a copy.
-		if (!$isNew && $canDo->get('core.create')) {
-			JToolBarHelper::save2copy('category.save2copy');
-		}
+		    if (!$checkedOut && $itemEditable) {
+                JToolBarHelper::apply('category.apply');
+                JToolBarHelper::save('category.save');
 
-		if (empty($this->item->id))  {
-			JToolBarHelper::cancel('category.cancel');
-		}
-		else {
-			JToolBarHelper::cancel('category.cancel', 'JTOOLBAR_CLOSE');
-		}
+                if ($canDo->get('core.create')) {
+                    JToolBarHelper::save2new('category.save2new');
+                }
+            }
 
-		JToolBarHelper::divider();
+            // If an existing item, can save to a copy.
+            if ($canDo->get('core.create')) {
+                JToolBarHelper::save2copy('category.save2copy');
+            }
+
+            JToolBarHelper::cancel('category.cancel', 'JTOOLBAR_CLOSE');
+		}
 
 		// Compute the ref_key if it does exist in the component
 		if (!$lang->hasKey($ref_key = strtoupper($component.($section?"_$section":'')).'_CATEGORY_'.($isNew?'ADD':'EDIT').'_HELP_KEY')) {
@@ -165,6 +175,11 @@ class TZ_Portfolio_PlusViewCategory extends JViewLegacy
 		else {
 			$url = null;
 		}
-		JToolBarHelper::help($ref_key, JComponentHelper::getParams( 'com_tz_portfolio_plus' )->exists('helpURL'), $url, 'com_tz_portfolio_plus');
+        JToolBarHelper::help($ref_key, false,
+            'https://www.tzportfolio.com/document/administration/48-how-to-create-a-category-in-tz-portfolio-plus.html?tmpl=component'
+            , 'com_tz_portfolio_plus');
+
+        TZ_Portfolio_PlusToolbarHelper::customHelp('https://www.youtube.com/channel/UCrLN8LMXTyTahwDKzQ-YOqg/videos'
+            ,'COM_TZ_PORTFOLIO_PLUS_VIDEO_TUTORIALS', 'youtube', 'youtube');
 	}
 }

@@ -25,6 +25,7 @@ use Joomla\Registry\Registry;
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
 jimport('joomla.application.component.modeladmin');
+JLoader::import('com_tz_portfolio_plus.helpers.addons', JPATH_ADMINISTRATOR.'/components');
 
 class TZ_Portfolio_PlusModelAddon extends JModelAdmin
 {
@@ -97,8 +98,10 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
     protected function preprocessForm(JForm $form, $data, $group = 'content')
     {
         $input  = JFactory::getApplication() -> input;
+
         if($input -> getCmd('layout') != 'upload'){
             jimport('joomla.filesystem.path');
+
 
             $folder		= $this->getState('item.folder');
             $element	= $this->getState('item.element');
@@ -112,7 +115,6 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
                 ->where($db->quoteName('type') . ' = ' . $db->quote($this -> type))
                 ->where($db->quoteName('folder') . ' = ' . $db->quote($folder));
             $db->setQuery($query);
-            $elements = $db->loadColumn();
 
             if (empty($folder) || empty($element))
             {
@@ -137,6 +139,27 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
                 {
                     throw new Exception(JText::_('JERROR_LOADFILE_FAILED'));
                 }
+            }
+
+            if($form -> getField('rules')){
+                if($data) {
+                    if(isset($folder) && $folder && isset($element) && $element) {
+                        $form -> setFieldAttribute('title', 'value', JText::_('PLG_' . strtoupper($folder . '_' . $element)));
+                        if(!$form -> getFieldAttribute('rules', 'group')) {
+                            $form->setFieldAttribute('rules', 'group', $folder);
+                        }
+                        if(!$form -> getFieldAttribute('rules', 'addon')) {
+                            $form -> setFieldAttribute('rules', 'addon', $element);
+                        }
+                    }
+                }
+            }
+
+            if(TZ_Portfolio_PlusHelperAddons::checkEditAddonConfigure($input -> getInt('id'))){
+                $form -> setFieldAttribute('folder', 'type', 'hidden');
+                $form -> setFieldAttribute('element', 'type', 'hidden');
+                $form -> removeField('access');
+                $form -> removeField('published');
             }
 
             // Attempt to load the xml file.
@@ -286,18 +309,15 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
 
     public function uninstall($eid = array())
     {
-        $user   = JFactory::getUser();
+        $user   = TZ_Portfolio_PlusUser::getUser();
         $app    = JFactory::getApplication();
         $view   = $app -> input -> getCmd('view');
 
-        if (!$user->authorise('core.delete', 'com_tz_portfolio_plus'))
+        if (!$user->authorise('core.delete', 'com_tz_portfolio_plus.addon'))
         {
-            JError::raiseWarning(403, JText::_('JERROR_CORE_DELETE_NOT_PERMITTED'));
-
+            \JLog::add(\JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), \JLog::WARNING, 'jerror');
             return false;
         }
-
-        $failed = array();
 
         /*
          * Ensure eid is an array of extension ids in the form id => client_id
@@ -576,5 +596,47 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
     {
         parent::cleanCache('com_tz_portfolio_plus', 0);
         parent::cleanCache('com_tz_portfolio_plus', 1);
+    }
+
+    protected function canDelete($record)
+    {
+        if (!empty($record->id))
+        {
+            $user = JFactory::getUser();
+
+            if(isset($record -> asset_id) && !empty($record -> asset_id)) {
+                $state = $user->authorise('core.delete', $this->option . '.addon.' . (int)$record->id);
+            }else{
+                $state = $user->authorise('core.delete', $this->option . '.addon');
+            }
+            return $state;
+        }
+
+        return parent::canDelete($record);
+    }
+
+    protected function canEditState($record)
+    {
+        $user = JFactory::getUser();
+
+        // Check for existing group.
+        if (!empty($record->id))
+        {
+            if(isset($record -> asset_id) && $record -> asset_id) {
+                $state = $user->authorise('core.edit.state', $this->option . '.addon.' . (int)$record->id);
+            }else{
+                $state = $user->authorise('core.edit.state', $this->option . '.addon');
+            }
+            return $state;
+        }
+
+        return parent::canEditState($record);
+    }
+    public function validate($form, $data, $group = null)
+    {
+        if($data && isset($data['rules'])){
+            unset($data['rules']);
+        }
+        return parent::validate($form, $data, $group);
     }
 }

@@ -25,6 +25,14 @@ JHtml::_('behavior.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('dropdown.init');
 
+JHtml::_('formbehavior.chosen', '.multipleMediaType', null,
+    array('placeholder_text_multiple' => JText::_('COM_TZ_PORTFOLIO_PLUS_OPTION_SELECT_MEDIA_TYPE')));
+JHtml::_('formbehavior.chosen', '.multipleAuthors', null,
+    array('placeholder_text_multiple' => JText::_('JOPTION_SELECT_AUTHOR')));
+JHtml::_('formbehavior.chosen', '.multipleAccessLevels', null,
+    array('placeholder_text_multiple' => JText::_('JOPTION_SELECT_ACCESS')));
+JHtml::_('formbehavior.chosen', '.multipleCategories', null,
+    array('placeholder_text_multiple' => JText::_('JOPTION_SELECT_CATEGORY')));
 JHtml::_('formbehavior.chosen', 'select');
 
 $user		= JFactory::getUser();
@@ -40,8 +48,6 @@ if ($saveOrder)
 	$saveOrderingUrl = 'index.php?option=com_tz_portfolio_plus&task=articles.saveOrderAjax&tmpl=component';
 	JHtml::_('sortablelist.sortable', 'articleList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
 }
-
-$sortFields = $this->getSortFields();
 
 $assoc		= JLanguageAssociations::isEnabled();
 ?>
@@ -61,68 +67,48 @@ $assoc		= JLanguageAssociations::isEnabled();
 
 <form action="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&view=articles');?>" method="post" name="adminForm" id="adminForm">
     <?php if(!empty( $this->sidebar)): ?>
-        <div id="j-sidebar-container" class="span2">
-            <?php echo $this->sidebar; ?>
-        </div>
-        <div id="j-main-container" class="span10 tpContainer">
+    <div id="j-sidebar-container" class="span2">
+        <?php echo $this->sidebar; ?>
+    </div>
+    <div id="j-main-container" class="span10">
     <?php else : ?>
-        <div id="j-main-container" class="tpContainer">
+    <div id="j-main-container">
     <?php endif;?>
-            <div id="filter-bar" class="btn-toolbar">
-                <div class="filter-search btn-group pull-left">
-                    <label for="filter_search" class="element-invisible"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_FILTER_SEARCH_DESC');?></label>
-                    <input type="text" name="filter_search" placeholder="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_FILTER_SEARCH_DESC'); ?>" id="filter_search" value="<?php echo $this->escape($this->state->get('filter.search')); ?>" title="<?php echo JText::_('COM_CONTENT_FILTER_SEARCH_DESC'); ?>" />
-                </div>
-                <div class="btn-group pull-left hidden-phone">
-                    <button class="btn hasTooltip" type="submit" title="<?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?>"><i class="icon-search"></i></button>
-                    <button class="btn hasTooltip" type="button" onclick="document.id('filter_search').value='';this.form.submit();" title="<?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?>"><i class="icon-remove"></i></button>
-                </div>
-                <div class="btn-group pull-right hidden-phone">
-                    <label for="limit" class="element-invisible"><?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC');?></label>
-                    <?php echo $this->pagination->getLimitBox(); ?>
-                </div>
 
-                <div class="btn-group pull-right hidden-phone">
-                    <label for="directionTable" class="element-invisible"><?php echo JText::_('JFIELD_ORDERING_DESC');?></label>
-                    <select name="directionTable" id="directionTable" class="input-medium" onchange="Joomla.orderTable()">
-                        <option value=""><?php echo JText::_('JFIELD_ORDERING_DESC');?></option>
-                        <option value="asc" <?php if ($listDirn == 'asc') echo 'selected="selected"'; ?>><?php echo JText::_('JGLOBAL_ORDER_ASCENDING');?></option>
-                        <option value="desc" <?php if ($listDirn == 'desc') echo 'selected="selected"'; ?>><?php echo JText::_('JGLOBAL_ORDER_DESCENDING');?></option>
-                    </select>
-                </div>
-                <div class="btn-group pull-right">
-                    <label for="sortTable" class="element-invisible"><?php echo JText::_('JGLOBAL_SORT_BY');?></label>
-                    <select name="sortTable" id="sortTable" class="input-medium" onchange="Joomla.orderTable()">
-                        <option value=""><?php echo JText::_('JGLOBAL_SORT_BY');?></option>
-                        <?php echo JHtml::_('select.options', $sortFields, 'value', 'text', $listOrder);?>
-                    </select>
-                </div>
-            </div>
+        <div class="tpContainer">
+            <?php
+            // Search tools bar
+            echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+            ?>
 
-            <div class="clearfix"> </div>
+            <?php if (empty($this->items)){ ?>
+                <div class="alert alert-no-items">
+                    <?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+                </div>
+            <?php }else{ ?>
             <table class="table table-striped" id="articleList">
                 <thead>
                     <tr>
                         <th width="1%" class="nowrap center hidden-phone">
-                            <?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'a.ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING'); ?>
+                            <?php echo JHtml::_('searchtools.sort', '', 'a.ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2'); ?>
                         </th>
                         <th width="1%" class="hidden-phone">
-                            <input type="checkbox" name="checkall-toggle" value="" title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
+                            <?php echo JHtml::_('grid.checkall'); ?>
                         </th>
                         <th width="1%" style="min-width:55px" class="nowrap center">
-                            <?php echo JHtml::_('grid.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
                         </th>
                         <th>
-                            <?php echo JHtml::_('grid.sort', 'JGLOBAL_TITLE', 'a.title', $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_('searchtools.sort', 'JGLOBAL_TITLE', 'a.title', $listDirn, $listOrder); ?>
                         </th>
                         <th width="6%" class="nowrap">
-                            <?php echo JHtml::_('grid.sort', 'COM_TZ_PORTFOLIO_PLUS_TYPE_OF_MEDIA', 'groupname', $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_('searchtools.sort', 'COM_TZ_PORTFOLIO_PLUS_TYPE_OF_MEDIA', 'groupname', $listDirn, $listOrder); ?>
                         </th>
                         <th width="10%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('grid.sort', 'COM_TZ_PORTFOLIO_PLUS_GROUP', 'groupname', $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_('searchtools.sort', 'COM_TZ_PORTFOLIO_PLUS_GROUP', 'groupname', $listDirn, $listOrder); ?>
                         </th>
                         <th width="6%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ACCESS', 'a.access', $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ACCESS', 'a.access', $listDirn, $listOrder); ?>
                         </th>
 
                         <?php if ($assoc) : ?>
@@ -132,33 +118,43 @@ $assoc		= JLanguageAssociations::isEnabled();
                         <?php endif;?>
 
                         <th width="10%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('grid.sort', 'JAUTHOR', 'a.created_by', $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_('searchtools.sort', 'JAUTHOR', 'a.created_by', $listDirn, $listOrder); ?>
                         </th>
                         <th width="5%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
                         </th>
                         <th width="10%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('grid.sort', 'JDATE', 'a.created', $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_('searchtools.sort', 'JDATE', 'a.created', $listDirn, $listOrder); ?>
                         </th>
                         <th width="1%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('grid.sort', 'JGLOBAL_HITS', 'a.hits', $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_('searchtools.sort', 'JGLOBAL_HITS', 'a.hits', $listDirn, $listOrder); ?>
                         </th>
                         <th width="1%" class="nowrap hidden-phone">
-                            <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
+                            <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
                         </th>
                     </tr>
                 </thead>
+                <tfoot>
+                <tr>
+                    <td colspan="13"><?php echo $this->pagination->getListFooter(); ?></td>
+                </tr>
+                </tfoot>
                 <tbody>
                 <?php
                 if($this -> items):
                     foreach ($this->items as $i => $item) :
                         $item->max_ordering = 0; //??
-                        $ordering	= ($listOrder == 'a.ordering');
-                        $canCreate	= $user->authorise('core.create',		'com_tz_portfolio_plus.category.'.$item->catid);
-                        $canEdit	= $user->authorise('core.edit',			'com_tz_portfolio_plus.article.'.$item->id);
-                        $canCheckin	= $user->authorise('core.manage',		'com_checkin') || $item->checked_out == $userId || $item->checked_out == 0;
-                        $canEditOwn	= $user->authorise('core.edit.own',		'com_tz_portfolio_plus.article.'.$item->id) && $item->created_by == $userId;
-                        $canChange	= $user->authorise('core.edit.state',	'com_tz_portfolio_plus.article.'.$item->id) && $canCheckin;
+                        $ordering	    = ($listOrder == 'a.ordering');
+                        $canCreate	    = $user->authorise('core.create',	  'com_tz_portfolio_plus.category.'.$item->catid);
+                        $canEdit	    = $user->authorise('core.edit',		  'com_tz_portfolio_plus.article.'.$item->id);
+                        $canCheckin	    = $user->authorise('core.manage',	  'com_checkin')
+                                            || $item->checked_out == $userId || $item->checked_out == 0;
+                        $canEditOwn	    = $user->authorise('core.edit.own', 'com_tz_portfolio_plus.article.'.$item->id)
+                                            && $item->created_by == $userId;
+                        $canChange	    = ($user->authorise('core.edit.state', 'com_tz_portfolio_plus.article.'.$item->id)
+                                            ||($user->authorise('core.edit.state.own', 'com_tz_portfolio_plus.article.'
+                                            .$item->id)
+                                            && $item->created_by == $userId)) && $canCheckin;
                         ?>
                         <tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item -> catid;?>">
                             <td class="order nowrap center hidden-phone">
@@ -180,7 +176,7 @@ $assoc		= JLanguageAssociations::isEnabled();
                                 </span>
                             <?php endif; ?>
                             </td>
-                            
+
                             <td class="center">
                                 <?php echo JHtml::_('grid.id', $i, $item->id); ?>
                             </td>
@@ -191,7 +187,6 @@ $assoc		= JLanguageAssociations::isEnabled();
                                     <?php // Create dropdown items and render the dropdown list.
                                     if ($canChange)
                                     {
-//                                        JHtml::_('actionsdropdown.' . ((int) $item->state === 2 ? 'un' : '') . 'archive', 'cb' . $i, 'articles');
                                         JHtml::_('actionsdropdown.' . ((int) $item->state === -2 ? 'un' : '') . 'trash', 'cb' . $i, 'articles');
                                         echo JHtml::_('actionsdropdown.render', $this->escape($item->title));
                                     }
@@ -199,38 +194,36 @@ $assoc		= JLanguageAssociations::isEnabled();
                                 </div>
                             </td>
                             <td class="nowrap has-context">
-                                <div class="pull-left">
-                                    <?php if ($item->checked_out) : ?>
-                                        <?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'articles.', $canCheckin); ?>
-                                    <?php endif; ?>
-                                    <?php if ($canEdit || $canEditOwn) : ?>
-                                        <a href="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&task=article.edit&id='.$item->id);?>">
-                                            <?php echo $this->escape($item->title); ?></a>
-                                    <?php else : ?>
-                                        <?php echo $this->escape($item->title); ?>
-                                    <?php endif; ?>
-                                    <div class="small">
-                                        <div class="clearfix">
-                                            <?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
-                                        </div>
-                                        <div class="clearfix">
-                                            <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_MAIN_CATEGORY') . ": " ?>
-                                            <a href="index.php?option=com_tz_portfolio_plus&task=category.edit&id=<?php echo $item -> catid;?>"><?php echo $this->escape($item->category_title); ?></a>
-                                        </div>
-                                        <?php if(isset($item -> categories) && $item -> categories && count($item -> categories)):?>
-                                        <div class="clearfix">
-                                            <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SECONDARY_CATEGORY') . ": " ?>
-                                            <?php foreach($item -> categories as $i => $category):?>
-                                                <a href="index.php?option=com_tz_portfolio_plus&task=category.edit&id=<?php echo $category -> id;?>"><?php echo $this->escape($category->title); ?></a>
-                                                <?php
-                                                if($i < count($item -> categories) - 1){
-                                                    echo ',';
-                                                }
-                                                ?>
-                                            <?php endforeach;?>
-                                        </div>
-                                        <?php endif;?>
+                                <?php if ($item->checked_out) : ?>
+                                    <?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'articles.', $canCheckin); ?>
+                                <?php endif; ?>
+                                <?php if ($canEdit || $canEditOwn) : ?>
+                                    <a href="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&task=article.edit&id='.$item->id);?>">
+                                        <?php echo $this->escape($item->title); ?></a>
+                                <?php else : ?>
+                                    <?php echo $this->escape($item->title); ?>
+                                <?php endif; ?>
+                                <div class="small">
+                                    <div class="clearfix">
+                                        <?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
                                     </div>
+                                    <div class="clearfix">
+                                        <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_MAIN_CATEGORY') . ": " ?>
+                                        <a href="index.php?option=com_tz_portfolio_plus&task=category.edit&id=<?php echo $item -> catid;?>"><?php echo $this->escape($item->category_title); ?></a>
+                                    </div>
+                                    <?php if(isset($item -> categories) && $item -> categories && count($item -> categories)):?>
+                                    <div class="clearfix">
+                                        <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SECONDARY_CATEGORY') . ": " ?>
+                                        <?php foreach($item -> categories as $i => $category):?>
+                                            <a href="index.php?option=com_tz_portfolio_plus&task=category.edit&id=<?php echo $category -> id;?>"><?php echo $this->escape($category->title); ?></a>
+                                            <?php
+                                            if($i < count($item -> categories) - 1){
+                                                echo ',';
+                                            }
+                                            ?>
+                                        <?php endforeach;?>
+                                    </div>
+                                    <?php endif;?>
                                 </div>
                             </td>
                             <td class="small hidden-phone">
@@ -276,14 +269,13 @@ $assoc		= JLanguageAssociations::isEnabled();
                     ?>
                     </tbody>
             </table>
-            <?php echo $this->pagination->getListFooter(); ?>
+            <?php } ?>
 
             <?php //Load the batch processing form. ?>
             <?php echo $this->loadTemplate('batch'); ?>
             <input type="hidden" name="task" value="" />
             <input type="hidden" name="boxchecked" value="0" />
-            <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
-            <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
             <?php echo JHtml::_('form.token'); ?>
         </div>
+    </div>
 </form>

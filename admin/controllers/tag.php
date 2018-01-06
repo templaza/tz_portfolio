@@ -31,7 +31,6 @@ class TZ_Portfolio_PlusControllerTag extends JControllerForm
         $app = JFactory::getApplication();
         $model = $this->getModel();
         $table = $model->getTable();
-        $checkin = property_exists($table, 'checked_out');
         $context = "$this->option.edit.$this->context";
 
         if (empty($key))
@@ -157,5 +156,35 @@ class TZ_Portfolio_PlusControllerTag extends JControllerForm
                 break;
         }
         return true;
+    }
+
+    protected function allowAdd($data = array())
+    {
+        $user = TZ_Portfolio_PlusUser::getUser();
+        return ($user->authorise('core.create','com_tz_portfolio_plus.tag'));
+    }
+
+    protected function allowEdit($data = array(), $key = 'id')
+    {
+        $recordId = (int) isset($data[$key]) ? $data[$key] : 0;
+        $user = JFactory::getUser();
+
+        // Zero record (id:0), return component edit permission by calling parent controller method
+        if (!$recordId)
+        {
+            return parent::allowEdit($data, $key);
+        }
+
+        // Existing record already has an owner, get it
+        $record = $this->getModel()->getItem($recordId);
+
+        // Check edit on the record asset (explicit or inherited)
+        if(isset($record -> asset_id) && $record -> asset_id){
+            return $user->authorise('core.edit', $this -> option.'.tag.' . $recordId);
+        }else{
+            return $user->authorise('core.edit', $this -> option.'.tag');
+        }
+
+        return false;
     }
 }

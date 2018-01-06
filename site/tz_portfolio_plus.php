@@ -28,7 +28,10 @@ JLoader::import('framework',JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_pl
 JLoader::import('template', JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/libraries');
 JLoader::import('controller', JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/libraries');
 JLoader::import('view', JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/libraries');
+
 tzportfolioplusimport('plugin.helper');
+tzportfolioplusimport('user.user');
+
 JLoader::import('route', COM_TZ_PORTFOLIO_PLUS_SITE_HELPERS_PATH);
 JLoader::import('query', COM_TZ_PORTFOLIO_PLUS_SITE_HELPERS_PATH);
 

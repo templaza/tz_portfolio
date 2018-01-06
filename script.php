@@ -70,6 +70,53 @@ class com_tz_portfolio_plusInstallerScript{
         JFactory::getLanguage() -> load('com_tz_portfolio_plus');
 
 
+        JLoader::import('com_tz_portfolio_plus.includes.framework',JPATH_ADMINISTRATOR.'/components');
+        $sections   = COM_TZ_PORTFOLIO_PLUS_ACL_SECTIONS;
+
+        if($sections && count($sections)){
+            // Get the parent asset id so we have a correct tree.
+            $parentAsset = JTable::getInstance('Asset');
+
+            if($parentAsset->loadByName('com_tz_portfolio_plus')){
+
+                $parentAssetId = $parentAsset->id;
+
+                // Create permissions for acl
+                $asset  = JTable::getInstance('Asset');
+
+                foreach($sections as $section){
+                    $name  = 'com_tz_portfolio_plus.'.$section;
+                    if($asset->loadByName($name) !== false){
+                        continue;
+                    }
+                    $asset -> id		= 0;
+                    $asset -> parent_id = $parentAssetId;
+                    $asset -> name  	= $name;
+                    switch ($section){
+                        default:
+                            $asset -> title  = JText::_('COM_TZ_PORTFOLIO_PLUS_'.strtoupper($section).'S');
+                            break;
+                        case 'category':
+                            $asset -> title  = JText::_('COM_TZ_PORTFOLIO_PLUS_CATEGORIES');
+                            break;
+                        case 'group':
+                            $asset -> title  = JText::_('COM_TZ_PORTFOLIO_PLUS_FIELD_GROUPS');
+                            break;
+                        case 'style':
+                            $asset -> title  = JText::_('COM_TZ_PORTFOLIO_PLUS_TEMPLATE_STYLES');
+                            break;
+
+                    }
+                    $asset->setLocation($parentAssetId, 'last-child');
+                    if ($asset->check())
+                    {
+                        $asset->store();
+                    }
+                }
+            }
+        }
+
+
         //Create folder
         $mediaFolder    = 'tz_portfolio_plus';
         $mediaFolderPath    = JPATH_SITE.'/media/'.$mediaFolder;
@@ -262,6 +309,7 @@ class com_tz_portfolio_plusInstallerScript{
         $db     = JFactory::getDbo();
         $listTable  = array(
             $db -> replacePrefix('#__tz_portfolio_plus_addon_data'),
+            $db -> replacePrefix('#__tz_portfolio_plus_addon_meta'),
             $db -> replacePrefix('#__tz_portfolio_plus_categories'),
             $db -> replacePrefix('#__tz_portfolio_plus_content'),
             $db -> replacePrefix('#__tz_portfolio_plus_content_category_map'),
@@ -282,6 +330,26 @@ class com_tz_portfolio_plusInstallerScript{
             $installer  = JInstaller::getInstance();
             $sql        = $adapter -> getParent() -> manifest;
             $installer ->parseSQLFiles($sql -> install->sql);
+        }
+
+        // Alter collection of all tables
+        $db -> alterTableCharacterSet('#__tz_portfolio_plus_addon_data');
+        $db -> alterTableCharacterSet('#__tz_portfolio_plus_content');
+
+        // Add fields for table tz_portfolio_plus_extensions;
+        $fields = $db -> getTableColumns('#__tz_portfolio_plus_extensions');
+        $arr    = array();
+        if(!array_key_exists('asset_id',$fields)){
+            $arr[]  = 'ADD `asset_id` int(10) unsigned NOT NULL DEFAULT \'0\'';
+        }
+
+        if($arr && count($arr)>0){
+            $arr    = implode(',',$arr);
+            if($arr){
+                $query  = 'ALTER TABLE `#__tz_portfolio_plus_extensions` '.$arr;
+                $db -> setQuery($query);
+                $db -> execute();
+            }
         }
 
         // Add fields for table tz_portfolio_plus_templates;
@@ -311,6 +379,30 @@ class com_tz_portfolio_plusInstallerScript{
         }
         if(!array_key_exists('detail_view',$fields)){
             $arr[]  = 'ADD `detail_view` tinyint(4) NOT NULL DEFAULT \'1\'';
+        }
+        if(!array_key_exists('asset_id',$fields)){
+            $arr[]  = 'ADD `asset_id` INT UNSIGNED NOT NULL DEFAULT \'0\'';
+        }
+        if(!array_key_exists('created',$fields)){
+            $arr[]  = 'ADD `created` DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\'';
+        }
+        if(!array_key_exists('created_by',$fields)){
+            $arr[]  = 'ADD `created_by` INT UNSIGNED NOT NULL DEFAULT \'0\'';
+        }
+        if(!array_key_exists('modified',$fields)){
+            $arr[]  = 'ADD `modified` DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\'';
+        }
+        if(!array_key_exists('modified_by',$fields)){
+            $arr[]  = 'ADD `modified_by` INT UNSIGNED NOT NULL DEFAULT \'0\'';
+        }
+        if(!array_key_exists('access',$fields)){
+            $arr[]  = 'ADD `access` INT(10) UNSIGNED NOT NULL DEFAULT \'0\'';
+        }
+        if(!array_key_exists('checked_out',$fields)){
+            $arr[]  = 'ADD `checked_out` int(10) unsigned NOT NULL DEFAULT \'0\'';
+        }
+        if(!array_key_exists('checked_out_time',$fields)){
+            $arr[]  = 'ADD `checked_out_time` datetime NOT NULL DEFAULT \'0000-00-00 00:00:00\'';
         }
 
         if($arr && count($arr)>0){
@@ -347,11 +439,78 @@ class com_tz_portfolio_plusInstallerScript{
         if(!array_key_exists('ordering',$fields)){
             $arr[]  = 'ADD `ordering` int(11) NOT NULL DEFAULT \'0\'';
         }
+        if(!array_key_exists('asset_id',$fields)){
+            $arr[]  = 'ADD `asset_id` int(10) unsigned NOT NULL DEFAULT \'0\' COMMENT \'FK to the #__assets table.\'';
+        }
+        if(!array_key_exists('created',$fields)){
+            $arr[]  = 'ADD `created` DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\'';
+        }
+        if(!array_key_exists('created_by',$fields)){
+            $arr[]  = 'ADD `created_by` INT UNSIGNED NOT NULL DEFAULT \'0\'';
+        }
+        if(!array_key_exists('modified',$fields)){
+            $arr[]  = 'ADD `modified` DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\'';
+        }
+        if(!array_key_exists('modified_by',$fields)){
+            $arr[]  = 'ADD `modified_by` INT UNSIGNED NOT NULL';
+        }
+        if(!array_key_exists('access',$fields)){
+            $arr[]  = 'ADD `access` INT(10) UNSIGNED NOT NULL DEFAULT \'0\'';
+        }
+        if(!array_key_exists('checked_out',$fields)){
+            $arr[]  = 'ADD `checked_out` int(10) unsigned NOT NULL DEFAULT \'0\'';
+        }
+        if(!array_key_exists('checked_out_time',$fields)){
+            $arr[]  = 'ADD `checked_out_time` datetime NOT NULL DEFAULT \'0000-00-00 00:00:00\'';
+        }
 
         if($arr && count($arr)>0){
             $arr    = implode(',',$arr);
             if($arr){
                 $query  = 'ALTER TABLE `#__tz_portfolio_plus_fieldgroups` '.$arr;
+                $db -> setQuery($query);
+                $db -> execute();
+            }
+        }
+
+        // Add fields for table tz_portfolio_plus_addon_data
+        $fields = $db -> getTableColumns('#__tz_portfolio_plus_addon_data');
+        $arr    = array();
+        if(!array_key_exists('asset_id',$fields)){
+            $arr[]  = 'ADD `asset_id` INT UNSIGNED NOT NULL DEFAULT \'0\'';
+        }
+        if(!array_key_exists('created',$fields)){
+            $arr[]  = 'ADD `created` DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\'';
+        }
+        if(!array_key_exists('created_by',$fields)){
+            $arr[]  = 'ADD `created_by` INT UNSIGNED NOT NULL';
+        }
+        if(!array_key_exists('modified',$fields)){
+            $arr[]  = 'ADD `modified` DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\'';
+        }
+        if(!array_key_exists('modified_by',$fields)){
+            $arr[]  = 'ADD `modified_by` INT UNSIGNED NOT NULL';
+        }
+        if(!array_key_exists('checked_out',$fields)){
+            $arr[]  = 'ADD `checked_out` INT NOT NULL DEFAULT \'0\'';
+        }
+        if(!array_key_exists('checked_out_time',$fields)){
+            $arr[]  = 'ADD `checked_out_time` DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\'';
+        }
+        if(!array_key_exists('publish_up',$fields)){
+            $arr[]  = 'ADD `publish_up` DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\'';
+        }
+        if(!array_key_exists('publish_down',$fields)){
+            $arr[]  = 'ADD `publish_down` DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\'';
+        }
+        if(!array_key_exists('access',$fields)){
+            $arr[]  = 'ADD `access` INT(10) UNSIGNED NOT NULL DEFAULT \'0\'';
+        }
+
+        if($arr && count($arr)>0){
+            $arr    = implode(',',$arr);
+            if($arr){
+                $query  = 'ALTER TABLE `#__tz_portfolio_plus_addon_data` '.$arr;
                 $db -> setQuery($query);
                 $db -> execute();
             }

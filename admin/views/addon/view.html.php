@@ -37,6 +37,8 @@ class TZ_Portfolio_PlusViewAddon extends JViewLegacy
         $this->state            = $this->get('State');
         $this->item             = $this->get('Item');
         $this -> return_link    = $this -> get('ReturnLink');
+        $canDo	                = TZ_Portfolio_PlusHelper::getActions(COM_TZ_PORTFOLIO_PLUS, 'addon', $this -> item -> id);
+        $this -> canDo	= $canDo;
 
         if($this -> getLayout() == 'manager') {
             $this->addonItem = $this->get('AddonItem');
@@ -66,8 +68,6 @@ class TZ_Portfolio_PlusViewAddon extends JViewLegacy
 
         $user		= JFactory::getUser();
         $userId		= $user->get('id');
-
-        $bar    = JToolBar::getInstance();
 
         $canDo = JHelperContent::getActions('com_tz_portfolio_plus');
         $checkedOut	= !($this->item->checked_out == 0 || $this->item->checked_out == $userId);
@@ -100,32 +100,14 @@ class TZ_Portfolio_PlusViewAddon extends JViewLegacy
 
         if($this -> getLayout() != 'manager') {
             JToolBarHelper::cancel('addon.cancel', JText::_('JTOOLBAR_CLOSE'));
-
-            JToolBarHelper::divider();
         }else{
             JToolbarHelper::custom('addon.cancel','puzzle','', JText::_('COM_TZ_PORTFOLIO_PLUS_ADDONS_MANAGER'), false);
         }
 
-        JToolBarHelper::help('JHELP_CONTENT_ARTICLE_MANAGER',false,'http://wiki.templaza.com/TZ_Portfolio_Plus_v3:Administration#How_to_Add_or_Edit_3');
+        JToolBarHelper::help('JHELP_CONTENT_ARTICLE_MANAGER',false,
+            'https://www.tzportfolio.com/document/add-ons/28-installation.html?tmpl=component');
 
-        // Special HTML workaround to get send popup working
-        $docClass       = ' class="btn btn-small"';
-        $youtubeIcon    = '<i class="tz-icon-youtube tz-icon-14"></i>&nbsp;';
-        $wikiIcon       = '<i class="tz-icon-wikipedia tz-icon-14"></i>&nbsp;';
-
-        $youtubeTitle   = JText::_('COM_TZ_PORTFOLIO_PLUS_VIDEO_TUTORIALS');
-        $wikiTitle      = JText::_('COM_TZ_PORTFOLIO_PLUS_WIKIPEDIA_TUTORIALS');
-
-        $videoTutorial    ='<a'.$docClass.' onclick="Joomla.popupWindow(\'http://www.youtube.com/channel/UCykS6SX6L2GOI-n3IOPfTVQ/videos\', \''
-            .$youtubeTitle.'\', 800, 500, 1)"'.' href="#">'
-            .$youtubeIcon.$youtubeTitle.'</a>';
-
-        $wikiTutorial    ='<a'.$docClass.' onclick="Joomla.popupWindow(\'http://wiki.templaza.com/Main_Page\', \''
-            .$wikiTitle.'\', 800, 500, 1)"'.' href="#">'
-            .$wikiIcon
-            .$wikiTitle.'</a>';
-
-        $bar->appendButton('Custom',$videoTutorial,'youtube');
-        $bar->appendButton('Custom',$wikiTutorial,'wikipedia');
+        TZ_Portfolio_PlusToolbarHelper::customHelp('https://www.youtube.com/channel/UCrLN8LMXTyTahwDKzQ-YOqg/videos'
+            ,'COM_TZ_PORTFOLIO_PLUS_VIDEO_TUTORIALS', 'youtube', 'youtube');
     }
 }

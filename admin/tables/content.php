@@ -21,7 +21,7 @@
 defined('JPATH_PLATFORM') or die;
 
 use Joomla\Registry\Registry;
-
+use Joomla\CMS\Access\Rules;
 
 /**
  * Content table
@@ -31,7 +31,8 @@ use Joomla\Registry\Registry;
  */
 class TZ_Portfolio_PlusTableContent extends JTable
 {
-    var $catid  = null;
+    public $catid  = null;
+    protected $m_catid  = null;
     /**
      * Constructor
      *
@@ -88,38 +89,38 @@ class TZ_Portfolio_PlusTableContent extends JTable
      *
      * @since   11.1
      */
-//    protected function _getAssetParentId(JTable $table = null, $id = null)
-//    {
-//        $assetId = null;
-//
-//        // This is a article under a category.
-//        if ($this->catid)
-//        {
-//            // Build the query to get the asset id for the parent category.
-//            $query = $this->_db->getQuery(true)
-//                ->select($this->_db->quoteName('asset_id'))
-//                ->from($this->_db->quoteName('#__tz_portfolio_plus_categories'))
-//                ->where($this->_db->quoteName('id') . ' = ' . (int) $this->catid);
-//
-//            // Get the asset id from the database.
-//            $this->_db->setQuery($query);
-//
-//            if ($result = $this->_db->loadResult())
-//            {
-//                $assetId = (int) $result;
-//            }
-//        }
-//
-//        // Return the asset id.
-//        if ($assetId)
-//        {
-//            return $assetId;
-//        }
-//        else
-//        {
-//            return parent::_getAssetParentId($table, $id);
-//        }
-//    }
+    protected function _getAssetParentId(JTable $table = null, $id = null)
+    {
+        $assetId = null;
+
+        // This is a article under a category.
+        if (isset($this -> m_catid) && $this->m_catid)
+        {
+            // Build the query to get the asset id for the parent category.
+            $query = $this->_db->getQuery(true)
+                ->select($this->_db->quoteName('asset_id'))
+                ->from($this->_db->quoteName('#__tz_portfolio_plus_categories'))
+                ->where($this->_db->quoteName('id') . ' = ' . (int) $this->m_catid);
+
+            // Get the asset id from the database.
+            $this->_db->setQuery($query);
+
+            if ($result = $this->_db->loadResult())
+            {
+                $assetId = (int) $result;
+            }
+        }
+
+        // Return the asset id.
+        if ($assetId)
+        {
+            return $assetId;
+        }
+        else
+        {
+            return parent::_getAssetParentId($table, $id);
+        }
+    }
 
     /**
      * Overloaded bind function
@@ -178,6 +179,10 @@ class TZ_Portfolio_PlusTableContent extends JTable
         {
             $rules = new JAccessRules($array['rules']);
             $this->setRules($rules);
+        }
+
+        if(isset($array['catid'])){
+            $this -> m_catid  = (int) $array['catid'];
         }
 
         return parent::bind($array, $ignore);
@@ -352,7 +357,7 @@ class TZ_Portfolio_PlusTableContent extends JTable
 
         // Initialise the query.
         $query = $this->_db->getQuery(true)
-            ->select('c.*, m.catid')
+            ->select('c.*, m.catid AS catid')
             ->from($this->_tbl.' AS c');
 
         $query -> join('INNER', '#__tz_portfolio_plus_content_category_map AS m ON m.contentid = c.id AND m.main = 1');
@@ -377,6 +382,7 @@ class TZ_Portfolio_PlusTableContent extends JTable
         $this->_db->setQuery($query);
 
         $row = $this->_db->loadAssoc();
+
 
         // Check that we have a result.
         if (empty($row))

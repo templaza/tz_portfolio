@@ -41,7 +41,6 @@ if($fieldGroups = $this -> extraFields){
                             <div class="control-label"><?php echo $field->getLabel(); ?></div>
                             <div class="controls"><?php echo $field->getInput(); ?></div>
                         </div>
-
                     <?php }
                     echo JHtml::_('bootstrap.endSlide');
                 }

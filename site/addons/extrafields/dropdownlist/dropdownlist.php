@@ -34,6 +34,7 @@ class TZ_Portfolio_PlusExtraFieldDropDownList extends TZ_Portfolio_PlusExtraFiel
         $value          = !is_null($fieldValue) ? $fieldValue : $this->value;
 
         $options        = $this -> getFieldValues();
+//        var_dump($options);
         if ($options)
         {
             $optGroupState = "close";

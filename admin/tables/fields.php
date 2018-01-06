@@ -119,5 +119,84 @@ class TZ_Portfolio_PlusTableFields extends JTable
 
         return true;
     }
+
+    protected function _getAssetName()
+    {
+        $k = $this->_tbl_key;
+
+        return 'com_tz_portfolio_plus.field.' . (int) $this->$k;
+    }
+
+    protected function _getAssetTitle()
+    {
+        return $this->title;
+    }
+
+    protected function _getAssetParentId(JTable $table = null, $id = null)
+    {
+        $assetId = null;
+
+        if ($assetId === null)
+        {
+            $query = $this->_db->getQuery(true)
+                ->select($this->_db->quoteName('id'))
+                ->from($this->_db->quoteName('#__assets'))
+                ->where($this->_db->quoteName('name') . ' = ' . $this->_db->quote('com_tz_portfolio_plus.group'));
+
+            // Get the asset id from the database.
+            $this->_db->setQuery($query);
+
+            if ($result = $this->_db->loadResult())
+            {
+                $assetId = (int) $result;
+            }
+        }
+
+        // Return the asset id.
+        if ($assetId)
+        {
+            return $assetId;
+        }
+        else
+        {
+            return parent::_getAssetParentId($table, $id);
+        }
+    }
+
+
+    public function store($updateNulls = false){
+
+        $date = JFactory::getDate();
+        $user = JFactory::getUser();
+
+        if (!(int) $this -> created)
+        {
+            $this -> created = $date -> toSql();
+        }
+
+        if ($this -> id)
+        {
+            $this -> modified       = $date->toSql();
+            $this -> modified_by  = $user -> get('id');
+        }
+        else
+        {
+            if (empty($this -> created_by))
+            {
+                $this -> created_by = $user -> get('id');
+            }
+        }
+        return parent::store($updateNulls);
+    }
+
+    public function bind($array, $ignore = ''){
+        // Bind the rules.
+        if (isset($array['rules']) && is_array($array['rules']))
+        {
+            $rules = new JAccessRules($array['rules']);
+            $this->setRules($rules);
+        }
+        return parent::bind($array, $ignore);
+    }
     
 }

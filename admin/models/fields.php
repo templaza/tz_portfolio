@@ -20,9 +20,12 @@
 // No direct access
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\Utilities\ArrayHelper;
+
 jimport('joomla.application.component.modellist');
 
 class TZ_Portfolio_PlusModelFields extends JModelList{
+
     public function __construct($config = array()){
         if (empty($config['filter_fields']))
         {
@@ -31,6 +34,9 @@ class TZ_Portfolio_PlusModelFields extends JModelList{
                 'title', 'f.title',
                 'groupname', 'f.groupname',
                 'type', 'f.type',
+                'list_view', 'f.list_view',
+                'detail_view', 'f.detail_view',
+                'advanced_search', 'f.advanced_search',
                 'published', 'f.published',
                 'ordering', 'f.ordering'
             );
@@ -38,29 +44,40 @@ class TZ_Portfolio_PlusModelFields extends JModelList{
         parent::__construct($config);
     }
 
-    public function populateState($ordering = null, $direction = null){
+    public function populateState($ordering = 'f.id', $direction = 'desc'){
 
-        parent::populateState('id','desc');
+        parent::populateState($ordering, $direction);
+        $app = JFactory::getApplication();
 
-        $app        = JFactory::getApplication();
-        $context    = 'com_tz_portfolio_plus.fields';
 
-        $group  = $app -> getUserStateFromRequest($context.'.filter.group','filter_group',0,'int');
+        $group  = $this -> getUserStateFromRequest($this->context.'.filter.group','filter_group',0);
         $this -> setState('filter.group',$group);
 
         $published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
         $this->setState('filter.published', $published);
 
-        $type  = $app -> getUserStateFromRequest($context.'filter.type','filter_type',null,'string');
-        $this -> setState('filter.type',$type);
+        $search  = $this -> getUserStateFromRequest($this->context.'.filter_search','filter_search',null,'string');
+        $this -> setState('filter.search',$search);
 
-        $search  = $app -> getUserStateFromRequest($context.'.filter_search','filter_search',null,'string');
-        $this -> setState('filter_search',$search);
+        $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '');
+        $this->setState('filter.access', $access);
+
+
+        $formSubmited = $app->input->post->get('form_submited');
+
+        $type  = $this -> getUserStateFromRequest($this->context.'filter.type','filter_type','');
+        if ($formSubmited) {
+            $type = $app->input->post->get('type');
+            $this -> setState('filter.type', $type);
+        }
     }
 
     protected function getListQuery(){
+
         $db     = $this -> getDbo();
         $query  = $db -> getQuery(true);
+        $user   = TZ_Portfolio_PlusUser::getUser();
+
         $query -> select('f.*, fg.id AS groupid');
         $query -> from('#__tz_portfolio_plus_fields AS f');
         $query -> join('LEFT','#__tz_portfolio_plus_field_fieldgroup_map AS x ON f.id=x.fieldsid');
@@ -70,40 +87,97 @@ class TZ_Portfolio_PlusModelFields extends JModelList{
             -> where('e.folder = '.$db -> quote('extrafields'))
             -> where('e.published = 1');
 
-        if($search = $this -> getState('filter_search'))
+        // Join over the users for the checked out user.
+        $query->select('uc.name AS editor')->join('LEFT', '#__users AS uc ON uc.id=f.checked_out');
+
+        // Join over the asset groups.
+        $query -> select('v.title AS access_level')
+            ->join('LEFT', '#__viewlevels AS v ON v.id = f.access');
+
+        if($search = $this -> getState('filter.search'))
             $query -> where('title LIKE '.$db -> quote('%'.$search.'%'));
 
         // Filter by published state
         $published = $this->getState('filter.published');
-        if (is_numeric($published)) {
+
+        if (is_numeric($published))
+        {
             $query->where('f.published = ' . (int) $published);
         }
-        elseif ($published === '') {
-            $query->where('(f.published = 0 OR f.published = 1)');
+        elseif ($published === '')
+        {
+            $query->where('(f.published IN (0, 1))');
         }
 
-        if($filter_group = $this -> getState('filter.group')){
-            if($filter_group!=-1){
-                $query -> where('x.groupid ='.$filter_group);
+        // Filter by group
+        if($group  = $this->getState('filter.group')){
+            if (is_numeric($group))
+            {
+                $query -> where('x.groupid = ' . (int) $group);
+            }
+            elseif (is_array($group))
+            {
+                $group  = ArrayHelper::toInteger($group);
+                $group  = implode(',', $group);
+                $query -> where('x.groupid IN (' . $group . ')');
             }
         }
 
-        if($filter_type = $this -> getState('filter.type')){
-            $query -> where('f.type='.$db -> quote($filter_type));
+        // Filter by field's type
+        if($type  = $this->getState('filter.type')){
+            if (is_string($type))
+            {
+                $query -> where('f.type = ' . $db -> quote($type));
+            }
+            elseif (is_array($type))
+            {
+                foreach($type as $i => $t) {
+                    $type[$i]  = 'f.type = '.$db -> quote($t);
+                }
+                $query -> andWhere($type);
+            }
+        }
+
+        // Filter by access level.
+        $access = $this->getState('filter.access');
+        if (is_numeric($access))
+        {
+            $query->where('f.access = ' . (int) $access);
+        }
+        elseif (is_array($access))
+        {
+            $access = ArrayHelper::toInteger($access);
+            $access = implode(',', $access);
+            $query->where('f.access IN (' . $access . ')');
+        }
+
+        // Implement View Level Access
+        if (!$user->authorise('core.admin'))
+        {
+            $groups     = implode(',', $user->getAuthorisedViewLevels());
+            $subquery   = $db -> getQuery(true);
+            $subquery -> select('subg.id');
+            $subquery -> from('#__tz_portfolio_plus_fieldgroups AS subg');
+            $subquery -> where('subg.access IN('.$groups.')');
+
+            $query -> where('f.access IN('.$groups.')');
+            $query -> where('fg.id IN('.((string) $subquery).')');
+            $query -> where('e.access IN('.$groups.')');
         }
 
         $query -> group('f.id');
 
-        // Add the list ordering clause.
-        $orderCol	= $this->state->get('list.ordering', 'f.id');
-        $orderDirn	= $this->state->get('list.direction', 'desc');
+        // Add the list ordering clause
+        $listOrdering   = $this->getState('list.ordering', 'f.id');
+        $listDirn       = $this->getState('list.direction', 'DESC');
 
-        if(isset($filter_group) && $filter_group){
-            $orderCol   = 'x.ordering';
+        if(isset($group) && $group){
+            $listOrdering   = 'x.ordering';
             $query -> select('x.ordering AS ordering');
         }
 
-        $query->order($db->escape($orderCol.' '.$orderDirn));
+        $query->order($db->escape($listOrdering) . ' ' . $db->escape($listDirn));
+//        var_dump($query -> dump()); die();
 
         return $query;
     }
@@ -111,10 +185,19 @@ class TZ_Portfolio_PlusModelFields extends JModelList{
     public function getItems(){
         if($items = parent::getItems()){
             $groupModel = JModelLegacy::getInstance('Groups','TZ_Portfolio_PlusModel');
-            if($groups = $groupModel -> getItemsContainFields()){
+            if($groupNames = $groupModel -> getGroupNamesContainFields()){
+                $groups = $groupModel -> getGroupsContainFields();
                 foreach($items as $item){
-                    if(isset($groups[$item -> id])){
-                        $item -> groupname      = $groups[$item -> id];
+                    if(isset($groupNames[$item -> id])){
+                        $item -> groupname  = $groupNames[$item -> id];
+                        if($groups && isset($groups[$item -> id])) {
+                            $groupIds   = $groups[$item -> id];
+                            if(is_array($groups[$item -> id])) {
+                                $groupIds = array_keys($groups[$item -> id]);
+                            }
+
+                            $item->groupid = (count($groupIds) == 1)?$groupIds[0]:$groupIds;
+                        }
                     }
                 }
             }

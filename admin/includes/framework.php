@@ -30,3 +30,14 @@ JLoader::import('com_tz_portfolio_plus.libraries.tzportfolioplus',JPATH_ADMINIST
 if(!class_exists('TZ_Portfolio_PlusUri')){
     JLoader::import('com_tz_portfolio_plus.libraries.uri',JPATH_ADMINISTRATOR.DIRECTORY_SEPARATOR.'components');
 }
+
+tzportfolioplusimport('helper.toolbar');
+
+tzportfolioplusimport('user.user');
+
+// Register class TZ_Portfolio_PlusPluginHelper from folder libraries of TZ Portfolio Plus
+tzportfolioplusimport('plugin.helper');
+
+// Register class TZ_Portfolio_PlusExtraField from folder libraries of TZ Portfolio Plus
+tzportfolioplusimport('fields.extrafield');
+

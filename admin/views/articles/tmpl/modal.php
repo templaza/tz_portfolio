@@ -20,8 +20,10 @@
 // no direct access
 defined('_JEXEC') or die;
 
-if (JFactory::getApplication()->isSite()) {
-	JSession::checkToken('get') or jexit(JText::_('JINVALID_TOKEN'));
+$app    = JFactory::getApplication();
+
+if ($app->isSite()) {
+    JSession::checkToken('get') or jexit(JText::_('JINVALID_TOKEN'));
 }
 
 require_once JPATH_ROOT . '/components/com_tz_portfolio_plus/helpers/route.php';
@@ -29,146 +31,162 @@ require_once JPATH_ROOT . '/components/com_tz_portfolio_plus/helpers/route.php';
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
 JHtml::_('behavior.framework');
 JHtml::_('bootstrap.tooltip');
+JHtml::_('behavior.multiselect');
+JHtml::_('formbehavior.chosen', '.multipleMediaType', null,
+    array('placeholder_text_multiple' => JText::_('COM_TZ_PORTFOLIO_PLUS_OPTION_SELECT_MEDIA_TYPE')));
+JHtml::_('formbehavior.chosen', '.multipleAuthors', null,
+    array('placeholder_text_multiple' => JText::_('JOPTION_SELECT_AUTHOR')));
+JHtml::_('formbehavior.chosen', '.multipleAccessLevels', null,
+    array('placeholder_text_multiple' => JText::_('JOPTION_SELECT_ACCESS')));
+JHtml::_('formbehavior.chosen', '.multipleCategories', null,
+    array('placeholder_text_multiple' => JText::_('JOPTION_SELECT_CATEGORY')));
 JHtml::_('formbehavior.chosen', 'select');
 
-$function	= JFactory::getApplication() -> input -> getCmd('function', 'jSelectArticle');
+$function	= $app->input->getCmd('function', 'tppSelectArticle');
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
+$isMultiple = $app -> input -> get('ismultiple', false, 'boolean');
 ?>
+<script type="text/javascript">
+    function tzGetDatas(){
+        if (window.parent){
+            var j= 0,titles  = new Array(),ids = new Array(),categories = new Array();
+            if(document.getElementsByName('cid[]').length){
+                var idElems  = document.getElementsByName('cid[]'),
+                    titleElems  = document.getElementsByName('tztitles[]'),
+                    categoryElems  = document.getElementsByName('tzcategories[]');
+                for(var i = 0; i<idElems.length; i++){
+                    if(idElems[i].checked){
+                        ids[j]  = idElems[i].value;
+                        titles[j]  = titleElems[i].value;
+                        categories[j]  = categoryElems[i].value;
+                        j++;
+                    }
+                }
+            }
+            window.parent.<?php echo $this->escape($function);?>(ids,titles,categories);
+        }
+    }
+</script>
+
 <form action="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&view=articles&layout=modal&tmpl=component&function='.$function.'&'.JSession::getFormToken().'=1');?>"
-      method="post" name="adminForm" id="adminForm" class="form-inline">
-	<fieldset class="filter clearfix">
-		<div class="btn-toolbar">
-			<div class="btn-group pull-left">
-				<label for="filter_search">
-					<?php echo JText::_('JSEARCH_FILTER_LABEL'); ?>
-				</label>
-				<input type="text" name="filter_search" id="filter_search" value="<?php echo $this->escape($this->state->get('filter.search')); ?>" size="30" title="<?php echo JText::_('COM_CONTENT_FILTER_SEARCH_DESC'); ?>" />
-			</div>
-			<div class="btn-group pull-left">
-				<button type="submit" class="btn hasTooltip" data-placement="bottom" title="<?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?>">
-					<i class="icon-search"></i></button>
-				<button type="button" class="btn hasTooltip" data-placement="bottom" title="<?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?>" onclick="document.id('filter_search').value='';this.form.submit();">
-					<i class="icon-remove"></i></button>
-			</div>
-			<div class="clearfix"></div>
-		</div>
-		<hr class="hr-condensed" />
+      method="post" name="adminForm" id="adminForm" class="form-inline tpContainer">
+    <?php if($isMultiple){?>
+    <div class="btn-toolbar">
+        <button type="button" class="btn btn-primary" onclick="tzGetDatas();">
+            <i class="icon-checkmark"></i> <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_INSERT');?></button>
+        <hr class="hr-condensed" />
+    </div>
+    <?php } ?>
 
-		<div class="filters">
-			<select name="filter_access" class="inputbox" onchange="this.form.submit()">
-				<option value=""><?php echo JText::_('JOPTION_SELECT_ACCESS');?></option>
-				<?php echo JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'));?>
-			</select>
+    <?php
+    // Search tools bar
+    echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+    ?>
 
-			<select name="filter_published" class="inputbox" onchange="this.form.submit()">
-				<option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED');?></option>
-				<?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions',array('archived' => false)), 'value', 'text', $this->state->get('filter.published'), true);?>
-			</select>
+    <?php if (empty($this->items)){ ?>
+        <div class="alert alert-no-items">
+            <?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+        </div>
+    <?php }else{ ?>
 
-			<select name="filter_category_id" class="input-medium" onchange="this.form.submit()">
-				<option value=""><?php echo JText::_('JOPTION_SELECT_CATEGORY');?></option>
-				<?php echo JHtml::_('select.options', JHtml::_('tzcategory.options', 'com_tz_portfolio_plus', array('filter.language' => array('*', $this->state->get('filter.forcedLanguage')))), 'value', 'text', $this->state->get('filter.category_id'));?>
-			</select>
-
-            <?php if ($this->state->get('filter.forcedLanguage')) : ?>
-                <input type="hidden" name="forcedLanguage" value="<?php echo $this->escape($this->state->get('filter.forcedLanguage')); ?>" />
-                <input type="hidden" name="filter_language" value="<?php echo $this->escape($this->state->get('filter.language')); ?>" />
-            <?php else : ?>
-                <select name="filter_language" class="inputbox" onchange="this.form.submit()">
-                    <option value=""><?php echo JText::_('JOPTION_SELECT_LANGUAGE');?></option>
-                    <?php echo JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true), 'value', 'text', $this->state->get('filter.language'));?>
-                </select>
-            <?php endif; ?>
-		</div>
-	</fieldset>
-
-	<table class="table table-striped table-condensed">
-		<thead>
-			<tr>
-				<th class="title">
-					<?php echo JHtml::_('grid.sort', 'JGLOBAL_TITLE', 'a.title', $listDirn, $listOrder); ?>
-				</th>
-                <th width="6%" class="nowrap">
-                    <?php echo JHtml::_('grid.sort', 'COM_TZ_PORTFOLIO_PLUS_TYPE_OF_MEDIA', 'groupname', $listDirn, $listOrder); ?>
-                </th>
-				<th width="15%">
-					<?php echo JHtml::_('grid.sort',  'JGRID_HEADING_ACCESS', 'access_level', $listDirn, $listOrder); ?>
-				</th>
-				<th width="15%">
-					<?php echo JHtml::_('grid.sort', 'JCATEGORY', 'a.catid', $listDirn, $listOrder); ?>
-				</th>
-				<th width="5%">
-					<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
-				</th>
-				<th width="5%">
-					<?php echo JHtml::_('grid.sort',  'JDATE', 'a.created', $listDirn, $listOrder); ?>
-				</th>
-				<th width="1%" class="nowrap">
-					<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
-				</th>
-			</tr>
-		</thead>
-		<tfoot>
-			<tr>
-				<td colspan="15">
-					<?php echo $this->pagination->getListFooter(); ?>
-				</td>
-			</tr>
-		</tfoot>
-		<tbody>
-		<?php foreach ($this->items as $i => $item) : ?>
-			<tr class="row<?php echo $i % 2; ?>">
-				<td>
-					<a style="cursor: pointer;" class="pointer"
-                       onclick="if (window.parent) window.parent.<?php echo $this->escape($function);?>('<?php echo $item->id; ?>', '<?php echo $this->escape(addslashes($item->title)); ?>', '<?php echo $this->escape($item->catid); ?>', null, '<?php echo $this->escape(TZ_Portfolio_PlusHelperRoute::getArticleRoute($item->id)); ?>');">
-						<?php echo $this->escape($item->title); ?></a>
-				</td>
+    <table class="table table-striped table-condensed">
+        <thead>
+        <tr>
+            <?php if($isMultiple){?>
+            <th width="1%">
+                <?php echo JHtml::_('grid.checkall'); ?>
+            </th>
+            <?php } ?>
+            <th class="title">
+                <?php echo JHtml::_('searchtools.sort', 'JGLOBAL_TITLE', 'a.title', $listDirn, $listOrder); ?>
+            </th>
+            <th width="6%" class="nowrap">
+                <?php echo JHtml::_('searchtools.sort', 'COM_TZ_PORTFOLIO_PLUS_TYPE_OF_MEDIA', 'groupname', $listDirn, $listOrder); ?>
+            </th>
+            <th width="15%">
+                <?php echo JHtml::_('searchtools.sort',  'JGRID_HEADING_ACCESS', 'access_level', $listDirn, $listOrder); ?>
+            </th>
+            <th width="15%">
+                <?php echo JHtml::_('searchtools.sort', 'JCATEGORY', 'a.catid', $listDirn, $listOrder); ?>
+            </th>
+            <th width="5%">
+                <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
+            </th>
+            <th width="5%">
+                <?php echo JHtml::_('searchtools.sort',  'JDATE', 'a.created', $listDirn, $listOrder); ?>
+            </th>
+            <th width="1%" class="nowrap">
+                <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
+            </th>
+        </tr>
+        </thead>
+        <tfoot>
+        <tr>
+            <td colspan="8">
+                <?php echo $this->pagination->getListFooter(); ?>
+            </td>
+        </tr>
+        </tfoot>
+        <tbody>
+        <?php foreach ($this->items as $i => $item) :?>
+            <tr class="row<?php echo $i % 2; ?>">
+                <?php if($isMultiple){?>
+                <td class="center">
+                    <?php echo JHtml::_('grid.id', $i, $item->id); ?>
+                </td>
+                <?php } ?>
+                <td>
+                    <a style="cursor: pointer;" class="pointer"
+                       onclick="if (window.parent) window.parent.<?php echo $this->escape($function);?>(['<?php echo $item->id; ?>'], ['<?php echo $this->escape(addslashes($item->title)); ?>'],['<?php echo $this->escape(addslashes($item->category_title)); ?>']);">
+                        <?php echo $this->escape($item->title); ?></a>
+                    <input type="hidden" name="tztitles[]" value="<?php echo $this->escape(addslashes($item->title));?>">
+                </td>
                 <td class="small hidden-phone">
                     <?php echo $item -> type;?>
                 </td>
-				<td class="center small">
-					<?php echo $this->escape($item->access_level); ?>
-				</td>
-				<td class="center small">
-					<?php echo $this->escape($item->category_title); ?>
-					<?php if(isset($item -> categories) && $item -> categories && count($item -> categories)):?>
-						<?php
-						echo ',';
-						foreach($item -> categories as $i => $category):
-						?>
-							<?php echo $this->escape($category->title); ?>
-							<?php
-							if($i < count($item -> categories) - 1){
-								echo ',';
-							}
-							?>
-						<?php endforeach;?>
-					<?php endif;?>
-				</td>
-				<td class="center small">
-					<?php if ($item->language=='*'):?>
-						<?php echo JText::alt('JALL', 'language'); ?>
-					<?php else:?>
-						<?php echo $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
-					<?php endif;?>
-				</td>
-				<td class="center small nowrap">
-					<?php echo JHtml::_('date', $item->created, JText::_('DATE_FORMAT_LC4')); ?>
-				</td>
-				<td class="center small">
-					<?php echo (int) $item->id; ?>
-				</td>
-			</tr>
-			<?php endforeach; ?>
-		</tbody>
-	</table>
+                <td class="center small">
+                    <?php echo $this->escape($item->access_level); ?>
+                </td>
+                <td class="small">
+                    <?php echo $this->escape($item->category_title); ?>
+                    <?php if(isset($item -> categories) && $item -> categories && count($item -> categories)):?>
+                        <?php
+                        echo ',';
+                        foreach($item -> categories as $i => $category):
+                            ?>
+                            <?php echo $this->escape($category->title); ?>
+                            <?php
+                            if($i < count($item -> categories) - 1){
+                                echo ',';
+                            }
+                            ?>
+                        <?php endforeach;?>
+                    <?php endif;?>
+                    <input type="hidden" name="tzcategories[]" value="<?php echo $this->escape(addslashes($item->category_title));?>">
+                </td>
+                <td class="center small">
+                    <?php if ($item->language=='*'):?>
+                        <?php echo JText::alt('JALL', 'language'); ?>
+                    <?php else:?>
+                        <?php echo $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
+                    <?php endif;?>
+                </td>
+                <td class="center small nowrap">
+                    <?php echo JHtml::_('date', $item->created, JText::_('DATE_FORMAT_LC4')); ?>
+                </td>
+                <td class="center small">
+                    <?php echo (int) $item->id; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+    <?php } ?>
 
-	<div>
-		<input type="hidden" name="task" value="" />
-		<input type="hidden" name="boxchecked" value="0" />
-		<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
-		<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
-		<?php echo JHtml::_('form.token'); ?>
-	</div>
+    <div>
+        <input type="hidden" name="task" value="" />
+        <input type="hidden" name="boxchecked" value="0" />
+        <?php echo JHtml::_('form.token'); ?>
+    </div>
 </form>

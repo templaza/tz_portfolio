@@ -21,58 +21,48 @@
 defined('_JEXEC') or die('Restricted access');
 
 use Joomla\Registry\Registry;
+use Joomla\CMS\User\User;
+use Joomla\CMS\User\UserWrapper;
 
-jimport('joomla.user.user');
+//jimport('joomla.user.user');
 
-class TZ_Portfolio_PlusUser extends JUser{
+class TZ_Portfolio_PlusUser extends User{
+
+    protected static $instances = array();
 
     public static function getUser($id = null)
     {
-        $instance = JFactory::getSession()->get('user');
+        $instance = JFactory::getUser();
 
         if (is_null($id))
         {
             if (!($instance instanceof TZ_Portfolio_PlusUser))
             {
-                if($instance instanceof JUser) {
-                    $instance   = self::getInstance($instance->id);
-                }else{
-                    $instance   = self::getInstance();
-                }
+                $instance = TZ_Portfolio_PlusUser::getInstance($instance -> id);
             }
         }
         // Check if we have a string as the id or if the numeric id is the current instance
-        elseif (is_string($id) || $instance->id !== $id)
+        elseif (!($instance instanceof TZ_Portfolio_PlusUser) || is_string($id) || $instance->id !== $id)
         {
-            $instance = self::getInstance($id);
+            $instance = TZ_Portfolio_PlusUser::getInstance($id);
         }
 
         return $instance;
     }
 
-    public static function getInstance($identifier = 0, JUserWrapperHelper $userHelper = null)
+    public static function getInstance($identifier = 0, UserWrapper $userHelper = null)
     {
         if (null === $userHelper)
         {
-            if(class_exists('JUserWrapperHelper')) {
-                $userHelper = new JUserWrapperHelper;
-            }else{
-                $userHelper = null;
-            }
+            $userHelper = new UserWrapper;
         }
 
         // Find the user id
         if (!is_numeric($identifier))
         {
-            $id = null;
-            if($userHelper){
-                $id = $userHelper->getUserId($identifier);
-            }else{
-                $id = JUserHelper::getUserId($identifier);
-            }
-            if (!$id)
+            if (!$id = $userHelper->getUserId($identifier))
             {
-                // If the $identifier doesn't match with any id, just return an empty JUser.
+                // If the $identifier doesn't match with any id, just return an empty User.
                 return new TZ_Portfolio_PlusUser;
             }
         }
@@ -81,7 +71,7 @@ class TZ_Portfolio_PlusUser extends JUser{
             $id = $identifier;
         }
 
-        // If the $id is zero, just return an empty JUser.
+        // If the $id is zero, just return an empty User.
         // Note: don't cache this user because it'll have a new ID on save!
         if ($id === 0)
         {
@@ -115,8 +105,9 @@ class TZ_Portfolio_PlusUser extends JUser{
             ->from('(' . $subQuery->__toString() . ') AS c')
             ->join('INNER', '#__assets AS a ON c.asset_id = a.id');
         $db->setQuery($query);
-        $allCategories = $db->loadObjectList('id');
-        $allowedCategories = array();
+
+        $allCategories      = $db->loadObjectList('id');
+        $allowedCategories  = array();
 
         foreach ($allCategories as $category)
         {
@@ -127,5 +118,44 @@ class TZ_Portfolio_PlusUser extends JUser{
         }
 
         return $allowedCategories;
+    }
+
+    public function getAuthorisedFieldGroups($action, $ids = null)
+    {
+        // Brute force method: get all published category rows for the component and check each one
+        // TODO: Modify the way permissions are stored in the db to allow for faster implementation and better scaling
+        $db = JFactory::getDbo();
+
+        $subQuery = $db->getQuery(true)
+            ->select('id,asset_id')
+            ->from('#__tz_portfolio_plus_fieldgroups')
+            ->where('published = 1');
+
+        if($ids){
+            if(is_numeric($ids)){
+                $subQuery -> where('id ='.$ids);
+            }else{
+                $subQuery -> where('id IN('.implode(',', $ids).')');
+            }
+        }
+
+        $query = $db->getQuery(true)
+            ->select('c.id AS id, a.name AS asset_name')
+            ->from('(' . $subQuery->__toString() . ') AS c')
+            ->join('INNER', '#__assets AS a ON c.asset_id = a.id');
+        $db->setQuery($query);
+
+        $allGroups      = $db->loadObjectList('id');
+        $allowedGroups  = array();
+
+        foreach ($allGroups as $group)
+        {
+            if ($this->authorise($action, $group->asset_name))
+            {
+                $allowedGroups[] = (int) $group->id;
+            }
+        }
+
+        return $allowedGroups;
     }
 }

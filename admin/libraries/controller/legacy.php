@@ -30,8 +30,13 @@ class TZ_Portfolio_Plus_AddOnControllerLegacy extends JControllerLegacy{
 
     protected $trigger_params;
 
+    protected $core_view_list;
+
     public function __construct($config = array())
     {
+
+        parent::__construct($config);
+
         if(isset($config['addon'])){
             $this -> addon          = $config['addon'];
         }
@@ -41,7 +46,13 @@ class TZ_Portfolio_Plus_AddOnControllerLegacy extends JControllerLegacy{
         if(isset($config['trigger_params'])){
             $this -> trigger_params = $config['trigger_params'];
         }
-        parent::__construct($config);
+
+        // Guess the list view as the suffix, eg: OptionControllerSuffix.
+        if (empty($this->core_view_list))
+        {
+            $view   = $this -> input -> getCmd('view');
+            $this->core_view_list = strtolower($view);
+        }
     }
 
     public function display($cachable = false, $urlparams = array())
@@ -51,8 +62,27 @@ class TZ_Portfolio_Plus_AddOnControllerLegacy extends JControllerLegacy{
         $viewName = $this->input->get('addon_view', $this->default_view);
         $viewLayout = $this->input->get('addon_layout', 'default', 'string');
 
+
         if($view = $this->getView($viewName, $viewType, '', array('base_path' => $this->basePath,
             'layout' => $viewLayout))){
+
+            // Check manage permission if the addon have manage datas
+            if($addon_id   = $this -> input -> get('addon_id', 0, 'int')){
+                if($plugin = TZ_Portfolio_PlusPluginHelper::getPluginById($addon_id)){
+                    $user   = TZ_Portfolio_PlusUser::getUser();
+                    if(isset($plugin -> asset_id) &&$plugin -> asset_id && !$user -> authorise('core.manage',
+                            'com_tz_portfolio_plus.addon.'.$plugin -> id)){
+
+                        // Somehow the person just went to the form - we don't allow that.
+                        $this->setError(JText::_('JERROR_ALERTNOAUTHOR'));
+                        $this->setMessage($this->getError(), 'error');
+
+                        $this->setRedirect(JRoute::_('index.php?option=com_tz_portfolio_plus&view=addons', false));
+
+                        return false;
+                    }
+                }
+            }
 
             if($addon = $this -> addon){
                 $plugin_path = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . DIRECTORY_SEPARATOR
@@ -283,10 +313,6 @@ class TZ_Portfolio_Plus_AddOnControllerLegacy extends JControllerLegacy{
             {
                 require_once $backuppath;
             }
-//            else
-//            {
-//                throw new InvalidArgumentException(JText::sprintf('JLIB_APPLICATION_ERROR_INVALID_CONTROLLER', $type, $format));
-//            }
         }
 
         // Instantiate the class.
@@ -294,11 +320,29 @@ class TZ_Portfolio_Plus_AddOnControllerLegacy extends JControllerLegacy{
         {
             self::$instance[$prefix] = new $class($config);
         }
-//        else
-//        {
-//            throw new InvalidArgumentException(JText::sprintf('JLIB_APPLICATION_ERROR_INVALID_CONTROLLER_CLASS', $class));
-//        }
 
         return self::$instance[$prefix];
+    }
+
+    protected function getCoreRedirect(){
+        $link   = '';
+        if($coreView = $this -> core_view_list){
+            $link   = 'index.php?option='.$this -> option.'&view='.$this -> core_view_list;
+        }
+        return $link;
+    }
+
+    protected function getAddonRedirect($addon_view = null){
+        $link   = $this -> getCoreRedirect();
+
+        if($addon_id = $this->input -> getInt('addon_id')){
+            $link   .= '&addon_id='.$addon_id;
+        };
+
+        if($addon_view){
+            $link   .= '&addon_view='.$addon_view;
+        }
+
+        return $link;
     }
 }

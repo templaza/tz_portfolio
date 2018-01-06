@@ -109,6 +109,25 @@ class TZ_Portfolio_PlusModelAddon_Data extends JModelAdmin{
     }
 
     protected function prepareTable($table){
+        $table -> set('_trackAssets', false);
+
+//        if(property_exists($table, 'checked_out')) {
+//            $table -> checked_out   = 0;
+//            unset($table->checked_out);
+//        }
+//        if(property_exists($table, 'checked_out_time')) {
+//            $table -> checked_out_time   = '0000-00-00 00:00:00';
+//            unset($table->checked_out_time);
+//        }
+//        if(property_exists($table, 'publish_up')) {
+//            $table -> publish_up   = '0000-00-00 00:00:00';
+//            unset($table -> publish_up);
+//        }
+//        if(property_exists($table, 'publish_down')) {
+//            $table -> publish_down   = '0000-00-00 00:00:00';
+//            unset($table -> publish_down);
+//        }
+
         if(!isset($table -> extension_id)
             || (isset($table -> extension_id) && !$table -> extension_id)){
             $input  = JFactory::getApplication() -> input;
@@ -123,145 +142,49 @@ class TZ_Portfolio_PlusModelAddon_Data extends JModelAdmin{
         }
     }
 
-    public function save($data)
+    protected function canDelete($record)
     {
-        $dispatcher = JEventDispatcher::getInstance();
-        $table      = $this->getTable();
-        $context    = $this->option . '.' . $this->name;
+        $user   = TZ_Portfolio_PlusUser::getUser();
+        $asset  = $this -> getTable('Asset', 'JTable');
 
-        if ((!empty($data['tags']) && $data['tags'][0] != ''))
+        if (!empty($record->id))
         {
-            $table->newTags = $data['tags'];
+
+            if(isset($record -> asset_id) && !empty($record -> asset_id)) {
+                return $user->authorise('tzportfolioplus.delete', $this->option . '.addon_data.' . (int)$record->id);
+            }
+        }
+        if(isset($record -> extension_id) && $record -> extension_id
+            && $asset -> loadByName($this -> option.'.addon.'.$record -> extension_id)) {
+            return $user->authorise('tzportfolioplus.delete', $this -> option
+                .'.addon.'.$record -> extension_id);
+        }elseif($asset -> loadByName($this -> option.'.addon')){
+            return $user->authorise('tzportfolioplus.delete', $this -> option.'.addon');
         }
 
-        $key = $table->getKeyName();
-        $pk = (!empty($data[$key])) ? $data[$key] : (int) $this->getState($this->getName() . '.id');
-        $isNew = true;
+        return parent::canDelete($record);
+    }
 
-        // Include the plugins for the save events.
-        JPluginHelper::importPlugin($this->events_map['save']);
+    protected function canEditState($record)
+    {
+        $user   = TZ_Portfolio_PlusUser::getUser();
+        $asset  = $this -> getTable('Asset', 'JTable');
 
-        // Allow an exception to be thrown.
-        try
+        if (!empty($record->id))
         {
-            // Load the row if saving an existing record.
-            if ($pk > 0)
-            {
-                $table->load($pk);
-                $isNew = false;
-            }
-
-            // Bind the data.
-            if (!$table->bind($data))
-            {
-                $this->setError($table->getError());
-
-                return false;
-            }
-
-            // Prepare the row for saving
-            $this->prepareTable($table);
-
-            // Check the data.
-            if (!$table->check())
-            {
-                $this->setError($table->getError());
-
-                return false;
-            }
-
-            // Trigger the before save event.
-            $result = $dispatcher->trigger($this->event_before_save, array($context, $table, $isNew));
-
-            if (in_array(false, $result, true))
-            {
-                $this->setError($table->getError());
-
-                return false;
-            }
-
-            // Store the data.
-            if (!$table->store())
-            {
-                $this->setError($table->getError());
-
-                return false;
-            }
-
-            // Clean the cache.
-            $this->cleanCache();
-
-            // Trigger the after save event.
-            $dispatcher->trigger($this->event_after_save, array($context, $table, $isNew));
-        }
-        catch (Exception $e)
-        {
-            $this->setError($e->getMessage());
-
-            return false;
-        }
-
-        if (isset($table->$key))
-        {
-            $this->setState($this->getName() . '.id', $table->$key);
-        }
-
-        $this->setState($this->getName() . '.new', $isNew);
-
-        if ($this->associationsContext && JLanguageAssociations::isEnabled())
-        {
-            $associations = $data['associations'];
-
-            // Unset any invalid associations
-            $associations = Joomla\Utilities\ArrayHelper::toInteger($associations);
-
-            // Unset any invalid associations
-            foreach ($associations as $tag => $id)
-            {
-                if (!$id)
-                {
-                    unset($associations[$tag]);
-                }
-            }
-
-            // Show a notice if the item isn't assigned to a language but we have associations.
-            if ($associations && ($table->language == '*'))
-            {
-                JFactory::getApplication()->enqueueMessage(
-                    JText::_(strtoupper($this->option) . '_ERROR_ALL_LANGUAGE_ASSOCIATED'),
-                    'notice'
-                );
-            }
-
-            // Adding self to the association
-            $associations[$table->language] = (int) $table->$key;
-
-            // Deleting old association for these items
-            $db    = $this->getDbo();
-            $query = $db->getQuery(true)
-                ->delete($db->qn('#__associations'))
-                ->where($db->qn('context') . ' = ' . $db->quote($this->associationsContext))
-                ->where($db->qn('id') . ' IN (' . implode(',', $associations) . ')');
-            $db->setQuery($query);
-            $db->execute();
-
-            if ((count($associations) > 1) && ($table->language != '*'))
-            {
-                // Adding new association for these items
-                $key   = md5(json_encode($associations));
-                $query = $db->getQuery(true)
-                    ->insert('#__associations');
-
-                foreach ($associations as $id)
-                {
-                    $query->values(((int) $id) . ',' . $db->quote($this->associationsContext) . ',' . $db->quote($key));
-                }
-
-                $db->setQuery($query);
-                $db->execute();
+            if(isset($record -> asset_id) && !empty($record -> asset_id)) {
+                return $user->authorise('tzportfolioplus.edit.state', $this->option . '.addon_data.' . (int)$record->id);
             }
         }
 
-        return true;
+        if(isset($record -> extension_id) && $record -> extension_id
+            && $asset -> loadByName($this -> option.'.addon.'.$record -> extension_id)) {
+            return $user->authorise('tzportfolioplus.edit.state', $this -> option
+                .'.addon.'.$record -> extension_id);
+        }elseif($asset -> loadByName($this -> option.'.addon')){
+            return $user->authorise('tzportfolioplus.edit.state', $this -> option.'.addon');
+        }
+
+        return parent::canEditState($record);
     }
 }

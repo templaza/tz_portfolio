@@ -41,16 +41,25 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
     }
 
     public function getDataManager(){
+        if($plugin = TZ_Portfolio_PlusPluginHelper::getPlugin($this -> _type, $this -> _name)){
+            if(isset($plugin -> asset_id) &&  $plugin -> asset_id){
+                $user   = TZ_Portfolio_PlusUser::getUser();
+                if(!$user -> authorise('core.manage', 'com_tz_portfolio_plus.addon.'.$plugin -> id)){
+                    return false;
+                }
+            }
+        }
         return $this -> data_manager;
     }
 
     public function onAddOnDisplayManager($task = null){
+
         tzportfolioplusimport('html.sidebar');
         tzportfolioplusimport('controller.legacy');
 
         $component_path = JPATH_ADMINISTRATOR.DIRECTORY_SEPARATOR.'components';
 
-        // Import addon_datas controller
+        // Import addon_datas helper
         JLoader::import('com_tz_portfolio_plus.helpers.addon_datas',$component_path);
 
         // Import addon_data model
@@ -150,27 +159,6 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
         return $form;
     }
 
-//    public function onAlwaysLoadDocument($context){
-//        try{
-//
-//            list($option,$vName) = explode('.',$context);
-//
-//            if($option != 'module' && $option != 'modules'){
-//                if($view = $this -> getView($vName)) {
-//                    if(method_exists($view, 'addDocument')){
-//                        $view -> addDocument();
-//                        return true;
-//                    }
-//                }
-//            }
-//        }
-//        catch(Exception $e){
-//            $this -> setError($e -> getMessage());
-//            return false;
-//        }
-//        return false;
-//    }
-
     // Load xml form file for article view of the plugin (this trigger called in system tz_portfolio_plus plugin)
     protected function contentPrepareForm($form, $data){
         $app        = JFactory::getApplication();
@@ -212,8 +200,9 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
     protected function menuPrepareForm($form, $data){
         $app            = JFactory::getApplication();
         if($app -> isAdmin()){
-            $formFile   = false;
-            $link       = false;
+            $formFile       = false;
+            $addonFormFile  = false;
+            $link           = false;
 
             if($data){
                 if(isset($data['link']) && !empty($data['link'])){
@@ -235,6 +224,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
                 $language -> load('plg_'.$this -> _type.'_'.$this -> _name);
 
                 if (isset($args['view'])) {
+
                     $view = $args['view'];
 
                     // Determine the layout to search for.
@@ -246,14 +236,52 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
 
                     // Check for the layout XML file. Use standard xml file if it exists.
                     $tplFolders = array(
-                        $base . '/views/' . $view . '/tmpl',
-                        $base . '/view/' . $view . '/tmpl'
+                        $base . '/view/' . $view . '/tmpl',
+                        $base . '/views/' . $view . '/tmpl'
                     );
+
+                    // Get addon view xml with don't views of core
+                    if($args['view'] == 'addon' && isset($args['addon_view'])) {
+                        $addonView   = $args['addon_view'];
+                        if(isset($args['addon_layout'])){
+                            $addOnlayout = $args['addon_layout'];
+                        }
+                        $tplFolders[]   = $base.'/view/'.$addonView.'/tmpl';
+                        $tplFolders[]   = $base.'/views/'.$addonView.'/tmpl';
+                    }
+
                     $path = JPath::find($tplFolders, $layout . '.xml');
 
                     if (is_file($path))
                     {
                         $formFile = $path;
+                    }
+
+                    // Get addon view xml with don't views of core
+                    if($args['view'] == 'addon' && isset($args['addon_view'])) {
+                        $addonView   = $args['addon_view'];
+                        if(isset($args['addon_layout'])){
+                            $addOnLayout = $args['addon_layout'];
+                        } else {
+                            $addOnLayout = 'default';
+                        }
+                        $tpladdOnFolders = array(
+                            $base . '/view/' . $addonView . '/tmpl',
+                            $base . '/views/' . $addonView . '/tmpl'
+                        );
+
+                        $addonPath = JPath::find($tpladdOnFolders, $addOnLayout . '.xml');
+
+                        if (is_file($addonPath))
+                        {
+                            $addonFormFile = $addonPath;
+                        }
+
+                        if ($addonFormFile && $form->loadFile($addonFormFile, true, '/metadata'))
+                        {
+                            $form -> addFieldPath(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.'/'.$this -> _type
+                                .'/'.$this -> _name.'/admin/models/fields');
+                        }
                     }
                 }
 
@@ -288,16 +316,46 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
                 }elseif(is_object($data) && isset($data -> module)){
                     $module_name   = $data -> module;
                 }
+            }else{
+                $input  = $app -> input;
+                $jform  = $input -> get($form -> getFormControl(),null, 'array');
+
+                if($jform && isset($jform['module'])){
+                    $module_name    = $jform['module'];
+                }
             }
 
-            if($module_name) {
-                    JFactory::getSession()->set('com_tz_portfolio_plus.plugin.module_name', $module_name);
+            // Get the modules if this addon support.
+            if (is_dir($base)) {
+                $folders = JFolder::folders($base, '^module[s]?$', false, true);
             }
 
+            $path = '';
+
+            if (!empty($folders[0]))
+            {
+                $path = $folders[0];
+            }
+
+            if (is_dir($path))
+            {
+                $modules    = JFolder::folders($path);
+            }
+            else
+            {
+                return false;
+            }
+
+            if(!$module_name || ($module_name && !in_array($module_name, $modules))){
+                return false;
+            }
+
+            // Load config.xml file from modules in this addon
             $tplFolders = array(
-                $base . '/modules/' . JFactory::getSession() -> get('com_tz_portfolio_plus.plugin.module_name'),
-                $base . '/module/' . JFactory::getSession() -> get('com_tz_portfolio_plus.plugin.module_name')
+                $base . '/modules/' . $module_name,
+                $base . '/module/' . $module_name
             );
+
             $path = JPath::find($tplFolders, 'config.xml');
 
             if (is_file($path))
@@ -338,13 +396,6 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
             }
         }
         return $html;
-    }
-
-    public function onExtensionAfterSave($context, $data, $isnew){
-        $app = JFactory::getApplication();
-        if ($app->isAdmin()) {
-            JFactory::getSession() -> clear('com_tz_portfolio_plus.plugin.module_name');
-        }
     }
 
     public function setVariable($variable, $value)
@@ -505,25 +556,6 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
             return $dPath;
         }
 
-//        // If the template has a layout override use it
-//        if (file_exists($tPath))
-//        {
-//            return $tPath;
-//        }
-//        if (file_exists($tpPath))
-//        {
-//            return $tpPath;
-//        }
-//        elseif (file_exists($bPath))
-//        {
-//            return $bPath;
-//        }
-//        else
-//        {
-//            if(file_exists($dPath)) {
-//                return $dPath;
-//            }
-//        }
         return false;
     }
 
@@ -534,39 +566,18 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
         $addon_id   = $input -> getInt('addon_id');
         $addon      = TZ_Portfolio_PlusPluginHelper::getPlugin($this -> _type, $this -> _name);
 
-        if(!$addon_id || ($addon_id && $addon_id == $addon -> id)){
-            tzportfolioplusimport('controller.legacy');
-            $result = true;
-            // Check task with format: addon_name.addon_view.addon_task (example image.default.display);
-            $adtask     = $input -> get('addon_task');
-            if($adtask && strpos($adtask,'.') > 0 && substr_count($adtask,'.') > 1){
-                list($plgname,$adtask) = explode('.',$adtask,2);
-                if($plgname == $this -> _name){
-                    $result = true;
-                    $input -> set('addon_task',$adtask);
-                }else{
-                    $result = false;
-                }
-            }
-            if($result && $controller = TZ_Portfolio_Plus_AddOnControllerLegacy::getInstance('PlgTZ_Portfolio_Plus'
-                    .ucfirst($this -> _type).ucfirst($this -> _name)
-                    , array('base_path' => COM_TZ_PORTFOLIO_PLUS_ADDON_PATH
-                        .DIRECTORY_SEPARATOR.$this -> _type
-                        .DIRECTORY_SEPARATOR.$this -> _name))) {
-                tzportfolioplusimport('plugin.modelitem');
 
-                $controller -> set('addon', $addon);
+            // Check task with format: addon_name.addon_view.addon_task (example image.default.display);
+            if($controller = TZ_Portfolio_PlusPluginHelper::getAddonController($addon -> id)){
+
                 $controller -> set('article', $article);
                 $controller -> set('trigger_params', $params);
 
                 $task   = $input->get('addon_task');
-
-                if(!$task && !$addon_id) {
-                    $input->set('addon_view', $vName);
-                    $input->set('addon_layout', 'default');
-                    if($layout) {
-                        $input->set('addon_layout', $layout);
-                    }
+                $input->set('addon_view', $vName);
+                $input->set('addon_layout', 'default');
+                if($layout) {
+                    $input->set('addon_layout', $layout);
                 }
 
                 $html   = null;
@@ -578,7 +589,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
                     ob_end_clean();
                 }catch (Exception $e){
                     if($e -> getMessage()) {
-                        JFactory::getApplication() ->enqueueMessage('Addon '.$this -> _name.': '.$e -> getMessage(), 'warning');
+//                        JFactory::getApplication() ->enqueueMessage('Addon '.$this -> _name.': '.$e -> getMessage(), 'warning');
                     }
                 }
 
@@ -588,7 +599,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
                 $input -> set('addon_task', null);
                 return $html;
             }
-        }
+//        }
     }
 
     protected function getModel($name = null, $prefix = null, $config = array('ignore_request' => true))
@@ -632,7 +643,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
 
     // Upload image and store data (from image form) in add or edit of portfolio's article view
     public function onContentAfterSave($context, $data, $isnew){
-        if($context == 'com_tz_portfolio_plus.article' || $context == 'com_tz_pỏ') {
+        if($context == 'com_tz_portfolio_plus.article') {
             if($model  = $this -> getModel()) {
                 if(method_exists($model,'save')) {
                     $model->save($data);
@@ -664,4 +675,175 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
 
         return $load;
     }
+
+    public function onRenderAddonView(){
+
+        tzportfolioplusimport('plugin.modelitem');
+
+        $input      = JFactory::getApplication() -> input;
+
+        if($controller = TZ_Portfolio_PlusPluginHelper::getAddonController($input -> get('addon_id'))){
+            $task       = $input->get('addon_task');
+//            ob_start();
+            $controller -> execute($task);
+            $controller -> redirect();
+//            $html   = ob_get_contents();
+//            ob_end_clean();
+//            return $html;
+        }
+//        return false;
+    }
+
+    public function onAfterGetMenuTypeOptions(&$data, $object){
+        $app    = JFactory::getApplication();
+        if($app -> isAdmin()){
+            $input  = $app -> input;
+            if($input -> get('option') == 'com_menus' && ($input -> get('view') == 'menutypes'
+                    || $input -> get('view') == 'item')){
+                $component  = COM_TZ_PORTFOLIO_PLUS;
+                if($data && isset($data[$component])){
+
+                    $addon  = null;
+                    $args   = array();
+                    $views  = array();
+                    $help   = null;
+
+                    if($input -> get('view') == 'item') {
+                        // Get Addon's information from data when create or edit menu
+                        if($link   = $app -> getUserState('com_menus.edit.item.link')) {
+                            parse_str(parse_url(htmlspecialchars_decode($link), PHP_URL_QUERY), $args);
+                        }
+
+                        if($id = $input -> getInt('id')){
+                            $menus   = $app -> getMenu('site');
+                            if($menu = $menus -> getItem($id)){
+                                if(isset($menu -> query)){
+                                    $args   = $menu -> query;
+                                }
+                            }
+                        }
+
+                        if(count($args) && $args['option'] != $component){
+                            return false;
+                        }
+
+                        if(isset($args['addon_id'])) {
+                            $addon = TZ_Portfolio_PlusPluginHelper::getPluginById($args['addon_id']);
+                        }
+                    }else{
+                        // Get Addon's information when list menu types
+                        $addon  = TZ_Portfolio_PlusPluginHelper::getPlugin($this->_type, $this->_name);
+                    }
+
+                    if(!$addon){
+                        return false;
+                    }
+
+                    $addonPath = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/' . $addon->type . '/' . $addon->name;
+
+                    // Get the views of this addon.
+                    if (is_dir($addonPath)) {
+                        $folders = JFolder::folders($addonPath, '^view[s]?$', false, true);
+                    }
+
+                    $path = '';
+
+                    if (!empty($folders[0])) {
+                        $path = $folders[0];
+                    }
+
+
+                    if(isset($args['addon_view'])){
+                        $views[]    = $args['addon_view'];
+                    }else {
+                        if (is_dir($path)) {
+                            $views = JFolder::folders($path);
+                        } else {
+                            return false;
+                        }
+                        // Filter views of addon with views of this component
+                        $cViews = array('article', 'categories', 'date', 'form', 'portfolio',
+                            'search', 'tags', 'users', 'addon');
+                        $views = array_diff($views, $cViews);
+                    }
+
+                    foreach ($views as $view)
+                    {
+                        $options     = array();
+                        $layouts     = array();
+
+                        $lPath  = $path.'/'.$view.'/tmpl';
+
+                        if (is_dir($lPath))
+                        {
+                            $layouts = array_merge($layouts, JFolder::files($lPath, '.xml$', false, true));
+                        }
+
+                        // Build list of standard layout names
+                        foreach ($layouts as $layout)
+                        {
+
+                            // Ignore private layouts.
+                            if (strpos(basename($layout), '_') === false)
+                            {
+                                $file = $layout;
+
+                                // Get the layout name.
+                                $layout = basename($layout, '.xml');
+
+                                // Create the menu option for the layout.
+                                $o = new JObject;
+                                $o->title       = ucfirst($layout);
+                                $o->description = '';
+                                $o->request     = array('option' => $component, 'view' => 'addon',
+                                    'addon_id' => $addon -> id, 'addon_view' => $view);
+
+                                // Load layout metadata if it exists.
+                                if (is_file($file))
+                                {
+                                    // Attempt to load the xml file.
+                                    if ($xml = simplexml_load_file($file))
+                                    {
+                                        // Look for the first view node off of the root node.
+                                        if ($menu = $xml->xpath('layout[1]'))
+                                        {
+                                            $menu = $menu[0];
+
+                                            // If the view is hidden from the menu, discard it and move on to the next view.
+                                            if (!empty($menu['hidden']) && $menu['hidden'] == 'true')
+                                            {
+                                                unset($xml);
+                                                unset($o);
+                                                continue;
+                                            }
+
+                                            // Populate the title and description if they exist.
+                                            if (!empty($menu['title']))
+                                            {
+                                                $title      = trim((string) $menu['title']);
+                                                $o->title   = JText::_('COM_TZ_PORTFOLIO_PLUS_ADDON')
+                                                    .' - '.JText::_($title);
+                                            }
+
+                                            if (!empty($menu->message[0]))
+                                            {
+                                                $o->description = trim((string) $menu->message[0]);
+                                            }
+                                        }
+                                    }
+                                }
+                                $object -> addReverseLookupUrl($o);
+                                // Add the layout to the options array.
+                                $options[] = $o;
+                            }
+                        }
+                        if(count($options)){
+                            $data[$component]   = array_merge($data[$component], $options);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }

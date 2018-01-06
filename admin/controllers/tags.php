@@ -69,4 +69,25 @@ class TZ_Portfolio_PlusControllerTags extends JControllerAdmin
         $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
     }
 
+    public function searchAjax(){
+        $app    = JFactory::getApplication();
+        $input  = $app -> input;
+        JLoader::import('com_tz_portfolio_plus.helpers.tags', JPATH_ADMINISTRATOR.'/components');
+
+        // Receive request data
+        $filters = array(
+            'like'      => trim($input->get('like', null, 'string')),
+            'title'     => trim($input->get('title', null, 'string')),
+            'published' => $input->get('published', 1, 'int')
+        );
+
+        if ($results = TZ_Portfolio_PlusHelperTags::searchTags($filters))
+        {
+            // Output a JSON object
+            echo json_encode($results);
+        }
+
+        $app->close();
+    }
+
 }

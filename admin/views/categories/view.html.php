@@ -36,11 +36,13 @@ class TZ_Portfolio_PlusViewCategories extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-//        JFactory::getLanguage()->load('com_categories');
+        JFactory::getLanguage()->load('com_categories');
 
-		$this->state		= $this->get('State');
-		$this->items		= $this->get('Items');
-		$this->pagination	= $this->get('Pagination');
+		$this -> state		    = $this->get('State');
+		$this -> items		    = $this->get('Items');
+		$this -> pagination	    = $this->get('Pagination');
+        $this -> filterForm     = $this -> get('FilterForm');
+        $this -> activeFilters  = $this -> get('ActiveFilters');
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
@@ -69,8 +71,21 @@ class TZ_Portfolio_PlusViewCategories extends JViewLegacy
 		$this->assign('f_levels', $options);
         $this -> assign('listsGroup',$this -> get('Groups'));
 
-		$this->addToolbar();
-        $this->sidebar = JHtmlSidebar::render();
+        if($this->getLayout() !== 'modal') {
+            $this->addToolbar();
+            $this->sidebar = JHtmlSidebar::render();
+        }else{
+            // In article associations modal we need to remove language filter if forcing a language.
+            if ($forcedLanguage = JFactory::getApplication()->input->get('forcedLanguage', '', 'CMD'))
+            {
+                // If the language is forced we can't allow to select the language, so transform the language selector filter into a hidden field.
+                $languageXml = new SimpleXMLElement('<field name="language" type="hidden" default="' . $forcedLanguage . '" />');
+                $this->filterForm->setField($languageXml, 'filter', true);
+
+                // Also, unset the active language filter so the search tools is not open by default with this filter.
+                unset($this->activeFilters['language']);
+            }
+        }
 		parent::display($tpl);
 	}
 
@@ -93,11 +108,6 @@ class TZ_Portfolio_PlusViewCategories extends JViewLegacy
         // Get the toolbar object instance
 		$bar = JToolBar::getInstance('toolbar');
 
-//		// Avoid nonsense situation.
-//		if ($component == 'com_tz_portfolio_plus') {
-//			return;
-//		}
-
 		// Need to load the menu language file as mod_menu hasn't been loaded yet.
 		$lang = JFactory::getLanguage();
 
@@ -105,7 +115,7 @@ class TZ_Portfolio_PlusViewCategories extends JViewLegacy
 		require_once JPATH_COMPONENT.'/helpers/categories.php';
 
 		// Get the results for each action.
-		$canDo = TZ_Portfolio_PlusHelper::getActions($component, $categoryId);
+		$canDo = TZ_Portfolio_PlusHelper::getActions($component, 'category', $categoryId);
 
 		// If a component categories title string is present, let's use it.
 		if ($lang->hasKey($component_section_key = strtoupper($component.($section?"_$section":'')))) {
@@ -128,13 +138,11 @@ class TZ_Portfolio_PlusViewCategories extends JViewLegacy
 
 		if ($canDo->get('core.edit' ) || $canDo->get('core.edit.own')) {
 			JToolBarHelper::editList('category.edit');
-			JToolBarHelper::divider();
 		}
 
-		if ($canDo->get('core.edit.state')) {
+		if ($canDo->get('core.edit.state') || $canDo -> get('core.edit.state.own')) {
 			JToolBarHelper::publish('categories.publish', 'JTOOLBAR_PUBLISH', true);
 			JToolBarHelper::unpublish('categories.unpublish', 'JTOOLBAR_UNPUBLISH', true);
-			JToolBarHelper::divider();
 			JToolBarHelper::archiveList('categories.archive');
 		}
 
@@ -142,12 +150,12 @@ class TZ_Portfolio_PlusViewCategories extends JViewLegacy
 			JToolBarHelper::checkin('categories.checkin');
 		}
 
-		if ($this->state->get('filter.published') == -2 && $canDo->get('core.delete', $component)) {
+		if ($this->state->get('filter.published') == -2 && ($canDo->get('core.delete', $component)
+                || $canDo -> get('core.delete.own'))) {
 			JToolBarHelper::deleteList('', 'categories.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
-		elseif ($canDo->get('core.edit.state')) {
+		elseif ($canDo->get('core.edit.state') || $canDo -> get('core.edit.state.own')) {
 			JToolBarHelper::trash('categories.trash');
-			JToolBarHelper::divider();
 		}
         // Add a batch button
 		if ($canDo->get('core.edit'))
@@ -165,9 +173,11 @@ class TZ_Portfolio_PlusViewCategories extends JViewLegacy
 		}
 
 		if ($canDo->get('core.admin')) {
-			JToolBarHelper::custom('categories.rebuild', 'refresh.png', 'refresh_f2.png', 'JTOOLBAR_REBUILD', false);
+            JToolBarHelper::custom('categories.rebuild', 'refresh.png', 'refresh_f2.png', 'JTOOLBAR_REBUILD', false);
+		}
+
+		if ($canDo->get('core.admin') || $canDo->get('core.options')) {
 			JToolBarHelper::preferences('com_tz_portfolio_plus');
-			JToolBarHelper::divider();
 		}
 
 		// Compute the ref_key if it does exist in the component
@@ -188,80 +198,11 @@ class TZ_Portfolio_PlusViewCategories extends JViewLegacy
 			$url = null;
 		}
 
-        $doc    = JFactory::getDocument();
-        // If the joomla is version 3.0
-        if(COM_TZ_PORTFOLIO_PLUS_JVERSION_COMPARE){
-            $doc -> addStyleSheet(JURI::base(true).'/components/com_tz_portfolio_plus/fonts/font-awesome-4.5.0/css/font-awesome.min.css');
-        }
-        $doc -> addStyleSheet(JURI::base(true).'/components/com_tz_portfolio_plus/css/style.min.css');
+		JToolBarHelper::help($ref_key, false,
+            'https://www.tzportfolio.com/document/administration/48-how-to-create-a-category-in-tz-portfolio-plus.html?tmpl=component'
+            , 'com_tz_portfolio_plus');
 
-		JToolBarHelper::help($ref_key, JComponentHelper::getParams( $component )->exists('helpURL'), $url);
-        JHtmlSidebar::setAction('index.php?option=com_tz_portfolio_plus&view=categories');
-
-        // Special HTML workaround to get send popup working
-        $docClass       = ' class="btn btn-small"';
-        $youtubeIcon    = '<i class="tz-icon-youtube tz-icon-14"></i>&nbsp;';
-        $wikiIcon       = '<i class="tz-icon-wikipedia tz-icon-14"></i>&nbsp;';
-
-        $youtubeTitle   = JText::_('COM_TZ_PORTFOLIO_PLUS_VIDEO_TUTORIALS');
-        $wikiTitle      = JText::_('COM_TZ_PORTFOLIO_PLUS_WIKIPEDIA_TUTORIALS');
-
-        $videoTutorial    ='<a'.$docClass.' onclick="Joomla.popupWindow(\'http://www.youtube.com/channel/UCykS6SX6L2GOI-n3IOPfTVQ/videos\', \''
-            .$youtubeTitle.'\', 800, 500, 1)"'.' href="#">'
-            .$youtubeIcon.$youtubeTitle.'</a>';
-
-        $wikiTutorial    ='<a'.$docClass.' onclick="Joomla.popupWindow(\'http://wiki.templaza.com/Main_Page\', \''
-            .$wikiTitle.'\', 800, 500, 1)"'.' href="#">'
-            .$wikiIcon
-            .$wikiTitle.'</a>';
-
-        $bar->appendButton('Custom',$videoTutorial,'youtube');
-        $bar->appendButton('Custom',$wikiTutorial,'wikipedia');
-
-        JHtmlSidebar::addFilter(JText::_('COM_TZ_PORTFOLIO_PLUS_OPTION_SELECT_FIELDS_GROUP'),
-            'filter_group',
-            JHtml::_('select.options', $this -> listsGroup, 'value', 'text', $this->state->get('filter.group')));
-		JHtmlSidebar::addFilter(
-			JText::_('JOPTION_SELECT_MAX_LEVELS'),
-			'filter_level',
-			JHtml::_('select.options', $this->f_levels, 'value', 'text', $this->state->get('filter.level'))
-		);
-
-		JHtmlSidebar::addFilter(
-			JText::_('JOPTION_SELECT_PUBLISHED'),
-			'filter_published',
-			JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
-		);
-
-		JHtmlSidebar::addFilter(
-			JText::_('JOPTION_SELECT_ACCESS'),
-			'filter_access',
-			JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
-		);
-
-		JHtmlSidebar::addFilter(
-			JText::_('JOPTION_SELECT_LANGUAGE'),
-			'filter_language',
-			JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true), 'value', 'text', $this->state->get('filter.language'))
-		);
+        TZ_Portfolio_PlusToolbarHelper::customHelp('https://www.youtube.com/channel/UCrLN8LMXTyTahwDKzQ-YOqg/videos'
+            ,'COM_TZ_PORTFOLIO_PLUS_VIDEO_TUTORIALS', 'youtube', 'youtube');
 	}
-
-    /**
-	 * Returns an array of fields the table can be sorted by
-	 *
-	 * @return  array  Array containing the field name to sort by as the key and display text as value
-	 *
-	 * @since   3.0
-	 */
-        protected function getSortFields()
-        {
-            return array(
-                'a.lft' => JText::_('JGRID_HEADING_ORDERING'),
-                'a.state' => JText::_('JSTATUS'),
-                'a.title' => JText::_('JGLOBAL_TITLE'),
-                'a.access' => JText::_('JGRID_HEADING_ACCESS'),
-                'language' => JText::_('JGRID_HEADING_LANGUAGE'),
-                'a.id' => JText::_('JGRID_HEADING_ID')
-            );
-        }
 }

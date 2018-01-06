@@ -26,7 +26,7 @@ if($this -> items):
     <div class="search-results"
          itemscope itemtype="http://schema.org/Blog">
 
-        <div class="TzItemsRow">
+        <div class="TzItemsRow row">
         <?php
         $col        = $params -> get('article_columns', 1);
         $cols       = TZ_Portfolio_PlusContentHelper::getBootstrapColumns($col);

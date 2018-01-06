@@ -53,6 +53,7 @@ class JFormFieldTZCategory extends JFormFieldList
         $options = array();
         $extension = $this->element['extension'] ? (string) $this->element['extension'] : (string) $this->element['scope'];
         $published = (string) $this->element['published'];
+        $language  = (string) $this->element['language'];
 
         if(!$extension){
             $extension  = 'com_tz_portfolio_plus';
@@ -71,6 +72,12 @@ class JFormFieldTZCategory extends JFormFieldList
             else
             {
                 $config['filter.published'] = array(0, 1);
+            }
+
+            // Filter over language depending upon if it is present.
+            if ($language)
+            {
+                $config['filter.language'] = explode(',', $language);
             }
 
             if(isset($this -> element['parent'])){

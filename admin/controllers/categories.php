@@ -129,4 +129,5 @@ class TZ_Portfolio_PlusControllerCategories extends JControllerAdmin
 		JFactory::getApplication()->close();
 
 	}
+
 }

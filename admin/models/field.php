@@ -48,6 +48,12 @@ class TZ_Portfolio_PlusModelField extends JModelAdmin
     public function getForm($data = array(), $loadData = true){
         $form = $this->loadForm('com_tz_portfolio_plus.field', 'field', array('control' => 'jform', 'load_data' => $loadData));
 
+        if (isset($data['type']))
+        {
+            // This is needed that the plugins can determine the type
+            $this->setState('field.type', $data['type']);
+        }
+
         if (empty($form)) {
             return false;
         }
@@ -56,15 +62,24 @@ class TZ_Portfolio_PlusModelField extends JModelAdmin
 
     protected function loadFormData()
     {
+        $app  = JFactory::getApplication();
+        $data = $app->getUserState('com_tz_portfolio_plus.edit.field.data', array());
+
         if (empty($data)) {
             $data = $this->getItem();
+
+            if(!$data -> id){
+                // Set the type if available from the request
+                $data->set('type', $app->input->getWord('type', $this->state->get('field.type', $data->get('type'))));
+            }
         }
+
+        $this->preprocessData('com_tz_portfolio_plus.field', $data);
 
         return $data;
     }
 
     public function getItem($pk = null){
-
         if($item = parent::getItem($pk)){
             $item -> field      = null;
 
@@ -74,40 +89,15 @@ class TZ_Portfolio_PlusModelField extends JModelAdmin
         return false;
     }
 
-    public function getGroups($pk = null){
-        // Initialise variables.
-        $pk     = (!empty($pk)) ? $pk : (int) $this->getState($this->getName() . '.id');
-        $db     = $this -> getDbo();
-        $query  = $db -> getQuery(true);
-        $query -> select('g.*,f.id AS fieldsid');
-        $query -> from($db -> quoteName('#__tz_portfolio_plus_fieldgroups').' AS g');
-        $query -> join('LEFT',$db -> quoteName('#__tz_portfolio_plus_field_fieldgroup_map').' AS x ON x.groupid=g.id');
-        $query -> join('LEFT',$db -> quoteName('#__tz_portfolio_plus_fields').' AS f ON x.fieldsid = f.id');
-        $query -> where('f.id='.$pk);
-        $db -> setQuery($query);
-
-        if($items = $db -> loadObjectList()){
-            $list   = array();
-            foreach($items as $item){
-                $list[$item -> id]  = $item;
-            }
-            return $list;
-        }
-
-        return array();
-    }
-    
     public function save($data){
         $groupid    = $data['groupid'];
         unset($data['groupid']);
 
-
         $table = $this->getTable();
+        $_data = $data;
 
-        if ($data['id'] && $table->load($data['id']))
-        {
-            $fieldClass     = TZ_Portfolio_PlusFrontHelperExtraFields::getExtraField($data['id']);
-            $data           = $fieldClass->onSave($data);
+        if($data && isset($data['value'])){
+            $data['value']  = '';
         }
 
         if(parent::save($data)){
@@ -116,6 +106,24 @@ class TZ_Portfolio_PlusModelField extends JModelAdmin
 
             // Insert field's groups
             TZ_Portfolio_PlusHelperExtraFields::insertFieldGroups($pk, $groupid);
+
+            if ($pk && $table->load($pk))
+            {
+                $_data['id']    = $pk;
+                if($fieldClass     = TZ_Portfolio_PlusFrontHelperExtraFields::getExtraField($pk)) {
+                    $_data = $fieldClass->onSave($_data);
+                    if($_data && isset($_data['value']) && !is_string($_data['value'])){
+                        $_data['value'] = json_encode($_data['value']);
+                    }
+                    $db     = $this -> _db;
+                    $query  = $db -> getQuery(true);
+                    $query -> update($table -> getTableName());
+                    $query -> set('value='.$db -> quote($_data['value']));
+                    $query -> where('id='.$pk);
+                    $db -> setQuery($query);
+                    $db -> execute();
+                }
+            }
 
             return true;
         }
@@ -135,9 +143,28 @@ class TZ_Portfolio_PlusModelField extends JModelAdmin
 
     protected function preprocessForm(JForm $form, $data, $group = 'content')
     {
-        if($data && $data -> id){
+        $type   = null;
+        if($data){
+            if(is_array($data)){
+                if(isset($data['type']) && $data['type']){
+                    $type   = $data['type'];
+                }
+                if(isset($data['id']) && $data['id']){
+                    $form -> setFieldAttribute('type', 'readonly',  true);
+                }
+            }elseif(is_object($data)){
+                if(isset($data -> type) && $data -> type){
+                    $type   = $data -> type;
+                }
+                if(isset($data -> id) && $data -> id){
+                    $form -> setFieldAttribute('type', 'readonly',  true);
+                }
+            }
+        }
+
+        if($type){
             $core_path  = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.DIRECTORY_SEPARATOR.'extrafields';
-            $core_f_xml_path    = $core_path.DIRECTORY_SEPARATOR.$data -> type.DIRECTORY_SEPARATOR
+            $core_f_xml_path    = $core_path.DIRECTORY_SEPARATOR.$type.DIRECTORY_SEPARATOR
                 .'admin'.DIRECTORY_SEPARATOR.'models'.DIRECTORY_SEPARATOR.'forms'.DIRECTORY_SEPARATOR.'field.xml';
             if(JFile::exists($core_f_xml_path)){
                 $form -> loadFile($core_f_xml_path, false, '/form/fields[@name="params"]');
@@ -146,17 +173,9 @@ class TZ_Portfolio_PlusModelField extends JModelAdmin
         }
     }
 
-    public function publish(&$pks,$value=1){
-        $table  = $this -> getTable();
-        if(!$table -> publish($pks,$value)){
-            $this -> setError($table -> getError());
-            return false;
-        }
-        return true;
-    }
-
     public function updateState(&$pks,$value=1, $task = null){
         if($table  = $this -> getTable()){
+            $user   = TZ_Portfolio_PlusUser::getUser();
             switch($task){
                 default:
                     break;
@@ -172,6 +191,36 @@ class TZ_Portfolio_PlusModelField extends JModelAdmin
                 case 'unadvsearch':
                     $table -> setColumnAlias('updatestate', 'advanced_search');
                     break;
+            }
+
+            // Access checks.
+            foreach ($pks as $i => $pk)
+            {
+                $table->reset();
+
+                if ($table->load($pk))
+                {
+                    if (!$this->canEditState($table))
+                    {
+                        // Prune items that you can't change.
+                        unset($pks[$i]);
+
+                        \JLog::add(\JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'), \JLog::WARNING, 'jerror');
+
+                        return false;
+                    }
+
+                    // If the table is checked out by another user, drop it and report to the user trying to change its state.
+                    if (property_exists($table, 'checked_out') && $table->checked_out && ($table->checked_out != $user->id))
+                    {
+                        \JLog::add(\JText::_('JLIB_APPLICATION_ERROR_CHECKIN_USER_MISMATCH'), \JLog::WARNING, 'jerror');
+
+                        // Prune items that you can't change.
+                        unset($pks[$i]);
+
+                        return false;
+                    }
+                }
             }
 
             if(!$table -> updateState($pks,$value)){
@@ -255,5 +304,41 @@ class TZ_Portfolio_PlusModelField extends JModelAdmin
         $this->cleanCache();
 
         return true;
+    }
+
+    protected function canDelete($record)
+    {
+        if (!empty($record->id))
+        {
+            $user = JFactory::getUser();
+
+            $state  = $user->authorise('core.delete', $this->option.'.field.' . (int) $record->id)
+                || ($user->authorise('core.delete.own', $this->option.'.field.' . (int) $record->id)
+                    && $record -> created_by == $user -> id);
+            return $state;
+        }
+
+        return false;
+    }
+
+    protected function canEditState($record)
+    {
+        $user = JFactory::getUser();
+
+        // Check for existing category.
+        if (!empty($record->id))
+        {
+            if(isset($record -> asset_id) && !empty($record -> asset_id)) {
+                $state = $user->authorise('core.edit.state', $this->option . '.field.' . (int)$record->id)
+                    || ($user->authorise('core.edit.state.own', $this->option . '.field.' . (int)$record->id)
+                        && $record->created_by == $user->id);
+            }else{
+                $state  = parent::canEditState($record) || ($user->authorise('core.edit.state.own',$this -> option)
+                        && $record -> created_by == $user -> id);
+            }
+            return $state;
+        }
+        // Default to component settings if neither category nor parent known.
+        return parent::canEditState($record);
     }
 }

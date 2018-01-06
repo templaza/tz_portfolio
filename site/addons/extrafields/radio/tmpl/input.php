@@ -25,7 +25,8 @@ if ($options)
 {
     $bootstrap_style    = $this -> params -> get('bootstrap_style',1);
 
-    $html .= "<fieldset id=\"" . $this->getId() . "\" class=\"".($bootstrap_style?'btn-group ':'')."radio " . $this->getInputClass() . "\">";
+    $html .= "<fieldset id=\"" . $this->getId() . "\" class=\"".($bootstrap_style?'btn-group ':'')."radio "
+        . $this->getInputClass() . "\" ". $this->getParentAttribute().">";
     $number_columns = $this->params->get("number_columns", 0);
     if (!$number_columns)
     {

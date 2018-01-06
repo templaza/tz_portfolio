@@ -57,18 +57,17 @@ class TZ_Portfolio_PlusViewArticle extends JViewLegacy
             $this->item		= $this->get('Item');
             $this->state	= $this->get('State');
 
-            $canDo			= TZ_Portfolio_PlusHelper::getActions($this->state->get('filter.category_id'));
+            $canDo	= TZ_Portfolio_PlusHelper::getActions(COM_TZ_PORTFOLIO_PLUS, 'article', $this -> item -> id);
 			$this -> canDo	= $canDo;
 
-			if($canDo -> get('core.edit')){
-				$this -> extraFields	= $this -> get('ExtraFields');
-			}
 
             // Check for errors.
             if (count($errors = $this->get('Errors'))) {
                 JError::raiseError(500, implode("\n", $errors));
                 return false;
             }
+
+            $this -> extraFields	= $this -> get('ExtraFields');
 
             $this -> assign('listsTags',json_encode($this -> get('Tags')));
             $this -> assign('listAttach',$this -> get('Attachment'));
@@ -94,6 +93,13 @@ class TZ_Portfolio_PlusViewArticle extends JViewLegacy
 				}
 			}
 
+            // If we are forcing a language in modal (used for associations).
+            if ($this->getLayout() === 'modal' && $forcedLanguage = JFactory::getApplication()->input->get('forcedLanguage', '', 'cmd')) {
+                // Set the language field to the forcedLanguage and disable changing it.
+                $this->form->setValue('language', null, $forcedLanguage);
+                $this->form->setFieldAttribute('language', 'readonly', 'true');
+            }
+
             $this->addToolbar();
         }
 		parent::display($tpl);
@@ -111,7 +117,8 @@ class TZ_Portfolio_PlusViewArticle extends JViewLegacy
 		$userId		= $user->get('id');
 		$isNew		= ($this->item->id == 0);
 		$checkedOut	= !($this->item->checked_out == 0 || $this->item->checked_out == $userId);
-		$canDo		= TZ_Portfolio_PlusHelper::getActions('com_tz_portfolio_plus','article', $this->item->id);
+		$canDo		= $this -> canDo;
+
 		JToolBarHelper::title(JText::_('COM_TZ_PORTFOLIO_PLUS_PAGE_'.($checkedOut ? 'VIEW_ARTICLE' : ($isNew ? 'ADD_ARTICLE' : 'EDIT_ARTICLE'))), 'pencil-2');
 
 		// Built the actions for new and existing records.
@@ -146,8 +153,11 @@ class TZ_Portfolio_PlusViewArticle extends JViewLegacy
 			JToolBarHelper::cancel('article.cancel', 'JTOOLBAR_CLOSE');
 		}
 
-		JToolBarHelper::divider();
-		JToolBarHelper::help('JHELP_CONTENT_ARTICLE_MANAGER_EDIT');
+        JToolBarHelper::help('JHELP_CONTENT_ARTICLE_MANAGER_EDIT',false,
+            'https://www.tzportfolio.com/document/administration/41-how-to-create-edit-an-article-in-tz-portfolio-plus.html?tmpl=component');
+
+        TZ_Portfolio_PlusToolbarHelper::customHelp('https://www.youtube.com/channel/UCrLN8LMXTyTahwDKzQ-YOqg/videos'
+            ,'COM_TZ_PORTFOLIO_PLUS_VIDEO_TUTORIALS', 'youtube', 'youtube');
 
 	}
 }

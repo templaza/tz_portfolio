@@ -26,6 +26,32 @@ class JFormFieldTZExtraFieldTypes extends JFormFieldList
 {
     protected $type = "TZExtraFieldTypes";
 
+    public function setup(SimpleXMLElement $element, $value, $group = null)
+    {
+        $return = parent::setup($element, $value, $group);
+
+        if(!$this -> onchange){
+            $this -> onchange   = 'tppTypeHasChanged(this);';
+            JFactory::getDocument()->addScriptDeclaration('
+                (function($, window){
+                    "use strict";
+                    $( document ).ready(function() {
+                        Joomla.loadingLayer("load");
+                    });
+                    window.tppTypeHasChanged = function(element){
+                        Joomla.loadingLayer("show");
+                        var cat = $(element);
+                        $("input[name=task]").val("field.reload");
+                        element.form.submit();
+                    }
+                })(jQuery, window);
+            '
+            );
+        }
+
+        return $return;
+    }
+
     public function getOptions(){
         $options = array();
 
@@ -45,8 +71,8 @@ class JFormFieldTZExtraFieldTypes extends JFormFieldList
         $core_path  = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.DIRECTORY_SEPARATOR.'extrafields';
         if($plg_ex     = TZ_Portfolio_PlusPluginHelper::getPlugin('extrafields')){
             $lang   = JFactory::getLanguage();
-            $field  = $this -> form -> getData();
-            $field  = $field -> toObject();
+//            $field  = $this -> form -> getData();
+//            $field  = $field -> toObject();
 
             foreach($plg_ex as $i => $plg){
                 $folder             = $plg -> name;
@@ -58,7 +84,7 @@ class JFormFieldTZExtraFieldTypes extends JFormFieldList
                         JLoader::import('com_tz_portfolio_plus.addons.extrafields.'.$folder.'.'.$folder,
                             JPATH_SITE.DIRECTORY_SEPARATOR.'components');
                     }
-                    $core_class         = new $core_class($field);
+                    $core_class         = new $core_class();
 
                     $data[$i]           = new stdClass();
                     $data[$i] -> value  = $folder;

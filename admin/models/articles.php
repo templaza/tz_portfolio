@@ -20,6 +20,8 @@
 // no direct access
 defined('_JEXEC') or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 jimport('joomla.application.component.modellist');
 
 /**
@@ -44,6 +46,7 @@ class TZ_Portfolio_PlusModelArticles extends JModelList
 				'checked_out', 'a.checked_out',
 				'checked_out_time', 'a.checked_out_time',
 				'catid', 'm.catid', 'category_title',
+				'type', 'a.type',
 				'state', 'a.state',
 				'access', 'a.access', 'access_level',
 				'created', 'a.created',
@@ -69,11 +72,11 @@ class TZ_Portfolio_PlusModelArticles extends JModelList
 	 * @return	void
 	 * @since	1.6
 	 */
-	protected function populateState($ordering = null, $direction = null)
+	protected function populateState($ordering = 'a.id', $direction = 'desc')
 	{
 
         // List state information.
-        parent::populateState('a.id', 'desc');
+        parent::populateState($ordering, $direction);
 
 		// Initialise variables.
 		$app = JFactory::getApplication();
@@ -85,33 +88,42 @@ class TZ_Portfolio_PlusModelArticles extends JModelList
 			$this->context .= '.'.$layout;
 		}
 
-        $mediatype	= $this -> getUserStateFromRequest($this -> context.'.mediatype','filter_mediatype');
-        $this -> setState('filter.mediatype',$mediatype);
-
         $group  = $this -> getUserStateFromRequest($this -> context.'.group','filter_group',0,'int');
         $this -> setState('filter.group',$group);
 
 		$search = $this->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
 
-		$access = $this->getUserStateFromRequest($this->context.'.filter.access', 'filter_access', 0, 'int');
-		$this->setState('filter.access', $access);
-
-		$authorId = $app->getUserStateFromRequest($this->context.'.filter.author_id', 'filter_author_id');
-		$this->setState('filter.author_id', $authorId);
-
 		$published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '');
 		$this->setState('filter.published', $published);
-
-		$categoryId = $this->getUserStateFromRequest($this->context.'.filter.category_id', 'filter_category_id');
-		$this->setState('filter.category_id', $categoryId);
 
 		$level = $this->getUserStateFromRequest($this->context.'.filter.level', 'filter_level', 0, 'int');
 		$this->setState('filter.level', $level);
 
-
 		$language = $this->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '');
 		$this->setState('filter.language', $language);
+
+        $formSubmited = $app->input->post->get('form_submited');
+
+        $access     = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access');
+        $authorId   = $this->getUserStateFromRequest($this->context . '.filter.author_id', 'filter_author_id');
+        $categoryId = $this->getUserStateFromRequest($this->context . '.filter.category_id', 'filter_category_id');
+        $mediatype	= $this -> getUserStateFromRequest($this -> context.'.type','filter_type');
+
+        if ($formSubmited)
+        {
+            $mediatype = $app->input->post->get('type');
+            $this -> setState('filter.type',$mediatype);
+
+            $access = $app->input->post->get('access');
+            $this->setState('filter.access', $access);
+
+            $authorId = $app->input->post->get('author_id');
+            $this->setState('filter.author_id', $authorId);
+
+            $categoryId = $app->input->post->get('category_id');
+            $this->setState('filter.category_id', $categoryId);
+        }
 
         // Force a language
         $forcedLanguage = $app->input->get('forcedLanguage');
@@ -139,10 +151,12 @@ class TZ_Portfolio_PlusModelArticles extends JModelList
 	{
 		// Compile the store id.
 		$id	.= ':'.$this->getState('filter.search');
-		$id	.= ':'.$this->getState('filter.access');
+        $id .= ':' . serialize($this->getState('filter.access'));
 		$id	.= ':'.$this->getState('filter.published');
-		$id	.= ':'.$this->getState('filter.category_id');
-		$id	.= ':'.$this->getState('filter.author_id');
+        $id .= ':' . serialize($this->getState('filter.category_id'));
+        $id .= ':' . serialize($this->getState('filter.author_id'));
+        $id .= ':' . serialize($this->getState('filter.type'));
+		$id	.= ':'.$this->getState('filter.group');
 		$id	.= ':'.$this->getState('filter.language');
 
 		return parent::getStoreId($id);
@@ -176,17 +190,9 @@ class TZ_Portfolio_PlusModelArticles extends JModelList
 
 		$query->from('#__tz_portfolio_plus_content AS a');
 
-        // Join over xref content
+        // Join over fieldgroups
         $query -> select('g.name AS groupname,g.id AS groupid');
-        if($this -> state -> get('filter.group') != 0){
-//            $query -> join('LEFT','#__tz_portfolio_plus_field_content_map AS xc ON xc.contentid=a.id');
-            $query -> join('LEFT','#__tz_portfolio_plus_fieldgroups AS g ON xc.groupid=g.id');
-        }
-        else{
-//            $query -> join('LEFT','#__tz_portfolio_plus_categories AS tc ON tc.id=m.catid');
-            $query -> join('LEFT','#__tz_portfolio_plus_fieldgroups AS g ON a.groupid=g.id');
-        }
-
+        $query -> join('LEFT','#__tz_portfolio_plus_fieldgroups AS g ON a.groupid=g.id');
 
 		// Join over the language
 		$query->select('l.title AS language_title');
@@ -221,14 +227,33 @@ class TZ_Portfolio_PlusModelArticles extends JModelList
 				->group('a.id');
 		}
 
-		// Filter by access level.
-		if ($access = $this->getState('filter.access')) {
-			$query->where('a.access = ' . (int) $access);
-		}
+        // Filter by access level.
+        $access = $this->getState('filter.access');
+        if (is_numeric($access))
+        {
+            $query->where('a.access = ' . (int) $access);
+        }
+        elseif (is_array($access))
+        {
+            $access = ArrayHelper::toInteger($access);
+            $access = implode(',', $access);
+            $query->where('a.access IN (' . $access . ')');
+        }
 
-        // Filter by mediatypes
-        if($this -> state -> get('filter.mediatype'))
-            $query -> where('a.type ='.$db -> quote($this -> getState('filter.mediatype')));
+        // Filter by media type
+        if($type  = $this->getState('filter.type')){
+            if (is_string($type))
+            {
+                $query -> where('a.type = ' . $db -> quote($type));
+            }
+            elseif (is_array($type))
+            {
+                foreach($type as $i => $t) {
+                    $type[$i]  = 'a.type = '.$db -> quote($t);
+                }
+                $query -> andWhere($type);
+            }
+        }
 
         // Filter by fields group
         if($this -> state -> get('filter.group')!=0)
@@ -273,12 +298,20 @@ class TZ_Portfolio_PlusModelArticles extends JModelList
 			$query->where('c.level <= '.((int) $level + (int) $baselevel - 1));
 		}
 
-		// Filter by author
-		$authorId = $this->getState('filter.author_id');
-		if (is_numeric($authorId)) {
-			$type = $this->getState('filter.author_id.include', true) ? '= ' : '<>';
-			$query->where('a.created_by '.$type.(int) $authorId);
-		}
+        // Filter by author
+        $authorId = $this->getState('filter.author_id');
+
+        if (is_numeric($authorId))
+        {
+            $type = $this->getState('filter.author_id.include', true) ? '= ' : '<>';
+            $query->where('a.created_by ' . $type . (int) $authorId);
+        }
+        elseif (is_array($authorId))
+        {
+            $authorId = ArrayHelper::toInteger($authorId);
+            $authorId = implode(',', $authorId);
+            $query->where('a.created_by IN (' . $authorId . ')');
+        }
 
 		// Filter by search in title.
 		$search = $this->getState('filter.search');
@@ -302,20 +335,11 @@ class TZ_Portfolio_PlusModelArticles extends JModelList
 		}
 
 		// Add the list ordering clause.
-		$orderCol	= $this->state->get('list.ordering', 'a.title');
-		$orderDirn	= $this->state->get('list.direction', 'asc');
+		$orderCol	= $this->state->get('list.ordering', 'a.id');
+		$orderDirn	= $this->state->get('list.direction', 'desc');
 
-//		if ($orderCol == 'a.ordering' || $orderCol == 'category_title') {
-//			$orderCol = 'c.title '.$orderDirn.', a.ordering';
-//		}
-		//sqlsrv change
-		if($orderCol == 'language')
-			$orderCol = 'l.title';
-		if($orderCol == 'access_level')
-			$orderCol = 'ag.title';
 		$query->order($db->escape($orderCol.' '.$orderDirn));
 
-		// echo nl2br(str_replace('#__','jos_',$query));
 		return $query;
 	}
 

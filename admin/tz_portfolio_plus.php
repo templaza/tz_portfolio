@@ -20,6 +20,11 @@
 // no direct access
 defined('_JEXEC') or die;
 
+// Access check.
+if (!JFactory::getUser()->authorise('core.manage', 'com_tz_portfolio_plus')) {
+    throw new JAccessExceptionNotallowed(JText::_('JERROR_ALERTNOAUTHOR'), 403);
+}
+
 $input			= JFactory::getApplication() -> input;
 $option         = $input -> getCmd('option','com_tz_portfolio_plus');
 $view           = $input -> getCmd('view','dashboard');
@@ -30,20 +35,8 @@ JLoader::import('com_tz_portfolio_plus.includes.framework',JPATH_ADMINISTRATOR.'
 // Register helper class
 JLoader::register('TZ_Portfolio_PlusHelper', dirname(__FILE__) . '/helpers/tz_portfolio_plus.php');
 
-tzportfolioplusimport('user.user');
-
-// Access check.
-if (!JFactory::getUser()->authorise('core.manage', 'com_tz_portfolio_plus')) {
-    return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
-}
-
-// Register class TZ_Portfolio_PlusPluginHelper from folder libraries of TZ Portfolio Plus
-tzportfolioplusimport('plugin.helper');
-//tzportfolioplusimport('controller.legacy');
 
 $controller	= JControllerLegacy::getInstance('TZ_Portfolio_Plus');
-//$controller	= TZ_Portfolio_Plus_AddOnControllerLegacy::getInstance('TZ_Portfolio_Plus');
 
 $controller->execute(JFactory::getApplication()->input->get('task'));
-
 $controller->redirect();

@@ -38,8 +38,6 @@ if ($options)
                 $text = $option->text;
             }
 
-
-
             $this->setAttribute("value", htmlspecialchars($option->value, ENT_COMPAT, 'UTF-8'), "input");
 
             if (in_array($option->value, $value))

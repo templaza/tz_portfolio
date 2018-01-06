@@ -294,9 +294,10 @@ class TZ_Portfolio_PlusPluginHelper extends JPluginHelper{
         {
             $db     = JFactory::getDbo();
             $query  = $db->getQuery(true)
-                ->select('id, folder AS type, element AS name, params, manifest_cache')
+                ->select('id, folder AS type, element AS name, params, manifest_cache, asset_id')
                 ->from('#__tz_portfolio_plus_extensions')
                 ->where('type =' . $db->quote('tz_portfolio_plus-plugin'))
+                ->where('access IN(' . $levels.')')
                 ->order('ordering');
 
             if($enabled){
@@ -368,6 +369,40 @@ class TZ_Portfolio_PlusPluginHelper extends JPluginHelper{
                 $paths[$path] = false;
             }
         }
+    }
+
+    public static function getAddonController($addon_id){
+        if($addon_id){
+
+            if($addon  = self::getPluginById($addon_id)){
+
+                tzportfolioplusimport('controller.legacy');
+
+                $app    = JFactory::getApplication();
+                $input  = $app -> input;
+                $result = true;
+
+                // Check task with format: addon_name.addon_view.addon_task (example image.default.display);
+                $adtask     = $input -> get('addon_task');
+                if($adtask && strpos($adtask,'.') > 0 && substr_count($adtask,'.') > 1){
+                    list($plgname,$adtask) = explode('.',$adtask,2);
+                    if($plgname == $addon -> name){
+                        $input -> set('addon_task',$adtask);
+                    }
+                }
+                if($controller = TZ_Portfolio_Plus_AddOnControllerLegacy::getInstance('PlgTZ_Portfolio_Plus'
+                        .ucfirst($addon -> type).ucfirst($addon -> name)
+                        , array('base_path' => COM_TZ_PORTFOLIO_PLUS_ADDON_PATH
+                            .DIRECTORY_SEPARATOR.$addon -> type
+                            .DIRECTORY_SEPARATOR.$addon -> name))) {
+                    tzportfolioplusimport('plugin.modelitem');
+
+                    $controller -> set('addon', $addon);
+                    return $controller;
+                }
+            }
+        }
+        return false;
     }
 
 }

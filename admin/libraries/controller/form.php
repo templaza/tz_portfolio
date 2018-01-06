@@ -162,7 +162,7 @@ class TZ_Portfolio_Plus_AddOnControllerForm extends TZ_Portfolio_Plus_AddOnContr
 
             $this->setRedirect(
                 JRoute::_(
-                    'index.php?option=' . $this->option . '&view=' . $this->view_list
+                    $this -> getAddonRedirect($this->view_list)
                     . $this->getRedirectToListAppend(), false
                 )
             );
@@ -174,10 +174,7 @@ class TZ_Portfolio_Plus_AddOnControllerForm extends TZ_Portfolio_Plus_AddOnContr
         $app->setUserState($context . '.data', null);
 
         // Redirect to the edit screen.
-        $addonIdURL		= ($addon_id = $this->input -> getInt('addon_id'))?'&addon_id='.$addon_id:'';
-        $view           = $this -> input -> getCmd('view');
-        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view='.$view
-            .$addonIdURL.'&addon_view=' . $this->view_item. $this->getRedirectToItemAppend()
+        $this->setRedirect(JRoute::_($this -> getAddonRedirect(). $this->getRedirectToItemAppend()
             , false));
 
         return true;
@@ -196,9 +193,18 @@ class TZ_Portfolio_Plus_AddOnControllerForm extends TZ_Portfolio_Plus_AddOnContr
      */
     protected function allowAdd($data = array())
     {
-        $user = JFactory::getUser();
+        $user       = TZ_Portfolio_PlusUser::getUser();
+        $asset      = JTable::getInstance('Asset','JTable');
+        $addonId    = $this -> input -> get('addon_id', 0, 'int');
 
-        return ($user->authorise('core.create', $this->option) || count($user->getAuthorisedCategories($this->option, 'core.create')));
+        if($addonId && $asset -> loadByName($this -> option.'.addon.'.$addonId)) {
+            return $user->authorise('tzportfolioplus.create', $this -> option
+                .'.addon.'.$addonId);
+        }elseif($asset -> loadByName($this -> option.'.addon')){
+            return $user->authorise('tzportfolioplus.create', $this -> option.'.addon');
+        }
+
+        return parent::allowAdd($data);
     }
 
     /**
@@ -215,7 +221,18 @@ class TZ_Portfolio_Plus_AddOnControllerForm extends TZ_Portfolio_Plus_AddOnContr
      */
     protected function allowEdit($data = array(), $key = 'id')
     {
-        return JFactory::getUser()->authorise('core.edit', $this->option);
+        $user       = TZ_Portfolio_PlusUser::getUser();
+        $asset      = JTable::getInstance('Asset','JTable');
+        $addonId    = $this -> input -> get('addon_id', 0, 'int');
+
+        if($addonId && $asset -> loadByName($this -> option.'.addon.'.$addonId)) {
+            return $user->authorise('tzportfolioplus.edit', $this -> option
+                .'.addon.'.$addonId);
+        }elseif($asset -> loadByName($this -> option.'.addon')){
+            return $user->authorise('tzportfolioplus.edit', $this -> option.'.addon');
+        }
+
+        return parent::allowEdit($data);
     }
 
     /**
@@ -328,11 +345,8 @@ class TZ_Portfolio_Plus_AddOnControllerForm extends TZ_Portfolio_Plus_AddOnContr
                     $this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', $model->getError()));
                     $this->setMessage($this->getError(), 'error');
 
-                    $addonIdURL		= ($addon_id = $this->input -> getInt('addon_id'))?'&addon_id='.$addon_id:'';
-                    $view           = $this -> input -> getCmd('view');
                     $this->setRedirect(
-                        JRoute::_('index.php?option=' . $this->option . '&view='.$view
-                            .$addonIdURL.'&addon_view=' . $this->view_item. $this->getRedirectToItemAppend($recordId, $key)
+                        JRoute::_($this -> getAddonRedirect(). $this->getRedirectToItemAppend($recordId, $key)
                             , false
                         )
                     );
@@ -346,11 +360,8 @@ class TZ_Portfolio_Plus_AddOnControllerForm extends TZ_Portfolio_Plus_AddOnContr
         $this->releaseEditId($context, $recordId);
         $app->setUserState($context . '.data', null);
 
-        $addonIdURL		= ($addon_id = $this->input -> getInt('addon_id'))?'&addon_id='.$addon_id:'';
-        $view           = $this -> input -> getCmd('view');
         $this->setRedirect(
-            JRoute::_('index.php?option=' . $this->option . '&view='.$view
-                .$addonIdURL.'&addon_view=' . $this->view_list. $this->getRedirectToListAppend()
+            JRoute::_($this -> getAddonRedirect($this->view_list). $this->getRedirectToListAppend()
                 , false
             )
         );
@@ -399,11 +410,8 @@ class TZ_Portfolio_Plus_AddOnControllerForm extends TZ_Portfolio_Plus_AddOnContr
             $this->setError(JText::_('JLIB_APPLICATION_ERROR_EDIT_NOT_PERMITTED'));
             $this->setMessage($this->getError(), 'error');
 
-            $addonIdURL		= ($addon_id = $this->input -> getInt('addon_id'))?'&addon_id='.$addon_id:'';
-            $view           = $this -> input -> getCmd('view');
             $this->setRedirect(
-                JRoute::_('index.php?option=' . $this->option . '&view='.$view
-                    .$addonIdURL.'&addon_view=' . $this->view_list. $this->getRedirectToListAppend()
+                JRoute::_($this -> getAddonRedirect($this->view_list). $this->getRedirectToListAppend()
                     , false
                 )
             );
@@ -418,11 +426,8 @@ class TZ_Portfolio_Plus_AddOnControllerForm extends TZ_Portfolio_Plus_AddOnContr
             $this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_CHECKOUT_FAILED', $model->getError()));
             $this->setMessage($this->getError(), 'error');
 
-            $addonIdURL		= ($addon_id = $this->input -> getInt('addon_id'))?'&addon_id='.$addon_id:'';
-            $view           = $this -> input -> getCmd('view');
             $this->setRedirect(
-                JRoute::_('index.php?option=' . $this->option . '&view='.$view
-                    .$addonIdURL.'&addon_view=' . $this->view_item. $this->getRedirectToItemAppend($recordId, $urlVar)
+                JRoute::_($this -> getAddonRedirect(). $this->getRedirectToItemAppend($recordId, $urlVar)
                     , false
                 )
             );
@@ -438,8 +443,7 @@ class TZ_Portfolio_Plus_AddOnControllerForm extends TZ_Portfolio_Plus_AddOnContr
             $addonIdURL		= ($addon_id = $this->input -> getInt('addon_id'))?'&addon_id='.$addon_id:'';
             $view           = $this -> input -> getCmd('view');
             $this->setRedirect(
-                JRoute::_('index.php?option=' . $this->option . '&view='.$view
-                    .$addonIdURL.'&addon_view=' . $this->view_item. $this->getRedirectToItemAppend($recordId, $urlVar)
+                JRoute::_($this -> getAddonRedirect(). $this->getRedirectToItemAppend($recordId, $urlVar)
                     , false
                 )
             );
@@ -459,7 +463,7 @@ class TZ_Portfolio_Plus_AddOnControllerForm extends TZ_Portfolio_Plus_AddOnContr
      *
      * @since   12.2
      */
-    public function getModel($name = '', $prefix = '', $config = array('ignore_request' => true))
+    public function getModel($name = '', $prefix = '', $config = array())
     {
         if (empty($name))
         {
@@ -482,7 +486,7 @@ class TZ_Portfolio_Plus_AddOnControllerForm extends TZ_Portfolio_Plus_AddOnContr
     protected function getRedirectToItemAppend($recordId = null, $urlVar = 'id')
     {
         $tmpl   = $this->input->get('tmpl');
-        $layout = $this->input->get('layout', 'edit', 'string');
+        $layout = $this->input->get('addon_layout', 'edit', 'string');
         $append = '';
 
         // Setup redirect info.
@@ -499,6 +503,13 @@ class TZ_Portfolio_Plus_AddOnControllerForm extends TZ_Portfolio_Plus_AddOnContr
         if ($recordId)
         {
             $append .= '&' . $urlVar . '=' . $recordId;
+        }
+
+        $return = $this->input->get('return', null, 'base64');
+
+        if ($return)
+        {
+            $append .= '&return=' . $return;
         }
 
         return $append;
@@ -560,11 +571,8 @@ class TZ_Portfolio_Plus_AddOnControllerForm extends TZ_Portfolio_Plus_AddOnContr
         {
             $this->setMessage($model->getError(), 'error');
 
-            $addonIdURL		= ($addon_id = $this->input -> getInt('addon_id'))?'&addon_id='.$addon_id:'';
-            $view           = $this -> input -> getCmd('view');
             $this->setRedirect(
-                JRoute::_('index.php?option=' . $this->option . '&view='.$view
-                    .$addonIdURL.'&addon_view=' . $this->view_list. $this->getRedirectToItemAppend()
+                JRoute::_($this -> getAddonRedirect($this->view_list). $this->getRedirectToItemAppend()
                     , false
                 )
             );
@@ -589,11 +597,8 @@ class TZ_Portfolio_Plus_AddOnControllerForm extends TZ_Portfolio_Plus_AddOnContr
             $this->setError(JText::_('JLIB_APPLICATION_ERROR_EDIT_NOT_PERMITTED'));
             $this->setMessage($this->getError(), 'error');
 
-            $addonIdURL		= ($addon_id = $this->input -> getInt('addon_id'))?'&addon_id='.$addon_id:'';
-            $view           = $this -> input -> getCmd('view');
             $this->setRedirect(
-                JRoute::_('index.php?option=' . $this->option . '&view='.$view
-                    .$addonIdURL.'&addon_view=' . $this->view_list. $this->getRedirectToItemAppend()
+                JRoute::_($this -> getAddonRedirect($this->view_list). $this->getRedirectToItemAppend()
                     , false
                 )
             );
@@ -604,11 +609,8 @@ class TZ_Portfolio_Plus_AddOnControllerForm extends TZ_Portfolio_Plus_AddOnContr
 
         $table->store();
 
-        $addonIdURL		= ($addon_id = $this->input -> getInt('addon_id'))?'&addon_id='.$addon_id:'';
-        $view           = $this -> input -> getCmd('view');
         $this->setRedirect(
-            JRoute::_('index.php?option=' . $this->option . '&view='.$view
-                .$addonIdURL.'&addon_view=' . $this->view_item. $this->getRedirectToItemAppend($recordId, $urlVar)
+            JRoute::_($this -> getAddonRedirect(). $this->getRedirectToItemAppend($recordId, $urlVar)
                 , false
             )
         );
@@ -672,11 +674,8 @@ class TZ_Portfolio_Plus_AddOnControllerForm extends TZ_Portfolio_Plus_AddOnContr
                 $this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', $model->getError()));
                 $this->setMessage($this->getError(), 'error');
 
-                $addonIdURL		= ($addon_id = $this->input -> getInt('addon_id'))?'&addon_id='.$addon_id:'';
-                $view           = $this -> input -> getCmd('view');
                 $this->setRedirect(
-                    JRoute::_('index.php?option=' . $this->option . '&view='.$view
-                        .$addonIdURL.'&addon_view=' . $this->view_item. $this->getRedirectToItemAppend($recordId, $urlVar)
+                    JRoute::_($this -> getAddonRedirect(). $this->getRedirectToItemAppend($recordId, $urlVar)
                         , false
                     )
                 );
@@ -695,11 +694,8 @@ class TZ_Portfolio_Plus_AddOnControllerForm extends TZ_Portfolio_Plus_AddOnContr
             $this->setError(JText::_('JLIB_APPLICATION_ERROR_SAVE_NOT_PERMITTED'));
             $this->setMessage($this->getError(), 'error');
 
-            $addonIdURL		= ($addon_id = $this->input -> getInt('addon_id'))?'&addon_id='.$addon_id:'';
-            $view           = $this -> input -> getCmd('view');
             $this->setRedirect(
-                JRoute::_('index.php?option=' . $this->option . '&view='.$view
-                    .$addonIdURL.'&addon_view=' . $this->view_list. $this->getRedirectToItemAppend()
+                JRoute::_($this -> getAddonRedirect($this->view_list). $this->getRedirectToItemAppend()
                     , false
                 )
             );
@@ -747,8 +743,7 @@ class TZ_Portfolio_Plus_AddOnControllerForm extends TZ_Portfolio_Plus_AddOnContr
             $addonIdURL		= ($addon_id = $this->input -> getInt('addon_id'))?'&addon_id='.$addon_id:'';
             $view           = $this -> input -> getCmd('view');
             $this->setRedirect(
-                JRoute::_('index.php?option=' . $this->option . '&view='.$view
-                    .$addonIdURL.'&addon_view=' . $this->view_item. $this->getRedirectToItemAppend($recordId, $urlVar)
+                JRoute::_($this -> getAddonRedirect(). $this->getRedirectToItemAppend($recordId, $urlVar)
                     , false
                 )
             );
@@ -793,11 +788,8 @@ class TZ_Portfolio_Plus_AddOnControllerForm extends TZ_Portfolio_Plus_AddOnContr
             $this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', $model->getError()));
             $this->setMessage($this->getError(), 'error');
 
-            $addonIdURL		= ($addon_id = $this->input -> getInt('addon_id'))?'&addon_id='.$addon_id:'';
-            $view           = $this -> input -> getCmd('view');
             $this->setRedirect(
-                JRoute::_('index.php?option=' . $this->option . '&view='.$view
-                    .$addonIdURL.'&addon_view=' . $this->view_item. $this->getRedirectToItemAppend($recordId, $urlVar)
+                JRoute::_($this -> getAddonRedirect(). $this->getRedirectToItemAppend($recordId, $urlVar)
                     , false
                 )
             );
@@ -824,11 +816,8 @@ class TZ_Portfolio_Plus_AddOnControllerForm extends TZ_Portfolio_Plus_AddOnContr
                 $model->checkout($recordId);
 
                 // Redirect back to the edit screen.
-                $addonIdURL		= ($addon_id = $this->input -> getInt('addon_id'))?'&addon_id='.$addon_id:'';
-                $view           = $this -> input -> getCmd('view');
                 $this->setRedirect(
-                    JRoute::_('index.php?option=' . $this->option . '&view='.$view
-                        .$addonIdURL.'&addon_view=' . $this->view_item. $this->getRedirectToItemAppend($recordId, $urlVar)
+                    JRoute::_($this -> getAddonRedirect(). $this->getRedirectToItemAppend($recordId, $urlVar)
                         , false
                     )
                 );
@@ -840,11 +829,8 @@ class TZ_Portfolio_Plus_AddOnControllerForm extends TZ_Portfolio_Plus_AddOnContr
                 $app->setUserState($context . '.data', null);
 
                 // Redirect back to the edit screen.
-                $addonIdURL		= ($addon_id = $this->input -> getInt('addon_id'))?'&addon_id='.$addon_id:'';
-                $view           = $this -> input -> getCmd('view');
                 $this->setRedirect(
-                    JRoute::_('index.php?option=' . $this->option . '&view='.$view
-                        .$addonIdURL.'&addon_view=' . $this->view_item. $this->getRedirectToItemAppend(null, $urlVar)
+                    JRoute::_($this -> getAddonRedirect(). $this->getRedirectToItemAppend(null, $urlVar)
                         , false
                     )
                 );
@@ -856,11 +842,8 @@ class TZ_Portfolio_Plus_AddOnControllerForm extends TZ_Portfolio_Plus_AddOnContr
                 $app->setUserState($context . '.data', null);
 
                 // Redirect to the list screen.
-                $addonIdURL		= ($addon_id = $this->input -> getInt('addon_id'))?'&addon_id='.$addon_id:'';
-                $view           = $this -> input -> getCmd('view');
                 $this->setRedirect(
-                    JRoute::_('index.php?option=' . $this->option . '&view='.$view
-                        .$addonIdURL.'&addon_view=' . $this->view_list. $this->getRedirectToItemAppend()
+                    JRoute::_($this -> getAddonRedirect($this -> view_list). $this->getRedirectToItemAppend()
                         , false
                     )
                 );
@@ -872,7 +855,6 @@ class TZ_Portfolio_Plus_AddOnControllerForm extends TZ_Portfolio_Plus_AddOnContr
 
         return true;
     }
-
 
     protected function getReturnPage()
     {
@@ -886,5 +868,10 @@ class TZ_Portfolio_Plus_AddOnControllerForm extends TZ_Portfolio_Plus_AddOnContr
         {
             return base64_decode($return);
         }
+    }
+
+    protected function getAddonRedirect($addon_view = null){
+        $addon_view = $addon_view?$addon_view:$this -> view_item;
+        return parent::getAddonRedirect($addon_view);
     }
 }

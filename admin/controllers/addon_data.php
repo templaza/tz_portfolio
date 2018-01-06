@@ -23,4 +23,17 @@ defined('JPATH_PLATFORM') or die;
 tzportfolioplusimport('controller.form');
 
 class TZ_Portfolio_PlusControllerAddon_Data extends TZ_Portfolio_Plus_AddOnControllerForm
-{}
+{
+    protected function allowEdit($data = array(), $key = 'id')
+    {
+        $user       = TZ_Portfolio_PlusUser::getUser();
+        $asset      = JTable::getInstance('Asset','JTable');
+        $recordId   = (int) isset($data[$key]) ? $data[$key] : 0;
+
+        if($recordId && $asset -> loadByName($this->option . '.addon_data.' . $recordId)) {
+            return $user->authorise('tzportfolioplus.edit', $this->option . '.addon_data.' . $recordId);
+        }
+
+        return parent::allowEdit($data);
+    }
+}

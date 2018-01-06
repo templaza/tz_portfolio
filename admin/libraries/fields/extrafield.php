@@ -62,18 +62,21 @@ class TZ_Portfolio_PlusExtraField{
             }
         }
 
-        $this->id           = $field->id;
+        $this -> id = $field -> id;
+        $app        = JFactory::getApplication();
 
-        $app                    = JFactory::getApplication();
         if($field -> type) {
-            $plugin = TZ_Portfolio_PlusPluginHelper::getPlugin('extrafields', $field->type);
-            $this->plugin_params = new JRegistry($plugin->params);
+            if($plugin = TZ_Portfolio_PlusPluginHelper::getPlugin('extrafields', $field->type)) {
+                $this->plugin_params = new JRegistry($plugin->params);
+            }
         }
 
         if(isset($field -> params) && !empty($field -> params)) {
             $params         = new JRegistry($field->params);
             if($app -> isSite()) {
-                $this->params = $this->plugin_params->merge($params);
+                if($this -> plugin_params) {
+                    $this->params = $this->plugin_params->merge($params);
+                }
             }else{
                 $this -> params = $params;
             }
@@ -328,11 +331,15 @@ class TZ_Portfolio_PlusExtraField{
         $storeId = md5(__METHOD__ . "::" . $this->id);
         if (!isset(self::$cache[$storeId]))
         {
-
-            $fieldValues = $this -> field -> value;
+            $fieldValues    = null;
+            if($this -> field && isset($this -> field -> value)) {
+                $fieldValues = $this->field->value;
+            }
 
             self::$cache[$storeId] = $this->parseDefaultValues($fieldValues);
         }
+
+        $this -> checkValueInArticle(self::$cache[$storeId]);
 
         return self::$cache[$storeId];
     }
@@ -340,6 +347,7 @@ class TZ_Portfolio_PlusExtraField{
     public function getDefaultValues()
     {
         $options = $this -> getFieldValues();
+
         if($this -> multiple_option){
             $return  = null;
             if($this -> multiple){
@@ -348,7 +356,7 @@ class TZ_Portfolio_PlusExtraField{
 
             if ($options)
             {
-                foreach ($options AS $option)
+                foreach ($options AS &$option)
                 {
                     if (isset($option->default) && $option ->default == 1)
                     {
@@ -360,7 +368,35 @@ class TZ_Portfolio_PlusExtraField{
                     }
                 }
             }
+
             return $return;
+        }
+
+        return $options;
+    }
+
+    protected function checkValueInArticle(&$options)
+    {
+        $user   = TZ_Portfolio_PlusUser::getUser();
+        if(!$user -> authorise('core.edit.value', 'com_tz_portfolio_plus.field.'.(int) $this -> id)
+            && (!$user -> authorise('core.edit.value.own', 'com_tz_portfolio_plus.field.'.$this -> id)
+                || ($user -> authorise('core.edit.value.own', 'com_tz_portfolio_plus.field.'.$this -> id)
+                    && $this -> field -> created_by != $user -> id))){
+            if($this -> multiple_option) {
+                if ($options && count($options))
+                {
+                    foreach ($options AS &$option)
+                    {
+                        if (!isset($option->disabled))
+                        {
+                            $option -> disabled   = 'disabled';
+                        }
+                    }
+                }
+            }
+            if(!$this -> multiple_option || !$this -> multiple ){
+                $this->setAttribute('disabled', 'disabled', 'input');
+            }
         }
 
         return $options;
@@ -503,6 +539,7 @@ class TZ_Portfolio_PlusExtraField{
         }
 
         $this -> group  = $group?$group:$this -> group;
+
 
         if ($this->getAttribute("type", "", "input") == "")
         {
@@ -843,7 +880,6 @@ class TZ_Portfolio_PlusExtraField{
         }
     }
 
-
     public function getAttribute($name = null, $default = null, $type = 'output', $returnType = 'string')
     {
         if (!isset($this->attributes[$type])){
@@ -942,15 +978,17 @@ class TZ_Portfolio_PlusExtraField{
                 return self::$cache[$storeId];
             }
 
-            if($fieldGroupObj = TZ_Portfolio_PlusFrontHelperExtraFields::getFieldGroupsById($this->groupid)){
-                self::$cache[$storeId] = false;
-                foreach($fieldGroupObj as $fieldgroup){
-                    if($fieldgroup -> published){
-                        self::$cache[$storeId] = true;
-                        break;
+            if($this -> groupid){
+                if($fieldGroupObj = TZ_Portfolio_PlusFrontHelperExtraFields::getFieldGroupsById($this->groupid)){
+                    self::$cache[$storeId] = false;
+                    foreach($fieldGroupObj as $fieldgroup){
+                        if($fieldgroup -> published){
+                            self::$cache[$storeId] = true;
+                            break;
+                        }
                     }
+                    return self::$cache[$storeId];
                 }
-                return self::$cache[$storeId];
             }
 
             self::$cache[$storeId] = true;
@@ -1019,14 +1057,26 @@ class TZ_Portfolio_PlusExtraField{
 
     public function onSaveArticleFieldValue($value)
     {
-
         if (!$this -> article_id)
         {
             return false;
         }
 
-        $_value = $this -> prepareFieldValue($value);
+        $_value = $value;
 
+        // Set default value if the field can't edit value from article
+        $user   = TZ_Portfolio_PlusUser::getUser();
+        if(!$user -> authorise('core.edit.value', 'com_tz_portfolio_plus.field.'.(int) $this -> id)
+            && (!$user -> authorise('core.edit.value.own', 'com_tz_portfolio_plus.field.'.$this -> id)
+                || ($user -> authorise('core.edit.value.own', 'com_tz_portfolio_plus.field.'.$this -> id)
+                && $this -> field -> created_by != $user -> id))){
+            $_value = $this -> getDefaultValues();
+        }
+
+
+        $_value = $this -> prepareFieldValue($_value);
+
+        // Store field value with the article
         $db         = JFactory::getDbo();
         $query      = $db -> getQuery(true);
         $result     = true;

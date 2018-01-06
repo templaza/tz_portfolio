@@ -40,6 +40,13 @@ class TZ_Portfolio_PlusExtraFieldRadio extends TZ_Portfolio_PlusExtraField{
         return $this->loadTmplFile('input.php', __CLASS__);
     }
 
+    protected function getParentAttribute(){
+
+        if($this -> getAttribute('disabled', null, 'input')){
+            return ' disabled=""';
+        }
+    }
+
     public function getSearchName(){
         $params = $this -> params;
         if($params -> get('search_type', 'dropdownlist') == 'checkbox'

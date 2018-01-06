@@ -204,6 +204,10 @@ class TZ_Portfolio_PlusViewSearch extends JViewLegacy
 					if($config -> get('force_ssl')){
 						$ssl    = $config -> get('force_ssl');
 					}
+                    $uri    = JUri::getInstance();
+                    if($uri -> isSsl()){
+                        $ssl    = 1;
+                    }
 
                     // Create Article Link
                     $item ->link        = JRoute::_(TZ_Portfolio_PlusHelperRoute::getArticleRoute($item -> slug, $item -> catid).$tmpl);

@@ -24,6 +24,9 @@ jimport('joomla.application.component.controlleradmin');
 
 class TZ_Portfolio_Plus_AddOnControllerAdmin extends TZ_Portfolio_Plus_AddOnControllerLegacy{
 
+    protected $view_list;
+    protected $core_view_list;
+
     public function __construct($config = array())
     {
         parent::__construct($config);
@@ -105,9 +108,7 @@ class TZ_Portfolio_Plus_AddOnControllerAdmin extends TZ_Portfolio_Plus_AddOnCont
             $this->postDeleteHook($model, $cid);
         }
 
-        $addonIdURL		= ($addon_id = $this->input -> getInt('addon_id'))?'&addon_id='.$addon_id:'';
-        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=addon_datas'
-            .$addonIdURL.'&addon_view=' . $this->view_list, false));
+        $this->setRedirect(JRoute::_($this ->getAddonRedirect(), false));
     }
 
     public function display($cachable = false, $urlparams = array())
@@ -170,10 +171,7 @@ class TZ_Portfolio_Plus_AddOnControllerAdmin extends TZ_Portfolio_Plus_AddOnCont
 
         $extension = $this->input->get('extension');
         $extensionURL = ($extension) ? '&extension=' . $extension : '';
-
-        $addonIdURL		= ($addon_id = $this->input -> getInt('addon_id'))?'&addon_id='.$addon_id:'';
-        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=addon_datas&addon_view=' . $this->view_list
-            .$addonIdURL . $extensionURL, false));
+        $this->setRedirect(JRoute::_($this -> getAddonRedirect() . $extensionURL, false));
     }
 
 
@@ -200,10 +198,7 @@ class TZ_Portfolio_Plus_AddOnControllerAdmin extends TZ_Portfolio_Plus_AddOnCont
         {
             // Reorder succeeded.
             $message = JText::_('JLIB_APPLICATION_SUCCESS_ITEM_REORDERED');
-
-            $addonIdURL		= ($addon_id = $this->input -> getInt('addon_id'))?'&addon_id='.$addon_id:'';
-            $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=addon_datas&addon_view=' . $this->view_list
-                .$addonIdURL, false), $message);
+            $this->setRedirect(JRoute::_($this -> getAddonRedirect(), false), $message);
 
             return true;
         }
@@ -233,10 +228,7 @@ class TZ_Portfolio_Plus_AddOnControllerAdmin extends TZ_Portfolio_Plus_AddOnCont
         {
             // Reorder failed
             $message = JText::sprintf('JLIB_APPLICATION_ERROR_REORDER_FAILED', $model->getError());
-
-            $addonIdURL		= ($addon_id = $this->input -> getInt('addon_id'))?'&addon_id='.$addon_id:'';
-            $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=addon_datas&addon_view=' . $this->view_list
-                .$addonIdURL, false), $message, 'error');
+            $this->setRedirect(JRoute::_($this -> getAddonRedirect(), false), $message, 'error');
 
             return false;
         }
@@ -244,10 +236,7 @@ class TZ_Portfolio_Plus_AddOnControllerAdmin extends TZ_Portfolio_Plus_AddOnCont
         {
             // Reorder succeeded.
             $this->setMessage(JText::_('JLIB_APPLICATION_SUCCESS_ORDERING_SAVED'));
-
-            $addonIdURL		= ($addon_id = $this->input -> getInt('addon_id'))?'&addon_id='.$addon_id:'';
-            $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=addon_datas&addon_view=' . $this->view_list
-                .$addonIdURL, false));
+            $this->setRedirect(JRoute::_($this -> getAddonRedirect(), false));
 
             return true;
         }
@@ -274,7 +263,7 @@ class TZ_Portfolio_Plus_AddOnControllerAdmin extends TZ_Portfolio_Plus_AddOnCont
         {
             // Checkin failed.
             $message = JText::sprintf('JLIB_APPLICATION_ERROR_CHECKIN_FAILED', $model->getError());
-            $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false), $message, 'error');
+            $this->setRedirect(JRoute::_($this -> getAddonRedirect(), false), $message, 'error');
 
             return false;
         }
@@ -282,7 +271,7 @@ class TZ_Portfolio_Plus_AddOnControllerAdmin extends TZ_Portfolio_Plus_AddOnCont
         {
             // Checkin succeeded.
             $message = JText::plural($this->text_prefix . '_N_ITEMS_CHECKED_IN', count($ids));
-            $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false), $message);
+            $this->setRedirect(JRoute::_($this -> getAddonRedirect(), false), $message);
 
             return true;
         }
@@ -322,5 +311,10 @@ class TZ_Portfolio_Plus_AddOnControllerAdmin extends TZ_Portfolio_Plus_AddOnCont
 
     protected function postDeleteHook(JModelLegacy $model, $id = null)
     {
+    }
+
+    protected function getAddonRedirect($addon_view = null){
+        $addon_view = $addon_view?$addon_view:$this -> view_list;
+        return parent::getAddonRedirect($addon_view);
     }
 }

@@ -31,10 +31,28 @@ class JFormFieldFieldGroups extends JFormFieldList
         $options    = array();
 
         if($items = TZ_Portfolio_PlusHelperGroups::getGroups()) {
+
+            $user   = JFactory::getUser();
+            $jinput = JFactory::getApplication()->input;
+
             foreach ($items as $i => $item) {
+//                if($jinput -> get('id')){
+//                    if(!$user->authorise('core.edit', 'com_tz_portfolio_plus.group.' . $item->id)
+//                        && (!$user -> authorise('core.edit.own', 'com_tz_portfolio_plus.group.'.$item -> id))){
+//                        continue;
+//                    }
+//                }else{
+//                    if(!$user->authorise('core.create', 'com_tz_portfolio_plus.group.' . $item->id) ){
+//                        continue;
+//                    }
+//                }
                 $options[$i] = new stdClass();
                 $options[$i]->value = $item->id;
-                $options[$i]->text = $item->name;
+                if($item -> published ) {
+                    $options[$i]->text = $item->name;
+                }else{
+                    $options[$i] -> text    = '['.$item -> name.']';
+                }
             }
         }
 

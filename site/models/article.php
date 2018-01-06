@@ -62,8 +62,9 @@ class TZ_Portfolio_PlusModelArticle extends JModelItem
 		$this->setState('params', $params);
 
 		// TODO: Tune these values based on other permissions.
-		$user		= JFactory::getUser();
-		if ((!$user->authorise('core.edit.state', 'com_tz_portfolio_plus')) &&  (!$user->authorise('core.edit', 'com_tz_portfolio_plus'))){
+		$user		= TZ_Portfolio_PlusUser::getUser();
+		if ((!$user->authorise('core.edit.state', 'com_tz_portfolio_plus'))
+            &&  (!$user->authorise('core.edit', 'com_tz_portfolio_plus'))){
 			$this->setState('filter.published', 1);
 			$this->setState('filter.archived', 2);
 		}

@@ -20,7 +20,6 @@
 //no direct access
 defined('_JEXEC') or die('Restricted access');
 
-if ($options)
-{
+//if ($options) {
     echo JHtml::_('select.genericlist', $options, $this->getName(), $this->getAttribute(null, null, "input"), 'value', 'text', $value, $this->getId());
-}
+//}

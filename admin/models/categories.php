@@ -70,17 +70,18 @@ class TZ_Portfolio_PlusModelCategories extends JModelList
 	 * @return	void
 	 * @since	1.6
 	 */
-	protected function populateState($ordering = null, $direction = null)
+	protected function populateState($ordering = 'a.lft', $direction = 'asc')
 	{
 
         // List state information.
-        parent::populateState('a.lft', 'asc');
+        parent::populateState($ordering, $direction);
 
 		// Initialise variables.
 		$app		= JFactory::getApplication();
 		$context	= $this->context;
 
-		$extension = $app->getUserStateFromRequest('com_tz_portfolio_plus.categories.filter.extension', 'extension', 'com_tz_portfolio_plus', 'cmd');
+		$extension = $app->getUserStateFromRequest('com_tz_portfolio_plus.categories.filter.extension',
+            'extension', 'com_tz_portfolio_plus', 'cmd');
 
 		$this->setState('filter.extension', $extension);
 		$parts = explode('.', $extension);
@@ -110,12 +111,12 @@ class TZ_Portfolio_PlusModelCategories extends JModelList
 		$this->setState('filter.language', $language);
 
         // Force a language
-        $forcedLanguage = $app->input->get('forcedLanguage');
+        $forcedLanguage = $app->input->get('forcedLanguage', '', 'cmd');
 
         if (!empty($forcedLanguage))
         {
             $this->setState('filter.language', $forcedLanguage);
-            $this->setState('filter.forcedLanguage', $forcedLanguage);
+//            $this->setState('filter.forcedLanguage', $forcedLanguage);
         }
 	}
 
@@ -136,8 +137,11 @@ class TZ_Portfolio_PlusModelCategories extends JModelList
 		// Compile the store id.
 		$id	.= ':'.$this->getState('filter.search');
 		$id	.= ':'.$this->getState('filter.extension');
-		$id	.= ':'.$this->getState('filter.published');
+        $id	.= ':'.$this->getState('filter.published');
+		$id	.= ':'.$this->getState('filter.group');
+		$id	.= ':'.$this->getState('filter.access');
 		$id	.= ':'.$this->getState('filter.language');
+        $id	.= ':'.$this->getState('filter.level');
 
 		return parent::getStoreId($id);
 	}

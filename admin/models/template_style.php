@@ -606,26 +606,17 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
         $db   = $this->getDbo();
 
         // Access checks.
-        if (!$user->authorise('core.edit.state', 'com_content'))
+        if (!$user->authorise('core.edit.state', 'com_tz_portfolio_plus.style'))
         {
             throw new Exception(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
         }
 
-//        $style = JTable::getInstance('Templates', 'Table');
         $style = $this -> getTable();
 
         if (!$style->load((int) $id))
         {
             throw new Exception(JText::_('COM_TEMPLATES_ERROR_STYLE_NOT_FOUND'));
         }
-
-        // Detect disabled extension
-//        $extension = JTable::getInstance('Extension');
-
-//        if ($extension->load(array('enabled' => 0, 'type' => 'template', 'element' => $style->template, 'client_id' => $style->client_id)))
-//        {
-//            throw new Exception(JText::_('COM_TEMPLATES_ERROR_SAVE_DISABLED_TEMPLATE'));
-//        }
 
         // Reset the home fields for the client_id.
         $db->setQuery(
@@ -655,7 +646,7 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
         $db   = $this->getDbo();
 
         // Access checks.
-        if (!$user->authorise('core.edit.state', 'com_content'))
+        if (!$user->authorise('core.edit.state', 'com_tz_portfolio_plus.style'))
         {
             throw new Exception(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
         }
@@ -699,18 +690,19 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
             if ($table->load($pk))
             {
                 // Access checks.
-                if (!$user->authorise('core.delete', 'com_tz_portfolio_plus'))
+                if (!$user->authorise('core.delete', 'com_tz_portfolio_plus.style'))
                 {
-                    throw new Exception(JText::_('JERROR_CORE_DELETE_NOT_PERMITTED'));
+                    \JLog::add(\JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), \JLog::WARNING, 'jerror');
+
+                    return false;
                 }
 
                 // You should not delete a default style
-//                if ($table->home != '0')
-//                {
-//                    JError::raiseWarning(SOME_ERROR_NUMBER, Jtext::_('COM_TEMPLATES_STYLE_CANNOT_DELETE_DEFAULT_STYLE'));
-//
-//                    return false;
-//                }
+                if ($table->home != '0')
+                {
+                    JError::raiseWarning(SOME_ERROR_NUMBER, Jtext::_('COM_TZ_PORTFOLIO_PLUS_TEMPLATE_STYLE_CANNOT_DELETE_DEFAULT_STYLE'));
+                    return false;
+                }
 
                 if (!$table->delete($pk))
                 {
@@ -761,14 +753,12 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
         return true;
     }
 
-
-
     public function duplicate(&$pks)
     {
         $user	= JFactory::getUser();
 
         // Access checks.
-        if (!$user->authorise('core.create', 'com_tz_portfolio_plus'))
+        if (!$user->authorise('core.create', 'com_tz_portfolio_plus.style'))
         {
             throw new Exception(JText::_('JERROR_CORE_CREATE_NOT_PERMITTED'));
         }
@@ -785,7 +775,7 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
                 // Reset the home (don't want dupes of that field).
                 $table->home = 0;
 
-//                // Alter the title.
+                // Alter the title.
                 $m = null;
                 $table->title = $this -> generateNewTitle(null,null,$table -> title);
 
@@ -805,8 +795,6 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
 
         return true;
     }
-
-
 
     public function getItemTemplate($artId = null,$catId = null){
         $_artId = !empty($artId)?$artId:$this -> getState('content.id');
@@ -1012,5 +1000,40 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
             }
         }
         return true;
+    }
+
+    protected function canDelete($record)
+    {
+        if (!empty($record->id))
+        {
+            $user = JFactory::getUser();
+
+            if(isset($record -> asset_id) && !empty($record -> asset_id)) {
+                $state = $user->authorise('core.delete', $this->option . '.style.' . (int)$record->id);
+            }else{
+                $state = $user->authorise('core.delete', $this->option . '.style');
+            }
+            return $state;
+        }
+
+        return parent::canDelete($record);
+    }
+
+    protected function canEditState($record)
+    {
+        $user = JFactory::getUser();
+
+        // Check for existing group.
+        if (!empty($record->id))
+        {
+            if(isset($record -> asset_id) && $record -> asset_id) {
+                $state = $user->authorise('core.edit.state', $this->option . '.style.' . (int)$record->id);
+            }else{
+                $state = $user->authorise('core.edit.state', $this->option . '.style');
+            }
+            return $state;
+        }
+
+        return parent::canEditState($record);
     }
 }

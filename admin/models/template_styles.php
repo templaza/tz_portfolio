@@ -40,14 +40,14 @@ class TZ_Portfolio_PlusModelTemplate_Styles extends JModelList
         parent::__construct($config);
     }
 
-    function populateState($ordering = null, $direction = null){
+    function populateState($ordering = 't.template', $direction = 'asc'){
 
-        parent::populateState('id','desc');
+        parent::populateState($ordering, $direction);
 
-        $search  = $this -> getUserStateFromRequest('com_tz_portfolio_plus.styles.filter_search','filter_search',null,'string');
+        $search  = $this -> getUserStateFromRequest($this -> context.'.filter_search','filter_search',null,'string');
         $this -> setState('filter.search',$search);
 
-        $template  = $this -> getUserStateFromRequest('com_tz_portfolio_plus.styles.filter.template','filter_template',null,'string');
+        $template  = $this -> getUserStateFromRequest($this -> context.'.filter.template','filter_template',null,'string');
         $this -> setState('filter.template',$template);
     }
 
@@ -93,8 +93,8 @@ class TZ_Portfolio_PlusModelTemplate_Styles extends JModelList
         }
 
         // Add the list ordering clause.
-        $orderCol = $this->getState('list.ordering','t.name');
-        $orderDirn = $this->getState('list.direction','asc');
+        $orderCol   = $this->getState('list.ordering','t.template');
+        $orderDirn  = $this->getState('list.direction','asc');
 
         if(!empty($orderCol) && !empty($orderDirn)){
             $query->order($db->escape($orderCol . ' ' . $orderDirn));

@@ -43,5 +43,82 @@ class TZ_Portfolio_PlusTableExtensions extends JTable
 
         return $this->_db->loadResult();
     }
+
+    protected function _getAssetName()
+    {
+//        if($this -> type && $this -> type == 'tz_portfolio_plus-plugin') {
+            $k = $this->_tbl_key;
+
+            return 'com_tz_portfolio_plus.addon.' . (int)$this->$k;
+//        }
+//        return null;
+    }
+
+    protected function _getAssetTitle()
+    {
+//        if($this -> type && $this -> type == 'tz_portfolio_plus-plugin') {
+            $text = 'PLG_' . strtoupper($this->folder . '_' . $this->element);
+            $lang = JFactory::getLanguage();
+            if ($lang->hasKey($text)) {
+                return JText::_($text);
+            }
+
+            return $this->name;
+//        }
+//        return null;
+    }
+
+    protected function _getAssetParentId(JTable $table = null, $id = null)
+    {
+        $assetId = null;
+
+//        if($this -> type && $this -> type == 'tz_portfolio_plus-plugin'){
+            // This is a category under a category.
+            if ($assetId === null)
+            {
+                // Build the query to get the asset id for the parent category.
+                $query = $this->_db->getQuery(true)
+                    ->select($this->_db->quoteName('id'))
+                    ->from($this->_db->quoteName('#__assets'))
+                    ->where($this->_db->quoteName('name') . ' = ' . $this->_db->quote('com_tz_portfolio_plus.addon'));
+
+                // Get the asset id from the database.
+                $this->_db->setQuery($query);
+
+                if ($result = $this->_db->loadResult())
+                {
+                    $assetId = (int) $result;
+                }
+            }
+//        }
+
+        // Return the asset id.
+        if ($assetId)
+        {
+            return $assetId;
+        }
+        else
+        {
+            return parent::_getAssetParentId($table, $id);
+        }
+    }
+
+    public function store($updateNulls = false)
+    {
+        if($this -> type && $this -> type != 'tz_portfolio_plus-plugin'){
+            $this -> _trackAssets   = false;
+        }
+        return parent::store($updateNulls);
+    }
+
+    public function bind($array, $ignore = ''){
+        // Bind the rules.
+        if (isset($array['rules']) && is_array($array['rules']))
+        {
+            $rules = new JAccessRules($array['rules']);
+            $this->setRules($rules);
+        }
+        return parent::bind($array, $ignore);
+    }
 }
 ?>

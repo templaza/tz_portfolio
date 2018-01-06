@@ -43,12 +43,6 @@ class TZ_Portfolio_PlusViewAddon_Datas extends JViewLegacy{
 
     protected function addToolbar(){
         JToolBarHelper::title(JText::sprintf('COM_TZ_PORTFOLIO_PLUS_ADDONS_MANAGER_TASK','Manager Data'),'puzzle');
-        $bar    = JToolbar::getInstance();
-        $return ='<a class="btn btn-small" href="'
-            .JRoute::_('index.php?option=com_tz_portfolio_plus&view=addons').'">'
-            .'<span class="icon-puzzle"></span>&nbsp;'
-            .JText::_('COM_TZ_PORTFOLIO_PLUS_ADDONS_MANAGER').'</a>';
-
-        $bar->appendButton('Custom',$return,'manager');
+        TZ_Portfolio_PlusToolbarHelper::addonDataManager();
     }
 }

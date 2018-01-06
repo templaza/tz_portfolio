@@ -72,15 +72,12 @@ class TZ_Portfolio_PlusViewTemplate_Style extends JViewLegacy
     }
 
     protected function addToolbar(){
+
         JFactory::getApplication()->input->set('hidemainmenu', true);
 
-        $doc    = JFactory::getDocument();
-        $bar    = JToolBar::getInstance();
-        $user	= JFactory::getUser();
-
-        $canDo = JHelperContent::getActions('com_tz_portfolio_plus');
-
+        $user   = JFactory::getUser();
         $isNew  = ($this -> item -> id == 0);
+        $canDo  = JHelperContent::getActions('com_tz_portfolio_plus');
 
         JToolBarHelper::title(JText::sprintf('COM_TZ_PORTFOLIO_PLUS_TEMPLATES_MANAGER_TASK',
             JText::_(($isNew)?'COM_TZ_PORTFOLIO_PLUS_PAGE_ADD_TEMPLATE':'COM_TZ_PORTFOLIO_PLUS_PAGE_EDIT_TEMPLATE')), 'palette');
@@ -97,33 +94,11 @@ class TZ_Portfolio_PlusViewTemplate_Style extends JViewLegacy
 
         JToolBarHelper::cancel('template_style.cancel',JText::_('JTOOLBAR_CLOSE'));
 
-        JToolBarHelper::divider();
+        JToolBarHelper::help('JHELP_CONTENT_ARTICLE_MANAGER',false,
+            'https://www.tzportfolio.com/document/administration/32-how-to-use-template-styles-in-tz-portfolio-plus.html?tmpl=component');
 
-        JToolBarHelper::help('JHELP_CONTENT_ARTICLE_MANAGER',false,'http://wiki.templaza.com/TZ_Portfolio_Plus_v3:Administration#How_to_Add_or_Edit_3');
-
-        $doc -> addStyleSheet(JURI::base(true).'/components/com_tz_portfolio_plus/fonts/font-awesome-4.5.0/css/font-awesome.min.css');
-
-        $doc -> addStyleSheet(JURI::base(true).'/components/com_tz_portfolio_plus/css/style.min.css');
-
-        // Special HTML workaround to get send popup working
-        $docClass       = ' class="btn btn-small"';
-        $youtubeIcon    = '<i class="tz-icon-youtube tz-icon-14"></i>&nbsp;';
-        $wikiIcon       = '<i class="tz-icon-wikipedia tz-icon-14"></i>&nbsp;';
-
-        $youtubeTitle   = JText::_('COM_TZ_PORTFOLIO_PLUS_VIDEO_TUTORIALS');
-        $wikiTitle      = JText::_('COM_TZ_PORTFOLIO_PLUS_WIKIPEDIA_TUTORIALS');
-
-        $videoTutorial    ='<a'.$docClass.' onclick="Joomla.popupWindow(\'http://www.youtube.com/channel/UCykS6SX6L2GOI-n3IOPfTVQ/videos\', \''
-            .$youtubeTitle.'\', 800, 500, 1)"'.' href="#">'
-            .$youtubeIcon.$youtubeTitle.'</a>';
-
-        $wikiTutorial    ='<a'.$docClass.' onclick="Joomla.popupWindow(\'http://wiki.templaza.com/Main_Page\', \''
-            .$wikiTitle.'\', 800, 500, 1)"'.' href="#">'
-            .$wikiIcon
-            .$wikiTitle.'</a>';
-
-        $bar->appendButton('Custom',$videoTutorial,'youtube');
-        $bar->appendButton('Custom',$wikiTutorial,'wikipedia');
+        TZ_Portfolio_PlusToolbarHelper::customHelp('https://www.youtube.com/channel/UCrLN8LMXTyTahwDKzQ-YOqg/videos'
+            ,'COM_TZ_PORTFOLIO_PLUS_VIDEO_TUTORIALS', 'youtube', 'youtube');
     }
 
     protected function get_value($item, $method){

@@ -44,6 +44,10 @@ class TZ_Portfolio_PlusModelGroup extends JModelAdmin
             $data -> categories_assignment = $this -> getCategoriesAssignment();
         }
 
+        if(!empty($data)){
+            $data -> title  = $data -> name;
+        }
+
         return $data;
     }
 
@@ -68,6 +72,11 @@ class TZ_Portfolio_PlusModelGroup extends JModelAdmin
             $categoriesAssignment  = $data['categories_assignment'];
             unset($data['categories_assignment']);
         }
+
+        if(isset($data['title'])){
+            $data['name']   = $data['title'];
+        }
+
         if(parent::save($data)){
             $db = $this -> getDbo();
             $id = (int) $this->getState($this->getName() . '.id');
@@ -127,63 +136,6 @@ class TZ_Portfolio_PlusModelGroup extends JModelAdmin
         return true;
     }
 
-    public function delete(&$pks){
-        // Initialise variables.
-        $dispatcher = JDispatcher::getInstance();
-        $pks = (array) $pks;
-        $table = $this->getTable();
-
-        // Iterate the items to delete each one.
-        foreach ($pks as $i => $pk)
-        {
-
-            if ($table->load($pk))
-            {
-
-                if ($this->canDelete($table))
-                {
-
-                    if (!$table->delete($pk))
-                    {
-                        $this->setError($table->getError());
-                        return false;
-                    }
-
-
-
-                }
-                else
-                {
-
-                    // Prune items that you can't change.
-                    unset($pks[$i]);
-                    $error = $this->getError();
-                    if ($error)
-                    {
-                        JError::raiseWarning(500, $error);
-                        return false;
-                    }
-                    else
-                    {
-                        JError::raiseWarning(403, JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'));
-                        return false;
-                    }
-                }
-
-            }
-            else
-            {
-                $this->setError($table->getError());
-                return false;
-            }
-        }
-
-        // Clear the component's cache
-        $this->cleanCache();
-
-        return true;
-    }
-
     public function getItem($pk=null){
         // Initialise variables.
         $pk = (!empty($pk)) ? $pk : (int) $this->getState($this->getName() . '.id');
@@ -216,5 +168,43 @@ class TZ_Portfolio_PlusModelGroup extends JModelAdmin
         return parent::getItem($pk);
     }
 
+    protected function canDelete($record)
+    {
+        if (!empty($record->id))
+        {
+            $user = JFactory::getUser();
+
+            $state  = $user->authorise('core.delete', $this->option.'.group.' . (int) $record->id)
+                || ($user->authorise('core.delete.own', $this->option.'.group.' . (int) $record->id)
+                    && $record -> created_by == $user -> id);
+            return $state;
+        }
+
+        return false;
+    }
+
+    protected function canEditState($record)
+    {
+        $user = JFactory::getUser();
+
+        // Check for existing group.
+        if (!empty($record->id))
+        {
+            if(isset($record -> asset_id) && !empty($record -> asset_id)) {
+                $state = $user->authorise('core.edit.state', $this->option . '.group.' . (int)$record->id)
+                    || ($user->authorise('core.edit.state.own', $this->option . '.group.' . (int)$record->id)
+                        && $record->created_by == $user->id);
+
+            }else
+            {
+                $state  = $user->authorise('core.edit.state', $this->option.'.group')
+                    || ($user->authorise('core.edit.state.own',$this -> option.'.group')
+                        && $record -> created_by == $user -> id);
+            }
+            return $state;
+        }
+
+        return parent::canEditState($record);
+    }
 
 }

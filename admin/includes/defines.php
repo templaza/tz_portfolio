@@ -40,6 +40,7 @@ define ('COM_TZ_PORTFOLIO_PLUS_MEDIA_ARTICLE_ROOT', JPATH_ROOT . DIRECTORY_SEPAR
 define ('COM_TZ_PORTFOLIO_PLUS_MEDIA_BASEURL', JURI::root() . 'media/tz_portfolio_plus/article/cache');
 define ('COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH',COM_TZ_PORTFOLIO_PLUS_PATH_SITE.DIRECTORY_SEPARATOR.'templates');
 define('COM_TZ_PORTFOLIO_PLUS_ADDON_PATH', COM_TZ_PORTFOLIO_PLUS_PATH_SITE.DIRECTORY_SEPARATOR.'addons');
+define('COM_TZ_PORTFOLIO_PLUS_ACL_SECTIONS', array('category', 'group', 'tag', 'addon', 'template', 'style'));
 
 if(file_exists(JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/tz_portfolio_plus.xml')){
     define('COM_TZ_PORTFOLIO_PLUS_VERSION',JFactory::getXML(JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/tz_portfolio_plus.xml')->version);

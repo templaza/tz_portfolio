@@ -36,38 +36,67 @@ class TZ_Portfolio_PlusHelper
 	 */
 	public static function addSubmenu($vName)
 	{
+	    $user   = JFactory::getUser();
         $class  = 'JHtmlSidebar';
 
         call_user_func_array($class.'::addEntry',array(JText::_('COM_TZ_PORTFOLIO_PLUS_DASHBOARD'),
             'index.php?option=com_tz_portfolio_plus&view=dashboard',
             $vName == 'dashboard'));
-        call_user_func_array($class.'::addEntry',array(JText::_('COM_TZ_PORTFOLIO_PLUS_ARTICLES'),
-                    'index.php?option=com_tz_portfolio_plus&view=articles',
-                    $vName == 'articles'));
-		call_user_func_array($class.'::addEntry',array(JText::_('COM_TZ_PORTFOLIO_PLUS_CATEGORIES'),
-			'index.php?option=com_tz_portfolio_plus&view=categories',
-			$vName == 'categories'));
-		call_user_func_array($class.'::addEntry',array(JText::_('COM_TZ_PORTFOLIO_PLUS_SUBMENU_FEATURED_ARTICLES'),
-			'index.php?option=com_tz_portfolio_plus&view=featured',
-			$vName == 'featured'));
-		call_user_func_array($class.'::addEntry',array(JText::_('COM_TZ_PORTFOLIO_PLUS_FIELDS'),
-			'index.php?option=com_tz_portfolio_plus&view=fields',
-			$vName == 'fields'));
-		call_user_func_array($class.'::addEntry',array(JText::_('COM_TZ_PORTFOLIO_PLUS_FIELD_GROUPS'),
-			'index.php?option=com_tz_portfolio_plus&view=groups',
-			$vName == 'groups'));
-        call_user_func_array($class.'::addEntry',array(JText::_('COM_TZ_PORTFOLIO_PLUS_TAGS'),
-                    'index.php?option=com_tz_portfolio_plus&view=tags',
-                    $vName == 'tags'));
-		call_user_func_array($class.'::addEntry',array(JText::_('COM_TZ_PORTFOLIO_PLUS_ADDONS'),
-			'index.php?option=com_tz_portfolio_plus&view=addons',
-			$vName == 'addons'));
-		call_user_func_array($class.'::addEntry',array(JText::_('COM_TZ_PORTFOLIO_PLUS_TEMPLATE_STYLES'),
-			'index.php?option=com_tz_portfolio_plus&view=template_styles',
-			$vName == 'template_styles'));
-		call_user_func_array($class.'::addEntry',array(JText::_('COM_TZ_PORTFOLIO_PLUS_TEMPLATES'),
-			'index.php?option=com_tz_portfolio_plus&view=templates',
-			$vName == 'templates'));
+
+        if($user -> authorise('core.manage.article', 'com_tz_portfolio_plus')) {
+            call_user_func_array($class . '::addEntry', array(JText::_('COM_TZ_PORTFOLIO_PLUS_ARTICLES'),
+                'index.php?option=com_tz_portfolio_plus&view=articles',
+                $vName == 'articles'));
+        }
+
+        if($user -> authorise( 'core.manage.category', 'com_tz_portfolio_plus')) {
+            call_user_func_array($class . '::addEntry', array(JText::_('COM_TZ_PORTFOLIO_PLUS_CATEGORIES'),
+                'index.php?option=com_tz_portfolio_plus&view=categories',
+                $vName == 'categories'));
+        }
+
+        if($user -> authorise('core.manage.article', 'com_tz_portfolio_plus')) {
+            call_user_func_array($class.'::addEntry',array(JText::_('COM_TZ_PORTFOLIO_PLUS_SUBMENU_FEATURED_ARTICLES'),
+                'index.php?option=com_tz_portfolio_plus&view=featured',
+                $vName == 'featured'));
+        }
+
+        if($user -> authorise( 'core.manage.field', 'com_tz_portfolio_plus')) {
+            call_user_func_array($class . '::addEntry', array(JText::_('COM_TZ_PORTFOLIO_PLUS_FIELDS'),
+                'index.php?option=com_tz_portfolio_plus&view=fields',
+                $vName == 'fields'));
+        }
+
+        if($user -> authorise( 'core.manage.group', 'com_tz_portfolio_plus')) {
+            call_user_func_array($class.'::addEntry',array(JText::_('COM_TZ_PORTFOLIO_PLUS_FIELD_GROUPS'),
+                'index.php?option=com_tz_portfolio_plus&view=groups',
+                $vName == 'groups'));
+        }
+        if($user -> authorise( 'core.manage.tag', 'com_tz_portfolio_plus')) {
+            call_user_func_array($class.'::addEntry',array(JText::_('COM_TZ_PORTFOLIO_PLUS_TAGS'),
+                        'index.php?option=com_tz_portfolio_plus&view=tags',
+                        $vName == 'tags'));
+        }
+        if($user -> authorise( 'core.manage.addon', 'com_tz_portfolio_plus')) {
+            call_user_func_array($class.'::addEntry',array(JText::_('COM_TZ_PORTFOLIO_PLUS_ADDONS'),
+                'index.php?option=com_tz_portfolio_plus&view=addons',
+                $vName == 'addons'));
+        }
+        if($user -> authorise( 'core.manage.style', 'com_tz_portfolio_plus')) {
+            call_user_func_array($class.'::addEntry',array(JText::_('COM_TZ_PORTFOLIO_PLUS_TEMPLATE_STYLES'),
+                'index.php?option=com_tz_portfolio_plus&view=template_styles',
+                $vName == 'template_styles'));
+        }
+        if($user -> authorise( 'core.manage.template', 'com_tz_portfolio_plus')) {
+            call_user_func_array($class.'::addEntry',array(JText::_('COM_TZ_PORTFOLIO_PLUS_TEMPLATES'),
+                'index.php?option=com_tz_portfolio_plus&view=templates',
+                $vName == 'templates'));
+        }
+        if($user -> authorise( 'core.manage.acl', 'com_tz_portfolio_plus')) {
+            call_user_func_array($class.'::addEntry',array(JText::_('COM_TZ_PORTFOLIO_PLUS_ACL'),
+                'index.php?option=com_tz_portfolio_plus&view=acls',
+                $vName == 'acls'));
+        }
 	}
 
 	/**
@@ -117,8 +146,7 @@ class TZ_Portfolio_PlusHelper
 		return $result;
 	}
 
-
-	public static function getActions($component = '', $section = '', $id = 0)
+	public static function getActions($component = '', $section = '', $id = 0, $parent_section = null)
 	{
 		// Check for deprecated arguments order
 		if (is_int($component) || is_null($component))
@@ -133,14 +161,20 @@ class TZ_Portfolio_PlusHelper
 
 		$path = JPATH_ADMINISTRATOR . '/components/com_tz_portfolio_plus/access.xml';
 
+        $assetName = $component;
+
 		if ($section && $id)
 		{
 			$assetName = $component . '.' . $section . '.' . (int) $id;
-		}
-		else
-		{
-			$assetName = $component;
-		}
+
+            $tblAsset   = JTable::getInstance('Asset', 'JTable');
+            if(!$tblAsset -> loadByName($assetName)){
+                $assetName  = $component . '.' . $parent_section;
+            }
+		}elseif (empty($id))
+        {
+            $assetName = $component . '.' . $section;
+        }
 
 		$actions = JAccess::getActionsFromFile($path, "/access/section[@name='component']/");
 

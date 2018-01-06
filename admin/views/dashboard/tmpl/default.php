@@ -6,7 +6,7 @@
 
 // No direct access.
 defined('_JEXEC') or die;
-$xml	= simplexml_load_file(JPATH_ROOT . '/administrator/components/com_tz_portfolio_plus/tz_portfolio_plus.xml');
+$xml	= simplexml_load_file(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/tz_portfolio_plus.xml');
 ?>
 <script type="text/javascript">
     "use strict";
@@ -82,6 +82,7 @@ $xml	= simplexml_load_file(JPATH_ROOT . '/administrator/components/com_tz_portfo
                     $this->_quickIcon('index.php?option=com_tz_portfolio_plus&view=addons', 'icon-64-addons.png', 'COM_TZ_PORTFOLIO_PLUS_ADDONS');
                     $this->_quickIcon('index.php?option=com_tz_portfolio_plus&view=template_styles', 'icon-64-styles.png', 'COM_TZ_PORTFOLIO_PLUS_TEMPLATE_STYLES');
                     $this->_quickIcon('index.php?option=com_tz_portfolio_plus&view=templates', 'icon-64-templates.png', 'COM_TZ_PORTFOLIO_PLUS_TEMPLATES');
+                    $this->_quickIcon('index.php?option=com_tz_portfolio_plus&view=acls', 'icon-64-security.png', 'COM_TZ_PORTFOLIO_PLUS_ACL');
                     $this->_quickIcon('index.php?option=com_config&view=component&component=com_tz_portfolio_plus&return=' . urlencode(base64_encode(JUri::getInstance())), 'icon-64-configure.png', 'COM_TZ_PORTFOLIO_PLUS_CONFIGURE');
                     ?>
                 </div>
@@ -105,11 +106,11 @@ $xml	= simplexml_load_file(JPATH_ROOT . '/administrator/components/com_tz_portfo
                 </div>
                 <div class="tpDetail">
                     <ul>
-                        <li><span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_AUTHOR'); ?>:</span> <a href="http://www.tzportfolio.com/" target="_blank"><?php echo $xml->author; ?></a></li>
+                        <li><span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_AUTHOR'); ?>:</span> <a href="<?php echo $xml -> authorUrl;?>" target="_blank"><?php echo $xml->author; ?></a></li>
                         <li><span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_COPYRIGHT'); ?>:</span> <?php echo $xml->copyright; ?></li>
-                        <li><span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SUPPORT'); ?>:</span> <a href="http://www.tzportfolio.com/forum.html" title="Get Support" target="_blank"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SUPPORT_DESC'); ?></a></li>
-                        <li><span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_GROUP'); ?>:</span> <a href="https://www.facebook.com/groups/tzportfolio/" target="_blank">https://www.facebook.com/groups/tzportfolio/</a></li>
-                        <li><span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_FANPAGE'); ?>:</span> <a href="https://www.facebook.com/tzportfolio/" target="_blank">https://www.facebook.com/tzportfolio/</a></li>
+                        <li><span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SUPPORT'); ?>:</span> <a href="<?php echo $xml->forumUrl; ?>" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SUPPORT'); ?>" target="_blank"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SUPPORT_DESC'); ?></a></li>
+                        <li><span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_GROUP'); ?>:</span> <a href="<?php echo $xml->facebookGroupUrl; ?>" target="_blank"><?php echo $xml->facebookGroupUrl; ?></a></li>
+                        <li><span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_FANPAGE'); ?>:</span> <a href="<?php echo $xml->facebookUrl; ?>" target="_blank"><?php echo $xml->facebookUrl; ?></a></li>
                     </ul>
                 </div>
             </div>

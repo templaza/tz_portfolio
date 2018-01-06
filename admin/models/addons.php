@@ -20,6 +20,7 @@
 //no direct access
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\Utilities\ArrayHelper;
 jimport('joomla.application.component.modellist');
 jimport('joomla.filesystem.folder');
 
@@ -30,7 +31,7 @@ class TZ_Portfolio_PlusModelAddons extends JModelList
         if (empty($config['filter_fields']))
         {
             $config['filter_fields'] = array(
-                'extension_id', 'e.extension_id',
+                'id', 'e.id',
                 'name', 'e.name',
                 'folder', 'e.folder',
                 'element', 'e.element',
@@ -44,9 +45,7 @@ class TZ_Portfolio_PlusModelAddons extends JModelList
         parent::__construct($config);
     }
 
-    function populateState($ordering = null, $direction = null){
-
-//        parent::populateState($ordering,$direction);
+    function populateState($ordering = 'folder', $direction = 'asc'){
 
         $search  = $this -> getUserStateFromRequest($this -> context.'.filter.search','filter_search',null,'string');
         $this -> setState('filter.search',$search);
@@ -57,30 +56,23 @@ class TZ_Portfolio_PlusModelAddons extends JModelList
         $folder = $this->getUserStateFromRequest($this->context . '.filter.folder', 'filter_folder', null, 'cmd');
         $this->setState('filter.folder', $folder);
 
-        $order  = $this -> getUserStateFromRequest($this -> context.'.filter_order','filter_order',null,'string');
-        $this -> setState('filter_order',$order);
-
-        $orderDir  = $this -> getUserStateFromRequest($this -> context.'.filter_order_Dir','filter_order_Dir','asc','string');
-        $this -> setState('filter_order_Dir',$orderDir);
-
         // List state information.
-        parent::populateState('folder', 'asc');
+        parent::populateState($ordering, $direction);
     }
 
     protected function getStoreId($id = '')
     {
         // Compile the store id.
         $id .= ':' . $this->getState('filter.search');
-        $id .= ':' . $this->getState('filter.access');
-        $id .= ':' . $this->getState('filter.state');
+        $id .= ':' . $this->getState('filter.status');
         $id .= ':' . $this->getState('filter.folder');
-        $id .= ':' . $this->getState('filter.language');
 
         return parent::getStoreId($id);
     }
 
     function getListQuery(){
         $db     = $this -> getDbo();
+        $user   = JFactory::getUser();
         $query  = $db -> getQuery(true);
         $query -> select('e.*');
         $query -> from($db -> quoteName('#__tz_portfolio_plus_extensions').' AS e');
@@ -90,6 +82,17 @@ class TZ_Portfolio_PlusModelAddons extends JModelList
         // Join over the users for the checked out user.
         $query->select('uc.name AS editor')
             ->join('LEFT', '#__users AS uc ON uc.id=e.checked_out');
+
+        // Join over the asset addons.
+        $query -> select('v.title AS access_level')
+            ->join('LEFT', '#__viewlevels AS v ON v.id = e.access');
+
+        // Implement View Level Access
+        if (!$user->authorise('core.admin'))
+        {
+            $level = implode(',', $user->getAuthorisedViewLevels());
+            $query -> where('e.access IN (' . $level . ')');
+        }
 
         // Filter by search in name.
         $search = $this->getState('filter.search');
@@ -123,7 +126,6 @@ class TZ_Portfolio_PlusModelAddons extends JModelList
             }
             else
             {
-//                $query->where('protected = 0')
                 $query->where('published=' . (int) $status);
             }
         }
@@ -135,8 +137,8 @@ class TZ_Portfolio_PlusModelAddons extends JModelList
         }
 
         // Add the list ordering clause.
-        $orderCol = $this->getState('list.ordering','e.id');
-        $orderDirn = $this->getState('list.direction','desc');
+        $orderCol   = $this->getState('list.ordering','e.folder');
+        $orderDirn  = $this->getState('list.direction','asc');
         if ($orderCol == 'e.ordering')
         {
             $orderCol = 'e.name ' . $orderDirn . ', e.ordering';

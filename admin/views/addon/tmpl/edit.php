@@ -63,10 +63,10 @@ JFactory::getDocument()->addScriptDeclaration("
                         </h3>
                         <div class="info-labels">
 							<span class="label hasTooltip" title="<?php echo JHtml::tooltipText('COM_TZ_PORTFOLIO_PLUS_ADDON_FIELD_FOLDER_LABEL', 'COM_TZ_PORTFOLIO_PLUS_ADDON_FIELD_FOLDER_DESC'); ?>">
-								<?php echo $this->form->getValue('folder'); ?>
+								<?php echo $this -> item -> folder; ?>
 							</span> /
 							<span class="label hasTooltip" title="<?php echo JHtml::tooltipText('COM_TZ_PORTFOLIO_PLUS_ADDON_FIELD_ELEMENT_LABEL', 'COM_TZ_PORTFOLIO_PLUS_ADDON_FIELD_ELEMENT_DESC'); ?>">
-								<?php echo $this->form->getValue('element'); ?>
+								<?php echo $this -> item -> element; ?>
 							</span>
                         </div>
                         <div>
@@ -108,22 +108,8 @@ JFactory::getDocument()->addScriptDeclaration("
             <div class="span3">
                 <?php echo JLayoutHelper::render('joomla.edit.global', $this); ?>
                 <div class="form-vertical">
-                    <div class="control-group">
-                        <div class="control-label">
-                            <?php echo $this->form->getLabel('folder'); ?>
-                        </div>
-                        <div class="controls">
-                            <?php echo $this->form->getInput('folder'); ?>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <div class="control-label">
-                            <?php echo $this->form->getLabel('element'); ?>
-                        </div>
-                        <div class="controls">
-                            <?php echo $this->form->getInput('element'); ?>
-                        </div>
-                    </div>
+                    <?php echo $this -> form -> renderField('folder');?>
+                    <?php echo $this -> form -> renderField('element');?>
                 </div>
             </div>
         </div>
@@ -137,9 +123,21 @@ JFactory::getDocument()->addScriptDeclaration("
 
         <?php
         $this->fieldsets = array();
-        $this->ignore_fieldsets = array('basic', 'description');
+        $this->ignore_fieldsets = array('basic', 'description', 'permissions');
         echo JLayoutHelper::render('joomla.edit.params', $this);
         ?>
+
+        <?php if ($this->canDo->get('core.admin')){
+            $rules  = $this -> form -> getInput('rules');
+            $rules  = trim($rules);
+            if($rules && !empty($rules)){
+        ?>
+            <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'permissions', JText::_('JCONFIG_PERMISSIONS_LABEL')); ?>
+            <?php echo $this->form->getInput('rules'); ?>
+            <?php echo $this->form->getInput('title'); ?>
+            <?php echo JHtml::_('bootstrap.endTab'); ?>
+        <?php }
+        } ?>
 
         <?php echo JHtml::_('bootstrap.endTabSet'); ?>
     </div>

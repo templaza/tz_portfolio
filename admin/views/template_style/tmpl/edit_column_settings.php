@@ -141,7 +141,7 @@ defined('_JEXEC') or die('Restricted access');
 
 
             <div class="span6 rownameOuter">
-                <label><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_NAME');?>: </label>
+                <label><?php echo JText::_('JGLOBAL_NAME');?>: </label>
                 <input type="text" class="rowname" id="">
             </div>
 

@@ -37,10 +37,12 @@ class TZ_Portfolio_PlusViewFeatured extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-		$this->items		= $this->get('Items');
-		$this->pagination	= $this->get('Pagination');
-		$this->state		= $this->get('State');
-        $this->authors		= $this->get('Authors');
+		$this->items		    = $this->get('Items');
+		$this->pagination	    = $this->get('Pagination');
+		$this->state		    = $this->get('State');
+        $this->authors		    = $this->get('Authors');
+        $this -> filterForm     = $this -> get('FilterForm');
+        $this -> activeFilters  = $this -> get('ActiveFilters');
 
         $model  = JModelLegacy::getInstance('Categories','TZ_Portfolio_PlusModel');
         $model -> setState('filter.group',$this -> state -> get('filter.group'));
@@ -102,10 +104,8 @@ class TZ_Portfolio_PlusViewFeatured extends JViewLegacy
 		}
 
 		if ($canDo->get('core.edit.state')) {
-			JToolBarHelper::divider();
 			JToolBarHelper::publish('articles.publish', 'JTOOLBAR_PUBLISH', true);
 			JToolBarHelper::unpublish('articles.unpublish', 'JTOOLBAR_UNPUBLISH', true);
-			JToolBarHelper::divider();
 			JToolBarHelper::archiveList('articles.archive');
 			JToolBarHelper::checkin('articles.checkin');
 			JToolBarHelper::custom('featured.delete', 'remove.png', 'remove_f2.png', 'JTOOLBAR_REMOVE', true);
@@ -113,108 +113,17 @@ class TZ_Portfolio_PlusViewFeatured extends JViewLegacy
 
 		if ($state->get('filter.published') == -2 && $canDo->get('core.delete')) {
 			JToolBarHelper::deleteList('', 'articles.delete', 'JTOOLBAR_EMPTY_TRASH');
-			JToolBarHelper::divider();
 		} elseif ($canDo->get('core.edit.state')) {
-			JToolBarHelper::divider();
 			JToolBarHelper::trash('articles.trash');
 		}
 
 		if ($canDo->get('core.admin')) {
 			JToolBarHelper::preferences('com_tz_portfolio_plus');
-//			JToolBarHelper::preferences('com_content');
-			JToolBarHelper::divider();
 		}
 
-        $doc    = JFactory::getDocument();
-        // If the joomla is version 3.0
-        if(COM_TZ_PORTFOLIO_PLUS_JVERSION_COMPARE){
-            $doc -> addStyleSheet(JURI::base(true).'/components/com_tz_portfolio_plus/fonts/font-awesome-4.5.0/css/font-awesome.min.css');
-        }
-
-        $doc -> addStyleSheet(JURI::base(true).'/components/com_tz_portfolio_plus/css/style.min.css');
-
 		JToolBarHelper::help('JHELP_CONTENT_FEATURED_ARTICLES');
-        JHtmlSidebar::setAction('index.php?option=com_tz_portfolio_plus&view=featured');
 
-
-
-        // Special HTML workaround to get send popup working
-        $docClass       = ' class="btn btn-small"';
-        $youtubeIcon    = '<i class="tz-icon-youtube tz-icon-14"></i>&nbsp;';
-        $wikiIcon       = '<i class="tz-icon-wikipedia tz-icon-14"></i>&nbsp;';
-
-        $youtubeTitle   = JText::_('COM_TZ_PORTFOLIO_PLUS_VIDEO_TUTORIALS');
-        $wikiTitle      = JText::_('COM_TZ_PORTFOLIO_PLUS_WIKIPEDIA_TUTORIALS');
-
-        $videoTutorial    ='<a'.$docClass.' onclick="Joomla.popupWindow(\'http://www.youtube.com/channel/UCykS6SX6L2GOI-n3IOPfTVQ/videos\', \''
-            .$youtubeTitle.'\', 800, 500, 1)"'.' href="#">'
-            .$youtubeIcon.$youtubeTitle.'</a>';
-
-        $wikiTutorial    ='<a'.$docClass.' onclick="Joomla.popupWindow(\'http://wiki.templaza.com/Main_Page\', \''
-            .$wikiTitle.'\', 800, 500, 1)"'.' href="#">'
-            .$wikiIcon
-            .$wikiTitle.'</a>';
-
-        $bar->appendButton('Custom',$videoTutorial,'youtube');
-        $bar->appendButton('Custom',$wikiTutorial,'wikipedia');
-
-		JHtmlSidebar::addFilter(
-			JText::_('JOPTION_SELECT_PUBLISHED'),
-			'filter_published',
-			JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true)
-		);
-
-		JHtmlSidebar::addFilter(
-			JText::_('JOPTION_SELECT_CATEGORY'),
-			'filter_category_id',
-			JHtml::_('select.options', JHtml::_('category.options', 'com_content'), 'value', 'text', $this->state->get('filter.category_id'))
-		);
-
-		JHtmlSidebar::addFilter(
-			JText::_('JOPTION_SELECT_MAX_LEVELS'),
-			'filter_level',
-			JHtml::_('select.options', $this->f_levels, 'value', 'text', $this->state->get('filter.level'))
-		);
-
-		JHtmlSidebar::addFilter(
-			JText::_('JOPTION_SELECT_ACCESS'),
-			'filter_access',
-			JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
-		);
-
-		JHtmlSidebar::addFilter(
-			JText::_('JOPTION_SELECT_AUTHOR'),
-			'filter_author_id',
-			JHtml::_('select.options', $this->authors, 'value', 'text', $this->state->get('filter.author_id'))
-		);
-
-		JHtmlSidebar::addFilter(
-			JText::_('JOPTION_SELECT_LANGUAGE'),
-			'filter_language',
-			JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true), 'value', 'text', $this->state->get('filter.language'))
-		);
-
-	}
-
-    /**
-	 * Returns an array of fields the table can be sorted by
-	 *
-	 * @return  array  Array containing the field name to sort by as the key and display text as value
-	 *
-	 * @since   3.0
-	 */
-	protected function getSortFields()
-	{
-		return array(
-			'a.ordering' => JText::_('JGRID_HEADING_ORDERING'),
-			'a.state' => JText::_('JSTATUS'),
-			'a.title' => JText::_('JGLOBAL_TITLE'),
-			'category_title' => JText::_('JCATEGORY'),
-			'access_level' => JText::_('JGRID_HEADING_ACCESS'),
-			'a.created_by' => JText::_('JAUTHOR'),
-			'language' => JText::_('JGRID_HEADING_LANGUAGE'),
-			'a.created' => JText::_('JDATE'),
-			'a.id' => JText::_('JGRID_HEADING_ID')
-		);
+        TZ_Portfolio_PlusToolbarHelper::customHelp('https://www.youtube.com/channel/UCrLN8LMXTyTahwDKzQ-YOqg/videos'
+            ,'COM_TZ_PORTFOLIO_PLUS_VIDEO_TUTORIALS', 'youtube', 'youtube');
 	}
 }

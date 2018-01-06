@@ -22,8 +22,8 @@
 
         <field type="categoriesassignment" name="categories_assignment" class="checkbox"/>
 
-        <field type="modal_articles_assignment" name="articles_assignment"
-               edit = "true"
+        <field type="modal_article" name="articles_assignment"
+               edit="true" multiple="true"
                label="COM_TZ_PORTFOLIO_PLUS_ARTICLES_ASSIGNMENT"/>
 
         <field type="hidden" name="preset"/>
@@ -50,7 +50,7 @@
 
     <fields name="presets">
         <field type="text" name="name"
-               label="COM_TZ_PORTFOLIO_PLUS_NAME"/>
+               label="JGLOBAL_NAME"/>
         <field type="media" name="image"
                label="COM_TZ_PORTFOLIO_PLUS_FORM_IMAGE"/>
         <field type="text" name="demo_link"

@@ -91,11 +91,12 @@ class TZ_Portfolio_PlusInstallerAdapterTemplate extends JInstallerAdapterTemplat
         {
             $manifest_details = JInstaller::parseXMLInstallFile($this->parent->getPath('manifest'));
 
-            $this->extension->manifest_cache = json_encode($manifest_details);
-            $this->extension->state = 0;
-            $this->extension->name = $manifest_details['name'];
-            $this->extension->published = 1;
-            $this->extension->params = $this->parent->getParams();
+            $this->extension->manifest_cache    = json_encode($manifest_details);
+            $this->extension->state             = 0;
+            $this->extension->name              = $manifest_details['name'];
+            $this->extension->published         = 1;
+            $this->extension->params            = $this->parent->getParams();
+            $this->extension->access            = 1;
 
             if (!$this->extension->store())
             {

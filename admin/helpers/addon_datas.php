@@ -27,4 +27,46 @@ class TZ_Portfolio_PlusHelperAddon_Datas{
         }
         return false;
     }
+
+    public static function getActions($id, $section = 'addon',$parent_section = '')
+    {
+        $component  = 'com_tz_portfolio_plus';
+        $user	    = JFactory::getUser();
+        $result	    = new JObject;
+
+        $path       = JPATH_ADMINISTRATOR . '/components/com_tz_portfolio_plus/access.xml';
+
+//        if($id){
+        if($addon  = TZ_Portfolio_PlusPluginHelper::getPluginById($id)){
+            $_path   = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.'/'.$addon -> type.'/'. $addon -> name.'/access.xml';
+            if(JFile::exists($_path)){
+                $path   = $_path;
+            }
+        }
+//        }
+
+        $assetName = $component;
+
+        if ($section && $id)
+        {
+            $assetName = $component . '.' . $section . '.' . (int) $id;
+
+            $tblAsset   = JTable::getInstance('Asset', 'JTable');
+            if(!$tblAsset -> loadByName($assetName)){
+                $assetName  = $component . '.' . $parent_section;
+            }
+        }elseif (empty($id))
+        {
+            $assetName = $component . '.' . $section;
+        }
+
+        $actions = JAccess::getActionsFromFile($path, "/access/section[@name='addon']/");
+
+        foreach ($actions as $action)
+        {
+            $result->set($action->name, $user->authorise($action->name, $assetName));
+        }
+
+        return $result;
+    }
 }

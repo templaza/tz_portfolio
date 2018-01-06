@@ -40,7 +40,7 @@ abstract class TZ_Portfolio_PlusHelperRoute
         );
 
         //Create the link
-        $link = 'index.php?option=com_tz_portfolio_plus&amp;view=article&amp;id='. $id;
+        $link = 'index.php?option=com_tz_portfolio_plus&view=article&id='. $id;
         if ((int)$catid > 1)
         {
             $categories = JCategories::getInstance('TZ_Portfolio_Plus');
@@ -50,7 +50,7 @@ abstract class TZ_Portfolio_PlusHelperRoute
                 $needles['portfolio']    = array_reverse($category->getPath());
                 $needles['categories']  = $needles['portfolio'];
                 $needles['date']        = $needles['portfolio'];
-                $link .= '&amp;catid='.$catid;
+                $link .= '&catid='.$catid;
             }
         }
 
@@ -60,16 +60,16 @@ abstract class TZ_Portfolio_PlusHelperRoute
 
             if (isset(self::$lang_lookup[$language]))
             {
-                $link .= '&amp;lang=' . self::$lang_lookup[$language];
+                $link .= '&lang=' . self::$lang_lookup[$language];
                 $needles['language'] = $language;
             }
         }
 
         if ($item = self::_findItem($needles)) {
-            $link .= '&amp;Itemid='.$item;
+            $link .= '&Itemid='.$item;
         }
         elseif ($item = self::_findItem()) {
-            $link .= '&amp;Itemid='.$item;
+            $link .= '&Itemid='.$item;
         }
 
         return $link;
@@ -199,6 +199,11 @@ abstract class TZ_Portfolio_PlusHelperRoute
         $link   = 'index.php?option=com_tz_portfolio_plus&amp;view=date'
             .($year?'&amp;year='.$year:'').(($year && $month)?'&amp;month='.$month:'').'&amp;Itemid='.$itemId;
 
+        return $link;
+    }
+
+    public static function getAddonRoute($addon_id = null){
+        $link   = 'index.php?option=com_tz_portfolio_plus&view=addon'.($addon_id?'&addon_id='.$addon_id:'');
         return $link;
     }
 

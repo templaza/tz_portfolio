@@ -188,6 +188,7 @@ class TZ_Portfolio_PlusInstallerAdapterPlugin extends JInstallerAdapterPlugin{
         $this->extension->type      = $this->type;
         $this->extension->folder    = $this->group;
         $this->extension->element   = $this->element;
+        $this->extension->access    = 1;
 
         unset($this -> extension -> extension_id);
 
@@ -227,7 +228,7 @@ class TZ_Portfolio_PlusInstallerAdapterPlugin extends JInstallerAdapterPlugin{
             $this->extension->folder    = $this -> group;
             $this->extension->published   = 1;
             $this->extension->protected = 0;
-            $this->extension->access    = 0;
+            $this->extension->access    = 1;
             $this->extension->params    = $this->parent->getParams();
         }
 

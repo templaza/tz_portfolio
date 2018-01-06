@@ -97,48 +97,40 @@ class TZ_Portfolio_PlusControllerArticle extends JControllerForm
 	 *
 	 * @since   1.6
 	 */
-	protected function allowEdit($data = array(), $key = 'id')
-	{
-		// Initialise variables.
-		$recordId = (int) isset($data[$key]) ? $data[$key] : 0;
-		$user = JFactory::getUser();
-		$userId = $user->get('id');
+    protected function allowEdit($data = array(), $key = 'id')
+    {
+        $recordId = (int) isset($data[$key]) ? $data[$key] : 0;
+        $user = JFactory::getUser();
 
-		// Check general edit permission first.
-		if ($user->authorise('core.edit', 'com_tz_portfolio_plus.article.' . $recordId))
-		{
-			return true;
-		}
+        // Zero record (id:0), return component edit permission by calling parent controller method
+        if (!$recordId)
+        {
+            return parent::allowEdit($data, $key);
+        }
 
-		// Fallback on edit.own.
-		// First test if the permission is available.
-		if ($user->authorise('core.edit.own', 'com_tz_portfolio_plus.article.' . $recordId))
-		{
-			// Now test the owner is the user.
-			$ownerId = (int) isset($data['created_by']) ? $data['created_by'] : 0;
-			if (empty($ownerId) && $recordId)
-			{
-				// Need to do a lookup from the model.
-				$record = $this->getModel()->getItem($recordId);
+        // Check edit on the record asset (explicit or inherited)
+        if ($user->authorise('core.edit', 'com_tz_portfolio_plus.article.' . $recordId))
+        {
+            return true;
+        }
 
-				if (empty($record))
-				{
-					return false;
-				}
+        // Check edit own on the record asset (explicit or inherited)
+        if ($user->authorise('core.edit.own', 'com_tz_portfolio_plus.article.' . $recordId))
+        {
+            // Existing record already has an owner, get it
+            $record = $this->getModel()->getItem($recordId);
 
-				$ownerId = $record->created_by;
-			}
+            if (empty($record))
+            {
+                return false;
+            }
 
-			// If the owner matches 'me' then do the test.
-			if ($ownerId == $userId)
-			{
-				return true;
-			}
-		}
+            // Grant if current user is owner of the record
+            return $user->id == $record->created_by;
+        }
 
-		// Since there is no asset tracking, revert to the component permissions.
-		return parent::allowEdit($data, $key);
-	}
+        return false;
+    }
 
 	/**
 	 * Method to run batch operations.
@@ -168,5 +160,4 @@ class TZ_Portfolio_PlusControllerArticle extends JControllerForm
         echo json_encode($model -> getTags());
         die();
     }
-
 }

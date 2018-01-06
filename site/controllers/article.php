@@ -147,7 +147,7 @@ class TZ_Portfolio_PlusControllerArticle extends JControllerForm
 	protected function allowAdd($data = array())
 	{
 		// Initialise variables.
-		$user		= JFactory::getUser();
+		$user		= TZ_Portfolio_PlusUser::getUser();
 		$categoryId	= JArrayHelper::getValue($data, 'catid', $this -> input -> getInt('catid'), 'int');
 		$allow		= null;
 
@@ -178,8 +178,7 @@ class TZ_Portfolio_PlusControllerArticle extends JControllerForm
 	{
 		// Initialise variables.
 		$recordId	= (int) isset($data[$key]) ? $data[$key] : 0;
-		$user		= JFactory::getUser();
-		$userId		= $user->get('id');
+		$user		= TZ_Portfolio_PlusUser::getUser();
 		$asset		= 'com_tz_portfolio_plus.article.'.$recordId;
 
 		// Check general edit permission first.
@@ -187,30 +186,23 @@ class TZ_Portfolio_PlusControllerArticle extends JControllerForm
 			return true;
 		}
 
-		// Fallback on edit.own.
-		// First test if the permission is available.
-		if ($user->authorise('core.edit.own', $asset)) {
-			// Now test the owner is the user.
-			$ownerId	= (int) isset($data['created_by']) ? $data['created_by'] : 0;
-			if (empty($ownerId) && $recordId) {
-				// Need to do a lookup from the model.
-				$record		= $this->getModel()->getItem($recordId);
+        // Check edit own on the record asset (explicit or inherited)
+        if ($user->authorise('core.edit.own', 'com_tz_portfolio_plus.article.' . $recordId))
+        {
+            // Existing record already has an owner, get it
+            $record = $this->getModel()->getItem($recordId);
 
-				if (empty($record)) {
-					return false;
-				}
+            if (empty($record))
+            {
+                return false;
+            }
 
-				$ownerId = $record->created_by;
-			}
-
-			// If the owner matches 'me' then do the test.
-			if ($ownerId == $userId) {
-				return true;
-			}
-		}
+            // Grant if current user is owner of the record
+            return $user->get('id') == $record->created_by;
+        }
 
 		// Since there is no asset tracking, revert to the component permissions.
-		return parent::allowEdit($data, $key);
+		return false;
 	}
 
 	/**

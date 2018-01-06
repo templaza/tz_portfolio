@@ -70,56 +70,162 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
 		$document -> addStyleSheet(JURI::base(true).'/components/com_tz_portfolio_plus/css/style.min.css');
 
         // Set the default view name and format from the Request.
-        $vName		= $this -> input -> get('view', 'dashboard');
+        $view		= $this -> input -> get('view', 'dashboard');
 
         $vFormat	= $document->getType();
-        $lName		= $this -> input -> get('layout', 'default');
+        $layout		= $this -> input -> get('layout', 'default');
         $id			= $this -> input -> getInt('id');
 
+        // Check each manage permission
+        if(!$this -> _checkAccess($view)){
+            $this->setRedirect(JRoute::_('index.php?option=com_tz_portfolio_plus', false));
+            return false;
+        }
+
         // Check for addon_datas
-        if($vName == 'addon_datas' && !$this -> input -> getInt('addon_id')){
+        if($view == 'addon_datas' && !$this -> input -> getInt('addon_id')){
             $response = 500;
 
             if ($app->get('sef_rewrite'))
             {
                 $response = 404;
             }
-            throw new Exception(JText::sprintf('JLIB_APPLICATION_ERROR_VIEW_NOT_FOUND', $vName,
+            throw new Exception(JText::sprintf('JLIB_APPLICATION_ERROR_VIEW_NOT_FOUND', $view,
                 $vFormat, $this->getName() . 'View'), $response);
         }
 
         // Check for edit form.
-        if ($vName == 'category' && $lName == 'edit' && !$this->checkEditId('com_tz_portfolio_plus.edit.category', $id)) {
-            // Somehow the person just went to the form - we don't allow that.
-            $this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $id));
-            $this->setMessage($this->getError(), 'error');
-            $this->setRedirect(JRoute::_('index.php?option=com_tz_portfolio_plus&view=categories&extension='.$this->extension, false));
+        if($layout == 'edit'){
+            if (in_array($view, array('category', 'article', 'group', 'field', 'style'))
+                && !$this->checkEditId('com_tz_portfolio_plus.edit.'.$view, $id)) {
 
-            return false;
+                // Somehow the person just went to the form - we don't allow that.
+                $this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $id));
+                $this->setMessage($this->getError(), 'error');
+
+                // Check edit category
+                if($view == 'category') {
+                    $this->setRedirect(JRoute::_('index.php?option=com_tz_portfolio_plus&view=categories&extension='
+                        . $this->extension, false));
+                }
+
+                // Check edit article
+                if($view == 'article') {
+                    $this->setRedirect(JRoute::_('index.php?option=com_tz_portfolio_plus&view=articles', false));
+                }
+
+                // Check edit group
+                if($view == 'group') {
+                    $this->setRedirect(JRoute::_('index.php?option=com_tz_portfolio_plus&view=groups', false));
+                }
+
+                // Check edit field
+                if($view == 'field') {
+                    $this->setRedirect(JRoute::_('index.php?option=com_tz_portfolio_plus&view=fields', false));
+                }
+
+                // Check edit style
+                if($view == 'style') {
+                    $this->setRedirect(JRoute::_('index.php?option=com_tz_portfolio_plus&view=template_styles', false));
+                }
+
+                return false;
+            }
+
+
+            // Check for edit form of addon
+            if($view == 'addon'){
+                $user   = JFactory::getUser();
+                if(!$user -> authorise('core.admin', 'com_tz_portfolio_plus.addon.'.$id)
+                    && !$user -> authorise('core.options', 'com_tz_portfolio_plus.addon.'.$id)) {
+
+                    // Somehow the person just went to the form - we don't allow that.
+                    $this->setError(JText::_('JERROR_ALERTNOAUTHOR'));
+                    $this->setMessage($this->getError(), 'error');
+                    $this->setRedirect(JRoute::_('index.php?option=com_tz_portfolio_plus&view=addons', false));
+                    return false;
+
+                }
+            }
         }
-
-//        // Get and render the view.
-//        if ($view = $this->getView($vName, $vFormat)) {
-//            // Get the model for the view.
-//            $model = $this->getModel($vName, 'TZ_Portfolio_PlusModel', array('name' => $vName . '.' . substr($this->extension, 4)));
-//
-//            // Push the model into the view (as default).
-//            $view->setModel($model, true);
-//
-//            $view->setLayout($lName);
-//
-//            // Push document object into the view.
-//            $view->assignRef('document', $document);
-//            // Load the submenu.
-//            require_once JPATH_COMPONENT.'/helpers/categories.php';
-//
-//            //CategoriesHelper::addSubmenu($model->getState('filter.extension'));
-//            $view->display();
-//        }
 
         require_once JPATH_COMPONENT.'/helpers/categories.php';
 
+        // Footer
+        JLayoutHelper::render('footer');
+
         return parent::display($cachable, $urlparams);
 	}
-    
+
+	protected function _checkAccess($view){
+	    $user   = JFactory::getUser();
+	    $error  = false;
+
+	    switch ($view){
+            case 'articles':
+            case 'article':
+            case 'featured':
+                if(!$user -> authorise('core.manage.article', $this -> extension)){
+                    $error  = true;
+                }
+                break;
+            case 'categories':
+            case 'category':
+                if(!$user -> authorise('core.manage.category', $this -> extension)){
+                    $error  = true;
+                }
+                break;
+            case 'fields':
+            case 'field':
+                if(!$user -> authorise('core.manage.field', $this -> extension)){
+                    $error  = true;
+                }
+                break;
+            case 'groups':
+            case 'group':
+                if(!$user -> authorise('core.manage.group', $this -> extension)){
+                    $error  = true;
+                }
+                break;
+            case 'tags':
+            case 'tag':
+                if(!$user -> authorise('core.manage.tag', $this -> extension)){
+                    $error  = true;
+                }
+                break;
+            case 'addons':
+            case 'addon':
+            case 'addon_datas':
+            case 'addon_data':
+                if(!$user -> authorise('core.manage.addon', $this -> extension)){
+                    $error  = true;
+                }
+                break;
+            case 'styles':
+            case 'style':
+                if(!$user -> authorise('core.manage.style', $this -> extension)){
+                    $error  = true;
+                }
+                break;
+            case 'templates':
+            case 'template':
+                if(!$user -> authorise('core.manage.template', $this -> extension)){
+                    $error  = true;
+                }
+                break;
+            case 'acls':
+            case 'acl':
+                if(!$user -> authorise('core.manage.acl', $this -> extension)){
+                    $error  = true;
+                }
+                break;
+        }
+        if($error){
+	        $this -> setError(JText::_('JERROR_ALERTNOAUTHOR'));
+	        $this -> setMessage($this -> getError(), 'error');
+	        return false;
+        }
+        return true;
+    }
+
 }

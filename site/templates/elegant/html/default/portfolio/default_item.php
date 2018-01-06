@@ -75,70 +75,48 @@ if($this -> items):
         // Start Description and some info
         ?>
         <div class="TzPortfolioDescription">
-            <?php
-            // Begin Icon print, Email or Edit
-            if ($params->get('show_cat_print_icon', 0) || $params->get('show_cat_email_icon', 0)
-                    || $params -> get('access-edit')) : ?>
-            <div class="tp-item-tools">
-                <div class="btn-group dropdown pull-right" role="presentation">
-                    <a class="btn btn-default btn-sm dropdown-toggle"
-                       data-target="#" data-toggle="dropdown"<?php echo $params->get('enable_bootstrap',1) ? ' href="#"' :''; ?>>
-                        <i class="icon-cog"></i> <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <?php if ($params->get('show_cat_print_icon', 0)) : ?>
-                            <li class="print-icon"> <?php echo JHtml::_('icon.print_popup', $item, $params); ?> </li>
+            <div class="header-box">
+                <?php if($params -> get('show_cat_title',1)): ?>
+                    <h3 class="TzPortfolioTitle name" itemprop="name">
+                        <?php if($params->get('cat_link_titles',1)) : ?>
+                            <a<?php if($params -> get('tz_use_lightbox', 1)){echo ' class="fancybox fancybox.iframe"';}?>
+                                    href="<?php echo $item ->link; ?>"  itemprop="url">
+                                <?php echo $this->escape($item -> title); ?>
+                            </a>
+                        <?php else : ?>
+                            <?php echo $this->escape($item -> title); ?>
                         <?php endif; ?>
-                        <?php if ($params->get('show_cat_email_icon', 0)) : ?>
-                            <li class="email-icon"> <?php echo JHtml::_('icon.email', $item, $params); ?> </li>
-                        <?php endif; ?>
+                    </h3>
+                <?php endif;?>
+                <?php
+                //-- Start display some information --//
+                if ($params->get('show_cat_author',0) or $params->get('show_cat_category',0)
+                    or $params->get('show_cat_create_date',0) or $params->get('show_cat_modify_date',0)
+                    or $params->get('show_cat_publish_date',0) or $params->get('show_cat_parent_category',0)
+                    or $params->get('show_cat_hits',0) or $params->get('show_cat_tags',0) or ($item -> featured == 1)
+                    or !empty($item -> event -> beforeDisplayAdditionInfo)
+                    or !empty($item -> event -> afterDisplayAdditionInfo)) :
+                    ?>
+                    <div class="muted tpMeta">
 
-                        <?php if ($params -> get('access-edit')) : ?>
-                            <li class="edit-icon"> <?php echo JHtml::_('icon.edit', $item, $params); ?> </li>
-                        <?php endif; ?>
-                    </ul>
-                </div>
-            </div>
-            <?php endif;
-            // End Icon print, Email or Edit
-            ?>
-
-            <?php if($params -> get('show_cat_title',1)): ?>
-            <h3 class="TzPortfolioTitle name" itemprop="name">
-                <?php if($params->get('cat_link_titles',1)) : ?>
-                    <a<?php if($params -> get('tz_use_lightbox', 1)){echo ' class="fancybox fancybox.iframe"';}?>
-                        href="<?php echo $item ->link; ?>"  itemprop="url">
-                        <?php echo $this->escape($item -> title); ?>
-                    </a>
-                <?php else : ?>
-                    <?php echo $this->escape($item -> title); ?>
-                <?php endif; ?>
-            </h3>
-            <?php endif;?>
-
-            <?php
-            //-- Start display some information --//
-            if ($params->get('show_cat_author',0) or $params->get('show_cat_category',0)
-                or $params->get('show_cat_create_date',0) or $params->get('show_cat_modify_date',0)
-                or $params->get('show_cat_publish_date',0) or $params->get('show_cat_parent_category',0)
-                or $params->get('show_cat_hits',0) or $params->get('show_cat_tags',0)
-                or !empty($item -> event -> beforeDisplayAdditionInfo)
-                or !empty($item -> event -> afterDisplayAdditionInfo)) :
-                ?>
-                <div class="muted tpMeta">
-
-                    <?php echo $item -> event -> beforeDisplayAdditionInfo;?>
-
-                    <?php if ($params->get('show_cat_category',0)) : ?>
-                        <div class="TZcategory-name">
-                            <i class="tp tp-folder-open"></i>
-                            <?php $title = $this->escape($item->category_title);
-                            $url = '<a href="' . $item -> category_link
-                                . '" itemprop="genre">' . $title . '</a>';
-                            $lang_text  = 'COM_TZ_PORTFOLIO_PLUS_CATEGORY';
+                        <?php echo $item -> event -> beforeDisplayAdditionInfo;?>
+                        <?php
+                        if($item -> featured == 1) {
                             ?>
+                            <div class="tp-post-featured"><i class="tp tp-star"></i> <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_FEATURED'); ?></div>
+                            <?php
+                        }
+                        ?>
+                        <?php if ($params->get('show_cat_category',0)) : ?>
+                            <div class="TZcategory-name">
+                                <i class="tp tp-folder-open"></i>
+                                <?php $title = $this->escape($item->category_title);
+                                $url = '<a href="' . $item -> category_link
+                                    . '" itemprop="genre">' . $title . '</a>';
+                                $lang_text  = 'COM_TZ_PORTFOLIO_PLUS_CATEGORY';
+                                ?>
 
-                            <?php if(isset($item -> second_categories) && $item -> second_categories
+                                <?php if(isset($item -> second_categories) && $item -> second_categories
                                     && count($item -> second_categories)){
                                     $lang_text  = 'COM_TZ_PORTFOLIO_PLUS_CATEGORIES';
                                     foreach($item -> second_categories as $j => $scategory){
@@ -152,83 +130,84 @@ if($this -> items):
                                     }
                                 }?>
 
-                            <?php if ($params->get('cat_link_category',1)) : ?>
+                                <?php if ($params->get('cat_link_category',1)) : ?>
                                     <?php echo $url; ?>
-                            <?php else : ?>
-                                <?php echo '<span itemprop="genre">' . $title . '</span>'; ?>
-                            <?php endif; ?>
-                        </div>
-                    <?php endif; ?>
+                                <?php else : ?>
+                                    <?php echo '<span itemprop="genre">' . $title . '</span>'; ?>
+                                <?php endif; ?>
+                            </div>
+                        <?php endif; ?>
 
-                    <?php if ($params->get('show_cat_parent_category', 0) && $item->parent_id != 1) : ?>
-                        <div class="TzParentCategoryName">
-                            <?php $title = $this->escape($item->parent_title);
-                            $url = '<a href="' . JRoute::_(TZ_Portfolio_PlusHelperRoute::getCategoryRoute($item->parent_id)) . '" itemprop="genre">' . $title . '</a>'; ?>
-                            <?php if ($params->get('cat_link_parent_category', 1)) : ?>
-                                <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_PARENT', $url); ?>
-                            <?php else : ?>
-                                <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_PARENT', '<span itemprop="genre">' . $title . '</span>'); ?>
-                            <?php endif; ?>
-                        </div>
-                    <?php endif; ?>
+                        <?php if ($params->get('show_cat_parent_category', 0) && $item->parent_id != 1) : ?>
+                            <div class="TzParentCategoryName">
+                                <?php $title = $this->escape($item->parent_title);
+                                $url = '<a href="' . JRoute::_(TZ_Portfolio_PlusHelperRoute::getCategoryRoute($item->parent_id)) . '" itemprop="genre">' . $title . '</a>'; ?>
+                                <?php if ($params->get('cat_link_parent_category', 1)) : ?>
+                                    <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_PARENT', $url); ?>
+                                <?php else : ?>
+                                    <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_PARENT', '<span itemprop="genre">' . $title . '</span>'); ?>
+                                <?php endif; ?>
+                            </div>
+                        <?php endif; ?>
 
+                        <?php
+                        if ($params->get('show_cat_tags', 0)) :
+                            echo $this -> loadTemplate('tags');
+                        endif;
+                        ?>
+
+                        <?php if ($params->get('show_cat_create_date',0)) : ?>
+                            <div class="TzPortfolioDate" itemprop="dateCreated">
+                                <i class="tp tp-clock-o"></i>
+                                <?php echo JHtml::_('date', $item->created, JText::_('DATE_FORMAT_LC')); ?>
+                            </div>
+                        <?php endif; ?>
+
+                        <?php if ($params->get('show_cat_modify_date', 0)) : ?>
+                            <div class="TzPortfolioModified" itemprop="dateModified">
+                                <i class="tp tp-pencil-square-o"></i>
+                                <?php echo JHtml::_('date', $item->modified, JText::_('DATE_FORMAT_LC')); ?>
+                            </div>
+                        <?php endif; ?>
+
+                        <?php if ($params->get('show_cat_publish_date',0)) : ?>
+                            <div class="published" itemprop="datePublished">
+                                <i class="tp tp-clock-o"></i>
+                                <?php echo JHtml::_('date', $item->publish_up, JText::_('DATE_FORMAT_LC')); ?>
+                            </div>
+                        <?php endif; ?>
+
+                        <?php if ($params->get('show_cat_author', 0) && !empty($item->author )) : ?>
+                            <div class="TzPortfolioCreatedby" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                                <i class="tp tp-pencil"></i>
+                                <?php $author =  $item->author; ?>
+                                <?php $author = ($item->created_by_alias ? $item->created_by_alias : $author);?>
+                                <?php $author = '<span itemprop="name">' . $author . '</span>'; ?>
+
+                                <?php if ($params->get('cat_link_author', 1)):?>
+                                    <?php 	echo JHtml::_('link', $item -> author_link, $author, array('itemprop' => 'url')); ?>
+                                <?php else :?>
+                                    <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_WRITTEN_BY', $author); ?>
+                                <?php endif; ?>
+                            </div>
+                        <?php endif; ?>
+
+                        <?php if ($params->get('show_cat_hits', 0)) : ?>
+                            <div class="TzPortfolioHits">
+                                <i class="tp tp-eye"></i>
+                                <?php echo $item->hits; ?>
+                                <meta itemprop="interactionCount" content="UserPageVisits:<?php echo $item->hits; ?>" />
+                            </div>
+                        <?php endif; ?>
+
+                        <?php echo $item -> event -> afterDisplayAdditionInfo; ?>
+
+                    </div>
                     <?php
-                    if ($params->get('show_cat_tags', 0)) :
-                        echo $this -> loadTemplate('tags');
-                    endif;
-                    ?>
-
-                    <?php if ($params->get('show_cat_create_date',0)) : ?>
-                        <div class="TzPortfolioDate" itemprop="dateCreated">
-                            <i class="tp tp-clock-o"></i>
-                            <?php echo JHtml::_('date', $item->created, JText::_('DATE_FORMAT_LC')); ?>
-                        </div>
-                    <?php endif; ?>
-
-                    <?php if ($params->get('show_cat_modify_date', 0)) : ?>
-                        <div class="TzPortfolioModified" itemprop="dateModified">
-                            <i class="tp tp-pencil-square-o"></i>
-                            <?php echo JHtml::_('date', $item->modified, JText::_('DATE_FORMAT_LC')); ?>
-                        </div>
-                    <?php endif; ?>
-
-                    <?php if ($params->get('show_cat_publish_date',0)) : ?>
-                        <div class="published" itemprop="datePublished">
-                            <i class="tp tp-clock-o"></i>
-                            <?php echo JHtml::_('date', $item->publish_up, JText::_('DATE_FORMAT_LC')); ?>
-                        </div>
-                    <?php endif; ?>
-
-                    <?php if ($params->get('show_cat_author', 0) && !empty($item->author )) : ?>
-                        <div class="TzPortfolioCreatedby" itemprop="author" itemscope itemtype="http://schema.org/Person">
-                            <i class="tp tp-pencil"></i>
-                            <?php $author =  $item->author; ?>
-                            <?php $author = ($item->created_by_alias ? $item->created_by_alias : $author);?>
-                            <?php $author = '<span itemprop="name">' . $author . '</span>'; ?>
-
-                            <?php if ($params->get('cat_link_author', 1)):?>
-                                <?php 	echo JHtml::_('link', $item -> author_link, $author, array('itemprop' => 'url')); ?>
-                            <?php else :?>
-                                <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_WRITTEN_BY', $author); ?>
-                            <?php endif; ?>
-                        </div>
-                    <?php endif; ?>
-
-                    <?php if ($params->get('show_cat_hits', 0)) : ?>
-                        <div class="TzPortfolioHits">
-                            <i class="tp tp-eye"></i>
-                            <?php echo $item->hits; ?>
-                            <meta itemprop="interactionCount" content="UserPageVisits:<?php echo $item->hits; ?>" />
-                        </div>
-                    <?php endif; ?>
-
-                    <?php echo $item -> event -> afterDisplayAdditionInfo; ?>
-
-                </div>
-            <?php
-            endif;
-            //-- End display some information --//
-            ?>
+                endif;
+                //-- End display some information --//
+                ?>
+            </div>
             <?php
             if(!$params -> get('show_cat_intro',1)) {
                 //Call event onContentAfterTitle on plugin
@@ -273,6 +252,27 @@ if($this -> items):
         <?php
         // End Description and some info
         endif;?>
+        <?php
+        // Begin Icon print, Email or Edit
+        if ($params->get('show_cat_print_icon', 0) || $params->get('show_cat_email_icon', 0)
+            || $params -> get('access-edit')) : ?>
+            <div class="tp-item-tools">
+                <ul class="tp-list-tools">
+                    <?php if ($params->get('show_cat_print_icon', 0)) : ?>
+                        <li class="print-icon"> <?php echo JHtml::_('icon.print_popup', $item, $params); ?> </li>
+                    <?php endif; ?>
+                    <?php if ($params->get('show_cat_email_icon', 0)) : ?>
+                        <li class="email-icon"> <?php echo JHtml::_('icon.email', $item, $params); ?> </li>
+                    <?php endif; ?>
+
+                    <?php if ($params -> get('access-edit')) : ?>
+                        <li class="edit-icon"> <?php echo JHtml::_('icon.edit', $item, $params); ?> </li>
+                    <?php endif; ?>
+                </ul>
+            </div>
+        <?php endif;
+        // End Icon print, Email or Edit
+        ?>
     </div>
 </div>
 

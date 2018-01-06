@@ -21,6 +21,7 @@
 defined('_JEXEC') or die;
 
 class TZ_Portfolio_PlusHelperTags{
+
     protected static $cache     = array();
     protected static $error     =  null;
 
@@ -218,6 +219,54 @@ class TZ_Portfolio_PlusHelperTags{
             }
         }
         return false;
+    }
+
+
+    public static function searchTags($filters = array())
+    {
+        $db = \JFactory::getDbo();
+        $query = $db->getQuery(true)
+            ->select('id AS value')
+            ->select('title AS text')
+            ->select('alias AS path')
+            ->from('#__tz_portfolio_plus_tags');
+
+        // Search in title or path
+        if (!empty($filters['like']))
+        {
+            $query->where(
+                '(' . $db->quoteName('title') . ' LIKE ' . $db->quote('%' . $filters['like'] . '%')
+                . ' OR ' . $db->quoteName('alias') . ' LIKE ' . $db->quote('%' . $filters['like'] . '%') . ')'
+            );
+        }
+
+        // Filter title
+        if (!empty($filters['title']))
+        {
+            $query->where($db->quoteName('title') . ' = ' . $db->quote($filters['title']));
+        }
+
+        // Filter on the published state
+        if (isset($filters['published']) && is_numeric($filters['published']))
+        {
+            $query->where('published = ' . (int) $filters['published']);
+        }
+
+        $query->group('id, title, alias');
+
+        // Get the options.
+        $db->setQuery($query);
+
+        try
+        {
+            $results = $db->loadObjectList();
+        }
+        catch (\RuntimeException $e)
+        {
+            return array();
+        }
+
+        return $results;
     }
 
     protected static function _insertTagsByTitle($titles){

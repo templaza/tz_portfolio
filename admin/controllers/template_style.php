@@ -234,4 +234,28 @@ class TZ_Portfolio_PlusControllerTemplate_Style extends JControllerForm
         );
     }
 
+    protected function allowEdit($data = array(), $key = 'id')
+    {
+        $recordId = (int) isset($data[$key]) ? $data[$key] : 0;
+        $user = JFactory::getUser();
+
+        // Zero record (id:0), return component edit permission by calling parent controller method
+        if (!$recordId)
+        {
+            return parent::allowEdit($data, $key);
+        }
+
+        // Existing record already has an owner, get it
+        $record = $this->getModel()->getItem($recordId);
+
+        // Check edit on the record asset (explicit or inherited)
+        if(isset($record -> asset_id) && $record -> asset_id){
+            return $user->authorise('core.edit', $this -> option.'.style.' . $recordId);
+        }else{
+            return $user->authorise('core.edit', $this -> option.'.style');
+        }
+
+        return false;
+    }
+
 }

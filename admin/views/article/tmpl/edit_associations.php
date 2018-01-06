@@ -18,13 +18,5 @@
 -------------------------------------------------------------------------*/
 
 defined('_JEXEC') or die;
-$displayData    = $this -> form;
-?>
-<?php
-foreach($displayData -> getFieldset('item_associations') as $field):
-?>
-<div class="control-group">
-    <div class="control-label"><?php echo $field -> label;?></div>
-    <div class="controls"><?php echo $field -> input;?></div>
-</div>
-<?php endforeach;?>
+
+echo JLayoutHelper::render('joomla.edit.associations', $this);

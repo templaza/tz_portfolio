@@ -25,38 +25,6 @@ class TZ_Portfolio_PlusControllerGroup extends JControllerForm
 {
     protected $view_list = 'groups';
 
-    public function cancel($key = null)
-    {
-        JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-
-        // Initialise variables.
-        $app = JFactory::getApplication();
-        $model = $this->getModel();
-        $table = $model->getTable();
-        $checkin = property_exists($table, 'checked_out');
-        $context = "$this->option.edit.$this->context";
-
-        if (empty($key))
-        {
-            $key = $table->getKeyName();
-        }
-
-        $recordId = $this -> input -> getInt($key);
-
-        // Clean the session data and redirect.
-        $this->releaseEditId($context, $recordId);
-        $app->setUserState($context . '.data', null);
-
-        $this->setRedirect(
-            JRoute::_(
-                'index.php?option=' . $this->option . '&view=' . $this->view_list
-                    . $this->getRedirectToListAppend(), false
-            )
-        );
-
-        return true;
-    }
-
     public function delete(&$pks){
         // Initialise variables.
         $dispatcher = JDispatcher::getInstance();
@@ -114,107 +82,44 @@ class TZ_Portfolio_PlusControllerGroup extends JControllerForm
         return true;
     }
 
-    public function save($key = null, $urlVar = null){
+    protected function allowAdd($data = array())
+    {
+        $user = TZ_Portfolio_PlusUser::getUser();
+        return ($user->authorise('core.create','com_tz_portfolio_plus.group'));
+    }
 
-        // Check for request forgeries.
-        JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+    protected function allowEdit($data = array(), $key = 'id')
+    {
+        $recordId = (int) isset($data[$key]) ? $data[$key] : 0;
+        $user = JFactory::getUser();
 
-        $app   = JFactory::getApplication();
-        $lang  = JFactory::getLanguage();
-        $model  = $this -> getModel();
-        $table = $model->getTable();
-        $context = "$this->option.edit.$this->context";
-        $task = $this->getTask();
-
-        // Determine the name of the primary key for the data.
-        if (empty($key))
+        // Zero record (id:0), return component edit permission by calling parent controller method
+        if (!$recordId)
         {
-            $key = $table->getKeyName();
+            return parent::allowEdit($data, $key);
         }
 
-        // To avoid data collisions the urlVar may be different from the primary key.
-        if (empty($urlVar))
+        // Check edit on the record asset (explicit or inherited)
+        if ($user->authorise('core.edit', $this -> option.'.group.' . $recordId))
         {
-            $urlVar = $key;
+            return true;
         }
 
-        $recordId = $this -> input -> getInt($urlVar);
-        $data  = $this -> input -> post -> get('jform', array(), 'array');
-
-        $context = "$this->option.edit.$this->context";
-        $task = $this->getTask();
-
-        // The save2copy task needs to be handled slightly differently.
-        if ($task == 'save2copy')
+        // Check edit own on the record asset (explicit or inherited)
+        if ($user->authorise('core.edit.own', $this -> option.'.group.' . $recordId))
         {
-            // Reset the ID and then treat the request as for Apply.
-            $data[$key] = 0;
-            $task = 'apply';
+            // Existing record already has an owner, get it
+            $record = $this->getModel()->getItem($recordId);
+
+            if (empty($record))
+            {
+                return false;
+            }
+
+            // Grant if current user is owner of the record
+            return $user->id == $record->created_by;
         }
 
-        // Attempt to save the data.
-        if(!$model -> save($data)){
-            // Redirect back to the edit screen.
-            $this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $model->getError()));
-            $this->setMessage($this->getError(), 'error');
-            $this->setRedirect(
-                JRoute::_(
-                    'index.php?option=' . $this->option . '&view=' . $this->view_item
-                        . $this->getRedirectToItemAppend($recordId, $urlVar), false
-                )
-            );
-
-            return false;
-        }
-
-        // Redirect the user and adjust session state based on the chosen task.
-        switch ($task)
-        {
-            case 'apply':
-                // Set the record data in the session.
-                $recordId = $model->getState($this->context . '.id');
-                $app->setUserState($context . '.data', null);
-
-                // Redirect back to the edit screen.
-                $this->setRedirect(
-                    JRoute::_(
-                        'index.php?option=' . $this->option . '&view=' . $this->view_item
-                            . $this->getRedirectToItemAppend($recordId, $urlVar), false
-                    ),
-                    JText::_('COM_TZ_PORTFOLIO_PLUS_FIELDS_GROUP_SUCCESS')
-                );
-                break;
-
-            case 'save2new':
-                // Clear the record id and data from the session.
-                $this->releaseEditId($context, $recordId);
-                $app->setUserState($context . '.data', null);
-
-                // Redirect back to the edit screen.
-                $this->setRedirect(
-                    JRoute::_(
-                        'index.php?option=' . $this->option . '&view=' . $this->view_item
-                            . $this->getRedirectToItemAppend(null, $urlVar), false
-                    ),
-                    JText::_('COM_TZ_PORTFOLIO_PLUS_FIELDS_GROUP_SUCCESS')
-                );
-                break;
-
-            default:
-                // Clear the record id and data from the session.
-                $this->releaseEditId($context, $recordId);
-                $app->setUserState($context . '.data', null);
-
-                // Redirect to the list screen.
-                $this->setRedirect(
-                    JRoute::_(
-                        'index.php?option=' . $this->option . '&view=' . $this->view_list
-                            . $this->getRedirectToListAppend(), false
-                    ),
-                    JText::_('COM_TZ_PORTFOLIO_PLUS_FIELDS_GROUP_SUCCESS')
-                );
-                break;
-        }
-        return true;
+        return false;
     }
 }

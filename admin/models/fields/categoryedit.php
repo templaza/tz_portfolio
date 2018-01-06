@@ -127,6 +127,8 @@ class JFormFieldCategoryEdit extends JFormFieldList
 			JError::raiseWarning(500, $e->getMessage());
 		}
 
+		$options_disable    = (array) $this -> element['options_disable'];
+
 		// Pad the option text with spaces using depth level as a multiplier.
 		for ($i = 0, $n = count($options); $i < $n; $i++)
 		{
@@ -148,6 +150,11 @@ class JFormFieldCategoryEdit extends JFormFieldList
 			{
 				$options[$i]->text = str_repeat('- ', $options[$i]->level) . '[' . $options[$i]->text . ']';
 			}
+
+			if(count($options_disable) && in_array($options[$i] -> value, $options_disable)){
+			    $options[$i] -> disable     = true;
+            }
+
 		}
 
 		// Get the current user object.

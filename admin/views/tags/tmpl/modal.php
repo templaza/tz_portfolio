@@ -39,46 +39,27 @@ $listDirn	= $this-> state -> filter_order_Dir;
 
 <form action="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&view=tags&layout=modal&tmpl=component&function='.$function.'&'.JSession::getFormToken().'=1');?>"
       method="post" name="adminForm" id="adminForm" class="form-inline">
-	<fieldset class="filter clearfix">
-        <div class="btn-toolbar">
-			<div class="btn-group pull-left">
-				<label for="filter_search">
-					<?php echo JText::_('JSEARCH_FILTER_LABEL'); ?>
-				</label>
-				<input type="text" name="filter_search" id="filter_search"
-                       value="<?php echo $this -> state -> get('filter.search');?>"
-                       size="30" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_TAGS_SEARCH_DESC'); ?>" />
-			</div>
-			<div class="btn-group pull-left">
-				<button type="submit" class="btn hasTooltip"
-                        data-placement="bottom" data-original-title="<?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?>">
-					<i class="icon-search"></i></button>
-				<button type="button" class="btn hasTooltip" data-placement="bottom"
-                        data-original-title="<?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?>"
-                        onclick="document.id('filter_search').value='';this.form.submit();">
-					<i class="icon-remove"></i></button>
-			</div>
-            <div class="btn-group pull-right">
-                <select name="filter_state" class="inputbox" onchange="this.form.submit()">
-				<option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED');?></option>
-                <?php $state = array( 'P' => JText::_('JPUBLISHED'), 'U' => JText::_('JUNPUBLISHED'));?>
-				<?php echo JHtml::_('select.options',$state,'value','text',$this -> state -> filter_state);?>
-			</select>
-            </div>
-			<div class="clearfix"></div>
-		</div>
-        <hr class="hr-condensed" />
-	</fieldset>
+
+    <?php
+    // Search tools bar
+    echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+    ?>
+
+    <?php if (empty($this->items)){ ?>
+        <div class="alert alert-no-items">
+            <?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+        </div>
+    <?php }else{ ?>
 
 	<table class="table table-striped table-condensed">
 		<thead>
 			<tr>
                 <th width="10">#</th>
                 <th class="title">
-                    <?php echo JHtml::_('grid.sort','COM_TZ_PORTFOLIO_PLUS_NAME','name',$this -> state -> filter_order_Dir,$this -> state -> filter_order);?>
+                    <?php echo JHtml::_('searchtools.sort','JGLOBAL_TITLE','name',$this -> state -> filter_order_Dir,$this -> state -> filter_order);?>
                 </th>
                 <th nowrap="nowrap" width="1%">
-                    <?php echo JHtml::_('grid.sort','JGRID_HEADING_ID','id',$this -> state -> filter_order_Dir,$this -> state -> filter_order);?>
+                    <?php echo JHtml::_('searchtools.sort','JGRID_HEADING_ID','id',$this -> state -> filter_order_Dir,$this -> state -> filter_order);?>
                 </th>
             </tr>
 		</thead>
@@ -114,12 +95,9 @@ $listDirn	= $this-> state -> filter_order_Dir;
         </tbody>
         <?php endif;?>
 	</table>
+    <?php }?>
 
-	<div>
-		<input type="hidden" name="task" value="" />
-		<input type="hidden" name="boxchecked" value="0" />
-		<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
-		<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
-		<?php echo JHtml::_('form.token'); ?>
-	</div>
+    <input type="hidden" name="task" value="" />
+    <input type="hidden" name="boxchecked" value="0" />
+    <?php echo JHtml::_('form.token'); ?>
 </form>

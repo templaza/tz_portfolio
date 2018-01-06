@@ -90,70 +90,67 @@ class TZ_Portfolio_PlusModelTemplate extends TZ_Portfolio_PlusModelAddon
 
     public function uninstall($eid = array())
     {
-        $user   = JFactory::getUser();
+        $user   = TZ_Portfolio_PlusUser::getUser();
         $app    = JFactory::getApplication();
         $view   = $app -> input -> getCmd('view');
 
-        if ($user->authorise('core.delete', 'com_tz_portfolio_plus'))
+        if (!$user->authorise('core.delete', 'com_tz_portfolio_plus.template'))
         {
-            $failed = array();
+            \JLog::add(\JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), \JLog::WARNING, 'jerror');
+            return false;
+        }
 
-            /*
-             * Ensure eid is an array of extension ids in the form id => client_id
-             * TODO: If it isn't an array do we want to set an error and fail?
-             */
-            if (!is_array($eid))
-            {
-                $eid = array($eid => 0);
-            }
+        if (!is_array($eid))
+        {
+            $eid = array($eid => 0);
+        }
 
-            // Get an installer object for the extension type
-            $row = $this -> getTable();
+        // Get an installer object for the extension type
+        $table = $this -> getTable();
 
-            $template_table     = $this -> getTable('Templates');
-            $template_default   = $template_table -> getHome();
-            $template_style     = JModelAdmin::getInstance('Template_Style','TZ_Portfolio_PlusModel',array('ignore_request' => true));
+        $template_table     = $this -> getTable('Templates');
+        $template_default   = $template_table -> getHome();
+        $template_style     = JModelAdmin::getInstance('Template_Style','TZ_Portfolio_PlusModel',array('ignore_request' => true));
 
-            // Uninstall the chosen extensions
-            $msgs = array();
-            $result = false;
+        // Uninstall the chosen extensions
+        $msgs = array();
+        $result = false;
 
-            foreach ($eid as $id)
-            {
-                $id = trim($id);
-                $row->load($id);
-
-                $langstring = 'COM_TZ_PORTFOLIO_PLUS_' . strtoupper($row->type);
+        foreach ($eid as $i => $id)
+        {
+            $id = trim($id);
+            if($table -> load($id)){
+                $langstring = 'COM_TZ_PORTFOLIO_PLUS_' . strtoupper($table -> type);
                 $rowtype = JText::_($langstring);
 
                 if (strpos($rowtype, $langstring) !== false)
                 {
-                    $rowtype = $row->type;
+                    $rowtype = $table -> type;
                 }
 
-                if ($row->type && $row->type == 'tz_portfolio_plus-template')
+                if ($table -> type && $table -> type == 'tz_portfolio_plus-template')
                 {
 
                     // Is the template we are trying to uninstall a core one?
                     // Because that is not a good idea...
-                    if ($row->protected)
+                    if ($table ->protected)
                     {
-                        JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_TPL_UNINSTALL_WARNCORETEMPLATE', JText::_('COM_TZ_PORTFOLIO_PLUS_'.$view)), JLog::WARNING, 'jerror');
-
+                        JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_TPL_UNINSTALL_WARNCORETEMPLATE',
+                            JText::_('COM_TZ_PORTFOLIO_PLUS_'.$view)), JLog::WARNING, 'jerror');
                         return false;
                     }
 
-                    if($template_default -> template == $row -> element){
+                    if($template_default -> template == $table -> element){
                         $msg    = JText::_('JLIB_INSTALLER_ERROR_TPL_UNINSTALL_TEMPLATE_DEFAULT');
                         $app->enqueueMessage($msg,'warning');
                         return false;
                     }
 
                     $tpl_path   = COM_TZ_PORTFOLIO_PLUS_PATH_SITE.DIRECTORY_SEPARATOR.'templates'
-                        .DIRECTORY_SEPARATOR.$row -> element;
+                        .DIRECTORY_SEPARATOR.$table -> element;
 
                     if(JFolder::exists($tpl_path)){
-                        if(!$template_style -> deleteTemplate($row -> name)){
+                        if(!$template_style -> deleteTemplate($table -> name)){
                             $app -> enqueueMessage($template_style -> getError(),'warning');
                             return false;
                         }
@@ -176,43 +173,52 @@ class TZ_Portfolio_PlusModelTemplate extends TZ_Portfolio_PlusModelAddon
                         $result = true;
                     }
                 }
+            }else
+            {
+                $this->setError($table->getError());
+
+                return false;
             }
-
-            $msg = implode("<br />", $msgs);
-            $app->enqueueMessage($msg);
-
-            return $result;
         }
-        else
-        {
-            JError::raiseWarning(403, JText::_('JERROR_CORE_DELETE_NOT_PERMITTED'));
-        }
+
+        $msg = implode("<br />", $msgs);
+        $app->enqueueMessage($msg);
+
+        return $result;
     }
 
-    public function publish(&$pks, $value = 1)
+    protected function canDelete($record)
     {
-        $table  = $this -> getTable();
-        $app    = JFactory::getApplication();
-        $result = false;
-        if(is_array($pks)){
-            foreach($pks as $i => $pk){
-                if($table -> load($pk)){
-                    if((int)$table ->protected){
-                        unset($pks[$i]);
-                        $app -> enqueueMessage(JText::_('COM_TZ_PORTFOLIO_PLUS_TEMPLATES_ERROR_DISABLE_DEFAULT_TEMPLATE_NOT_PERMITTED'),'notice');
-                    }else{
-                        $result = true;
-                    }
-                }
+        if (!empty($record->id))
+        {
+            $user = JFactory::getUser();
+
+            if(isset($record -> asset_id) && !empty($record -> asset_id)) {
+                $state = $user->authorise('core.delete', $this->option . '.template.' . (int)$record->id);
+            }else{
+                $state = $user->authorise('core.delete', $this->option . '.template');
             }
-
-        }else{
-
+            return $state;
         }
 
-        if($result) {
-            return parent::publish($pks, $value); // TODO: Change the autogenerated stub
+        return parent::canDelete($record);
+    }
+
+    protected function canEditState($record)
+    {
+        $user = JFactory::getUser();
+
+        // Check for existing group.
+        if (!empty($record->id))
+        {
+            if(isset($record -> asset_id) && $record -> asset_id) {
+                $state = $user->authorise('core.edit.state', $this->option . '.template.' . (int)$record->id);
+            }else{
+                $state = $user->authorise('core.edit.state', $this->option . '.template');
+            }
+            return $state;
         }
-        return $result;
+
+        return parent::canEditState($record);
     }
 }

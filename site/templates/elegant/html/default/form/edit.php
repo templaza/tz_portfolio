@@ -31,14 +31,9 @@ JHtml::_('formbehavior.chosen', 'select');
 $params = $this->state->get('params');
 
 $doc    = JFactory::getDocument();
-$doc -> addscript(TZ_Portfolio_PlusUri::root(true, null, true).'/js/tz-chosen.min.js');
 $doc -> addScript(TZ_Portfolio_PlusUri::root(true, null, true).'/js/jquery-ui.min.js');
 $doc -> addStyleSheet(TZ_Portfolio_PlusUri::root(true, null, true).'/css/jquery-ui.min.css');
 $doc -> addStyleSheet(TZ_Portfolio_PlusUri::root(true, null, true).'/css/tz_portfolio_plus.min.css');
-
-if(!$this -> tagsSuggest){
-    $this -> tagsSuggest    = 'null';
-}
 
 $doc -> addScriptDeclaration('
 (function($){
@@ -50,7 +45,6 @@ $doc -> addScriptDeclaration('
                 Joomla.submitform(task, document.getElementById("item-form"));
             }
         }
-        $(".suggest").tzChosen({ source: '.$this -> tagsSuggest.', sourceEdit: '.$this -> listTags.',keys: ["\,","/"]});
         
         $(\'#jform_second_catid option[value="\'+$(\'#jform_catid\').val()+\'"]\').attr(\'disabled\',\'disabled\');
             $(\'#jform_second_catid\').trigger(\'liszt:updated\');

@@ -52,7 +52,8 @@ class TZ_Portfolio_PlusViewForm extends JViewLegacy
 
         if (empty($this->item->id))
         {
-            $authorised = $user->authorise('core.create', 'com_tz_portfolio_plus') || count($user->getAuthorisedCategories('com_tz_portfolio_plus', 'core.create'));
+            $authorised = $user->authorise('core.create', 'com_tz_portfolio_plus')
+                || count($user->getAuthorisedCategories('com_tz_portfolio_plus', 'core.create'));
         }
         else
         {

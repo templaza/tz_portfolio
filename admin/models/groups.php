@@ -20,9 +20,12 @@
 // No direct access
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\Utilities\ArrayHelper;
+
 jimport('joomla.application.component.modellist');
 
 class TZ_Portfolio_PlusModelGroups extends JModelList{
+
     public function __construct($config = array()){
         if (empty($config['filter_fields']))
         {
@@ -30,28 +33,44 @@ class TZ_Portfolio_PlusModelGroups extends JModelList{
                 'id', 'g.id',
                 'name', 'g.name',
                 'published', 'g.published',
-                'ordering', 'g.ordering'
+                'ordering', 'g.ordering',
+                'access', 'g.access',
             );
         }
         parent::__construct($config);
     }
 
-    public function populateState($ordering = null, $direction = null){
+    protected function getStoreId($id = '')
+    {
+        // Compile the store id.
+        $id .= ':' . $this->getState('filter.search');
+        $id .= ':' . $this->getState('filter.access');
+        $id .= ':' . $this->getState('filter.published');
 
-        parent::populateState('id','desc');
+        return parent::getStoreId($id);
+    }
+
+    public function populateState($ordering = 'g.id', $direction = 'DESC'){
 
         $app        = JFactory::getApplication();
-        $context    = 'com_tz_portfolio_plus.groups';
 
-        $state  = $app -> getUserStateFromRequest($context.'filter_state','filter_state',null,'string');
-        $this -> setState('filter_state',$state);
-        $search  = $app -> getUserStateFromRequest($context.'.filter_search','filter_search',null,'string');
-        $this -> setState('filter_search',$search);
+        $search  = $app -> getUserStateFromRequest($this->context.'.filter.search','filter_search',null,'string');
+        $this -> setState('filter.search',$search);
+
+        $published = $this->getUserStateFromRequest($this->context . '.filter.published', 'filter_published', '');
+        $this->setState('filter.published', $published);
+
+        $access = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', '');
+        $this->setState('filter.access', $access);
+
+        // List state information.
+        parent::populateState($ordering, $direction);
     }
 
     protected function getListQuery(){
         $db         = $this -> getDbo();
         $query      = $db -> getQuery(true);
+        $user       = JFactory::getUser();
 
         $query -> select('g.*, COUNT(f.id) AS total');
         $query -> from($db -> quoteName('#__tz_portfolio_plus_fieldgroups').' AS g');
@@ -59,11 +78,66 @@ class TZ_Portfolio_PlusModelGroups extends JModelList{
         $query -> join('LEFT', '#__tz_portfolio_plus_fields AS f ON f.id = m.fieldsid');
         $query -> group('g.id');
 
-        // Add the list ordering clause.
-        $orderCol	= $this->state->get('list.ordering', 'g.id');
-        $orderDirn	= $this->state->get('list.direction', 'desc');
+        // Join over the users for the checked out user.
+        $query->select('uc.name AS editor')->join('LEFT', '#__users AS uc ON uc.id=g.checked_out');
 
-        $query->order($db->escape($orderCol.' '.$orderDirn));
+        // Join over the asset groups.
+        $query -> select('v.title AS access_level')
+            ->join('LEFT', '#__viewlevels AS v ON v.id = g.access');
+
+        // Filter by published state
+        $published = $this->getState('filter.published');
+
+        if (is_numeric($published))
+        {
+            $query->where('g.published = ' . (int) $published);
+        }
+        elseif ($published === '')
+        {
+            $query->where('(g.published IN (0, 1))');
+        }
+
+        // Filter by access level.
+        $access = $this->getState('filter.access');
+        if (is_numeric($access))
+        {
+            $query->where('g.access = ' . (int) $access);
+        }
+        elseif (is_array($access))
+        {
+            $access = ArrayHelper::toInteger($access);
+            $access = implode(',', $access);
+            $query->where('g.access IN (' . $access . ')');
+        }
+
+        // Implement View Level Access
+        if (!$user->authorise('core.admin'))
+        {
+            $groups = implode(',', $user->getAuthorisedViewLevels());
+            $query->where('g.access IN (' . $groups . ')');
+        }
+
+        // Filter by search in title
+        $search = $this->getState('filter.search');
+
+        if (!empty($search))
+        {
+            if (stripos($search, 'id:') === 0)
+            {
+                $query->where('g.id = ' . (int) substr($search, 3));
+            }
+            else
+            {
+                $search = $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
+                $query->where('(g.name LIKE ' . $search . ')');
+            }
+        }
+
+        // Add the list ordering clause.
+        $orderCol	= $this -> getState('list.ordering', 'g.id');
+        $orderDirn	= $this -> getState('list.direction', 'desc');
+
+        $query->order($db->escape($orderCol).' '.$db->escape($orderDirn));
 
         return $query;
     }
@@ -96,7 +170,7 @@ class TZ_Portfolio_PlusModelGroups extends JModelList{
     }
 
     // Get fields group name have had fields
-    public function getItemsContainFields(){
+    public function getGroupNamesContainFields(){
         $db     = $this -> getDbo();
         $query  = $db -> getQuery(true);
         $query -> select('g.*,x.fieldsid');
@@ -121,7 +195,7 @@ class TZ_Portfolio_PlusModelGroups extends JModelList{
 
     }
 
-    // Get fields group name have had fields
+    // Get fields group have had fields
     public function getGroupsContainFields(){
         $db     = $this -> getDbo();
         $query  = $db -> getQuery(true);

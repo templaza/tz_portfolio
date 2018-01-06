@@ -59,6 +59,13 @@ $doc        = JFactory::getDocument();
             <?php endif;?>
             <div class="tpMeta muted">
                 <?php echo $item -> event -> beforeDisplayAdditionInfo; ?>
+                <?php
+                if($item -> featured == 1) {
+                    ?>
+                    <div class="tp-post-featured"><i class="tp tp-star"></i> <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_FEATURED'); ?></div>
+                    <?php
+                }
+                ?>
                 <?php if($published_date = $this -> loadTemplate('published_date')):?>
                     <?php echo $published_date;?>
                 <?php endif;?>

@@ -20,6 +20,8 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 class TZ_Portfolio_PlusHelperGroups{
 
     protected static $cache	= array();
@@ -35,10 +37,15 @@ class TZ_Portfolio_PlusHelperGroups{
         }
 
         if(!isset(self::$cache[$storeId])){
-            $db     = JFactory::getDbo();
-            $query  = $db -> getQuery(true);
+
+            $user       = JFactory::getUser();
+            $viewlevels = ArrayHelper::toInteger($user->getAuthorisedViewLevels());
+            $db         = JFactory::getDbo();
+            $query      = $db -> getQuery(true);
+
             $query -> select('*');
             $query -> from('#__tz_portfolio_plus_fieldgroups');
+            $query -> where('access IN (' . implode(',', $viewlevels) . ')');
             if($option) {
                 if(isset($option['filter.published'])) {
                     if($option['filter.published']) {

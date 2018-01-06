@@ -24,23 +24,27 @@ jimport('joomla.application.component.modellist');
 
 class TZ_Portfolio_PlusModelTags extends JModelList
 {
-    function populateState($ordering = null, $direction = null){
+    public function __construct($config = array()){
+        if (empty($config['filter_fields']))
+        {
+            $config['filter_fields'] = array(
+                'id', 'f.id',
+                'title', 'f.title',
+                'published', 'f.published'
+            );
+        }
+        parent::__construct($config);
+    }
 
-        parent::populateState('id','desc');
+    function populateState($ordering = 'id', $direction = 'desc'){
 
-        $app    = JFactory::getApplication();
+        parent::populateState($ordering, $direction);
 
-        $state  = $this -> getUserStateFromRequest('com_tz_portfolio_plus.tags.filter_state','filter_state',null,'string');
-        $this -> setState('filter_state',$state);
+        $state  = $this -> getUserStateFromRequest($this -> context.'.filter_published','filter_published',null,'string');
+        $this -> setState('filter.published',$state);
 
-        $search  = $this -> getUserStateFromRequest('com_tz_portfolio_plus.tags.filter.search','filter_search',null,'string');
+        $search  = $this -> getUserStateFromRequest($this -> context.'.filter.search','filter_search',null,'string');
         $this -> setState('filter.search',$search);
-
-        $order  = $this -> getUserStateFromRequest('com_tz_portfolio_plus.tags.filter_order','filter_order',null,'string');
-        $this -> setState('filter_order',$order);
-
-        $orderDir  = $this -> getUserStateFromRequest('com_tz_portfolio_plus.tags.filter_order_Dir','filter_order_Dir','asc','string');
-        $this -> setState('filter_order_Dir',$orderDir);
     }
 
     protected function getListQuery(){
@@ -67,21 +71,23 @@ class TZ_Portfolio_PlusModelTags extends JModelList
             }
         }
 
-        switch ($this -> getState('filter_state')){
-            default:
-                $query -> where('published>=0');
-                break;
-            case 'P':
-                $query -> where('published=1');
-                break;
-            case 'U':
-                $query -> where('published=0');
-                break;
+        // Filter by published state
+        $published = $this->getState('filter.published');
+
+        if (is_numeric($published))
+        {
+            $query->where('published = ' . (int) $published);
+        }
+        elseif ($published === '')
+        {
+            $query->where('(published IN (0, 1))');
         }
 
-        if($order = $this -> getState('filter_order','id')){
-            $query -> order($order.' '.$this -> getState('filter_order_Dir','DESC'));
-        }
+        // Add the list ordering clause
+        $listOrdering   = $this->getState('list.ordering', 'f.id');
+        $listDirn       = $this->getState('list.direction', 'DESC');
+
+        $query -> order($db->escape($listOrdering) . ' ' . $db->escape($listDirn));
 
         return $query;
 

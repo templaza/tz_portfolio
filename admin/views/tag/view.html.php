@@ -24,74 +24,52 @@ jimport('joomla.application.component.view');
 
 class TZ_Portfolio_PlusViewTag extends JViewLegacy
 {
-    protected $item = null;
+    protected $item     = null;
+    protected $form     = null;
+    protected $canDo    = null;
 
     function display($tpl = null){
         $this -> item   = $this -> get('Item');
         $this -> form   = $this -> get('Form');
-//        $editor         = JFactory::getEditor();
-//        $this -> assign('editor',$editor);
-//
-//        if($this -> item -> id == 0){
-//            $this -> item -> published = 'P';
-//        }
-//        else{
-//            if($this -> item -> published == 1){
-//                $this -> item -> published  = 'P';
-//            }
-//            else{
-//                $this -> item -> published  = 'U';
-//            }
-//        }
+
+        $this -> canDo  = TZ_Portfolio_PlusHelper::getActions(COM_TZ_PORTFOLIO_PLUS, 'tag');
 
         $this -> addToolbar();
         parent::display($tpl);
     }
 
     protected function addToolbar(){
+
         JFactory::getApplication()->input->set('hidemainmenu', true);
 
-        $doc    = JFactory::getDocument();
-        $bar    = JToolBar::getInstance();
+        $canDo  = $this -> canDo;
 
         $isNew  = ($this -> item -> id == 0);
 
         JToolBarHelper::title(JText::sprintf('COM_TZ_PORTFOLIO_PLUS_TAGS_MANAGER_TASK',
             JText::_(($isNew)?'COM_TZ_PORTFOLIO_PLUS_PAGE_ADD_TAG':'COM_TZ_PORTFOLIO_PLUS_PAGE_EDIT_TAG')), 'tag');
-        JToolBarHelper::apply('tag.apply');
-        JToolBarHelper::save('tag.save');
-        JToolBarHelper::save2new('tag.save2new');
-        JToolBarHelper::cancel('tag.cancel',JText::_('JTOOLBAR_CLOSE'));
-
-        JToolBarHelper::divider();
-
-        JToolBarHelper::help('JHELP_CONTENT_ARTICLE_MANAGER',false,'http://wiki.templaza.com/TZ_Portfolio_Plus_v3:Administration#How_to_Add_or_Edit_3');
-
-        // If the joomla is version 3.0
-        if(COM_TZ_PORTFOLIO_PLUS_JVERSION_COMPARE){
-            $doc -> addStyleSheet(JURI::base(true).'/components/com_tz_portfolio_plus/fonts/font-awesome-4.5.0/css/font-awesome.min.css');
+        if($isNew) {
+            if($canDo -> get('core.create')) {
+                JToolBarHelper::apply('tag.apply');
+                JToolBarHelper::save('tag.save');
+                JToolBarHelper::save2new('tag.save2new');
+                JToolBarHelper::cancel('tag.cancel');
+            }
+        }else {
+            if($canDo -> get('core.edit')) {
+                JToolBarHelper::apply('tag.apply');
+                JToolBarHelper::save('tag.save');
+            }
+            if($canDo -> get('core.create')) {
+                JToolBarHelper::save2new('tag.save2new');
+            }
+            JToolBarHelper::cancel('tag.cancel', JText::_('JTOOLBAR_CLOSE'));
         }
 
-        $doc -> addStyleSheet(JURI::base(true).'/components/com_tz_portfolio_plus/css/style.min.css');
+        JToolBarHelper::help('JHELP_CONTENT_ARTICLE_MANAGER',false,
+            'https://www.tzportfolio.com/document/administration/54-how-to-create-tags-in-tz-portfolio-plus.html?tmpl=component');
 
-        // Special HTML workaround to get send popup working
-        $docClass       = ' class="btn btn-small"';
-        $youtubeIcon    = '<i class="tz-icon-youtube tz-icon-14"></i>&nbsp;';
-        $wikiIcon       = '<i class="tz-icon-wikipedia tz-icon-14"></i>&nbsp;';
-
-        $youtubeTitle   = JText::_('COM_TZ_PORTFOLIO_PLUS_VIDEO_TUTORIALS');
-        $wikiTitle      = JText::_('COM_TZ_PORTFOLIO_PLUS_WIKIPEDIA_TUTORIALS');
-
-        $videoTutorial    ='<a'.$docClass.' onclick="Joomla.popupWindow(\'http://www.youtube.com/channel/UCykS6SX6L2GOI-n3IOPfTVQ/videos\', \''
-            .$youtubeTitle.'\', 800, 500, 1)"'.' href="#">'
-            .$youtubeIcon.$youtubeTitle.'</a>';
-
-        $wikiTutorial    ='<a'.$docClass.' onclick="Joomla.popupWindow(\'http://wiki.templaza.com/Main_Page\', \''
-            .$wikiTitle.'\', 800, 500, 1)"'.' href="#">'
-            .$wikiIcon
-            .$wikiTitle.'</a>';
-
-        $bar->appendButton('Custom',$videoTutorial,'youtube');
-        $bar->appendButton('Custom',$wikiTutorial,'wikipedia');
+        TZ_Portfolio_PlusToolbarHelper::customHelp('https://www.youtube.com/channel/UCrLN8LMXTyTahwDKzQ-YOqg/videos'
+            ,'COM_TZ_PORTFOLIO_PLUS_VIDEO_TUTORIALS', 'youtube', 'youtube');
     }
 }
