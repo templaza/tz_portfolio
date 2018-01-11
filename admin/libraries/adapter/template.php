@@ -188,4 +188,21 @@ class TZ_Portfolio_PlusInstallerAdapterTemplate extends JInstallerAdapterTemplat
             $db->setQuery($query)->execute();
         }
     }
+
+    public function loadLanguage($path = null)
+    {
+        $source   = $this->parent->getPath('source');
+        $basePath = JPATH_SITE.'/components/com_tz_portfolio_plus';
+
+        if (!$source)
+        {
+            $this->parent->setPath('source', $basePath . '/templates/' . $this->parent->extension->element);
+        }
+
+        $base = JPATH_SITE.'/components/com_tz_portfolio_plus';
+        $extension = 'tpl_' . $this->getName();
+        $source    = $path ?: $base . '/templates/' . $this->getName();
+
+        $this->doLoadLanguage($extension, $source, $base);
+    }
 }

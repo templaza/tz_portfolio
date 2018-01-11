@@ -103,8 +103,10 @@ if ($saveOrder)
                     <?php foreach($this -> items as $i => $item):
 
                         $canCreate = $user->authorise('core.create',     'com_tz_portfolio_plus.addon');
-                        $canEdit   = $user->authorise('core.edit', 'com_tz_portfolio_plus.addon.'.$item -> id);
-                        $canCheckin = $user->authorise('core.admin',     'com_tz_portfolio_plus.addon.'.$item -> id)
+                        $canEdit   = ($user->authorise('core.edit', 'com_tz_portfolio_plus.addon.'.$item -> id)
+                            || $user->authorise('core.admin', 'com_tz_portfolio_plus.addon.'.$item -> id)
+                                || $user->authorise('core.options', 'com_tz_portfolio_plus.addon.'.$item -> id));
+                        $canCheckin = $user->authorise('core.manage',     'com_checkin')
                             || $item->checked_out == $user->get('id') || $item->checked_out == 0;
                         $canChange = $user->authorise('core.edit.state', 'com_tz_portfolio_plus.addon') && $canCheckin;
 

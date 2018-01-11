@@ -69,9 +69,9 @@ class TZ_Portfolio_PlusViewAddons extends JViewLegacy
             JToolbarHelper::addNew('addon.upload', 'JTOOLBAR_UPLOAD');
         }
 
-//        if ($canDo->get('core.edit' )) {
+        if ($canDo->get('core.edit' )) {
             JToolBarHelper::editList('addon.edit');
-//        }
+        }
 
         if ($canDo->get('core.delete')){
             JToolBarHelper::deleteList(JText::_('COM_TZ_PORTFOLIO_PLUS_QUESTION_DELETE'),'addon.uninstall','JTOOLBAR_UNINSTALL');

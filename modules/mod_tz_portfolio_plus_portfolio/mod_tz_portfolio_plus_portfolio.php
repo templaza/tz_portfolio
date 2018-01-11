@@ -25,13 +25,13 @@ require_once dirname(__FILE__) . '/helper.php';
 
 JLoader::import('com_tz_portfolio_plus.libraries.helper.modulehelper', JPATH_ADMINISTRATOR.'/components');
 
-$list = modTZ_Portfolio_PlusArticlesHelper::getList($params);
-$categories = modTZ_Portfolio_PlusArticlesHelper::getCategoriesByArticle($params);
-$tags = modTZ_Portfolio_PlusArticlesHelper::getTagsByArticle($params);
+$list = modTZ_Portfolio_PlusPortfolioHelper::getList($params);
+$categories = modTZ_Portfolio_PlusPortfolioHelper::getCategoriesByArticle($params);
+$tags = modTZ_Portfolio_PlusPortfolioHelper::getTagsByArticle($params);
 $show_filter = $params->get('show_filter',1);
 if($show_filter) {
-    $filter_tag = modTZ_Portfolio_PlusArticlesHelper::getTagsFilterByArticle($params);
-    $filter_cat = modTZ_Portfolio_PlusArticlesHelper::getCategoriesFilterByArticle($params);
+    $filter_tag = modTZ_Portfolio_PlusPortfolioHelper::getTagsFilterByArticle($params);
+    $filter_cat = modTZ_Portfolio_PlusPortfolioHelper::getCategoriesFilterByArticle($params);
 }
 $moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'));
-require TZ_Portfolio_PlusModuleHelper::getLayoutPath('mod_tz_portfolio_plus_articles', $params->get('layout', 'default'));
+require TZ_Portfolio_PlusModuleHelper::getLayoutPath('mod_tz_portfolio_plus_portfolio', $params->get('layout', 'default'));

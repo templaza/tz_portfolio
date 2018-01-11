@@ -79,12 +79,12 @@ class TZ_Portfolio_PlusModelArticles extends JModelList
         parent::populateState($ordering, $direction);
 
 		// Initialise variables.
-		$app = JFactory::getApplication();
-		$session = JFactory::getSession();
+		$app    = JFactory::getApplication();
+		$input  = $app -> input;
 
 //        $this-> context = 'com_tz_portfolio_plus.articles';
 		// Adjust the context to support modal layouts.
-		if ($layout = JRequest::getVar('layout')) {
+		if ($layout = $input -> get('layout')) {
 			$this->context .= '.'.$layout;
 		}
 
@@ -288,7 +288,7 @@ class TZ_Portfolio_PlusModelArticles extends JModelList
 			$query->where('c.rgt <= '.(int) $rgt);
 		}
 		elseif (is_array($categoryId)) {
-			JArrayHelper::toInteger($categoryId);
+			ArrayHelper::toInteger($categoryId);
 			$categoryId = implode(',', $categoryId);
 			$query->where('m.catid IN ('.$categoryId.')');
 		}
@@ -433,8 +433,8 @@ class TZ_Portfolio_PlusModelArticles extends JModelList
 			TZ_Portfolio_PlusPluginHelper::importPlugin('mediatype');
 			$results	= $dispatcher -> trigger('onAddMediaType');
 			if(count($results)) {
-				$texts = JArrayHelper::getColumn($results, 'text');
-				$values = JArrayHelper::getColumn($results, 'value');
+				$texts = ArrayHelper::getColumn($results, 'text');
+				$values = ArrayHelper::getColumn($results, 'value');
 			}
             foreach($items as &$item){
 				$categories			= TZ_Portfolio_PlusHelperCategories::getCategoriesByArticleId($item -> id, 0);

@@ -19,6 +19,9 @@
  
 //no direct access
 defined('_JEXEC') or die('Restricted access');
+
+use Joomla\Utilities\ArrayHelper;
+
 jimport('joomla.application.component.view');
 jimport('joomla.event.dispatcher');
 
@@ -109,7 +112,7 @@ class TZ_Portfolio_PlusViewSearch extends JViewLegacy
             $comments       = null;
 
             if(count($items)>0){
-                $content_ids        = JArrayHelper::getColumn($items, 'id');
+                $content_ids        = ArrayHelper::getColumn($items, 'id');
                 $mainCategories     = TZ_Portfolio_PlusFrontHelperCategories::getCategoriesByArticleId($content_ids,
                     array('main' => true));
                 $second_categories  = TZ_Portfolio_PlusFrontHelperCategories::getCategoriesByArticleId($content_ids,

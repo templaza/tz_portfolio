@@ -20,6 +20,8 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 class TZ_Portfolio_PlusHelperTags{
 
     protected static $cache     = array();
@@ -127,19 +129,14 @@ class TZ_Portfolio_PlusHelperTags{
                 $tagTitleCreate = array();
                 $newTagTitles   = array();
 
-                // Get all tag's information
-                if($tagsCreated = self::getTagsByTitle($tagTitles)){
-                    $tagTitleCreate = JArrayHelper::getColumn($tagsCreated, 'title');
-                    $tagsIds        = JArrayHelper::getColumn($tagsCreated, 'id');
+                foreach($tagTitles as $key => &$tag){
+                    if(strpos($tag, '#new#') !== false){
+                        $tagText = str_replace('#new#', '', $tag);
+                        $newTagTitles[] = $tagText;
+                    }else{
+                        $tagsIds[]  = $tag;
+                    }
                 }
-
-                // Get new tag title data
-                $newTagTitles = array_diff($tagTitles, $tagTitleCreate);
-                // Remove tag title duplicate
-                $newTagTitles = array_unique($newTagTitles);
-                // Remove tag title is null
-                $newTagTitles = array_filter($newTagTitles);
-                $newTagTitles = array_reverse($newTagTitles);
 
                 // Insert new tags by tag's titles
                 if (count($newTagTitles)) {
@@ -170,22 +167,9 @@ class TZ_Portfolio_PlusHelperTags{
         return true;
     }
 
-    public static function getTagsSuggestToArticle(){
-        $db     = JFactory::getDbo();
-        $query  = $db -> getQuery(true);
-        $query -> select('title');
-        $query -> from('#__tz_portfolio_plus_tags');
-        $db -> setQuery($query);
-
-        if($rows = $db -> loadColumn()){
-            return json_encode($rows);
-        }
-        return null;
-    }
-
     public static function getTagTitlesByArticleId($articleId){
         if($tags = self::getTagsByArticleId($articleId)){
-            $tags   = JArrayHelper::getColumn($tags, 'title');
+            $tags   = ArrayHelper::getColumn($tags, 'title');
             return array_unique($tags);
         }
         return false;

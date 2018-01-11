@@ -23,7 +23,7 @@ defined('_JEXEC') or die;
 // Include dependancies
 jimport('joomla.application.component.controller');
 
-JLoader::import('framework',JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/includes');
+JLoader::import('com_tz_portfolio_plus.includes.framework',JPATH_ADMINISTRATOR.'/components');
 
 JLoader::import('template', JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/libraries');
 JLoader::import('controller', JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/libraries');

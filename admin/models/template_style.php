@@ -20,6 +20,8 @@
 //no direct access
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\Utilities\ArrayHelper;
+
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
 jimport('joomla.application.component.modeladmin');
@@ -48,7 +50,7 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
         }
         else
         {
-            $template  = JArrayHelper::getValue($data, 'template');
+            $template  = ArrayHelper::getValue($data, 'template');
         }
 
         // These variables are used to add data from the plugin XML files.
@@ -193,7 +195,7 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
 
         // Convert to the JObject before adding other data.
         $properties = $table->getProperties(1);
-        $item = JArrayHelper::toObject($properties, 'JObject');
+        $item = ArrayHelper::toObject($properties, 'JObject');
 
         if (property_exists($item, 'layout'))
         {
@@ -375,7 +377,7 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
                 if (!empty($data['menus_assignment']) && is_array($data['menus_assignment']))
                 {
 
-                    JArrayHelper::toInteger($data['menus_assignment']);
+                    $data['menus_assignment']   = ArrayHelper::toInteger($data['menus_assignment']);
 
                     $query  = $db -> getQuery(true)
                         -> select('*')

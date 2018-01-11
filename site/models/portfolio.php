@@ -21,6 +21,7 @@
 defined('_JEXEC') or die();
 
 use Joomla\Registry\Registry;
+use Joomla\Utilities\ArrayHelper;
 
 jimport('joomla.application.component.modellist');
 jimport('joomla.html.pagination');
@@ -134,8 +135,8 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
             $query->where('c.state = ' . (int) $published);
         }
         elseif (is_array($published)) {
-            JArrayHelper::toInteger($published);
-            $published = implode(',', $published);
+            $published  = ArrayHelper::toInteger($published);
+            $published  = implode(',', $published);
             // Use article state if badcats.id is null, otherwise, force 0 for unpublished
             $query->where('c.state IN ('.$published.')');
         }
@@ -270,7 +271,7 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
             $comments       = null;
 
             if(count($items)>0){
-                $content_ids        = JArrayHelper::getColumn($items, 'id');
+                $content_ids        = ArrayHelper::getColumn($items, 'id');
                 $mainCategories     = TZ_Portfolio_PlusFrontHelperCategories::getCategoriesByArticleId($content_ids,
                     array('main' => true));
                 $second_categories  = TZ_Portfolio_PlusFrontHelperCategories::getCategoriesByArticleId($content_ids,
@@ -545,7 +546,7 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
     protected function __getArticleByKey($article, $key = 'id'){
         $storeId    = md5(__METHOD__.'::'.$key);
         if(!isset($this -> cache[$storeId])){
-            $this -> cache[$storeId]    = JArrayHelper::getColumn($article, $key);
+            $this -> cache[$storeId]    = ArrayHelper::getColumn($article, $key);
             return $this -> cache[$storeId];
         }
         return $this -> cache[$storeId];

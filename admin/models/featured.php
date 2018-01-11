@@ -20,6 +20,8 @@
 // no direct access
 defined('_JEXEC') or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 require_once dirname(__FILE__) . '/articles.php';
 
 /**

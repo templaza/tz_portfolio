@@ -19,6 +19,9 @@
 
 // No direct access.
 defined('_JEXEC') or die;
+
+use Joomla\Utilities\ArrayHelper;
+
 jimport('joomla.application.component.controllerform');
 
 class TZ_Portfolio_PlusControllerTemplate extends JControllerForm
@@ -87,10 +90,10 @@ class TZ_Portfolio_PlusControllerTemplate extends JControllerForm
         // Check for request forgeries.
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-        $eid   = $this->input->get('cid', array(), 'array');
-        $model = $this->getModel('Template');
+        $eid    = $this->input->get('cid', array(), 'array');
+        $model  = $this->getModel('Template');
+        $eid    = ArrayHelper::toInteger($eid);
 
-        JArrayHelper::toInteger($eid, array());
         $model->uninstall($eid);
         $this->setRedirect(JRoute::_('index.php?option=com_tz_portfolio_plus&view=templates', false));
     }

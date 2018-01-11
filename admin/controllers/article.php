@@ -20,6 +20,8 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 jimport('joomla.application.component.controllerform');
 
 class TZ_Portfolio_PlusControllerArticle extends JControllerForm
@@ -66,7 +68,7 @@ class TZ_Portfolio_PlusControllerArticle extends JControllerForm
 	{
 		// Initialise variables.
 		$user = JFactory::getUser();
-		$categoryId = JArrayHelper::getValue($data, 'catid', $this -> input -> getInt('filter_category_id'), 'int');
+		$categoryId = ArrayHelper::getValue($data, 'catid', $this -> input -> getInt('filter_category_id'), 'int');
 		$allow = null;
 
 		if ($categoryId)

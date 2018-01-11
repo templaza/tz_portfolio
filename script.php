@@ -69,9 +69,130 @@ class com_tz_portfolio_plusInstallerScript{
 
         JFactory::getLanguage() -> load('com_tz_portfolio_plus');
 
+        if($this -> install_new) {
+            //Create folder
+            $mediaFolder    = 'tz_portfolio_plus';
+            $mediaFolderPath    = JPATH_SITE.'/media/'.$mediaFolder;
+            $article    = 'article';
+            $cache      = 'cache';
+            $src        = 'src';
+            $html   = htmlspecialchars_decode('<!DOCTYPE html><title></title>');
 
-        JLoader::import('com_tz_portfolio_plus.includes.framework',JPATH_ADMINISTRATOR.'/components');
-        $sections   = COM_TZ_PORTFOLIO_PLUS_ACL_SECTIONS;
+            if(!JFolder::exists($mediaFolderPath)){
+                JFolder::create($mediaFolderPath);
+            }
+            if(!JFile::exists($mediaFolderPath.'/index.html')){
+                JFile::write($mediaFolderPath.'/index.html',$html);
+            }
+            if(!JFolder::exists($mediaFolderPath.'/'.$article)){
+                JFolder::create($mediaFolderPath.'/'.$article);
+            }
+            if(!JFile::exists($mediaFolderPath.'/'.$article.'/'.'index.html')){
+                JFile::write($mediaFolderPath.'/'.$article.'/'.'index.html',$html);
+            }
+            if(!JFolder::exists($mediaFolderPath.'/'.$article.'/'.$cache)){
+                JFolder::create($mediaFolderPath.'/'.$article.'/'.$cache);
+            }
+            if(!JFile::exists($mediaFolderPath.'/'.$article.'/'.$cache.'/'.'index.html')){
+                JFile::write($mediaFolderPath.'/'.$article.'/'.$cache.'/'.'index.html',$html);
+            }
+            if(!JFolder::exists($mediaFolderPath.'/'.$article.'/'.$src)){
+                JFolder::create($mediaFolderPath.'/'.$article.'/'.$src);
+            }
+            if(!JFile::exists($mediaFolderPath.'/'.$article.'/'.$src.'/'.'index.html')){
+                JFile::write($mediaFolderPath.'/'.$article.'/'.$src.'/'.'index.html',$html);
+            }
+        }
+
+        $status             = new stdClass;
+        $status -> modules  = array();
+        $src = $parent->getParent()->getPath('source');
+
+        if(version_compare( JVERSION, '1.6.0', 'ge' )) {
+            // Install modules packages
+            $modules = $parent->getParent()->manifest->xpath('modules/module');
+
+            foreach($modules as $module){
+
+                $result = null;
+                $mname  = $module -> attributes() -> module;
+                $mname  = (string)$mname;
+                $client = $module -> attributes() -> client;
+
+                if(is_null($client)) $client = 'site';
+
+                ($client=='administrator')? $path=$src.'/'.'administrator'.'/'.'modules'.'/'.$mname:
+                    $path = $src.'/'.'modules'.'/'.$mname;
+
+                $installer  = new JInstaller();
+                $result     = $installer -> install($path);
+
+                $status -> modules[]    = array('name'=>$mname,'client'=>$client, 'result'=>$result);
+            }
+
+            // Install modules packages
+            $installer  = new JInstaller();
+            $plugins    = $parent->getParent()->manifest->xpath('plugins/plugin');
+            foreach($plugins as $plugin){
+
+                $result = null;
+                $folder = null;
+                $pname  = $plugin -> attributes() -> plugin;
+                $pname  = (string) $pname;
+                $group  = $plugin -> attributes() -> group;
+                $folder = $plugin -> attributes() -> folder;
+
+                if(isset($folder)){
+                    $folder = $plugin -> attributes() -> folder;
+                }
+
+                $path       = $src.'/'.'plugins'.'/'.$group.'/'.$folder;
+                $result     = $installer -> install($path);
+
+                $query = 'UPDATE #__extensions SET `enabled`=1 WHERE `type`="plugin" AND `element`="'
+                    . $pname . '" AND `folder`="' . $group . '"';
+                $db->setQuery($query);
+                $db->execute();
+
+                $status->plugins[] = array('name'=>$pname,'group'=>$group, 'result'=>$result);
+            }
+
+
+            if(!$this -> install_new) {
+                // Insert default template
+                $template_sql   = 'SELECT COUNT(*) FROM #__tz_portfolio_plus_templates';
+                $db -> setQuery($template_sql);
+                if(!$db -> loadResult()){
+                    $def_file   = JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/views/template_style/tmpl/default.json';
+                    if(JFile::exists($def_file)){
+                        $def_value      = JFile::read($def_file);
+                        $template_sql2  = 'INSERT INTO `#__tz_portfolio_plus_templates`(`id`, `title`, `home`, `params`) VALUES(1, \'system - Default\', \'1\',\''.$def_value.'\')';
+                        $db -> setQuery($template_sql2);
+                        $db -> query();
+                    }
+                }
+            }
+        }
+
+        // Create default permission
+        $this -> createSectionPermissions($src);
+
+        // Install templates to update version
+        $this -> installTemplates($src, $parent, $status);
+
+        // Install AddOns to update version
+        $this -> installAddOns($src, $parent, $status);
+
+        // Display information when installed
+        $this -> installationResult($status);
+
+    }
+
+    protected function createSectionPermissions($sourcePath){
+        if(!defined('COM_TZ_PORTFOLIO_PLUS_ACL_SECTIONS')){
+            JLoader::import('includes.defines',$sourcePath.'/admin');
+        }
+        $sections   = constant('COM_TZ_PORTFOLIO_PLUS_ACL_SECTIONS');
 
         if($sections && count($sections)){
             // Get the parent asset id so we have a correct tree.
@@ -86,6 +207,7 @@ class com_tz_portfolio_plusInstallerScript{
 
                 foreach($sections as $section){
                     $name  = 'com_tz_portfolio_plus.'.$section;
+                    $asset -> reset();
                     if($asset->loadByName($name) !== false){
                         continue;
                     }
@@ -115,125 +237,46 @@ class com_tz_portfolio_plusInstallerScript{
                 }
             }
         }
-
-
-        //Create folder
-        $mediaFolder    = 'tz_portfolio_plus';
-        $mediaFolderPath    = JPATH_SITE.'/media/'.$mediaFolder;
-        $article    = 'article';
-        $cache      = 'cache';
-        $src        = 'src';
-        $html   = htmlspecialchars_decode('<!DOCTYPE html><title></title>');
-
-        if(!JFolder::exists($mediaFolderPath)){
-            JFolder::create($mediaFolderPath);
-        }
-        if(!JFile::exists($mediaFolderPath.'/index.html')){
-            JFile::write($mediaFolderPath.'/index.html',$html);
-        }
-        if(!JFolder::exists($mediaFolderPath.'/'.$article)){
-            JFolder::create($mediaFolderPath.'/'.$article);
-        }
-        if(!JFile::exists($mediaFolderPath.'/'.$article.'/'.'index.html')){
-            JFile::write($mediaFolderPath.'/'.$article.'/'.'index.html',$html);
-        }
-        if(!JFolder::exists($mediaFolderPath.'/'.$article.'/'.$cache)){
-            JFolder::create($mediaFolderPath.'/'.$article.'/'.$cache);
-        }
-        if(!JFile::exists($mediaFolderPath.'/'.$article.'/'.$cache.'/'.'index.html')){
-            JFile::write($mediaFolderPath.'/'.$article.'/'.$cache.'/'.'index.html',$html);
-        }
-        if(!JFolder::exists($mediaFolderPath.'/'.$article.'/'.$src)){
-            JFolder::create($mediaFolderPath.'/'.$article.'/'.$src);
-        }
-        if(!JFile::exists($mediaFolderPath.'/'.$article.'/'.$src.'/'.'index.html')){
-            JFile::write($mediaFolderPath.'/'.$article.'/'.$src.'/'.'index.html',$html);
-        }
-        //Install plugins
-        $status = new stdClass;
-        $status->modules = array();
-        $src = $parent->getParent()->getPath('source');
-
-        if(version_compare( JVERSION, '1.6.0', 'ge' )) {
-            $modules = $parent->getParent()->manifest->xpath('modules/module');
-
-            foreach($modules as $module){
-                $result = null;
-                $mname = $module->attributes() -> module;
-                $mname = (string)$mname;
-                $client = $module->attributes() -> client;
-                if(is_null($client)) $client = 'site';
-                ($client=='administrator')? $path=$src.'/'.'administrator'.'/'.'modules'.'/'.$mname: $path = $src.'/'.'modules'.'/'.$mname;
-                $installer = new JInstaller();
-                $result = $installer->install($path);
-                $status->modules[] = array('name'=>$mname,'client'=>$client, 'result'=>$result);
-            }
-
-            $plugins = $parent->getParent()->manifest->xpath('plugins/plugin');
-            foreach($plugins as $plugin){
-                $result = null;
-                $folder = null;
-                $pname  = $plugin->attributes() -> plugin;
-                $pname  = (string) $pname;
-                $group  = $plugin->attributes() -> group;
-                $folder = $plugin -> attributes() -> folder;
-                if(isset($folder)){
-                    $folder = $plugin -> attributes() -> folder;
-                }
-                $path   = $src.'/'.'plugins'.'/'.$group.'/'.$folder;
-
-                $installer = new JInstaller();
-                $result = $installer->install($path);
-
-
-                $query  = 'UPDATE #__extensions SET `enabled`=1 WHERE `type`="plugin" AND `element`="'
-                    .$pname.'" AND `folder`="'.$group.'"';
-                $db -> setQuery($query);
-                $db -> execute();
-
-                $status->plugins[] = array('name'=>$pname,'group'=>$group, 'result'=>$result);
-            }
-
-            // Insert default template
-            $template_sql   = 'SELECT COUNT(*) FROM #__tz_portfolio_plus_templates';
-            $db -> setQuery($template_sql);
-            if(!$db -> loadResult()){
-                $def_file   = JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/views/template_style/tmpl/default.json';
-                if(JFile::exists($def_file)){
-                    $def_value      = JFile::read($def_file);
-                    $template_sql2  = 'INSERT INTO `#__tz_portfolio_plus_templates`(`id`, `title`, `home`, `params`) VALUES(1, \'Default\', \'1\',\''.$def_value.'\')';
-                    $db -> setQuery($template_sql2);
-                    $db -> query();
-                }
-            }
-        }
-
-
-        // Reinstall for add-ons to update version
-        JLoader::import('com_tz_portfolio_plus.libraries.installer',JPATH_ADMINISTRATOR
-            .DIRECTORY_SEPARATOR.'components');
-        $tzInstaller    = TZ_Portfolio_PlusInstaller::getInstance();
-        $addon_cores    = array('content' => 'vote',
-            'extrafields' => array('checkboxes','dropdownlist','multipleselect', 'radio', 'text', 'textarea'),
-            'mediatype' => 'image',
-            'user' => 'profile');
-        foreach($addon_cores as $type => $addon) {
-            $addon_path = $src . '/site/addons/'.$type;
-            if(is_array($addon)){
-                foreach($addon as $value) {
-                    $tzInstaller->install($addon_path.'/' . $value);
-                }
-            }else{
-                $tzInstaller -> install($addon_path.'/'.$addon);
-            }
-        }
-        // End reinstall for add-ons to update version
-
-        $this -> installationResult($status);
-
     }
 
-    function install($parent)
+    protected function installTemplates($sourcePath, $parent, &$status = null){
+        // Install for add-ons to update version
+        JLoader::import('com_tz_portfolio_plus.libraries.installer',JPATH_ADMINISTRATOR
+            .DIRECTORY_SEPARATOR.'components');
+
+        $tzInstaller    = TZ_Portfolio_PlusInstaller::getInstance();
+        $templates      = $parent->getParent()->manifest->xpath('templates/template');
+
+        foreach($templates as $template) {
+            $name   = (string) ($template -> attributes() -> template);
+            $path   = $sourcePath . '/site/templates/'.$name;
+            $result = $tzInstaller -> install($path);
+
+            $status -> templates[] = array('name' => $name, 'result' => $result);
+        }
+    }
+
+    protected function installAddOns($sourcePath, $parent, &$status = null){
+        // Install for add-ons to update version
+        JLoader::import('com_tz_portfolio_plus.libraries.installer',JPATH_ADMINISTRATOR
+            .DIRECTORY_SEPARATOR.'components');
+
+        $tzInstaller    = TZ_Portfolio_PlusInstaller::getInstance();
+        $addons         = $parent->getParent()->manifest->xpath('addons/addon');
+
+        foreach($addons as $addon) {
+
+            $group  = $addon -> attributes() -> group;
+            $name   = (string) ($addon -> attributes() -> addon);
+            $path   = $sourcePath . '/site/addons/'.$group.'/'.$name;
+            $result = $tzInstaller -> install($path);
+
+            $status -> addons[] = array('name' => $name,'group' => $group, 'result' => $result);
+        }
+        // End reinstall for add-ons to update version
+    }
+
+    public function install($parent)
     {
         $this -> install_new    = true;
     }
@@ -396,7 +439,7 @@ class com_tz_portfolio_plusInstallerScript{
             $arr[]  = 'ADD `modified_by` INT UNSIGNED NOT NULL DEFAULT \'0\'';
         }
         if(!array_key_exists('access',$fields)){
-            $arr[]  = 'ADD `access` INT(10) UNSIGNED NOT NULL DEFAULT \'0\'';
+            $arr[]  = 'ADD `access` INT(10) UNSIGNED NOT NULL DEFAULT \'1\'';
         }
         if(!array_key_exists('checked_out',$fields)){
             $arr[]  = 'ADD `checked_out` int(10) unsigned NOT NULL DEFAULT \'0\'';
@@ -455,7 +498,7 @@ class com_tz_portfolio_plusInstallerScript{
             $arr[]  = 'ADD `modified_by` INT UNSIGNED NOT NULL';
         }
         if(!array_key_exists('access',$fields)){
-            $arr[]  = 'ADD `access` INT(10) UNSIGNED NOT NULL DEFAULT \'0\'';
+            $arr[]  = 'ADD `access` INT(10) UNSIGNED NOT NULL DEFAULT \'1\'';
         }
         if(!array_key_exists('checked_out',$fields)){
             $arr[]  = 'ADD `checked_out` int(10) unsigned NOT NULL DEFAULT \'0\'';
@@ -515,6 +558,8 @@ class com_tz_portfolio_plusInstallerScript{
                 $db -> execute();
             }
         }
+
+
     }
 
     public function installationResult($status){
@@ -525,7 +570,7 @@ class com_tz_portfolio_plusInstallerScript{
         <h2><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS'); ?></h2>
         <span style="font-weight: normal"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_DESCRIPTION');?></span>
         <h3 style="margin-top: 20px;"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_INSTALL_STATUS'); ?></h3>
-        <table class="table table-striped table-condensed">
+        <table class="table table-striped">
             <thead>
             <tr>
                 <th class="title" colspan="2"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_EXTENSION'); ?></th>
@@ -578,6 +623,57 @@ class com_tz_portfolio_plusInstallerScript{
                         <td class="key"><?php echo JText::_(strtoupper('plg_'.$plugin['group'].'_'.$plugin['name'])); ?></td>
                         <td class="key"><?php echo ucfirst($plugin['group']); ?></td>
                         <td><span style="color: green; font-weight: bold;"><?php echo ($plugin['result'])?JText::_('COM_TZ_PORTFOLIO_PLUS_INSTALLED'):JText::_('COM_TZ_PORTFOLIO_PLUS_NOT_INSTALLED'); ?></span></td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php endif; ?>
+
+            <?php if ($status && isset($status -> templates) && count($status->templates)): ?>
+                <tr>
+                    <th><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_TEMPLATE_OF_COMPONENT'); ?></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                <?php foreach ($status->templates as $template): ?>
+                    <?php
+                    $tmplPath   = JPATH_SITE.'/components/com_tz_portfolio_plus/templates/'.$template['name'];
+                    if(!$lang -> exists('tpl_'.(string)$template['name'], $tmplPath, null, true)):
+                        $lang -> load('tpl_'.(string)$template['name'], $tmplPath, null, true);
+                    endif;
+                    ?>
+                    <tr class="row<?php echo (++ $rows % 2); ?>">
+                        <td class="key"><?php echo JText::_(strtoupper('tz_portfolio_plus_tpl_'.$template['name'])); ?></td>
+                        <td></td>
+                        <td>
+                            <span style="color: green; font-weight: bold;"><?php echo ($template['result'])?
+                                    JText::_('COM_TZ_PORTFOLIO_PLUS_INSTALLED'):
+                                    JText::_('COM_TZ_PORTFOLIO_PLUS_NOT_INSTALLED'); ?></span>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php endif; ?>
+
+            <?php if ($status && isset($status -> addons) && count($status->addons)): ?>
+                <tr>
+                    <th><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ADDON'); ?></th>
+                    <th><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_GROUP'); ?></th>
+                    <th></th>
+                </tr>
+                <?php foreach ($status->addons as $addon): ?>
+                    <?php
+                    $addonPath  = JPATH_SITE.'/components/com_tz_portfolio_plus/addons/'
+                        .$addon['group'].'/'.$addon['name'];
+                    if(!$lang -> exists('plg_'.$addon['group'].'_'.(string)$addon['name'], $addonPath, null, true)):
+                        $lang -> load('plg_'.$addon['group'].'_'.(string)$addon['name'], $addonPath, null, true);
+                    endif;
+                    ?>
+                    <tr class="row<?php echo (++ $rows % 2); ?>">
+                        <td class="key"><?php echo JText::_(strtoupper('plg_'.$addon['group'].'_'.$addon['name'])); ?></td>
+                        <td class="key"><?php echo ucfirst($addon['group']); ?></td>
+                        <td>
+                            <span style="color: green; font-weight: bold;"><?php echo ($addon['result'])?
+                                    JText::_('COM_TZ_PORTFOLIO_PLUS_INSTALLED'):
+                                    JText::_('COM_TZ_PORTFOLIO_PLUS_NOT_INSTALLED'); ?></span>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             <?php endif; ?>

@@ -21,13 +21,14 @@
 defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
+use Joomla\Utilities\ArrayHelper;
 
 JLoader::import('com_tz_portfolio_plus.helpers.route', JPATH_SITE . '/components');
 JLoader::import('com_tz_portfolio_plus.helpers.tags', JPATH_SITE . '/components');
 JLoader::import('com_tz_portfolio_plus.helpers.categories', JPATH_SITE . '/components');
 JLoader::import('com_tz_portfolio_plus.libraries.plugin.helper', JPATH_ADMINISTRATOR.'/components');
 
-class modTZ_Portfolio_PlusArticlesHelper
+class modTZ_Portfolio_PlusPortfolioHelper
 {
     protected static $cache;
 
@@ -144,8 +145,8 @@ class modTZ_Portfolio_PlusArticlesHelper
             TZ_Portfolio_PlusPluginHelper::importPlugin('content');
             TZ_Portfolio_PlusPluginHelper::importPlugin('mediatype');
 
-            $dispatcher -> trigger('onAlwaysLoadDocument', array('modules.mod_tz_portfolio_plus_articles'));
-            $dispatcher -> trigger('onLoadData', array('modules.mod_tz_portfolio_plus_articles', $items, $params));
+            $dispatcher -> trigger('onAlwaysLoadDocument', array('modules.mod_tz_portfolio_plus_portfolio'));
+            $dispatcher -> trigger('onLoadData', array('modules.mod_tz_portfolio_plus_portfolio', $items, $params));
 
             foreach ($items as $i => &$item) {
                 $item->link = JRoute::_(TZ_Portfolio_PlusHelperRoute::getArticleRoute($item->slug, $item->catslug));
@@ -171,36 +172,36 @@ class modTZ_Portfolio_PlusArticlesHelper
                 $item -> event  = new stdClass();
 
                 //Call trigger in group content
-                $results = $dispatcher->trigger('onContentPrepare', array ('modules.mod_tz_portfolio_plus_articles', &$item, &$params, 0));
+                $results = $dispatcher->trigger('onContentPrepare', array ('modules.mod_tz_portfolio_plus_portfolio', &$item, &$params, 0));
                 $item->introtext = $item->text;
 
                 if($introtext_limit = $params -> get('introtext_limit')){
                     $item -> introtext  = '<p>'.JHtml::_('string.truncate', $item->introtext, $introtext_limit, true, false).'</p>';
                 }
 //
-                $results = $dispatcher->trigger('onContentBeforeDisplay', array('modules.mod_tz_portfolio_plus_articles',
+                $results = $dispatcher->trigger('onContentBeforeDisplay', array('modules.mod_tz_portfolio_plus_portfolio',
                     &$item, &$params, 0, $params->get('layout', 'default')));
                 $item->event->beforeDisplayContent = trim(implode("\n", $results));
 
-                $results = $dispatcher->trigger('onContentAfterDisplay', array('modules.mod_tz_portfolio_plus_articles',
+                $results = $dispatcher->trigger('onContentAfterDisplay', array('modules.mod_tz_portfolio_plus_portfolio',
                     &$item, &$params, 0, $params->get('layout', 'default')));
                 $item->event->afterDisplayContent = trim(implode("\n", $results));
 
                 // Process the tz portfolio's content plugins.
-                $results    = $dispatcher -> trigger('onBeforeDisplayAdditionInfo',array('modules.mod_tz_portfolio_plus_articles',
+                $results    = $dispatcher -> trigger('onBeforeDisplayAdditionInfo',array('modules.mod_tz_portfolio_plus_portfolio',
                     &$item, &$params, 0, $params->get('layout', 'default')));
                 $item -> event -> beforeDisplayAdditionInfo   = trim(implode("\n", $results));
 
-                $results    = $dispatcher -> trigger('onAfterDisplayAdditionInfo',array('modules.mod_tz_portfolio_plus_articles',
+                $results    = $dispatcher -> trigger('onAfterDisplayAdditionInfo',array('modules.mod_tz_portfolio_plus_portfolio',
                     &$item, &$params, 0, $params->get('layout', 'default')));
                 $item -> event -> afterDisplayAdditionInfo   = trim(implode("\n", $results));
 
-                $results    = $dispatcher -> trigger('onContentDisplayListView',array('modules.mod_tz_portfolio_plus_articles',
+                $results    = $dispatcher -> trigger('onContentDisplayListView',array('modules.mod_tz_portfolio_plus_portfolio',
                     &$item, &$params, 0, $params->get('layout', 'default')));
                 $item -> event -> contentDisplayListView   = trim(implode("\n", $results));
 
                 //Call trigger in group tz_portfolio_plus_mediatype
-                $results    = $dispatcher -> trigger('onContentDisplayMediaType',array('modules.mod_tz_portfolio_plus_articles',
+                $results    = $dispatcher -> trigger('onContentDisplayMediaType',array('modules.mod_tz_portfolio_plus_portfolio',
                     &$item, &$params, 0, $params->get('layout', 'default')));
                 if(isset($item) && $item){
                     $item -> event -> onContentDisplayMediaType    = trim(implode("\n", $results));
@@ -224,19 +225,19 @@ class modTZ_Portfolio_PlusArticlesHelper
 
     protected static function __getArticleByKey($article, $key = 'id')
     {
-        $contentId	= JArrayHelper::getColumn($article, $key);
+        $contentId	= ArrayHelper::getColumn($article, $key);
         $storeId = md5(__METHOD__ . '::' . $key.'::'.implode(',',$contentId));
-        if (!isset(modTZ_Portfolio_PlusArticlesHelper::$cache[$storeId])) {
-            modTZ_Portfolio_PlusArticlesHelper::$cache[$storeId] = JArrayHelper::getColumn($article, $key);
-            return modTZ_Portfolio_PlusArticlesHelper::$cache[$storeId];
+        if (!isset(self::$cache[$storeId])) {
+            self::$cache[$storeId] = ArrayHelper::getColumn($article, $key);
+            return self::$cache[$storeId];
         }
-        return modTZ_Portfolio_PlusArticlesHelper::$cache[$storeId];
+        return self::$cache[$storeId];
     }
 
     public static function getCategoriesByArticle($params)
     {
-        if ($articles = modTZ_Portfolio_PlusArticlesHelper::getList($params)) {
-            $contentId = modTZ_Portfolio_PlusArticlesHelper::__getArticleByKey($articles, 'content_id');
+        if ($articles = self::getList($params)) {
+            $contentId = self::__getArticleByKey($articles, 'content_id');
             return TZ_Portfolio_PlusFrontHelperCategories::getCategoriesByArticleId($contentId, array('reverse_contentid' => true));
         }
         return false;
@@ -244,8 +245,8 @@ class modTZ_Portfolio_PlusArticlesHelper
 
     public static function getCategoriesGroupByArticle($params)
     {
-        if ($articles = modTZ_Portfolio_PlusArticlesHelper::getList($params)) {
-            $contentId = modTZ_Portfolio_PlusArticlesHelper::__getArticleByKey($articles, 'content_id');
+        if ($articles = self::getList($params)) {
+            $contentId = self::__getArticleByKey($articles, 'content_id');
             return TZ_Portfolio_PlusFrontHelperCategories::getCategoriesByArticleId($contentId, array('reverse_contentid' => true, 'groupby' => 'id'));
         }
         return false;
@@ -253,8 +254,8 @@ class modTZ_Portfolio_PlusArticlesHelper
 
     public static function getTagsByArticle($params)
     {
-        if ($articles = modTZ_Portfolio_PlusArticlesHelper::getList($params)) {
-            $contentId = modTZ_Portfolio_PlusArticlesHelper::__getArticleByKey($articles, 'content_id');
+        if ($articles = self::getList($params)) {
+            $contentId = self::__getArticleByKey($articles, 'content_id');
             return TZ_Portfolio_PlusFrontHelperTags::getTagsByArticleId($contentId, array(
                     'orderby' => 'm.contentid',
                     'menuActive' => $params->get('tagmenuitem', 'auto'),
@@ -277,8 +278,8 @@ class modTZ_Portfolio_PlusArticlesHelper
 
     public static function getTagsFilterByArticle($params)
     {
-        if ($articles = modTZ_Portfolio_PlusArticlesHelper::getList($params)) {
-            $contentId = modTZ_Portfolio_PlusArticlesHelper::__getArticleByKey($articles, 'content_id');
+        if ($articles = self::getList($params)) {
+            $contentId = self::__getArticleByKey($articles, 'content_id');
             return TZ_Portfolio_PlusFrontHelperTags::getTagsFilterByArticleId($contentId);
         }
         return false;
@@ -286,8 +287,8 @@ class modTZ_Portfolio_PlusArticlesHelper
 
     public static function getCategoriesFilterByArticle($params)
     {
-        if ($articles = modTZ_Portfolio_PlusArticlesHelper::getList($params)) {
-            $contentId = modTZ_Portfolio_PlusArticlesHelper::__getArticleByKey($articles, 'content_id');
+        if ($articles = self::getList($params)) {
+            $contentId = self::__getArticleByKey($articles, 'content_id');
             return TZ_Portfolio_PlusFrontHelperCategories::getCategoriesByArticleId($contentId, array('reverse_contentid' => false, 'groupby' => 'id'));
         }
         return false;

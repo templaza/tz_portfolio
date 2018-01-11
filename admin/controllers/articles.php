@@ -20,6 +20,8 @@
 // No direct access.
 defined('_JEXEC') or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 jimport('joomla.application.component.controlleradmin');
 
 /**
@@ -68,7 +70,7 @@ class TZ_Portfolio_PlusControllerArticles extends JControllerAdmin
 		$cid 	= $this -> input -> get('cid', array(), 'array');
 		$data 	= array('publish' => 1, 'unpublish' => 0, 'archive' => 2, 'trash' => -2, 'report' => -3);
 		$task 	= $this->getTask();
-		$value 	= JArrayHelper::getValue($data, $task, 0, 'int');
+		$value 	= ArrayHelper::getValue($data, $task, 0, 'int');
 
 		if (empty($cid))
 		{
@@ -80,7 +82,7 @@ class TZ_Portfolio_PlusControllerArticles extends JControllerAdmin
 			$model = $this->getModel();
 
 			// Make sure the item ids are integers
-			JArrayHelper::toInteger($cid);
+			$cid    = ArrayHelper::toInteger($cid);
 
 			// Publish the items.
 			if (!$model->publish($cid, $value))
@@ -129,7 +131,7 @@ class TZ_Portfolio_PlusControllerArticles extends JControllerAdmin
 		$ids	= $this -> input -> get('cid', array(), 'array');
 		$values	= array('featured' => 1, 'unfeatured' => 0);
 		$task	= $this->getTask();
-		$value	= JArrayHelper::getValue($values, $task, 0, 'int');
+		$value	= ArrayHelper::getValue($values, $task, 0, 'int');
 
 		// Access checks.
 		foreach ($ids as $i => $id)
@@ -179,8 +181,8 @@ class TZ_Portfolio_PlusControllerArticles extends JControllerAdmin
         $order = $this->input->post->get('order', array(), 'array');
 
         // Sanitize the input
-        JArrayHelper::toInteger($pks);
-        JArrayHelper::toInteger($order);
+        $pks    = ArrayHelper::toInteger($pks);
+        $order  = ArrayHelper::toInteger($order);
 
         // Get the model
         $model = $this->getModel();

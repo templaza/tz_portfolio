@@ -20,6 +20,8 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 jimport('joomla.application.component.modellist');
 JLoader::import('category',COM_TZ_PORTFOLIO_PLUS_PATH_SITE.DIRECTORY_SEPARATOR.'helpers');
 
@@ -259,8 +261,8 @@ class TZ_Portfolio_PlusModelDate extends JModelList{
             $query->where($publishedWhere . ' = ' . (int) $published);
         }
         elseif (is_array($published)) {
-            JArrayHelper::toInteger($published);
-            $published = implode(',', $published);
+            $published  = ArrayHelper::toInteger($published);
+            $published  = implode(',', $published);
             // Use article state if badcats.id is null, otherwise, force 0 for unpublished
             $query->where($publishedWhere . ' IN ('.$published.')');
         }
@@ -303,8 +305,8 @@ class TZ_Portfolio_PlusModelDate extends JModelList{
             $authorWhere = 'a.created_by '.$type.(int) $authorId;
         }
         elseif (is_array($authorId)) {
-            JArrayHelper::toInteger($authorId);
-            $authorId = implode(',', $authorId);
+            $authorId   = ArrayHelper::toInteger($authorId);
+            $authorId   = implode(',', $authorId);
 
             if ($authorId) {
                 $type = $this->getState('filter.author_id.include', true) ? 'IN' : 'NOT IN';
@@ -324,7 +326,7 @@ class TZ_Portfolio_PlusModelDate extends JModelList{
             $first = current($authorAlias);
 
             if (!empty($first)) {
-                JArrayHelper::toString($authorAlias);
+                $authorAlias    = ArrayHelper::toString($authorAlias);
 
                 foreach ($authorAlias as $key => $alias)
                 {

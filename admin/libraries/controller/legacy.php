@@ -57,19 +57,21 @@ class TZ_Portfolio_Plus_AddOnControllerLegacy extends JControllerLegacy{
 
     public function display($cachable = false, $urlparams = array())
     {
-        $document = JFactory::getDocument();
-        $viewType = $document->getType();
-        $viewName = $this->input->get('addon_view', $this->default_view);
+        $app        = JFactory::getApplication();
+        $document   = JFactory::getDocument();
+        $viewType   = $document->getType();
+        $viewName   = $this->input->get('addon_view', $this->default_view);
         $viewLayout = $this->input->get('addon_layout', 'default', 'string');
 
 
         if($view = $this->getView($viewName, $viewType, '', array('base_path' => $this->basePath,
             'layout' => $viewLayout))){
 
-            // Check manage permission if the addon have manage datas
-            if($addon_id   = $this -> input -> get('addon_id', 0, 'int')){
+            // Check manage permission if the addon have manage datas (only use of back-end)
+            if($app -> isAdmin() && $addon_id = $this -> input -> get('addon_id', 0, 'int')){
                 if($plugin = TZ_Portfolio_PlusPluginHelper::getPluginById($addon_id)){
                     $user   = TZ_Portfolio_PlusUser::getUser();
+
                     if(isset($plugin -> asset_id) &&$plugin -> asset_id && !$user -> authorise('core.manage',
                             'com_tz_portfolio_plus.addon.'.$plugin -> id)){
 
@@ -155,7 +157,6 @@ class TZ_Portfolio_Plus_AddOnControllerLegacy extends JControllerLegacy{
                 }
             }
         }
-
         $view -> setLayout($viewLayout);
 
         // Get/Create the model

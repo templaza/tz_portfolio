@@ -20,6 +20,8 @@
 defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
+use Joomla\Utilities\ArrayHelper;
+
 tzportfolioplusimport('template');
 
 class TZ_Portfolio_PlusPluginHelper extends JPluginHelper{
@@ -250,7 +252,7 @@ class TZ_Portfolio_PlusPluginHelper extends JPluginHelper{
 
     public static function getContentTypes(){
         if($core_types             = self::getCoreContentTypes()) {
-            $types = JArrayHelper::getColumn($core_types, 'value');
+            $types = ArrayHelper::getColumn($core_types, 'value');
             $includeTypes = $core_types;
             $dispatcher = JEventDispatcher::getInstance();
 

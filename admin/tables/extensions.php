@@ -46,51 +46,54 @@ class TZ_Portfolio_PlusTableExtensions extends JTable
 
     protected function _getAssetName()
     {
-//        if($this -> type && $this -> type == 'tz_portfolio_plus-plugin') {
-            $k = $this->_tbl_key;
+        $k = $this->_tbl_key;
 
-            return 'com_tz_portfolio_plus.addon.' . (int)$this->$k;
-//        }
-//        return null;
+        return 'com_tz_portfolio_plus.addon.' . (int)$this->$k;
     }
 
     protected function _getAssetTitle()
     {
-//        if($this -> type && $this -> type == 'tz_portfolio_plus-plugin') {
-            $text = 'PLG_' . strtoupper($this->folder . '_' . $this->element);
-            $lang = JFactory::getLanguage();
-            if ($lang->hasKey($text)) {
-                return JText::_($text);
-            }
+        $text   = null;
+        $lang   = JFactory::getLanguage();
 
-            return $this->name;
-//        }
-//        return null;
+        if(isset($this -> folder) && isset($this -> element) && $this -> folder && $this -> element) {
+            $text = 'PLG_' . strtoupper($this->folder . '_' . $this->element);
+
+            $lang -> load('plg_'.strtolower($this -> folder.'_'.$this -> element),
+                COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.'/'.$this -> folder.'/'.$this -> element);
+
+        }else{
+            $text   = strtoupper($this -> name);
+        }
+
+        if ($text && $lang->hasKey($text)) {
+            return JText::_($text);
+        }
+
+        return $this->name;
     }
 
     protected function _getAssetParentId(JTable $table = null, $id = null)
     {
         $assetId = null;
 
-//        if($this -> type && $this -> type == 'tz_portfolio_plus-plugin'){
-            // This is a category under a category.
-            if ($assetId === null)
+        // This is a category under a category.
+        if ($assetId === null)
+        {
+            // Build the query to get the asset id for the parent category.
+            $query = $this->_db->getQuery(true)
+                ->select($this->_db->quoteName('id'))
+                ->from($this->_db->quoteName('#__assets'))
+                ->where($this->_db->quoteName('name') . ' = ' . $this->_db->quote('com_tz_portfolio_plus.addon'));
+
+            // Get the asset id from the database.
+            $this->_db->setQuery($query);
+
+            if ($result = $this->_db->loadResult())
             {
-                // Build the query to get the asset id for the parent category.
-                $query = $this->_db->getQuery(true)
-                    ->select($this->_db->quoteName('id'))
-                    ->from($this->_db->quoteName('#__assets'))
-                    ->where($this->_db->quoteName('name') . ' = ' . $this->_db->quote('com_tz_portfolio_plus.addon'));
-
-                // Get the asset id from the database.
-                $this->_db->setQuery($query);
-
-                if ($result = $this->_db->loadResult())
-                {
-                    $assetId = (int) $result;
-                }
+                $assetId = (int) $result;
             }
-//        }
+        }
 
         // Return the asset id.
         if ($assetId)

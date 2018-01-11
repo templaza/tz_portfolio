@@ -9,6 +9,8 @@
 
 defined('JPATH_BASE') or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 JFormHelper::loadFieldClass('list');
 
 /**
@@ -92,7 +94,7 @@ class JFormFieldCategoryEdit extends JFormFieldList
 		}
 		elseif (is_array($published))
 		{
-			JArrayHelper::toInteger($published);
+			$published  = ArrayHelper::toInteger($published);
 			$subQuery->where('published IN (' . implode(',', $published) . ')');
 		}
 

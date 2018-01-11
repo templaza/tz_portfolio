@@ -122,7 +122,7 @@ class TZ_Portfolio_PlusFrontHelperExtraFields{
         $fields     = null;
         if($group){
             $groupobj   = self::getFieldGroupsByArticleId($article -> id);
-            $groupid    = JArrayHelper::getColumn($groupobj, 'id');
+            $groupid    = ArrayHelper::getColumn($groupobj, 'id');
             $fields     = self::getExtraFieldsByFieldGroupId($groupid);
         }else{
             $fields = self::getExtraFieldsByArticle($article, $params, $options);
@@ -403,7 +403,7 @@ class TZ_Portfolio_PlusFrontHelperExtraFields{
         $storeId    = __METHOD__;
 
         if($groupid    = self::getFieldGroupsByArticleId($article -> id)) {
-            $groupid = JArrayHelper::getColumn($groupid, 'id');
+            $groupid = ArrayHelper::getColumn($groupid, 'id');
             $storeId    .= '::'.implode(',',$groupid);
         }
 

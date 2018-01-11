@@ -47,7 +47,7 @@ class TZ_Portfolio_PlusViewArticle extends JViewLegacy
                 $eName		= preg_replace( '#[^A-Z0-9\-\_\[\]]#i', '', $eName );
                 $document	= JFactory::getDocument();
                 $document->setTitle(JText::_('COM_CONTENT_PAGEBREAK_DOC_TITLE'));
-                $this->assignRef('eName', $eName);
+                $this-> eName    = $eName;
                 parent::display($tpl);
                 return;
             }
@@ -68,11 +68,6 @@ class TZ_Portfolio_PlusViewArticle extends JViewLegacy
             }
 
             $this -> extraFields	= $this -> get('ExtraFields');
-
-            $this -> assign('listsTags',json_encode($this -> get('Tags')));
-            $this -> assign('listAttach',$this -> get('Attachment'));
-            $this -> assign('listEdit',$this -> get('FieldsContent'));
-            $this -> assign('tagsSuggest',TZ_Portfolio_PlusHelperTags::getTagsSuggestToArticle());
 
 			// Load Tabs's title from plugin group tz_portfolio_plus_mediatype
 			$dispatcher	= JDispatcher::getInstance();

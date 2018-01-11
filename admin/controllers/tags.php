@@ -20,11 +20,10 @@
 // No direct access.
 defined('_JEXEC') or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 jimport('joomla.application.component.controlleradmin');
 
-    /**
-     * Users list controller class.
-     */
 class TZ_Portfolio_PlusControllerTags extends JControllerAdmin
 {
     protected $text_prefix  = 'COM_TZ_PORTFOLIO_PLUS_TAGS';
@@ -53,7 +52,7 @@ class TZ_Portfolio_PlusControllerTags extends JControllerAdmin
 
             // Make sure the item ids are integers
             jimport('joomla.utilities.arrayhelper');
-            JArrayHelper::toInteger($cid);
+            $cid    = ArrayHelper::toInteger($cid);
 
             // Remove the items.
             if ($model->delete($cid))

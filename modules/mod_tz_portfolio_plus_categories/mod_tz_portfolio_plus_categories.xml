@@ -7,7 +7,7 @@
     <license>GNU/GPL v2 or later http://www.gnu.org/licenses/gpl-2.0.html</license>
     <authorEmail>support@templaza.com</authorEmail>
     <authorUrl>www.templaza.com/</authorUrl>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
     <description>MOD_TZ_PORTFOLIO_PLUS_CATEGORIES_XML_DESCRIPTION</description>
 
     <files>
@@ -29,6 +29,10 @@
                        size="10" default=""
                        label="MOD_TZ_PORTFOLIO_PLUS_CATEGORIES_CHOOSE_CATEGORIES_LABEL">
                     <option value="">JOPTION_ALL_CATEGORIES</option>
+                </field>
+                <field type="tztemplates" name="template_id"
+                       label="COM_TZ_PORTFOLIO_PLUS_TEMPLATE_LABEL">
+                    <option value="0">JOPTION_USE_DEFAULT</option>
                 </field>
                 <field type="radio" class="btn-group" name="show_total" default="1"
                        label="MOD_TZ_PORTFOLIO_PLUS_CATEGORIES_SHOW_TOTAL">

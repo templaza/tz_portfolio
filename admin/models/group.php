@@ -20,6 +20,8 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 jimport('joomla.application.component.modeladmin');
 
 class TZ_Portfolio_PlusModelGroup extends JModelAdmin
@@ -156,7 +158,7 @@ class TZ_Portfolio_PlusModelGroup extends JModelAdmin
 
         // Convert to the JObject before adding other data.
         $properties = $table->getProperties(1);
-        $item = JArrayHelper::toObject($properties, 'JObject');
+        $item = ArrayHelper::toObject($properties, 'JObject');
 
         if (property_exists($item, 'params'))
         {

@@ -14,7 +14,7 @@
     <jedUrl>https://extensions.joomla.org/extension/tz-portfolio</jedUrl>
     <facebookUrl>https://www.facebook.com/tzportfolio</facebookUrl>
     <facebookGroupUrl>https://www.facebook.com/groups/tzportfolio</facebookGroupUrl>
-	<version>1.2.0</version>
+	<version>1.2.1</version>
     
     <scriptfile>script.php</scriptfile>
 
@@ -96,7 +96,7 @@
     </config>
     
     <modules>
-        <module module="mod_tz_portfolio_plus_articles" client="site" />
+        <module module="mod_tz_portfolio_plus_portfolio" client="site" />
         <module module="mod_tz_portfolio_plus_articles_archive" client="site" />
         <module module="mod_tz_portfolio_plus_categories" client="site" />
         <module module="mod_tz_portfolio_plus_tags" client="site" />
@@ -106,6 +106,23 @@
     <plugins>
         <plugin plugin="tz_portfolio_plus" group="system" />
     </plugins>
+
+    <addons>
+        <addon addon="vote" group="content"/>
+        <addon addon="checkboxes" group="extrafields"/>
+        <addon addon="dropdownlist" group="extrafields"/>
+        <addon addon="multipleselect" group="extrafields"/>
+        <addon addon="radio" group="extrafields"/>
+        <addon addon="text" group="extrafields"/>
+        <addon addon="textarea" group="extrafields"/>
+        <addon addon="image" group="mediatype"/>
+        <addon addon="profile" group="user"/>
+    </addons>
+
+    <templates>
+        <template template="system"/>
+        <template template="elegant"/>
+    </templates>
 
     <updateservers>
         <server type="extension" pirority="1" name="TZ Portfolio Plus Updates">

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+    <fields name="params">
+        <fieldset name="basic">
+            <field type="spacer" name="spacer_vote_addon_hr" hr="true"/>
+            <field type="radio" name="show_cat_vote"
+                   default="1" class="btn-group"
+                   label="JGLOBAL_SHOW_VOTE_LABEL"
+                   description="JGLOBAL_SHOW_VOTE_DESC">
+                <option value="0">JHIDE</option>
+                <option value="1">JSHOW</option>
+            </field>
+            <field name="show_counter" type="radio"
+                   default="1" class="btn-group"
+                   label="PLG_CONTENT_VOTE_SHOW_COUNTER_LABEL"
+                   description="PLG_CONTENT_VOTE_SHOW_COUNTER_DESC">
+                <option value="0">JHIDE</option>
+                <option value="1">JSHOW</option>
+            </field>
+            <field name="unrated" type="radio"
+                   class="btn-group" default="1"
+                   label="PLG_CONTENT_VOTE_UNRATED_LABEL"
+                   description="PLG_CONTENT_VOTE_UNRATED_DESC">
+                <option value="0">JHIDE</option>
+                <option value="1">JSHOW</option>
+            </field>            ​
+        </fieldset>        ​
+    </fields>
+</form>

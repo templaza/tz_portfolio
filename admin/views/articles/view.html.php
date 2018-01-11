@@ -67,9 +67,7 @@ class TZ_Portfolio_PlusViewArticles extends JViewLegacy
 		$options[]	= JHtml::_('select.option', '9', JText::_('J9'));
 		$options[]	= JHtml::_('select.option', '10', JText::_('J10'));
 
-		$this->assign('f_levels', $options);
-
-
+		$this-> f_levels    = $options;
 
         TZ_Portfolio_PlusHelper::addSubmenu('articles');
 

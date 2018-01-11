@@ -20,6 +20,8 @@
 // No direct access
 defined('JPATH_PLATFORM') or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 jimport('joomla.application.component.controlleradmin');
 
 class TZ_Portfolio_Plus_AddOnControllerAdmin extends TZ_Portfolio_Plus_AddOnControllerLegacy{
@@ -92,7 +94,7 @@ class TZ_Portfolio_Plus_AddOnControllerAdmin extends TZ_Portfolio_Plus_AddOnCont
 
             // Make sure the item ids are integers
             jimport('joomla.utilities.arrayhelper');
-            JArrayHelper::toInteger($cid);
+            $cid    = ArrayHelper::toInteger($cid);
 
             // Remove the items.
             if ($model->delete($cid))
@@ -125,7 +127,7 @@ class TZ_Portfolio_Plus_AddOnControllerAdmin extends TZ_Portfolio_Plus_AddOnCont
         $cid = JFactory::getApplication()->input->get('cid', array(), 'array');
         $data = array('publish' => 1, 'unpublish' => 0, 'archive' => 2, 'trash' => -2, 'report' => -3);
         $task = $this->getTask();
-        $value = JArrayHelper::getValue($data, $task, 0, 'int');
+        $value = ArrayHelper::getValue($data, $task, 0, 'int');
 
         if (empty($cid))
         {
@@ -137,7 +139,7 @@ class TZ_Portfolio_Plus_AddOnControllerAdmin extends TZ_Portfolio_Plus_AddOnCont
             $model = $this->getModel();
 
             // Make sure the item ids are integers
-            JArrayHelper::toInteger($cid);
+            $cid    = ArrayHelper::toInteger($cid);
 
             // Publish the items.
             try
@@ -215,8 +217,8 @@ class TZ_Portfolio_Plus_AddOnControllerAdmin extends TZ_Portfolio_Plus_AddOnCont
         $order = $this->input->post->get('order', array(), 'array');
 
         // Sanitize the input
-        JArrayHelper::toInteger($pks);
-        JArrayHelper::toInteger($order);
+        $pks    = ArrayHelper::toInteger($pks);
+        $order  = ArrayHelper::toInteger($order);
 
         // Get the model
         $model = $this->getModel();
@@ -291,8 +293,8 @@ class TZ_Portfolio_Plus_AddOnControllerAdmin extends TZ_Portfolio_Plus_AddOnCont
         $order = $this->input->post->get('order', array(), 'array');
 
         // Sanitize the input
-        JArrayHelper::toInteger($pks);
-        JArrayHelper::toInteger($order);
+        $pks    = ArrayHelper::toInteger($pks);
+        $order  = ArrayHelper::toInteger($order);
 
         // Get the model
         $model = $this->getModel();

@@ -55,6 +55,9 @@ class JFormFieldModal_Article extends JFormFieldCheckboxes
         if($this -> multiple){
             $this -> layout = 'form.field.articles';
         }
+        if(!$this -> multiple){
+            $this -> value  = (int) $this -> value;
+        }
 
         return $return;
     }
@@ -62,10 +65,11 @@ class JFormFieldModal_Article extends JFormFieldCheckboxes
     {
         $data = parent::getLayoutData();
 
+        $data['title']      = null;
+        $data['items']      = false;
+        $data['submitform'] = false;
         $data['link']       = 'index.php?option=com_tz_portfolio_plus&view=articles&layout=modal'
             .($this -> multiple?'&ismultiple=true':'').'&tmpl=component';
-        $data['items']  = false;
-        $data['title']  = null;
 
         if($items  = $this -> _getItems($this -> value)){
             if($this -> multiple) {
@@ -78,6 +82,10 @@ class JFormFieldModal_Article extends JFormFieldCheckboxes
         {
             $data['language']   = $this -> element['language'];
             $data['link']      .= '&forcedLanguage='.$this->element['language'];
+        }
+
+        if(isset($this -> element['submitform']) && $this -> element['submitform']){
+            $data['submitform'] = boolval($this -> element['submitform']);
         }
 
         return $data;

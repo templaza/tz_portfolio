@@ -310,10 +310,20 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
                 $media -> loadString($item -> media);
                 $item -> media  = $media -> toArray();
             }
+
+            if (!empty($item->id))
+            {
+                $item -> tags   = null;
+                $tags   = TZ_Portfolio_PlusHelperTags::getTagsByArticleId($item -> id);
+                if($tags && count($tags)) {
+                    $tags = ArrayHelper::getColumn($tags, 'id');
+                    $tags = implode(',', $tags);
+                    $item->tags = $tags;
+                }
+            }
         }
 
         // Load associated content items
-        $app    = JFactory::getApplication();
         $assoc = JLanguageAssociations::isEnabled();
 
         if ($assoc)
@@ -323,7 +333,6 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
             if ($item->id != null)
             {
                 $associations    = TZ_Portfolio_PlusBackEndHelperAssociation::getArticleAssociations($item->id);
-
 
                 foreach ($associations as $tag => $association)
                 {
@@ -451,7 +460,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
             $data               = $this->getItem();
             if($second_categories  = TZ_Portfolio_PlusHelperCategories::getCategoriesByArticleId($data -> id, 0)) {
                 if (is_array($second_categories)) {
-                    $catids = JArrayHelper::getColumn($second_categories, 'id');
+                    $catids = ArrayHelper::getColumn($second_categories, 'id');
                 } else {
                     $catids = $second_categories->id;
                 }
@@ -461,7 +470,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
 
             if($main_category      = TZ_Portfolio_PlusHelperCategories::getCategoriesByArticleId($data -> id, 1)) {
                 if (is_array($main_category)) {
-                    $catid = JArrayHelper::getColumn($main_category, 'id');
+                    $catid = ArrayHelper::getColumn($main_category, 'id');
                 } else {
                     $catid = $main_category->id;
                 }
@@ -482,13 +491,6 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
         $this->preprocessData('com_tz_portfolio_plus.article', $data);
 
         return $data;
-    }
-
-
-    // Show tags
-    public function getTags(){
-        $pk = (int) $this->getState($this->getName() . '.id');
-        return TZ_Portfolio_PlusHelperTags::getTagTitlesByArticleId($pk);
     }
 
     /**
@@ -798,8 +800,8 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
     public function featured($pks, $value = 0)
     {
         // Sanitize the ids.
-        $pks = (array) $pks;
-        JArrayHelper::toInteger($pks);
+        $pks    = (array) $pks;
+        $pks    = ArrayHelper::toInteger($pks);
 
         if (empty($pks))
         {
@@ -1015,6 +1017,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
 
                 $query -> where('field.access IN('.$viewlevels.')');
                 $query -> where('fg.id IN('.((string) $subquery).')');
+                $query -> where('e.access IN('.$viewlevels.')');
 
                 // Ordering by default : core fields, then extra fields
                 $query -> order('IF(fg.field_ordering_type = 2, '.$db -> quoteName('m.ordering')

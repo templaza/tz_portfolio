@@ -7,7 +7,7 @@
     <license>GNU/GPL v2 or later http://www.gnu.org/licenses/gpl-2.0.html</license>
     <authorEmail>support@templaza.com</authorEmail>
     <authorUrl>www.tzportfolio.com/</authorUrl>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
     <description>MOD_TZ_PORTFOLIO_PLUS_FILTER_XML_DESCRIPTION</description>
     <files>
         <filename module="mod_tz_portfolio_plus_filter">mod_tz_portfolio_plus_filter.php</filename>
@@ -26,6 +26,10 @@
         <fields name="params" addfieldpath="modules/mod_tz_portfolio_plus_filter/admin/fields">
             <fieldset name="basic" addfieldpath="administrator/components/com_tz_portfolio_plus/models/fields">
 
+                <field type="tztemplates" name="template_id"
+                       label="COM_TZ_PORTFOLIO_PLUS_TEMPLATE_LABEL">
+                    <option value="0">JOPTION_USE_DEFAULT</option>
+                </field>
                 <field type="radio" name="show_search_word"
                        default="1" class="btn-group btn-group-yesno"
                        label="MOD_TZ_PORTFOLIO_PLUS_FIELDS_SHOW_SEARCH_WORD_LABEL">

@@ -20,6 +20,8 @@
 // No direct access.
 defined('_JEXEC') or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 jimport('joomla.application.component.modeladmin');
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
@@ -212,7 +214,7 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 			{
 				$result->associations = TZ_Portfolio_PlusHelperCategories::getAssociations($result->id, $result->extension);
 
-				JArrayHelper::toInteger($result->associations);
+                $result->associations   = ArrayHelper::toInteger($result->associations);
 			}
 			else
 			{
@@ -972,7 +974,7 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 
 		// $value comes as {parent_id}.{extension}
 		$parts = explode('.', $value);
-		$parentId = (int) JArrayHelper::getValue($parts, 0, 1);
+		$parentId = (int) ArrayHelper::getValue($parts, 0, 1);
 
 		$db = $this->getDbo();
 		$extension = JFactory::getApplication()->input->get('extension', '', 'word');
@@ -1287,8 +1289,8 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 		if (!empty($children))
 		{
 			// Remove any duplicates and sanitize ids.
-			$children = array_unique($children);
-			JArrayHelper::toInteger($children);
+			$children   = array_unique($children);
+			$children   = ArrayHelper::toInteger($children);
 
 			// Check for a database error.
 			if ($db->getErrorNum())

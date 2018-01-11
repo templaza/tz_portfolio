@@ -19,6 +19,8 @@
 
 defined('JPATH_PLATFORM') or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 /**
  * Utility class for categories
  *
@@ -70,7 +72,7 @@ abstract class JHtmlTZCategory
                 }
                 elseif (is_array($config['filter.published']))
                 {
-                    JArrayHelper::toInteger($config['filter.published']);
+                    $config['filter.published'] = ArrayHelper::toInteger($config['filter.published']);
                     $query->where('a.published IN (' . implode(',', $config['filter.published']) . ')');
                 }
             }
@@ -156,7 +158,7 @@ abstract class JHtmlTZCategory
                 }
                 elseif (is_array($config['filter.published']))
                 {
-                    JArrayHelper::toInteger($config['filter.published']);
+                    $config['filter.published'] = ArrayHelper::toInteger($config['filter.published']);
                     $query->where('a.published IN (' . implode(',', $config['filter.published']) . ')');
                 }
             }

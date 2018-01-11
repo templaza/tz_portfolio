@@ -69,9 +69,6 @@ class TZ_Portfolio_PlusViewForm extends JViewLegacy
         }
 
         $this -> extraFields	= $this -> get('ExtraFields');
-        $this -> listTags      = json_encode($this -> get('Tags'));
-        $this -> tagsSuggest   = TZ_Portfolio_PlusHelperTags::getTagsSuggestToArticle();
-
 
         // Create a shortcut to the parameters.
         $params = &$this->state->params;

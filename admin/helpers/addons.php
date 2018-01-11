@@ -79,29 +79,4 @@ class TZ_Portfolio_PlusHelperAddons{
         }
         return false;
     }
-
-    public static function checkEditAddonConfigure($addonId = 0, $return = null)
-    {
-        $input      = JFactory::getApplication() -> input;
-        $recordId   = $addonId ? (int) $addonId : 0;
-        $return     = $return ? $return : $input ->  get('return', null, 'base64');
-
-        // Return the addon edit options permission
-        if($return) {
-            $return = base64_decode($return);
-            $uri    = JUri::getInstance($return);
-
-            if($uri -> isInternal($return)){
-                if($query  = $uri -> getQuery(true)){
-                    if(isset($query['option']) && isset($query['view']) && isset($query['addon_id'])){
-                        if($query['option'] == 'com_tz_portfolio_plus' && $query['view'] == 'addon_datas'
-                            && $query['addon_id'] == $recordId){
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
-    }
 }

@@ -20,6 +20,8 @@
 // No direct access.
 defined('_JEXEC') or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 jimport('joomla.application.component.controllerform');
 
 class TZ_Portfolio_PlusControllerAddon extends JControllerForm
@@ -188,7 +190,7 @@ class TZ_Portfolio_PlusControllerAddon extends JControllerForm
         $eid   = $this->input->get('cid', array(), 'array');
         $model = $this->getModel();
 
-        JArrayHelper::toInteger($eid, array());
+        $eid    = ArrayHelper::toInterger($eid);
         $model->uninstall($eid);
         $this->setRedirect(JRoute::_('index.php?option=com_tz_portfolio_plus&view=addons', false));
     }
@@ -197,11 +199,14 @@ class TZ_Portfolio_PlusControllerAddon extends JControllerForm
     {
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
+        $cancel = parent::cancel($key);
+
         if($return = $this -> input -> get('return', null, 'base64')){
             $this -> setRedirect(base64_decode($return));
             return true;
         }
-        return parent::cancel($key);
+
+        return $cancel;
     }
 
     public function save($key = null, $urlVar = null)
@@ -273,38 +278,10 @@ class TZ_Portfolio_PlusControllerAddon extends JControllerForm
         $tblAsset   = JTable::getInstance('Asset','JTable');
 
         // Return the addon edit options permission
-        if($return     = $this -> input -> get('return', null, 'base64')) {
-
-            if(TZ_Portfolio_PlusHelperAddons::checkEditAddonConfigure($recordId, $return)){
-                if($tblAsset -> loadByName('com_tz_portfolio_plus.addon.'.$recordId)) {
-                    return $user->authorise('core.admin', $this -> option.'.addon.'.$recordId)
-                        || $user->authorise('core.options', $this -> option.'.addon.'.$recordId);
-                }elseif($tblAsset -> loadByName('com_tz_portfolio_plus.addon')) {
-                    return $user->authorise('core.admin', $this -> option.'.addon')
-                        || $user->authorise('core.options', $this -> option.'.addon');
-                }
-
-            }
-
-//            $return = base64_decode($return);
-//
-//            $uri = JUri::getInstance($return);
-//            if($uri->isInternal($return)){
-//                if($query  = $uri -> getQuery(true)){
-//                    if(isset($query['option']) && isset($query['view']) && isset($query['addon_id'])){
-//                        if($query['option'] == $this -> option && $query['view'] == 'addon_datas'
-//                            && $query['addon_id'] == $recordId){
-//                            if($tblAsset -> loadByName('com_tz_portfolio_plus.addon.'.$recordId)) {
-//                                return $user->authorise('core.admin', $this -> option.'.addon.'.$recordId)
-//                                    || $user->authorise('core.options', $this -> option.'.addon.'.$recordId);
-//                            }elseif($tblAsset -> loadByName('com_tz_portfolio_plus.addon')) {
-//                                return $user->authorise('core.admin', $this -> option.'.addon')
-//                                    || $user->authorise('core.options', $this -> option.'.addon');
-//                            }
-//                        }
-//                    }
-//                }
-//            }
+        if($recordId){
+            return $user->authorise('core.edit', 'com_tz_portfolio_plus.addon.'.$recordId)
+            || $user->authorise('core.admin', 'com_tz_portfolio_plus.addon.'.$recordId)
+            || $user->authorise('core.options', 'com_tz_portfolio_plus.addon.'.$recordId);
         }
 
         // Zero record (id:0), return component edit permission by calling parent controller method

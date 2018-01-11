@@ -303,6 +303,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
             $formFile   = false;
             $link       = false;
 
+
             $base   = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.'/'.$this -> _type.'/'.$this -> _name;
 
             // Load plugin's language
@@ -325,6 +326,17 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
                 }
             }
 
+            // Load addon config for module from module
+            $mAddonBasePath = JPATH_SITE.'/modules/'.$module_name.'/tmpl/plg_'.$this -> _type.'_'
+                .$this -> _name.'/config.xml';
+            if(file_exists($mAddonBasePath)){
+                if ($form->loadFile($mAddonBasePath, true))
+                {
+                    return $form;
+                }
+            }
+
+            // Load addon config for module from addon
             // Get the modules if this addon support.
             if (is_dir($base)) {
                 $folders = JFolder::folders($base, '^module[s]?$', false, true);
@@ -472,91 +484,94 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
     }
 
     protected function getModuleLayout($type, $name, $folder, $module, $layout = 'default',$tmpl=false){
-        $template = JFactory::getApplication()->getTemplate();
-        $defaultLayout = $layout;
-
-        if (strpos($layout, ':') !== false)
-        {
-            // Get the template and file name from the string
-            $temp = explode(':', $layout);
-            $template = ($temp[0] == '_') ? $template : $temp[0];
-            $layout = $temp[1];
-            $defaultLayout = ($temp[1]) ? $temp[1] : 'default';
-        }
-
-        $tmpl_folder    = null;
-        if($tmpl){
-            $tmpl_folder    = '/tmpl';
-        }
-
-        if(!$layout){
-            $layout = 'default';
-        }
-
-        $tpTemplate = TZ_Portfolio_PlusTemplate::getTemplate(true);
-        $tplParams  = $tpTemplate->params;
-
-        // Build the template and base path for the layout
-        $tpdefPath  = null;
-        $tpPath     = null;
-
-        if(isset($tpTemplate -> home_path) && $tpTemplate -> home_path){
-            $tpdefPath    = $tpTemplate -> home_path.'/' . $module .'/plg_' . $type
-                . '_' . $name . '/' . $layout . '.php';
-        }
-        if(isset($tpTemplate -> base_path) && $tpTemplate -> base_path){
-            $tpPath    = $tpTemplate -> base_path.'/' . $module .'/plg_' . $type
-                . '_' . $name . '/' . $layout . '.php';
-        }
-
-        $tPath = JPATH_THEMES . '/' . $template . '/html/'.$module.'/plg_' . $type . '_' . $name . '/' . $layout . '.php';
-        $bPath = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/' . $type . '/' . $name . '/'.$folder.'/'.$module
-            .$tmpl_folder.'/'. $defaultLayout . '.php';
-        $dPath = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/' . $type . '/' . $name . '/'.$folder.'/'.$module
-            .$tmpl_folder.'/default.php';
-
-        if ($tplParams->get('override_html_template_site', 0)) {
-            // If the template has a layout override use it
-            if(file_exists($tpPath)){
-                return $tpPath;
-            }
-
-            if(file_exists($tpdefPath)){
-                return $tpdefPath;
-            }
-
-            if (file_exists($tPath))
-            {
-                return $tPath;
-            }
-
-        }else{
-            // If the template has a layout override use it
-
-            if (file_exists($tPath))
-            {
-                return $tPath;
-            }
-
-            if(file_exists($tpPath)){
-                return $tpPath;
-            }
-
-            if(file_exists($tpdefPath)){
-                return $tpdefPath;
-            }
-        }
-
-        if (file_exists($bPath))
-        {
-            return $bPath;
-        }
-
-        if(file_exists($dPath)) {
-            return $dPath;
-        }
-
-        return false;
+        $path   = TZ_Portfolio_PlusModuleHelper::getAddOnModuleLayout($type, $name, $module, $layout);
+        return $path;
+//        var_dump($path);
+//        $template = JFactory::getApplication()->getTemplate();
+//        $defaultLayout = $layout;
+//
+//        if (strpos($layout, ':') !== false)
+//        {
+//            // Get the template and file name from the string
+//            $temp = explode(':', $layout);
+//            $template = ($temp[0] == '_') ? $template : $temp[0];
+//            $layout = $temp[1];
+//            $defaultLayout = ($temp[1]) ? $temp[1] : 'default';
+//        }
+//
+//        $tmpl_folder    = null;
+//        if($tmpl){
+//            $tmpl_folder    = '/tmpl';
+//        }
+//
+//        if(!$layout){
+//            $layout = 'default';
+//        }
+//
+//        $tpTemplate = TZ_Portfolio_PlusTemplate::getTemplate(true);
+//        $tplParams  = $tpTemplate->params;
+//
+//        // Build the template and base path for the layout
+//        $tpdefPath  = null;
+//        $tpPath     = null;
+//
+//        if(isset($tpTemplate -> home_path) && $tpTemplate -> home_path){
+//            $tpdefPath    = $tpTemplate -> home_path.'/' . $module .'/plg_' . $type
+//                . '_' . $name . '/' . $layout . '.php';
+//        }
+//        if(isset($tpTemplate -> base_path) && $tpTemplate -> base_path){
+//            $tpPath    = $tpTemplate -> base_path.'/' . $module .'/plg_' . $type
+//                . '_' . $name . '/' . $layout . '.php';
+//        }
+//
+//        $tPath = JPATH_THEMES . '/' . $template . '/html/'.$module.'/plg_' . $type . '_' . $name . '/' . $layout . '.php';
+//        $bPath = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/' . $type . '/' . $name . '/'.$folder.'/'.$module
+//            .$tmpl_folder.'/'. $defaultLayout . '.php';
+//        $dPath = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/' . $type . '/' . $name . '/'.$folder.'/'.$module
+//            .$tmpl_folder.'/default.php';
+//
+//        if ($tplParams->get('override_html_template_site', 0)) {
+//            // If the template has a layout override use it
+//            if(file_exists($tpPath)){
+//                return $tpPath;
+//            }
+//
+//            if(file_exists($tpdefPath)){
+//                return $tpdefPath;
+//            }
+//
+//            if (file_exists($tPath))
+//            {
+//                return $tPath;
+//            }
+//
+//        }else{
+//            // If the template has a layout override use it
+//
+//            if (file_exists($tPath))
+//            {
+//                return $tPath;
+//            }
+//
+//            if(file_exists($tpPath)){
+//                return $tpPath;
+//            }
+//
+//            if(file_exists($tpdefPath)){
+//                return $tpdefPath;
+//            }
+//        }
+//
+//        if (file_exists($bPath))
+//        {
+//            return $bPath;
+//        }
+//
+//        if(file_exists($dPath)) {
+//            return $dPath;
+//        }
+//
+//        return false;
     }
 
     protected function _getViewHtml($context, &$article, $params, $layout = null){

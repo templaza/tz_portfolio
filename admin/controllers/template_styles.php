@@ -20,6 +20,8 @@
 // No direct access.
 defined('_JEXEC') or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 jimport('joomla.application.component.controlleradmin');
 
 class TZ_Portfolio_PlusControllerTemplate_Styles extends JControllerAdmin
@@ -46,7 +48,7 @@ class TZ_Portfolio_PlusControllerTemplate_Styles extends JControllerAdmin
                 throw new Exception(JText::_('COM_TEMPLATES_NO_TEMPLATE_SELECTED'));
             }
 
-            JArrayHelper::toInteger($pks);
+            $pks    = ArrayHelper::toInteger($pks);
 
             $model = $this->getModel();
             $model->duplicate($pks);
@@ -76,7 +78,7 @@ class TZ_Portfolio_PlusControllerTemplate_Styles extends JControllerAdmin
                 throw new Exception(JText::_('COM_TEMPLATES_NO_TEMPLATE_SELECTED'));
             }
 
-            JArrayHelper::toInteger($pks);
+            $pks    = ArrayHelper::toInteger($pks);
 
             // Pop off the first element.
             $id = array_shift($pks);
@@ -99,8 +101,8 @@ class TZ_Portfolio_PlusControllerTemplate_Styles extends JControllerAdmin
 
         JFactory::getLanguage() -> load('com_templates');
 
-        $pks = $this->input->get->get('cid', array(), 'array');
-        JArrayHelper::toInteger($pks);
+        $pks    = $this->input->get->get('cid', array(), 'array');
+        $pks    = ArrayHelper::toInteger($pks);
 
         try
         {

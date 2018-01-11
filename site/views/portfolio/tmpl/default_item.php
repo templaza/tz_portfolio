@@ -19,6 +19,8 @@
 
 defined('_JEXEC') or die();
 
+use Joomla\Utilities\ArrayHelper;
+
 $doc    = JFactory::getDocument();
 
 if($this -> items):
@@ -40,7 +42,7 @@ if($this -> items):
         $class  = '';
         if($params -> get('tz_filter_type','tags') == 'tags'){
             if($item -> tags && count($item -> tags)){
-                $alias  = JArrayHelper::getColumn($item -> tags, 'alias');
+                $alias  = ArrayHelper::getColumn($item -> tags, 'alias');
                 $class  = implode(' ', $alias);
             }
         }

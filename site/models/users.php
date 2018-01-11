@@ -19,6 +19,9 @@
 
 // no direct access
 defined('_JEXEC') or die();
+
+use Joomla\Utilities\ArrayHelper;
+
 jimport('joomla.application.component.modellist');
 jimport('joomla.html.pagination');
 JLoader::import('category',COM_TZ_PORTFOLIO_PLUS_PATH_SITE.DIRECTORY_SEPARATOR.'helpers');
@@ -143,8 +146,8 @@ class TZ_Portfolio_PlusModelUsers extends JModelList
             // Use article state if badcats.id is null, otherwise, force 0 for unpublished
             $query->where('c.state = ' . (int) $published);
         }elseif (is_array($published)) {
-            JArrayHelper::toInteger($published);
-            $published = implode(',', $published);
+            $published  = ArrayHelper::toInteger($published);
+            $published  = implode(',', $published);
             // Use article state if badcats.id is null, otherwise, force 0 for unpublished
             $query->where('c.state IN ('.$published.')');
         }

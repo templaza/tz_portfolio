@@ -146,32 +146,7 @@ class TZ_Portfolio_PlusInstallerAdapterPlugin extends JInstallerAdapterPlugin{
                     )
                 );
             }
-
-//            // Set the schema version to be the latest update version
-//            if ($this->getManifest()->update)
-//            {
-//                $this->parent->setSchemaVersion($this->getManifest()->update->schemas, $this->extension->extension_id);
-//            }
         }
-//        elseif ($this->route == 'update')
-//        {
-//            if ($this->getManifest()->update)
-//            {
-//                $result = $this->parent->parseSchemaUpdates($this->getManifest()->update->schemas, $this->extension->extension_id);
-//
-//                if ($result === false)
-//                {
-//                    // Install failed, rollback changes
-//                    throw new RuntimeException(
-//                        JText::sprintf(
-//                            'JLIB_INSTALLER_ABORT_SQL_ERROR',
-//                            JText::_('JLIB_INSTALLER_' . strtoupper($this->route)),
-//                            $this->db->stderr(true)
-//                        )
-//                    );
-//                }
-//            }
-//        }
     }
 
     protected function storeExtension($deleteExisting = false)
@@ -188,7 +163,6 @@ class TZ_Portfolio_PlusInstallerAdapterPlugin extends JInstallerAdapterPlugin{
         $this->extension->type      = $this->type;
         $this->extension->folder    = $this->group;
         $this->extension->element   = $this->element;
-        $this->extension->access    = 1;
 
         unset($this -> extension -> extension_id);
 
@@ -198,12 +172,12 @@ class TZ_Portfolio_PlusInstallerAdapterPlugin extends JInstallerAdapterPlugin{
             $db = $this->parent->getDbo();
 
             $query = $db->getQuery(true)
-                ->select($db->qn('id'))
-                ->from($db->qn('#__tz_portfolio_plus_extensions'))
-                ->where($db->qn('name') . ' = ' . $db->q($this->extension->name))
-                ->where($db->qn('type') . ' = ' . $db->q($this->extension->type))
-                ->where($db->qn('element') . ' = ' . $db->q($this->extension->element))
-                ->where($db->qn('folder') . ' = ' . $db->q($this->extension->folder));
+                ->select($db->quoteName('id'))
+                ->from($db->quoteName('#__tz_portfolio_plus_extensions'))
+                ->where($db->quoteName('name') . ' = ' . $db->quote($this->extension->name))
+                ->where($db->quoteName('type') . ' = ' . $db->quote($this->extension->type))
+                ->where($db->quoteName('element') . ' = ' . $db->quote($this->extension->element))
+                ->where($db->quoteName('folder') . ' = ' . $db->quote($this->extension->folder));
 
             $db->setQuery($query);
 
@@ -222,37 +196,58 @@ class TZ_Portfolio_PlusInstallerAdapterPlugin extends JInstallerAdapterPlugin{
             }
         }
 
-        // If there is not already a row, generate a heap of defaults
-        if (!$this->currentExtensionId)
+        // Was there a plugin with the same name already installed?
+        if ($this->currentExtensionId)
+        {
+            if (!$this->parent->isOverwrite())
+            {
+                // Install failed, roll back changes
+                throw new \RuntimeException(
+                    \JText::sprintf(
+                        'JLIB_INSTALLER_ABORT_PLG_INSTALL_ALLREADY_EXISTS',
+                        \JText::_('JLIB_INSTALLER_' . $this->route),
+                        $this->name
+                    )
+                );
+            }
+
+            $this->extension->load($this->currentExtensionId);
+            $this->extension->name = $this->name;
+            $this->extension->manifest_cache = $this->parent->generateManifestCache();
+
+            // Update the manifest cache and name
+            $this->extension->store();
+        }
+        else
         {
             $this->extension->folder    = $this -> group;
-            $this->extension->published   = 1;
+            $this->extension->published = 1;
             $this->extension->protected = 0;
-            $this->extension->access    = 1;
             $this->extension->params    = $this->parent->getParams();
+            $this->extension->access    = 1;
+
+            $this->extension->manifest_cache = $this->parent->generateManifestCache();
+
+            $couldStore = $this->extension->store();
+
+            if (!$couldStore && $deleteExisting)
+            {
+                // Install failed, roll back changes
+                throw new RuntimeException(
+                    JText::sprintf(
+                        'JLIB_INSTALLER_ABORT_COMP_INSTALL_ROLLBACK',
+                        $this->extension->getError()
+                    )
+                );
+            }
+
+            if (!$couldStore && !$deleteExisting)
+            {
+                // Maybe we have a failed installation (e.g. timeout). Let's retry after deleting old records.
+                $this->storeExtension(true);
+            }
+
         }
-
-        $this->extension->manifest_cache = $this->parent->generateManifestCache();
-
-        $couldStore = $this->extension->store();
-
-        if (!$couldStore && $deleteExisting)
-        {
-            // Install failed, roll back changes
-            throw new RuntimeException(
-                JText::sprintf(
-                    'JLIB_INSTALLER_ABORT_COMP_INSTALL_ROLLBACK',
-                    $this->extension->getError()
-                )
-            );
-        }
-
-        if (!$couldStore && !$deleteExisting)
-        {
-            // Maybe we have a failed installation (e.g. timeout). Let's retry after deleting old records.
-            $this->storeExtension(true);
-        }
-
         // Set extension_id = id because table extension of joomla with key is "extension_id" so plus is "id"
         $this -> extension -> extension_id  = $this -> extension -> id;
     }

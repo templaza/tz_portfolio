@@ -21,6 +21,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
+use Joomla\Utilities\ArrayHelper;
 
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
@@ -56,8 +57,8 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
         }
         else
         {
-            $folder		= JArrayHelper::getValue($data, 'folder', '', 'cmd');
-            $element	= JArrayHelper::getValue($data, 'element', '', 'cmd');
+            $folder		= ArrayHelper::getValue($data, 'folder', '', 'cmd');
+            $element	= ArrayHelper::getValue($data, 'element', '', 'cmd');
         }
 
         // These variables are used to add data from the plugin XML files.
@@ -155,11 +156,16 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
                 }
             }
 
-            if(TZ_Portfolio_PlusHelperAddons::checkEditAddonConfigure($input -> getInt('id'))){
-                $form -> setFieldAttribute('folder', 'type', 'hidden');
-                $form -> setFieldAttribute('element', 'type', 'hidden');
-                $form -> removeField('access');
-                $form -> removeField('published');
+            if($addonId = $input -> getInt('id')){
+
+                $user       = TZ_Portfolio_PlusUser::getUser();
+
+                if(!$user->authorise('core.edit', 'com_tz_portfolio_plus.addon.'.$addonId)){
+                    $form -> setFieldAttribute('folder', 'type', 'hidden');
+                    $form -> setFieldAttribute('element', 'type', 'hidden');
+                    $form -> removeField('access');
+                    $form -> removeField('published');
+                }
             }
 
             // Attempt to load the xml file.
@@ -493,7 +499,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
 
             // Convert to the JObject before adding other data.
             $properties = $table->getProperties(1);
-            $this->_cache[$pk] = JArrayHelper::toObject($properties, 'JObject');
+            $this->_cache[$pk] = ArrayHelper::toObject($properties, 'JObject');
 
             // Convert the params field to an array.
             $registry = new Registry;
@@ -549,7 +555,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
 
             // Convert to the JObject before adding other data.
             $properties = $table->getProperties(1);
-            $this->_cache[$storeId] = JArrayHelper::toObject($properties, 'JObject');
+            $this->_cache[$storeId] = ArrayHelper::toObject($properties, 'JObject');
 
             // Convert the params field to an array.
             $registry = new Registry;

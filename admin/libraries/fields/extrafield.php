@@ -21,6 +21,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 use Joomla\Registry\Registry;
+use Joomla\Utilities\ArrayHelper;
 
 JLoader::import('article',COM_TZ_PORTFOLIO_PLUS_SITE_HELPERS_PATH);
 
@@ -71,8 +72,9 @@ class TZ_Portfolio_PlusExtraField{
             }
         }
 
+        $this -> params = new Registry();
         if(isset($field -> params) && !empty($field -> params)) {
-            $params         = new JRegistry($field->params);
+            $params         = new Registry($field->params);
             if($app -> isSite()) {
                 if($this -> plugin_params) {
                     $this->params = $this->plugin_params->merge($params);
@@ -84,7 +86,7 @@ class TZ_Portfolio_PlusExtraField{
             if($app -> isSite()) {
                 $this->params   = $this->plugin_params;
             }else{
-                $this -> params = new JRegistry();
+                $this -> params = new Registry();
             }
         }
 
@@ -1092,7 +1094,7 @@ class TZ_Portfolio_PlusExtraField{
         if($countData > 0){
 
             if($groupid    = TZ_Portfolio_PlusFrontHelperExtraFields::getFieldGroupsByArticleId($this -> article_id)) {
-                $groupid = JArrayHelper::getColumn($groupid, 'id');
+                $groupid = ArrayHelper::getColumn($groupid, 'id');
                 if(count($groupid)){
                     $query -> join('INNER', '#__tz_portfolio_plus_field_fieldgroup_map AS fm ON fm.fieldsid = m.fieldsid');
                     $query -> where('fm.groupid IN('.implode(',', $groupid).')');

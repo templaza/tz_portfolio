@@ -10,6 +10,16 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+11/01/2018 - 1.2.1
+
+	- Fix warning when updating from version 1.1.8.
+	- Fix error "save tags" when creating or editing article in version 1.2.0
+	- Fix error "override module's html" (Add template assignment into module).
+	- Remove module TZ Portfolio Plus Articles in core (Extracted to independent package).
+	- Add new module TZ Portfolio Plus Portfolio (This module displays articles informing portfolio).
+	- Add new view type for some addons (create view types in "Menu Item/Menu Item Type").
+
+
 06/01/2018 - 1.2.0
 
 	- Fix error sort articles by order.

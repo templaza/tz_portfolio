@@ -131,7 +131,7 @@ class TZ_Portfolio_PlusModelAddon_Datas extends JModelList{
 
             // Convert to the JObject before adding other data.
             $properties = $table->getProperties(1);
-            $this->cache[$storeId] = JArrayHelper::toObject($properties, 'JObject');
+            $this->cache[$storeId] = ArrayHelper::toObject($properties, 'JObject');
 
             $dispatcher     = JEventDispatcher::getInstance();
             if($plugin         = TZ_Portfolio_PlusPluginHelper::getInstance($table -> folder,

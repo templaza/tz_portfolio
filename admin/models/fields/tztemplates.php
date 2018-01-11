@@ -19,11 +19,41 @@
 
 defined('JPATH_BASE') or die;
 
+use Joomla\Registry\Registry;
+
 JFormHelper::loadFieldClass('list');
+JLoader::import('com_tz_portfolio_plus.includes.defines', JPATH_ADMINISTRATOR);
 
 class JFormFieldTZTemplates extends JFormFieldList
 {
     protected $type = 'TZTemplates';
+    protected $module_layout;
+    protected $module;
+
+    public function setup(SimpleXMLElement $element, $value, $group = null)
+    {
+        $return = parent::setup($element, $value, $group);
+
+        if ($return)
+        {
+            $module = (string) $this->element['module'];
+
+            if(!empty($module)){
+                if($module == 'true' || $module = 1){
+                    if($this->form instanceof JForm)
+                    {
+                        $module = $this->form->getValue('module');
+                    }
+                }
+                $this -> module = $module;
+            }
+        }
+
+        $lang   = JFactory::getLanguage();
+        $lang -> load('com_tz_portfolio_plus', JPATH_ADMINISTRATOR);
+
+        return $return;
+    }
 
     protected function getOptions()
     {

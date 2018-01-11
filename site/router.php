@@ -467,6 +467,16 @@ class TZ_Portfolio_PlusRouter extends JComponentRouterBase
             return $segments;
         }
 
+        if($view == 'addon'){
+            if($menuItemGiven){
+                $segments[] = $query['view'];
+            }else{
+                $segments[] = $view;
+            }
+            unset($query['view']);
+            return $segments;
+        }
+
         // if the layout is specified and it is the same as the layout in the menu item, we
         // unset it so it doesn't go into the query string.
         if (isset($query['layout'])) {

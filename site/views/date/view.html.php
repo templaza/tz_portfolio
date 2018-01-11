@@ -20,6 +20,8 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 jimport('joomla.application.component.view');
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
 
@@ -77,7 +79,7 @@ class TZ_Portfolio_PlusViewDate extends JViewLegacy{
 
         $content_ids    = array();
         if($items) {
-            $content_ids    = JArrayHelper::getColumn($items, 'id');
+            $content_ids    = ArrayHelper::getColumn($items, 'id');
         }
 
         $tags   = null;

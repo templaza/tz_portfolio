@@ -7,7 +7,7 @@
 
 # author    TuanNATemPlaza
 
-# copyright Copyright (C) 2015 templaza.com. All Rights Reserved.
+# copyright Copyright (C) 2015-2018 tzportfolio.com. All Rights Reserved.
 
 # @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 
@@ -20,14 +20,16 @@
 // no direct access
 defined('_JEXEC') or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 $doc = JFactory::getDocument();
 $doc->addScript(JUri::root() . '/components/com_tz_portfolio_plus/js/tz_portfolio_plus.min.js');
 $doc->addScript(JUri::root() . '/components/com_tz_portfolio_plus/js/jquery.isotope.min.js');
 $doc->addStyleSheet(JUri::base(true) . '/components/com_tz_portfolio_plus/css/isotope.min.css');
-$doc->addStyleSheet(JUri::base(true) . '/modules/mod_tz_portfolio_plus_articles/css/style.css');
+$doc->addStyleSheet(JUri::base(true) . '/modules/'.$module -> module.'/css/style.css');
 
 if($params -> get('load_style', 0)) {
-    $doc->addStyleSheet(JUri::base(true) . '/modules/mod_tz_portfolio_plus_articles/css/basic.css');
+    $doc->addStyleSheet(JUri::base(true) . '/modules/'.$module -> module.'/css/basic.css');
 }
 if ($params->get('height_element')) {
     $doc->addStyleDeclaration('
@@ -37,7 +39,7 @@ if ($params->get('height_element')) {
     ');
 }
 if($params -> get('enable_resize_image', 0)){
-    $doc -> addScript(JUri::base(true) . '/modules/mod_tz_portfolio_plus_articles/js/resize.js');
+    $doc -> addScript(JUri::base(true) . '/modules/'.$module -> module.'/js/resize.js');
     if ($params->get('height_element')) {
         $doc->addStyleDeclaration('
         #portfolio' . $module->id . ' .tzpp_media img{
@@ -83,13 +85,13 @@ jQuery(function($){
 
 if ($list):
     ?>
-<div id="TzContent<?php echo $module->id; ?>" class="tz_portfolio_plus_articles<?php echo $moduleclass_sfx;?> TzContent">
+<div id="TzContent<?php echo $module->id; ?>" class="tz_portfolio_plus_portfolio<?php echo $moduleclass_sfx;?> TzContent">
     <?php if($show_filter && isset($filter_tag) && isset($categories)):?>
     <div id="tz_options<?php echo $module -> id;?>" class="clearfix">
         <div class="option-combo">
-            <div class="filter-title TzFilter"><?php echo JText::_('MOD_TZ_PORTFOLIO_PLUS_ARTICLES_FILTER');?></div>
+            <div class="filter-title TzFilter"><?php echo JText::_('MOD_TZ_PORTFOLIO_PLUS_PORTFOLIO_FILTER');?></div>
             <div id="filter<?php echo $module->id;?>" class="option-set clearfix" data-option-key="filter">
-                <a href="#show-all" data-option-value="*" class="btn btn-default btn-small selected"><?php echo JText::_('MOD_TZ_PORTFOLIO_PLUS_ARTICLES_SHOW_ALL');?></a>
+                <a href="#show-all" data-option-value="*" class="btn btn-default btn-small selected"><?php echo JText::_('MOD_TZ_PORTFOLIO_PLUS_PORTFOLIO_SHOW_ALL');?></a>
                 <?php if($params->get('tz_filter_type','categories') == 'tags' && $filter_tag):?>
                     <?php foreach($filter_tag as $i => $itag):?>
                         <a href="#<?php echo $itag -> alias; ?>"
@@ -117,12 +119,12 @@ if ($list):
             <?php
             $item_filter    = array();
             if ($params->get('tz_filter_type','') == 'tags' && isset($tags[$item->content_id]) && !empty($tags[$item->content_id])) {
-                $item_filter = JArrayHelper::getColumn($tags[$item->content_id], 'alias');
+                $item_filter = ArrayHelper::getColumn($tags[$item->content_id], 'alias');
             }
 
             if ($params->get('tz_filter_type','') == 'categories' && isset($categories[$item->content_id]) && !empty($categories[$item->content_id])) {
                 if(isset($categories[$item->content_id])){
-                    $item_filter    = JArrayHelper::getColumn($categories[$item->content_id], 'alias');
+                    $item_filter    = ArrayHelper::getColumn($categories[$item->content_id], 'alias');
                 }
             }
             ?>
@@ -170,19 +172,19 @@ if ($list):
                         }
 
                         if ($params->get('show_author', 1)) {
-                            echo '<div class="tz_created_by"><span class="text">' . JText::_('MOT_TZ_PORTFOLIO_PLUS_ARTICLE_TZ_CREATED_BY')
+                            echo '<div class="tz_created_by"><span class="text">' . JText::_('MOD_TZ_PORTFOLIO_PLUS_PORTFOLIO_TZ_CREATED_BY')
                                 . '</span><a href="' . $item->author_link . '">' . $item->user_name . '</a></div>';
                         }
                         if ($params->get('show_created_date', 1)) {
-                            echo '<div class="tz_date"><span class="text">' . JText::_('MOT_TZ_PORTFOLIO_PLUS_ARTICLE_TZ_DATE')
+                            echo '<div class="tz_date"><span class="text">' . JText::_('MOD_TZ_PORTFOLIO_PLUS_PORTFOLIO_TZ_DATE')
                                 . '</span>' . JHtml::_('date', $item->created, JText::_('DATE_FORMAT_LC1')) . '</div>';
                         }
                         if ($params->get('show_hit', 1)) {
-                            echo '<div class="tz_hit"><span class="text">' . JText::_('MOT_TZ_PORTFOLIO_PLUS_ARTICLE_TZ_HIT') . '</span>' . $item->hits . '</div>';
+                            echo '<div class="tz_hit"><span class="text">' . JText::_('MOD_TZ_PORTFOLIO_PLUS_PORTFOLIO_TZ_HIT') . '</span>' . $item->hits . '</div>';
                         }
                         if ($params->get('show_tag', 1)) {
                             if (isset($tags[$item->content_id])) {
-                                echo '<div class="tz_tag"><span class="text">' . JText::_('MOT_TZ_PORTFOLIO_PLUS_ARTICLE_TZ_TAGS') . '</span>';
+                                echo '<div class="tz_tag"><span class="text">' . JText::_('MOD_TZ_PORTFOLIO_PLUS_PORTFOLIO_TZ_TAGS') . '</span>';
                                 foreach ($tags[$item->content_id] as $t => $tag) {
                                     echo '<a href="' . $tag->link . '">' . $tag->title . '</a>';
                                     if ($t != count($tags[$item->content_id]) - 1) {
@@ -195,7 +197,7 @@ if ($list):
                         if ($params->get('show_category', 1)) {
                             if (isset($categories[$item->content_id]) && $categories[$item->content_id]) {
                                 if (count($categories[$item->content_id]))
-                                    echo '<div class="tz_categories"><span class="text">' . JText::_('MOT_TZ_PORTFOLIO_PLUS_ARTICLE_TZ_CATEGORIES') . '</span>';
+                                    echo '<div class="tz_categories"><span class="text">' . JText::_('MOD_TZ_PORTFOLIO_PLUS_PORTFOLIO_TZ_CATEGORIES') . '</span>';
                                 foreach ($categories[$item->content_id] as $c => $category) {
                                     echo '<a href="' . $category->link . '">' . $category->title . '</a>';
                                     if ($c != count($categories[$item->content_id]) - 1) {

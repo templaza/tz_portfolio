@@ -20,6 +20,8 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 class TZ_Portfolio_PlusPluginModelAdmin extends JModelAdmin
 {
     protected $data         = null;
@@ -78,7 +80,7 @@ class TZ_Portfolio_PlusPluginModelAdmin extends JModelAdmin
                 $registry->loadString($data -> media);
 
                 if($registry -> get($this -> getName())) {
-                    $old_data   = JArrayHelper::fromObject($registry->get($this -> getName()));
+                    $old_data   = ArrayHelper::fromObject($registry->get($this -> getName()));
                     $dataInsert = array_merge($old_data, $dataInsert);
                 }
             }

@@ -51,7 +51,7 @@ echo JHtml::_(
 ?>
 <div class="input-append">
     <input type="text" <?php echo $required; ?> readonly="readonly" id="<?php echo $id; ?>_name" value="<?php
-            echo $title; ?>" <?php echo $size . $class; ?> />
+            echo $title; ?>" <?php echo $size . $class; ?>  placeholder="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SELECT_AN_ARTICLE');?>" />
     <a id="<?php echo $id; ?>_select" class="btn btn-primary hasTooltip" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_CHANGE_ARTICLE');
         ?>" data-toggle="modal" href="#<?php echo $modalId;?>"><i class="icon-file"></i><?php
         echo JText::_('JSELECT');?></a>
@@ -65,7 +65,7 @@ echo JHtml::_(
 </div>
 
     <input class="input-small" id="<?php echo $id; ?>" type="hidden" name="<?php echo $name; ?>" value="<?php
-    echo htmlspecialchars($value, ENT_COMPAT, 'UTF-8') ?>" />
+    echo htmlspecialchars($value, ENT_COMPAT, 'UTF-8') ?>"/>
 <?php
 $doc    = JFactory::getDocument();
 $doc -> addScriptDeclaration('
@@ -77,6 +77,7 @@ $doc -> addScriptDeclaration('
             $("#" + id + "_clear").addClass("hidden");
             $("#" + id + "_edit").addClass("hidden");
             $("#" + id + "_select").removeClass("hidden");
+                '.($submitform?'$("#'.$id.'").parents("form").first().submit()':'').'
             return false;
         };
         window.'.$function.' = function(id, title, category){
@@ -91,7 +92,8 @@ $doc -> addScriptDeclaration('
                     .attr("href",function(index, href){
                         return "index.php?option=com_tz_portfolio_plus&task=article.edit&id="+id;
                     });
-                $("#" + fieldId + "_select").addClass("hidden");':'').'
+                $("#" + fieldId + "_select").addClass("hidden");':'')
+                .($submitform?'$("#'.$id.'").parents("form").first().submit()':'').'
             }
         };
     })(jQuery, window);');

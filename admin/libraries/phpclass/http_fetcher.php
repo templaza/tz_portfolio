@@ -21,7 +21,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 class Services_Yadis_HTTPResponse {
-    function Services_Yadis_HTTPResponse($final_url = null, $status = null,
+    function __construct($final_url = null, $status = null,
                                          $headers = null, $body = null)
     {
         $this->final_url = $final_url;

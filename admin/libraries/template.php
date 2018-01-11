@@ -20,6 +20,8 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\Registry\Registry;
+
 class TZ_Portfolio_PlusTemplate {
 
     public static function getTemplate($params = false)
@@ -134,6 +136,63 @@ class TZ_Portfolio_PlusTemplate {
         }
 
         return $template;
+    }
+
+    public static function getTemplateById($id, $params = true){
+        if(!$id){
+            return false;
+        }
+        JTable::addIncludePath(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.DIRECTORY_SEPARATOR.'tables');
+
+        $table  = JTable::getInstance('Templates','TZ_Portfolio_PlusTable');
+
+
+        $table -> reset();
+
+        if(!$table -> load($id)){
+            return false;
+        }
+
+        if($db = $table -> getDbo()){
+            $template   = $db -> loadObject();
+            if(is_string($template -> params)){
+                $_params = new Registry();
+                $_params -> loadString($template -> params);
+                $template -> params = $_params;
+            }
+
+            $tplparams      = $template -> params;
+
+            $template -> base_path  = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH.DIRECTORY_SEPARATOR
+                . $template->template. DIRECTORY_SEPARATOR . 'html'. DIRECTORY_SEPARATOR
+                . $template->params -> get('layout','default');
+
+            if($home = $table -> getHome()){
+                $default_params = new JRegistry;
+                $default_params -> loadString($home -> params);
+                $home -> params = clone($default_params);
+            }
+
+            if($home){
+                if($home -> template != $template -> template) {
+                    $template->home_path = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH . DIRECTORY_SEPARATOR
+                        . $home->template . DIRECTORY_SEPARATOR . 'html' . DIRECTORY_SEPARATOR
+                        . $tplparams->get('layout', 'default');
+                }else{
+                    $template->home_path = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH . DIRECTORY_SEPARATOR
+                        . $home->template . DIRECTORY_SEPARATOR . 'html' . DIRECTORY_SEPARATOR
+                        . $home -> params->get('layout', 'default');
+                }
+            }
+
+            if ($params)
+            {
+                return $template;
+            }
+
+            return $template -> template;
+        }
+        return false;
     }
 
 

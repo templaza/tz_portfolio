@@ -19,6 +19,9 @@
  
 //no direct access
 defined('_JEXEC') or die('Restricted access');
+
+use Joomla\Utilities\ArrayHelper;
+
 jimport('joomla.application.component.view');
 jimport('joomla.filesystem.file');
 
@@ -63,7 +66,7 @@ class TZ_Portfolio_PlusViewUsers extends JViewLegacy
 
             $content_ids    = array();
             if($items) {
-                $content_ids    = JArrayHelper::getColumn($items, 'id');
+                $content_ids    = ArrayHelper::getColumn($items, 'id');
             }
 
             $mainCategories     = TZ_Portfolio_PlusFrontHelperCategories::getCategoriesByArticleId($content_ids,

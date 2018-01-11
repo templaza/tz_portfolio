@@ -20,11 +20,10 @@
 // No direct access.
 defined('_JEXEC') or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 jimport('joomla.application.component.controlleradmin');
 
-    /**
-     * Users list controller class.
-     */
 class TZ_Portfolio_PlusControllerFields extends JControllerAdmin
 {
     protected $input        = null;
@@ -68,7 +67,7 @@ class TZ_Portfolio_PlusControllerFields extends JControllerAdmin
 
             // Make sure the item ids are integers
             jimport('joomla.utilities.arrayhelper');
-            JArrayHelper::toInteger($cid);
+            $cid    = ArrayHelper::toInteger($cid);
 
             // Remove the items.
             if ($model->delete($cid))
@@ -93,7 +92,7 @@ class TZ_Portfolio_PlusControllerFields extends JControllerAdmin
             'detailview' => 1, 'undetailview' => 0,
             'advsearch' => 1, 'unadvsearch' => 0);
         $task   = $this->getTask();
-        $value  = JArrayHelper::getValue($data, $task, 0, 'int');
+        $value  = ArrayHelper::getValue($data, $task, 0, 'int');
 
         if (empty($cid))
         {
@@ -105,7 +104,7 @@ class TZ_Portfolio_PlusControllerFields extends JControllerAdmin
             $model = $this->getModel();
 
             // Make sure the item ids are integers
-            JArrayHelper::toInteger($cid);
+            $cid    = ArrayHelper::toInteger($cid);
 
             // Publish the items.
             try
@@ -152,8 +151,8 @@ class TZ_Portfolio_PlusControllerFields extends JControllerAdmin
         $group  = $this->input->post->get('filter_group');
 
         // Sanitize the input
-        JArrayHelper::toInteger($pks);
-        JArrayHelper::toInteger($order);
+        $pks    = ArrayHelper::toInteger($pks);
+        $order  = ArrayHelper::toInteger($order);
 
         // Get the model
         $model = $this->getModel();

@@ -163,7 +163,7 @@ class TZ_Portfolio_PlusModelForm extends TZ_Portfolio_PlusModelArticle
             $data               = $this->getItem();
             if($second_categories  = TZ_Portfolio_PlusHelperCategories::getCategoriesByArticleId($data -> id, 0)) {
                 if (is_array($second_categories)) {
-                    $catids = JArrayHelper::getColumn($second_categories, 'id');
+                    $catids = ArrayHelper::getColumn($second_categories, 'id');
                 } else {
                     $catids = $second_categories->id;
                 }
@@ -173,7 +173,7 @@ class TZ_Portfolio_PlusModelForm extends TZ_Portfolio_PlusModelArticle
 
             if($main_category      = TZ_Portfolio_PlusHelperCategories::getCategoriesByArticleId($data -> id, 1)) {
                 if (is_array($main_category)) {
-                    $catid = JArrayHelper::getColumn($main_category, 'id');
+                    $catid = ArrayHelper::getColumn($main_category, 'id');
                 } else {
                     $catid = $main_category->id;
                 }

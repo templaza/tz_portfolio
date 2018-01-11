@@ -20,6 +20,8 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\Utilities\ArrayHelper;
+
 jimport('joomla.application.component.view');
 
 class TZ_Portfolio_PlusViewLegacy extends JViewLegacy{
@@ -32,7 +34,7 @@ class TZ_Portfolio_PlusViewLegacy extends JViewLegacy{
             if($tplparams -> get('use_single_layout_builder',1)){
 
                 $core_types         = TZ_Portfolio_PlusPluginHelper::getCoreContentTypes();
-                $this -> core_types = JArrayHelper::getColumn($core_types, 'value');
+                $this -> core_types = ArrayHelper::getColumn($core_types, 'value');
 
                 $this->_generateLayout($article, $params, $dispatcher);
                 return $this -> generateLayout;
