@@ -27,13 +27,19 @@ jimport('joomla.application.module.helper');
 
 JLoader::import('com_tz_portfolio_plus.includes.framework',JPATH_ADMINISTRATOR.'/components');
 
-abstract class TZ_Portfolio_PlusModuleHelper extends JModuleHelper{
+class TZ_Portfolio_PlusModuleHelper extends JModuleHelper{
 
     public static function getLayoutPath($module, $layout = 'default')
     {
-        $_template  = \JFactory::getApplication()->getTemplate(true);
-        $template   = $_template -> template;
-        $defaultLayout = $layout;
+        self::getTZLayoutPath($module, $layout);
+    }
+
+    public static function getTZLayoutPath($module, $layout = 'default')
+    {
+        $_template      = \JFactory::getApplication()->getTemplate(true);
+        $template       = $_template -> template;
+        $defaultLayout  = $layout;
+        $moduleName     = '';
 
         if (strpos($layout, ':') !== false)
         {
@@ -45,11 +51,23 @@ abstract class TZ_Portfolio_PlusModuleHelper extends JModuleHelper{
         }
 
         $modParams  = new Registry();
-        if($objModule  = ModuleHelper::getModule($module)){
-            if(is_string($objModule -> params)) {
-                $modParams->loadString($objModule->params);
-            }else{
-                $modParams  = $objModule -> params;
+        if(is_string($module)){
+            $moduleName = $module;
+            if($objModule  = ModuleHelper::getModule($module)){
+                if(is_string($objModule -> params)) {
+                    $modParams->loadString($objModule->params);
+                }else{
+                    $modParams  = $objModule -> params;
+                }
+            }
+        }else{
+            $moduleName = $module -> module;
+            if(isset($module -> params) && $module -> params){
+                if(is_string($module -> params)){
+                    $modParams -> loadString($module -> params);
+                }else{
+                    $modParams  = $module -> params;
+                }
             }
         }
 
@@ -67,16 +85,15 @@ abstract class TZ_Portfolio_PlusModuleHelper extends JModuleHelper{
             $tpPath     = null;
 
             if(isset($tpTemplate -> home_path) && $tpTemplate -> home_path){
-                $tpdefPath    = $tpTemplate -> home_path.'/' . $module . '/' . $layout . '.php';
+                $tpdefPath    = $tpTemplate -> home_path.'/' . $moduleName . '/' . $layout . '.php';
             }
             if(isset($tpTemplate -> base_path) && $tpTemplate -> base_path){
-                $tpPath    = $tpTemplate -> base_path.'/' . $module . '/' . $layout . '.php';
+                $tpPath    = $tpTemplate -> base_path.'/' . $moduleName . '/' . $layout . '.php';
             }
 
             // Add template.css file if it has have in template
             if (JFile::exists(COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH . '/' . $tpTemplate -> template
-                . '/css/template.css')
-            ) {
+                . '/css/template.css')) {
 
                 $docOptions = array();
                 $docOptions['template']     = $tpTemplate->template;
@@ -97,9 +114,9 @@ abstract class TZ_Portfolio_PlusModuleHelper extends JModuleHelper{
         }
 
         // Build the template and base path for the layout
-        $tPath = JPATH_THEMES . '/' . $template . '/html/' . $module . '/' . $layout . '.php';
-        $bPath = JPATH_BASE . '/modules/' . $module . '/tmpl/' . $defaultLayout . '.php';
-        $dPath = JPATH_BASE . '/modules/' . $module . '/tmpl/default.php';
+        $tPath = JPATH_THEMES . '/' . $template . '/html/' . $moduleName . '/' . $layout . '.php';
+        $bPath = JPATH_BASE . '/modules/' . $moduleName . '/tmpl/' . $defaultLayout . '.php';
+        $dPath = JPATH_BASE . '/modules/' . $moduleName . '/tmpl/default.php';
 
         // If the template has a layout override use it
         if ($tplParams->get('override_html_template_site', 0)) {
@@ -139,7 +156,7 @@ abstract class TZ_Portfolio_PlusModuleHelper extends JModuleHelper{
         return $dPath;
     }
 
-    public static function getAddOnModuleLayout($group, $name, $module, $layout='default', $folder = 'modules'){
+    public static function getAddOnModuleLayout($group, $name, $module, $layout='default', $folder = 'modules', Registry $params = null){
 
         $template   = JFactory::getApplication()->getTemplate();
 
@@ -158,22 +175,21 @@ abstract class TZ_Portfolio_PlusModuleHelper extends JModuleHelper{
             $cfglayout = ($temp[1]) ? $temp[1] : 'default';
         }
 
-//        $tmpl_folder    = null;
-//        if($tmpl){
-//            $tmpl_folder    = '/tmpl';
-//        }
-
-
-        // Get template
         $modParams  = new Registry();
-        if($objModule  = ModuleHelper::getModule($module)){
-            if(is_string($objModule -> params)) {
-                $modParams->loadString($objModule->params);
-            }else{
-                $modParams  = $objModule -> params;
+        if(is_string($module) && !$params){
+            if($objModule  = ModuleHelper::getModule($module)){
+                if(is_string($objModule -> params)) {
+                    $modParams->loadString($objModule->params);
+                }else{
+                    $modParams  = $objModule -> params;
+                }
             }
         }
+        if($params){
+            $modParams  = $params;
+        }
 
+        // Get template
         if($tplId = (int) $modParams -> def('template_id', 0)) {
             $tpTemplate = TZ_Portfolio_PlusTemplate::getTemplateById($tplId);
         }

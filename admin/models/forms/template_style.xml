@@ -50,7 +50,7 @@
 
     <fields name="presets">
         <field type="text" name="name"
-               label="JGLOBAL_NAME"/>
+               label="JFIELD_NAME_LABEL"/>
         <field type="media" name="image"
                label="COM_TZ_PORTFOLIO_PLUS_FORM_IMAGE"/>
         <field type="text" name="demo_link"

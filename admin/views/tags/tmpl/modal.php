@@ -32,13 +32,13 @@ JHtml::_('bootstrap.tooltip');
 JHtml::_('formbehavior.chosen', 'select');
 
 $function	= JFactory::getApplication() -> input -> getCmd('function', 'jSelectTag');
-//var_dump($function); die();
-$listOrder	= $this-> state -> filter_order;
-$listDirn	= $this-> state -> filter_order_Dir;
+
+$listOrder	= $this->escape($this->state->get('list.ordering'));
+$listDirn	= $this->escape($this->state->get('list.direction'));
 ?>
 
 <form action="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&view=tags&layout=modal&tmpl=component&function='.$function.'&'.JSession::getFormToken().'=1');?>"
-      method="post" name="adminForm" id="adminForm" class="form-inline">
+      method="post" name="adminForm" id="adminForm" class="form-inline tpContainer">
 
     <?php
     // Search tools bar
@@ -56,10 +56,10 @@ $listDirn	= $this-> state -> filter_order_Dir;
 			<tr>
                 <th width="10">#</th>
                 <th class="title">
-                    <?php echo JHtml::_('searchtools.sort','JGLOBAL_TITLE','name',$this -> state -> filter_order_Dir,$this -> state -> filter_order);?>
+                    <?php echo JHtml::_('searchtools.sort','JGLOBAL_TITLE','name', $listDirn, $listOrder);?>
                 </th>
                 <th nowrap="nowrap" width="1%">
-                    <?php echo JHtml::_('searchtools.sort','JGRID_HEADING_ID','id',$this -> state -> filter_order_Dir,$this -> state -> filter_order);?>
+                    <?php echo JHtml::_('searchtools.sort','JGRID_HEADING_ID','id', $listDirn, $listOrder);?>
                 </th>
             </tr>
 		</thead>

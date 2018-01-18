@@ -46,18 +46,24 @@ class com_tz_portfolio_plusInstallerScript{
             $db->setQuery($query);
             $asset = $db->loadObject();
 
-            $query->clear();
+            $assetTbl  = JTable::getInstance('Asset');
 
-            $query->insert('#__assets');
-            $query->columns('parent_id, lft, rgt, level, name, title, rules');
-            $query->values($asset->id . ',' . ($asset->lft + 1) . ',' . ($asset->rgt + 1)
-                . ',2,' . $db->quote('com_tz_portfolio_plus.category.2') . ',' . $db->quote('Uncategorised')
-                . ',' . $db->quote('{"core.create":{"6":1,"3":1},"core.delete":{"6":1},"core.edit":{"6":1,"4":1},'
-                    . '"core.edit.state":{"6":1,"5":1},"core.edit.own":{"6":1,"3":1}}'));
-            $db->setQuery($query);
-            $db->execute();
+            if(!$assetTbl -> loadByName('com_tz_portfolio_plus.category.2')) {
+                $query->clear();
 
-            $new_asset_id = $db->insertid();
+                $query->insert('#__assets');
+                $query->columns('parent_id, lft, rgt, level, name, title, rules');
+                $query->values($asset->id . ',' . ($asset->lft + 1) . ',' . ($asset->rgt + 1)
+                    . ',2,' . $db->quote('com_tz_portfolio_plus.category.2') . ',' . $db->quote('Uncategorised')
+                    . ',' . $db->quote('{"core.create":{"6":1,"3":1},"core.delete":{"6":1},"core.edit":{"6":1,"4":1},'
+                        . '"core.edit.state":{"6":1,"5":1},"core.edit.own":{"6":1,"3":1}}'));
+                $db->setQuery($query);
+                $db->execute();
+
+                $new_asset_id = $db->insertid();
+            }else{
+                $new_asset_id   = $assetTbl -> id;
+            }
 
             $query->clear();
             $query->update('#__tz_portfolio_plus_categories');
@@ -192,7 +198,7 @@ class com_tz_portfolio_plusInstallerScript{
         if(!defined('COM_TZ_PORTFOLIO_PLUS_ACL_SECTIONS')){
             JLoader::import('includes.defines',$sourcePath.'/admin');
         }
-        $sections   = constant('COM_TZ_PORTFOLIO_PLUS_ACL_SECTIONS');
+        $sections   = COM_TZ_PORTFOLIO_PLUS_ACL_SECTIONS;
 
         if($sections && count($sections)){
             // Get the parent asset id so we have a correct tree.

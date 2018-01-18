@@ -34,4 +34,4 @@ if($show_filter) {
     $filter_cat = modTZ_Portfolio_PlusPortfolioHelper::getCategoriesFilterByArticle($params);
 }
 $moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'));
-require TZ_Portfolio_PlusModuleHelper::getLayoutPath('mod_tz_portfolio_plus_portfolio', $params->get('layout', 'default'));
+require TZ_Portfolio_PlusModuleHelper::getTZLayoutPath($module, $params->get('layout', 'default'));

@@ -97,6 +97,15 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
         $this -> setState('filter.year',null);
         $this -> setState('filter.month',null);
         $this -> setState('filter.category_id',$app -> input -> getInt('id'));
+
+        $orderby    = '';
+        $secondary  = TZ_Portfolio_PlusHelperQuery::orderbySecondary($params -> get('orderby_sec', 'rdate'));
+        $primary    = TZ_Portfolio_PlusHelperQuery::orderbyPrimary($params -> get('orderby_pri'));
+
+        $orderby .= $primary . ' ' . $secondary;
+
+        $this -> setState('list.ordering', $orderby);
+        $this -> setState('list.direction', null);
     }
 
     protected function getListQuery(){
@@ -191,58 +200,7 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
             $query -> where('ASCII(SUBSTR(LOWER(c.title),1,1)) = ASCII('.$db -> quote(mb_strtolower($char)).')');
         }
 
-        // Order by artilce
-        switch ($params -> get('orderby_pri')){
-            default:
-                $cateOrder  = null;
-                break;
-            case 'alpha' :
-                $cateOrder = 'cc.path, ';
-                break;
-
-            case 'ralpha' :
-                $cateOrder = 'cc.path DESC, ';
-                break;
-
-            case 'order' :
-                $cateOrder = 'cc.lft ASC, ';
-                break;
-        }
-
-        switch ($params -> get('orderby_sec', 'rdate')){
-            default:
-                $orderby    = 'c.id DESC';
-                break;
-            case 'rdate':
-                $orderby    = 'c.created DESC';
-                break;
-            case 'date':
-                $orderby    = 'c.created ASC';
-                break;
-            case 'alpha':
-                $orderby    = 'c.title ASC';
-                break;
-            case 'ralpha':
-                $orderby    = 'c.title DESC';
-                break;
-            case 'author':
-                $orderby    = 'u.name ASC';
-                break;
-            case 'rauthor':
-                $orderby    = 'u.name DESC';
-                break;
-            case 'hits':
-                $orderby    = 'c.hits DESC';
-                break;
-            case 'rhits':
-                $orderby    = 'c.hits ASC';
-                break;
-            case 'order':
-                $orderby    = 'c.ordering ASC';
-                break;
-        }
-
-        $query -> order($cateOrder.$orderby);
+        $query->order($this->getState('list.ordering', 'c.created') . ' ' . $this->getState('list.direction', null));
 
         // Filter by language
         if ($this->getState('filter.language')) {

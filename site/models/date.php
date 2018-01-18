@@ -60,15 +60,6 @@ class TZ_Portfolio_PlusModelDate extends JModelList{
         // Load the parameters. Merge Global and Menu Item params into new object
         $params = $app->getParams('com_tz_portfolio_plus');
 
-//        $menuParams = new JRegistry;
-//
-//        if ($menu = $app->getMenu()->getActive()) {
-//            $menuParams->loadString($menu->params);
-//        }
-
-//        $mergedParams = clone $menuParams;
-//        $mergedParams->merge($params);
-
         $pk = $params -> get('tz_catid',array());
         $this->setState('category.id', $pk);
 
@@ -107,25 +98,18 @@ class TZ_Portfolio_PlusModelDate extends JModelList{
         $this->setState('list.filter', $app -> input -> getString('filter-search'));
 
         // filter.order
-        $itemid = $app -> input -> getInt('id', 0) . ':' . $app -> input -> getInt('Itemid', 0);
-        $orderCol = $app->getUserStateFromRequest('com_tz_portfolio_plus.date.list.' . $itemid . '.filter_order', 'filter_order', '', 'string');
-        if (!in_array($orderCol, $this->filter_fields)) {
-            $orderCol = 'a.ordering';
-        }
-        $this->setState('list.ordering', $orderCol);
 
-        $listOrder = $app->getUserStateFromRequest('com_tz_portfolio_plus.date.list.' . $itemid . '.filter_order_Dir',
-            'filter_order_Dir', '', 'cmd');
-        if (!in_array(strtoupper($listOrder), array('ASC', 'DESC', ''))) {
-            $listOrder = 'ASC';
-        }
-        $this->setState('list.direction', $listOrder);
+        $orderby    = '';
+        $secondary  = TZ_Portfolio_PlusHelperQuery::orderbySecondary($params -> get('orderby_sec', 'rdate'));
+        $primary    = TZ_Portfolio_PlusHelperQuery::orderbyPrimary($params -> get('orderby_pri'));
+
+        $orderby .= $primary . ' ' . $secondary;
+
+        $this -> setState('list.ordering', $orderby);
+        $this -> setState('list.direction', null);
 
         $this->setState('list.start', $app -> input -> getInt('limitstart', 0));
 
-//        // set limit for query. If list, use parameter. If blog, add blog parameters for limit.
-//        $limit = $params->get('num_leading_articles') + $params->get('num_intro_articles') + $params->get('num_links');
-//        $this->setState('list.links', $params->get('num_links'));
 
 //        $this->setState('list.limit', $limit);
         $this->setState('list.limit', $params -> get('tz_article_limit', 10));
@@ -438,8 +422,7 @@ class TZ_Portfolio_PlusModelDate extends JModelList{
         }
 
         // Add the list ordering clause.
-        $query->order('a.created DESC,'.$this->getState('list.ordering', 'a.ordering').' '.$this->getState('list.direction', 'ASC'));
-//        $query->group('a.id, a.title, a.alias, a.introtext, a.checked_out, a.checked_out_time,  a.created, a.created_by, a.created_by_alias, a.created, a.modified, a.modified_by, uam.name, a.publish_up, a.attribs, a.metadata, a.metakey, a.metadesc, a.access, a.hits, a.xreference, a.featured, a.fulltext, a.state, a.publish_down, badcats.id, c.title, c.path, c.access, c.alias, uam.id, ua.name, ua.email, contact.id, parent.title, parent.id, parent.path, parent.alias, v.rating_sum, v.rating_count, c.published, c.lft, a.ordering, parent.lft, fp.ordering, c.id, a.images, a.urls');
+        $query->order('a.created DESC,'.$this->getState('list.ordering', 'a.ordering').' '.$this->getState('list.direction', ''));
 
         $query -> group('a.id');
 
@@ -532,7 +515,6 @@ class TZ_Portfolio_PlusModelDate extends JModelList{
 
                 $item -> mediatypes = array();
             }
-//            var_dump($items); die();
 
             return $items;
         }

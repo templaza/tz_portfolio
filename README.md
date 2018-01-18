@@ -10,6 +10,18 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+18/01/2018 - 1.2.2
+
+	- Fix error vote of module TZ Portfolio Plus Portfolio.
+	- Fix error edit acl when click button "Edit" in back-end.
+	- Fix warning in modal tag when create menu with menu item type is "Tag Articles".
+	- Fix error TZ Portfolio Plus's template assign for modules.
+	- Fix error sort article by ordering in front-end.
+	- Fix error language in preset of version 1.2.1
+	- Added sort article by ordering reverse.
+	- Added function generate image url with size (for developer).
+	
+
 11/01/2018 - 1.2.1
 
 	- Fix warning when updating from version 1.1.8.

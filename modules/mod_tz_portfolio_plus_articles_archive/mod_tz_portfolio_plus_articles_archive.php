@@ -29,4 +29,4 @@ $params->def('count', 10);
 $moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'));
 $list = modTZ_Portfolio_PlusArchiveHelper::getList($params);
 
-require TZ_Portfolio_PlusModuleHelper::getLayoutPath('mod_tz_portfolio_plus_articles_archive', $params->get('layout', 'default'));
+require TZ_Portfolio_PlusModuleHelper::getTZLayoutPath($module, $params->get('layout', 'default'));

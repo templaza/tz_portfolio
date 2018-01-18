@@ -50,7 +50,7 @@ class TZ_Portfolio_PlusModelGroups extends JModelList{
         return parent::getStoreId($id);
     }
 
-    public function populateState($ordering = 'g.id', $direction = 'DESC'){
+    protected function populateState($ordering = 'g.id', $direction = 'DESC'){
 
         $app        = JFactory::getApplication();
 

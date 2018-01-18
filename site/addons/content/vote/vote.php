@@ -42,15 +42,15 @@ class PlgTZ_Portfolio_PlusContentVote extends TZ_Portfolio_PlusPlugin
     }
 
     public function onAlwaysLoadDocument($context){
-//        $document = JFactory::getDocument();
-//        $document->addStyleSheet(TZ_Portfolio_PlusUri::root(true).'/addons/content/vote/css/vote.css');
-//        $document->addScript(TZ_Portfolio_PlusUri::root(true).'/addons/content/vote/js/vote.js');
-//        $document->addScriptDeclaration( 'var tzPortfolioVoteFolder = "'.TZ_Portfolio_PlusUri::base(true).'";
-//        var tzPortfolioPlusBase = "'.TZ_Portfolio_PlusUri::base(true).'/addons/content/vote";
-//        var TzPortfolioPlusVote_text=Array("'.JTEXT::_('PLG_CONTENT_VOTE_NO_AJAX').'","'
-//            .JTEXT::_('PLG_CONTENT_VOTE_LOADING').'","'.JTEXT::_('PLG_CONTENT_VOTE_THANKS').'","'
-//            .JTEXT::_('PLG_CONTENT_VOTE_LOGIN').'","'.JTEXT::_('PLG_CONTENT_VOTE_RATED').'","'
-//            .JTEXT::_('PLG_CONTENT_VOTE_VOTES').'","'.JTEXT::_('PLG_CONTENT_VOTE_VOTE').'");');
+        $document = JFactory::getDocument();
+        $document->addStyleSheet(TZ_Portfolio_PlusUri::root(true).'/addons/content/vote/css/vote.css');
+        $document->addScript(TZ_Portfolio_PlusUri::root(true).'/addons/content/vote/js/vote.js');
+        $document->addScriptDeclaration( 'var tzPortfolioVoteFolder = "'.TZ_Portfolio_PlusUri::base(true).'";
+        var tzPortfolioPlusBase = "'.TZ_Portfolio_PlusUri::base(true).'/addons/content/vote";
+        var TzPortfolioPlusVote_text=Array("'.JTEXT::_('PLG_CONTENT_VOTE_NO_AJAX').'","'
+            .JTEXT::_('PLG_CONTENT_VOTE_LOADING').'","'.JTEXT::_('PLG_CONTENT_VOTE_THANKS').'","'
+            .JTEXT::_('PLG_CONTENT_VOTE_LOGIN').'","'.JTEXT::_('PLG_CONTENT_VOTE_RATED').'","'
+            .JTEXT::_('PLG_CONTENT_VOTE_VOTES').'","'.JTEXT::_('PLG_CONTENT_VOTE_VOTE').'");');
     }
 
     public function onBeforeDisplayAdditionInfo($context, &$article, $params, $page = 0, $layout = 'default'){

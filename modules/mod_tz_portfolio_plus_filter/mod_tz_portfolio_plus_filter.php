@@ -43,4 +43,4 @@ $mitemid            = $set_Itemid > 0 ? $set_Itemid : $app->input->get('Itemid')
 $advfilter          = modTZ_Portfolio_PlusFilterHelper::getAdvFilterFields($params);
 $categoryOptions    = modTZ_Portfolio_PlusFilterHelper::getCategoriesOptions($params);
 
-require TZ_Portfolio_PlusModuleHelper::getLayoutPath('mod_tz_portfolio_plus_filter', $params->get('layout', 'default'));
+require TZ_Portfolio_PlusModuleHelper::getTZLayoutPath($module, $params->get('layout', 'default'));

@@ -26,6 +26,6 @@ require_once dirname(__FILE__) . '/helper.php';
 JLoader::import('com_tz_portfolio_plus.libraries.helper.modulehelper', JPATH_ADMINISTRATOR.'/components');
 
 $list = modTzPortfolioTagsHelper::getList($params);
-require TZ_Portfolio_PlusModuleHelper::getLayoutPath('mod_tz_portfolio_plus_tags', $params->get('layout', 'default'));
+require TZ_Portfolio_PlusModuleHelper::getTZLayoutPath($module, $params->get('layout', 'default'));
 
 ?>

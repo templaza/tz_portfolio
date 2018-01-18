@@ -31,15 +31,6 @@ class TZ_Portfolio_PlusControllerAcl extends JControllerForm
 
         return $model;
     }
-    protected function getRedirectToItemAppend($recordId = null, $urlVar = 'id')
-    {
-        $append = parent::getRedirectToItemAppend($recordId, $urlVar);
-        if($section = $this -> input -> get('section')){
-            $append .= '&section='.$section;
-        }
-        return $append;
-    }
-
     public function edit($key = null, $urlVar = null)
     {
         // Do not cache the response to this, its a redirect, and mod_expires and google chrome browser bugs cache it forever!

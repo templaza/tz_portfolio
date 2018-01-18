@@ -38,15 +38,15 @@ class TZ_Portfolio_PlusHelperQuery
 		switch ($orderby)
 		{
 			case 'alpha' :
-				$orderby = 'c.path, ';
+				$orderby = 'cc.path, ';
 				break;
 
 			case 'ralpha' :
-				$orderby = 'c.path DESC, ';
+				$orderby = 'cc.path DESC, ';
 				break;
 
 			case 'order' :
-				$orderby = 'c.lft, ';
+				$orderby = 'cc.lft, ';
 				break;
 
 			default :
@@ -81,24 +81,28 @@ class TZ_Portfolio_PlusHelperQuery
 				break;
 
 			case 'alpha' :
-				$orderby = 'a.title';
+				$orderby = 'c.title';
 				break;
 
 			case 'ralpha' :
-				$orderby = 'a.title DESC';
+				$orderby = 'c.title DESC';
 				break;
 
 			case 'hits' :
-				$orderby = 'a.hits DESC';
+				$orderby = 'c.hits DESC';
 				break;
 
 			case 'rhits' :
-				$orderby = 'a.hits';
+				$orderby = 'c.hits';
 				break;
 
 			case 'order' :
-				$orderby = 'a.ordering';
+				$orderby = 'c.ordering';
 				break;
+
+            case 'rorder' :
+                $orderby = 'c.ordering DESC';
+                break;
 
 			case 'author' :
 				$orderby = 'author';
@@ -113,7 +117,7 @@ class TZ_Portfolio_PlusHelperQuery
 				break;
 
 			default :
-				$orderby = 'a.ordering';
+				$orderby = 'c.ordering';
 				break;
 		}
 
@@ -133,17 +137,17 @@ class TZ_Portfolio_PlusHelperQuery
 		switch ($orderDate)
 		{
 			case 'modified' :
-				$queryDate = ' CASE WHEN a.modified = 0 THEN a.created ELSE a.modified END';
+				$queryDate = ' CASE WHEN c.modified = 0 THEN c.created ELSE c.modified END';
 				break;
 
 			// use created if publish_up is not set
 			case 'published' :
-				$queryDate = ' CASE WHEN a.publish_up = 0 THEN a.created ELSE a.publish_up END ';
+				$queryDate = ' CASE WHEN c.publish_up = 0 THEN c.created ELSE c.publish_up END ';
 				break;
 
 			case 'created' :
 			default :
-				$queryDate = ' a.created ';
+				$queryDate = ' c.created ';
 				break;
 		}
 
