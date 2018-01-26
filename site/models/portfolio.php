@@ -494,6 +494,15 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
         $this -> setState('filter.char',$char);
         $this -> setState('filter.category_id',$catid);
 
+        $orderby    = '';
+        $secondary  = TZ_Portfolio_PlusHelperQuery::orderbySecondary($params -> get('orderby_sec', 'rdate'));
+        $primary    = TZ_Portfolio_PlusHelperQuery::orderbyPrimary($params -> get('orderby_pri'));
+
+        $orderby .= $primary . ' ' . $secondary;
+
+        $this -> setState('list.ordering', $orderby);
+        $this -> setState('list.direction', null);
+
         if($offset >= $this -> getTotal()){
             return false;
         }

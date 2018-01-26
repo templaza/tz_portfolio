@@ -10,6 +10,11 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+26/01/2018 - 1.2.3
+
+	- Fix error function TZ_Portfolio_PlusModuleHelper::getLayoutPath.
+	- Fix error when ajax load in portfolio view of v1.2.2
+
 18/01/2018 - 1.2.2
 
 	- Fix error vote of module TZ Portfolio Plus Portfolio.

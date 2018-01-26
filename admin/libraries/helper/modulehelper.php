@@ -31,7 +31,7 @@ class TZ_Portfolio_PlusModuleHelper extends JModuleHelper{
 
     public static function getLayoutPath($module, $layout = 'default')
     {
-        self::getTZLayoutPath($module, $layout);
+        return self::getTZLayoutPath($module, $layout);
     }
 
     public static function getTZLayoutPath($module, $layout = 'default')
