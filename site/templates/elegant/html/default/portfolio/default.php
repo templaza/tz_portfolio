@@ -39,7 +39,7 @@ jQuery(document).ready(function(){
     <?php
     $params = &$this -> params;
 ?>
-<div id="tpPortfolio" class="tzpp_bootstrap3 <?php echo $this->pageclass_sfx;?>">
+<div id="tpPortfolio" class="tzpp_bootstrap3 tplElegant <?php echo $this->pageclass_sfx;?>">
     <?php if ($params->get('show_page_heading', 1)) : ?>
         <h1 class="page-heading">
             <?php echo $this->escape($params->get('page_heading')); ?>

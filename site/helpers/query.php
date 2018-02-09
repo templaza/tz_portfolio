@@ -33,20 +33,20 @@ class TZ_Portfolio_PlusHelperQuery
 	 * @return	string	The SQL field(s) to order by.
 	 * @since	1.5
 	 */
-	public static function orderbyPrimary($orderby)
+	public static function orderbyPrimary($orderby, $tblprefix = 'cc')
 	{
 		switch ($orderby)
 		{
 			case 'alpha' :
-				$orderby = 'cc.path, ';
+				$orderby = $tblprefix.'.path, ';
 				break;
 
 			case 'ralpha' :
-				$orderby = 'cc.path DESC, ';
+				$orderby = $tblprefix.'.path DESC, ';
 				break;
 
 			case 'order' :
-				$orderby = 'cc.lft, ';
+				$orderby = $tblprefix.'.lft, ';
 				break;
 
 			default :
@@ -66,9 +66,9 @@ class TZ_Portfolio_PlusHelperQuery
 	 * @return	string	The SQL field(s) to order by.
 	 * @since	1.5
 	 */
-	public static function orderbySecondary($orderby, $orderDate = 'created')
+	public static function orderbySecondary($orderby, $orderDate = 'created', $tblprefix = 'c')
 	{
-		$queryDate = self::getQueryDate($orderDate);
+		$queryDate = self::getQueryDate($orderDate, $tblprefix);
 
 		switch ($orderby)
 		{
@@ -81,27 +81,27 @@ class TZ_Portfolio_PlusHelperQuery
 				break;
 
 			case 'alpha' :
-				$orderby = 'c.title';
+				$orderby = $tblprefix.'.title';
 				break;
 
 			case 'ralpha' :
-				$orderby = 'c.title DESC';
+				$orderby = $tblprefix.'.title DESC';
 				break;
 
 			case 'hits' :
-				$orderby = 'c.hits DESC';
+				$orderby = $tblprefix.'.hits DESC';
 				break;
 
 			case 'rhits' :
-				$orderby = 'c.hits';
+				$orderby = $tblprefix.'.hits';
 				break;
 
 			case 'order' :
-				$orderby = 'c.ordering';
+				$orderby = $tblprefix.'.ordering';
 				break;
 
             case 'rorder' :
-                $orderby = 'c.ordering DESC';
+                $orderby = $tblprefix.'.ordering DESC';
                 break;
 
 			case 'author' :
@@ -117,7 +117,7 @@ class TZ_Portfolio_PlusHelperQuery
 				break;
 
 			default :
-				$orderby = 'c.ordering';
+				$orderby = $tblprefix.'.ordering';
 				break;
 		}
 
@@ -132,22 +132,22 @@ class TZ_Portfolio_PlusHelperQuery
 	 * @return	string	The SQL field(s) to order by.
 	 * @since	1.6
 	 */
-	public static function getQueryDate($orderDate) {
+	public static function getQueryDate($orderDate, $tblprefix = 'c') {
 
 		switch ($orderDate)
 		{
 			case 'modified' :
-				$queryDate = ' CASE WHEN c.modified = 0 THEN c.created ELSE c.modified END';
+				$queryDate = ' CASE WHEN c.modified = 0 THEN '.$tblprefix.'.created ELSE '.$tblprefix.'.modified END';
 				break;
 
 			// use created if publish_up is not set
 			case 'published' :
-				$queryDate = ' CASE WHEN c.publish_up = 0 THEN c.created ELSE c.publish_up END ';
+				$queryDate = ' CASE WHEN '.$tblprefix.'.publish_up = 0 THEN '.$tblprefix.'.created ELSE '.$tblprefix.'.publish_up END ';
 				break;
 
 			case 'created' :
 			default :
-				$queryDate = ' c.created ';
+				$queryDate = ' '.$tblprefix.'.created ';
 				break;
 		}
 

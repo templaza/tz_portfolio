@@ -14,7 +14,7 @@
     <jedUrl>https://extensions.joomla.org/extension/tz-portfolio</jedUrl>
     <facebookUrl>https://www.facebook.com/tzportfolio</facebookUrl>
     <facebookGroupUrl>https://www.facebook.com/groups/tzportfolio</facebookGroupUrl>
-	<version>1.2.3</version>
+	<version>1.2.4</version>
     
     <scriptfile>script.php</scriptfile>
 

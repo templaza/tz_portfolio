@@ -10,6 +10,11 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+09/02/2018 - 1.2.4
+
+	- Fix error of view date.
+	- Update elegant template v1.5: support styles for TZ Portfolio+ Carousel module.
+
 26/01/2018 - 1.2.3
 
 	- Fix error function TZ_Portfolio_PlusModuleHelper::getLayoutPath.

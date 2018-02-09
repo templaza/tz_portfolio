@@ -100,8 +100,8 @@ class TZ_Portfolio_PlusModelDate extends JModelList{
         // filter.order
 
         $orderby    = '';
-        $secondary  = TZ_Portfolio_PlusHelperQuery::orderbySecondary($params -> get('orderby_sec', 'rdate'));
-        $primary    = TZ_Portfolio_PlusHelperQuery::orderbyPrimary($params -> get('orderby_pri'));
+        $secondary  = TZ_Portfolio_PlusHelperQuery::orderbySecondary($params -> get('orderby_sec', 'rdate'), 'created', 'a');
+        $primary    = TZ_Portfolio_PlusHelperQuery::orderbyPrimary($params -> get('orderby_pri'), 'c');
 
         $orderby .= $primary . ' ' . $secondary;
 
@@ -119,6 +119,9 @@ class TZ_Portfolio_PlusModelDate extends JModelList{
         $this -> setState('filter.use_filter_first_letter',$params -> get('use_filter_first_letter',1));
 
         $this->setState('filter.language', $app->getLanguageFilter());
+
+
+        $itemid = $app -> input -> getInt('id', 0) . ':' . $app -> input -> getInt('Itemid', 0);
 
         $_month = null;
         $_year  = null;
