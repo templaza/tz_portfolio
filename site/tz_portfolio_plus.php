@@ -39,6 +39,8 @@ JLoader::import('query', COM_TZ_PORTFOLIO_PLUS_SITE_HELPERS_PATH);
 JLoader::import('categories', COM_TZ_PORTFOLIO_PLUS_SITE_HELPERS_PATH);
 JLoader::import('tags', COM_TZ_PORTFOLIO_PLUS_SITE_HELPERS_PATH);
 
+JHtml::addIncludePath(COM_TZ_PORTFOLIO_PLUS_SITE_HELPERS_PATH.'/html');
+
 $controller = JControllerLegacy::getInstance('TZ_Portfolio_Plus');
 $controller->execute(JFactory::getApplication()->input->get('task'));
 $controller->redirect();

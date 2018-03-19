@@ -34,11 +34,39 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
     protected $accept_types = array();
     protected $_cache;
     protected $folder       = 'addons';
+    protected $cache;
+    protected $limit;
+    protected $filterFormName = null;
+    protected $filter_fields    = array();
 
     public function __construct($config = array())
     {
         parent::__construct($config);
         $this -> accept_types   = array('tz_portfolio_plus-plugin', 'tz_portfolio_plus-template');
+    }
+
+    protected function populateState()
+    {
+        parent::populateState();
+
+        $app    = JFactory::getApplication();
+
+        $filters = $app->getUserStateFromRequest($this->option . '.'.$this -> getName().'.filter', 'filter', array(), 'array');
+        $this -> setState('filters', $filters);
+
+        $limitstart  = $app -> getUserStateFromRequest($this->option . '.'.$this -> getName().'.limitstart', 'limitstart', 0,'int');
+        $this -> setState('list.start', $limitstart);
+
+        $search      = isset($filters['search'])?$filters['search']:null;
+        $search  = $app -> getUserStateFromRequest($this->option . '.'.$this -> getName().'.filter_search', 'filter_search', $search,'string');
+        $this -> setState('filter.search',$search);
+
+        $type  = $app -> getUserStateFromRequest($this->option . '.'.$this -> getName().'.filter_type', 'filter_type',
+            (isset($filters['type'])?$filters['type']:null), 'string');
+        $this -> setState('filter.type',$type);
+
+        $this -> setState('cache.filename', 'addon_list');
+
     }
 
     public function getTable($type = 'Extensions', $prefix = 'TZ_Portfolio_PlusTable', $config = array())
@@ -232,7 +260,13 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
         }
         /* end phan code working */
 
-        $package        = $this -> _getPackageFromUpload();
+        if($input -> get('task') == 'ajax_install'){
+            $url        = $input -> post -> get('pProduceUrl', null, 'string');
+            $package = $this->_getPackageFromUrl($url);
+        }else {
+            $package = $this->_getPackageFromUpload();
+        }
+
         $extension_path = COM_TZ_PORTFOLIO_PLUS_PATH_SITE;
         $result         = true;
         $msg            = JText::sprintf('COM_TZ_PORTFOLIO_PLUS_INSTALL_SUCCESS', JText::_('COM_TZ_PORTFOLIO_PLUS_'.$input -> getCmd('view')));
@@ -645,4 +679,344 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
         }
         return parent::validate($form, $data, $group);
     }
+
+
+
+    public function getFilterForm($data = array(), $loadData = true)
+    {
+        $form = null;
+
+        // Try to locate the filter form automatically. Example: ContentModelArticles => "filter_articles"
+        if (empty($this->filterFormName))
+        {
+            $classNameParts = explode('Model', get_called_class());
+
+            if (count($classNameParts) == 2)
+            {
+                $this->filterFormName = 'filter_' . strtolower($classNameParts[1]);
+            }
+        }
+
+        if (!empty($this->filterFormName))
+        {
+            // Get the form.
+            $form = $this->loadForm($this->option . '.'.$this -> getName().'.filter', $this->filterFormName, array('control' => '', 'load_data' => $loadData));
+
+            // Check the session for previously entered form data.
+            $filters = \JFactory::getApplication()->getUserState($this -> option.'.'.$this -> getName().'.filter', new \stdClass);
+
+            $data   = new stdClass();
+            $data -> filter = $filters;
+
+            $form -> bind($data);
+        }
+
+        return $form;
+    }
+
+    public function getItemsFromServer(){
+
+        $data           = false;
+        $value          = $this -> getState('list.start');
+        $limitstart     = $value;
+        $search         = $this -> getState('filter.search');
+        $type           = $this -> getState('filter.type');
+        $params         = $this -> getState('params');
+        $filters        = $this -> getState('filters');
+        $cacheFileName  = $this -> getState('cache.filename');
+
+        // Cache time is 1 day
+        $cacheTime      = 24 * 60 * 60;
+        $cacheFilters   = null;
+        $hasCache       = true;
+        $cacheFolder    = JPATH_CACHE.'/'.$this -> option;
+        $cacheFile      = $cacheFolder.'/'. $cacheFileName .'.json';
+
+
+        // Get data from cache
+        if(JFile::exists($cacheFile) && (filemtime($cacheFile) > (time() - $cacheTime ))){
+            $items  = JFile::read($cacheFile);
+            $items  = trim($items);
+            if(!empty($items)){
+                $data   = json_decode($items);
+                if($data && isset($data -> filters) && $data -> filters){
+                    $cacheFilters   = $data -> filters;
+                }else{
+                    $hasCache  = false;
+                }
+            }
+        }
+
+        if($cacheFilters && count($cacheFilters) && $filters){
+            foreach($cacheFilters as $k => $v){
+                if(isset($filters[$k]) && $filters[$k] != $v){
+                    $hasCache  = false;
+                    $limitstart = 0;
+                    break;
+                }
+            }
+        }
+
+        if($hasCache && $data && isset($data -> start) && $data -> start != $limitstart){
+            $hasCache  = false;
+        }
+
+        if(!$data && $hasCache) {
+            $hasCache = false;
+        }
+
+        if(!$hasCache) {
+
+            $url    = $this -> getUrlFromServer();
+//            var_dump($url); die();
+
+            if(!$url){
+                return false;
+            }
+
+            // Get data from server
+            $edition = '';
+            if (COM_TZ_PORTFOLIO_PLUS_EDITION == 'commercial' && $apiKey = $params->get('apikey')) {
+                $edition = '&apikey=' . $apiKey;
+            }
+
+            $url .= ($limitstart ? '&start=' . $limitstart : '') . ($type ? '&type=' . urlencode($type) : '')
+                . ($search ? '&search=' . urlencode($search) : '') . $edition;
+
+            $response = TZ_Portfolio_PlusHelper::getDataFromServer($url);
+
+            if(!$response){
+                return false;
+            }
+
+            $data   = json_decode($response -> body);
+
+            if(!$data){
+                return false;
+            }
+
+            $items  = $data -> items;
+            unset($data -> items);
+
+            $data -> start      = $limitstart;
+            $data -> filters    = $filters;
+            $data -> items      = $items;
+
+            JFile::write($cacheFile, json_encode($data));
+        }
+
+        if(!$data || ($data && !isset($data -> items) )){
+            return false;
+        }
+
+
+        if($data -> items){
+            foreach($data -> items as &$item){
+                $item -> pProduce           = null;
+                $item -> installedVersion   = null;
+
+                $editionName    = 'pProduce';
+
+                if($item -> pElement && isset($item -> pType)){
+                    if($extension = $this -> getManifest_Cache($item -> pElement, $item -> pType)){
+                        if(isset($extension -> edition) && $extension -> edition) {
+                            $editionName = $extension->edition;
+                        }
+                        $item -> installedVersion   = $extension -> version;
+                    }
+                }
+
+                if($pProduces = $item -> pProduces) {
+                    if(isset($pProduces -> {$editionName}) && $pProduces -> {$editionName}) {
+                        $item->pProduce = $pProduces->{$editionName};
+                    }
+                }
+            }
+        }
+
+        $this -> setState('list.dataserver', true);
+
+        $limit  = $data -> limit;
+
+        $limitstart = ($limit != 0 ? (floor($value / $limit) * $limit) : 0);
+
+        $this -> setState('list.start', $limitstart);
+        $this -> setState('list.limit', $limit);
+        $this -> setState('list.total', $data -> total);
+
+        return $data -> items;
+    }
+
+    protected function getManifest_Cache($element, $folder = null, $type = 'tz_portfolio_plus-plugin'){
+
+        if(!$element){
+            return false;
+        }
+
+        if(!$type){
+            $type   = 'tz_portfolio_plus-plugin';
+        }
+
+        $option = array('element' => $element, 'type' => $type);
+
+        if($folder){
+            $option['folder']   = $folder;
+        }
+
+        $table  = JTable::getInstance('Extensions', 'TZ_Portfolio_PlusTable');
+
+        if(!$table -> load($option)){
+            return false;
+        }
+
+        if(!$table -> id){
+            return false;
+        }
+
+        $data = $table -> getDbo() -> loadObject();
+        if(isset($data -> manifest_cache) && $data -> manifest_cache && is_string($data -> manifest_cache)){
+            $data -> manifest_cache    = json_decode($data -> manifest_cache);
+        }
+
+
+        return $data -> manifest_cache;
+    }
+
+    protected function getUrlFromServer($xmlTag = 'addonurl'){
+
+        if(!$xmlTag){
+            return false;
+        }
+
+        $url    = false;
+
+        // Get update data
+        $xmlPath    = COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/tz_portfolio_plus.xml';
+
+        $xml        = simplexml_load_file($xmlPath, 'SimpleXMLElement', LIBXML_NOCDATA);
+        if($updateServer = $xml -> updateservers){
+            if(isset($updateServer -> server) && $updateServer -> server){
+                foreach ($updateServer -> server as $server){
+                    if($responseUpdate = TZ_Portfolio_PlusHelper::getDataFromServer((string) $server)){
+                        $xmlUpdate  = simplexml_load_string( $responseUpdate -> body);
+
+                        if($update = $xmlUpdate -> xpath('update['.((int) $server['pirority']).']')) {
+                            $update = $update[0];
+                            if(isset($update -> listupdate)) {
+                                $listUpdate = $update -> listupdate;
+                                if(isset($listUpdate -> {$xmlTag}) && $listUpdate -> {$xmlTag}){
+                                    $url    = (string) $listUpdate -> {$xmlTag};
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        return $url;
+    }
+
+    public function getStart()
+    {
+        $store = __METHOD__;
+
+        // Try to load the data from internal storage.
+        if (isset($this->cache[$store]))
+        {
+            return $this->cache[$store];
+        }
+
+        $start = $this->getState('list.start');
+
+        if ($start > 0)
+        {
+            $limit = $this->getState('list.limit', 0);
+            $total = $this -> getState('list.total', 0);
+
+            if ($limit > 0 && $start > $total - $limit)
+            {
+                $start = max(0, (int) (ceil($total / $limit) - 1) * $limit);
+            }
+        }
+
+        // Add the total to the internal cache.
+        $this->cache[$store] = $start;
+
+        return $this->cache[$store];
+    }
+
+    public function getPaginationFromServer()
+    {
+        // Get a storage key.
+        $store  = __METHOD__;
+
+        // Try to load the data from internal storage.
+        if (isset($this->cache[$store]))
+        {
+            return $this->cache[$store];
+        }
+
+        $limit = (int) $this->getState('list.limit');
+
+        // Create the pagination object and add the object to the internal cache.
+        $this->cache[$store] = new \JPagination($this -> getState('list.total'), $this->getStart(), $limit);
+
+        return $this->cache[$store];
+    }
+
+    protected function _getPackageFromUrl($url)
+    {
+        // Capture PHP errors
+        $track_errors = ini_get('track_errors');
+        ini_set('track_errors', true);
+
+        // Load installer plugins, and allow URL and headers modification
+        $headers = array();
+        \JPluginHelper::importPlugin('installer');
+        $dispatcher = \JEventDispatcher::getInstance();
+        $dispatcher->trigger('onInstallerBeforePackageDownload', array(&$url, &$headers));
+
+        $response   = TZ_Portfolio_PlusHelper::getDataFromServer($url);
+
+        // Was the package downloaded?
+        if (!$response)
+        {
+            JError::raiseWarning('', JText::sprintf('COM_INSTALLER_PACKAGE_DOWNLOAD_FAILED', $url));
+
+            return false;
+        }
+
+        $target     = null;
+
+        // Parse the Content-Disposition header to get the file name
+        if (isset($response->headers['Content-Disposition'])
+            && preg_match("/\s*filename\s?=\s?(.*)/", $response->headers['Content-Disposition'], $parts))
+        {
+            $flds = explode(';', $parts[1]);
+            $target = trim($flds[0], '"');
+        }
+
+        $tmp_dest	= JPATH_ROOT . '/tmp/tz_portfolio_plus_install/' . $target;
+
+        if(!JFile::exists(JPATH_ROOT . '/tmp/tz_portfolio_plus_install/index.html')){
+            JFile::write(JPATH_ROOT . '/tmp/tz_portfolio_plus_install/index.html',
+                htmlspecialchars_decode('<!DOCTYPE html><title></title>'));
+        }
+
+        // Write buffer to file
+        \JFile::write($tmp_dest, $response->body);
+
+        // Restore error tracking to what it was before
+        ini_set('track_errors', $track_errors);
+
+        // Bump the max execution time because not using built in php zip libs are slow
+        @set_time_limit(ini_get('max_execution_time'));
+
+        // Unpack the downloaded package file
+        $package = JInstallerHelper::unpack($tmp_dest, true);
+
+        return $package;
+    }
+
 }

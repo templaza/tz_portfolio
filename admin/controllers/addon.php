@@ -190,7 +190,7 @@ class TZ_Portfolio_PlusControllerAddon extends JControllerForm
         $eid   = $this->input->get('cid', array(), 'array');
         $model = $this->getModel();
 
-        $eid    = ArrayHelper::toInterger($eid);
+        $eid    = ArrayHelper::toInteger($eid);
         $model->uninstall($eid);
         $this->setRedirect(JRoute::_('index.php?option=com_tz_portfolio_plus&view=addons', false));
     }
@@ -200,6 +200,9 @@ class TZ_Portfolio_PlusControllerAddon extends JControllerForm
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
         $cancel = parent::cancel($key);
+
+        $app    = JFactory::getApplication();
+        $app -> setUserState($this->option . '.'.$this -> context.'.limitstart', 0);
 
         if($return = $this -> input -> get('return', null, 'base64')){
             $this -> setRedirect(base64_decode($return));
@@ -336,4 +339,47 @@ class TZ_Portfolio_PlusControllerAddon extends JControllerForm
         return parent::edit($key, $urlVar);
     }
 
+    public function ajax_install()
+    {
+        // Check for request forgeries.
+        JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
+        $result = null;
+        $app    = JFactory::getApplication();
+
+
+        // Access check.
+        if (!$this->allowAdd())
+        {
+            // Set the internal error and also the redirect error.
+            $this->setError(\JText::_('JLIB_APPLICATION_ERROR_CREATE_RECORD_NOT_PERMITTED'));
+            $app->enqueueMessage($this->getError(), 'error');
+        }else{
+            $model  = $this -> getModel();
+            if($result = $model -> install()){
+                $app -> enqueueMessage(JText::sprintf('COM_TZ_PORTFOLIO_PLUS_INSTALL_SUCCESS'
+                    , JText::_('COM_TZ_PORTFOLIO_PLUS_ADDON')));
+            }
+        }
+
+        $message    = $this -> getError();
+
+        $this->setRedirect(
+            \JRoute::_(
+                'index.php?option=' . $this->option . '&view=' . $this->view_item.'&layout=upload', false
+            )
+        );
+
+        $redirect   = $this -> redirect;
+
+        // Push message queue to session because we will redirect page by Javascript, not $app->redirect().
+        // The "application.queue" is only set in redirect() method, so we must manually store it.
+        $app->getSession()->set('application.queue', $app->getMessageQueue());
+
+        header('Content-Type: application/json');
+
+        echo new JResponseJson(array('redirect' => $redirect), $message, !$result);
+
+        exit();
+    }
 }

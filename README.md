@@ -10,6 +10,22 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+19/03/2018 - 1.2.5
+
+	- Fix error: Use of undefined constant COM_TZ_PORTFOLIO_PLUS_ACL_SECTIONS with php v5.6
+	- Remove lightbox feature of core.
+	- Remove Cloud Zoom of Image Addon.
+	- Remove styles of charity addon and added styles for social addon in elegant template.
+	- Move option "Show Original Gif Image" of image Addon from category edit to addon's global config.
+	- Optimize multiplefield xml field.
+	- Update code of function getListQuery() in portfolio model.
+	- Update "Upload" text to "Install" of button upload in addons view and templates view (back-end).
+	- Added upload button in layout upload of view addon and template.
+	- Added install addons and templates from server.
+	- Added option "Show Image" of image add-on for category listing and article view.
+	- Added option "Enable Search Link" (Insert search link for value of field in front-end.) for field.
+	- Added option "Show Image" for tag articles listing, user article listing and data article listings in global and category, article.
+
 09/02/2018 - 1.2.4
 
 	- Fix error of view date.

@@ -87,7 +87,9 @@ $doc        = JFactory::getDocument();
         <div class="tpBody type-standard clearfix">
             <div class="tpArticle clearfix" itemprop="articleBody" data-blog-content>
                 <?php
-                echo $this -> loadTemplate('media');
+                if (trim($this->item->params ->get('mt_image_show_image_article',1))) :
+                    echo $this -> loadTemplate('media');
+                endif;
                 ?>
                 <?php if($introtext = $this -> loadTemplate('introtext')):?>
                     <?php echo $introtext;?>
@@ -102,7 +104,7 @@ $doc        = JFactory::getDocument();
                     <div class="tpPortfolioLink"><a href="<?php echo $this->item->params ->get('project_link'); ?>" title="<?php echo $this->item->params ->get('project_link_title'); ?>" target="_blank" itemprop="url"><?php echo $this->item->params ->get('project_link_title'); ?></a></div>
                 <?php endif; ?>
                 <?php
-                $plugins = array('hikashop_checkout','attachment','vote');
+                $plugins = array('hikashop_checkout','attachment','vote','social');
                 $dispatcher = new JEventDispatcher();
                 $html = '';
                 foreach ($plugins as $plugin) {
@@ -139,7 +141,7 @@ $doc        = JFactory::getDocument();
 
         </div>
         <?php
-        $plugins = array('music','charity','googlemap');
+        $plugins = array('music','charity','googlemap','navigation');
         $dispatcher = new JEventDispatcher();
         $html = '';
         foreach ($plugins as $plugin) {

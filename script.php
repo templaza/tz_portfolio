@@ -198,47 +198,50 @@ class com_tz_portfolio_plusInstallerScript{
         if(!defined('COM_TZ_PORTFOLIO_PLUS_ACL_SECTIONS')){
             JLoader::import('includes.defines',$sourcePath.'/admin');
         }
-        $sections   = COM_TZ_PORTFOLIO_PLUS_ACL_SECTIONS;
+        if($sections   = COM_TZ_PORTFOLIO_PLUS_ACL_SECTIONS){
+            if(is_string($sections)) {
+                $sections = json_decode($sections);
+            }
+            if(count($sections)){
+                // Get the parent asset id so we have a correct tree.
+                $parentAsset = JTable::getInstance('Asset');
 
-        if($sections && count($sections)){
-            // Get the parent asset id so we have a correct tree.
-            $parentAsset = JTable::getInstance('Asset');
+                if($parentAsset->loadByName('com_tz_portfolio_plus')){
 
-            if($parentAsset->loadByName('com_tz_portfolio_plus')){
+                    $parentAssetId = $parentAsset->id;
 
-                $parentAssetId = $parentAsset->id;
+                    // Create permissions for acl
+                    $asset  = JTable::getInstance('Asset');
 
-                // Create permissions for acl
-                $asset  = JTable::getInstance('Asset');
+                    foreach($sections as $section){
+                        $name  = 'com_tz_portfolio_plus.'.$section;
+                        $asset -> reset();
+                        if($asset->loadByName($name) !== false){
+                            continue;
+                        }
+                        $asset -> id		= 0;
+                        $asset -> parent_id = $parentAssetId;
+                        $asset -> name  	= $name;
+                        switch ($section){
+                            default:
+                                $asset -> title  = JText::_('COM_TZ_PORTFOLIO_PLUS_'.strtoupper($section).'S');
+                                break;
+                            case 'category':
+                                $asset -> title  = JText::_('COM_TZ_PORTFOLIO_PLUS_CATEGORIES');
+                                break;
+                            case 'group':
+                                $asset -> title  = JText::_('COM_TZ_PORTFOLIO_PLUS_FIELD_GROUPS');
+                                break;
+                            case 'style':
+                                $asset -> title  = JText::_('COM_TZ_PORTFOLIO_PLUS_TEMPLATE_STYLES');
+                                break;
 
-                foreach($sections as $section){
-                    $name  = 'com_tz_portfolio_plus.'.$section;
-                    $asset -> reset();
-                    if($asset->loadByName($name) !== false){
-                        continue;
-                    }
-                    $asset -> id		= 0;
-                    $asset -> parent_id = $parentAssetId;
-                    $asset -> name  	= $name;
-                    switch ($section){
-                        default:
-                            $asset -> title  = JText::_('COM_TZ_PORTFOLIO_PLUS_'.strtoupper($section).'S');
-                            break;
-                        case 'category':
-                            $asset -> title  = JText::_('COM_TZ_PORTFOLIO_PLUS_CATEGORIES');
-                            break;
-                        case 'group':
-                            $asset -> title  = JText::_('COM_TZ_PORTFOLIO_PLUS_FIELD_GROUPS');
-                            break;
-                        case 'style':
-                            $asset -> title  = JText::_('COM_TZ_PORTFOLIO_PLUS_TEMPLATE_STYLES');
-                            break;
-
-                    }
-                    $asset->setLocation($parentAssetId, 'last-child');
-                    if ($asset->check())
-                    {
-                        $asset->store();
+                        }
+                        $asset->setLocation($parentAssetId, 'last-child');
+                        if ($asset->check())
+                        {
+                            $asset->store();
+                        }
                     }
                 }
             }

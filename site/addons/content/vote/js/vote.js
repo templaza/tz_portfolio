@@ -6,7 +6,7 @@ function JVXVote(obj,id,i,total,total_count,counter,style){
 	var currentURL = window.location;
 	var live_site = currentURL.protocol+'//'+currentURL.host+tzPortfolioPlusBase;
 	var lsXmlHttp = '';
-	
+
 	var div = document.getElementById('TzVote_'+id);
 	if (div.className != 'TzVote-count voted') {
 		div.innerHTML='<img src="'+live_site+'/images/loading.gif" border="0" align="absmiddle" /> '+'<small>'+TzPortfolioPlusVote_text[1]+'</small>';

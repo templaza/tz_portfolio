@@ -108,43 +108,6 @@
         </field>
         <!-- End order options -->
 
-        <!-- START THE LIGHTBOX'S PARAMETERS FOR ALL PAGE -->
-        <field type="spacer" hr="true"/>
-        <field type="spacer" name="spacer_lightbox_name"
-               class="alert alert-warning btn-block"
-               label="COM_TZ_PORTFOLIO_PLUS_FIELDSET_LIGHTBOX_OPTIONS_LABEL"/>
-        <field type="radio" name="tz_use_lightbox"
-               class="btn-group"
-               default="0"
-               label="COM_TZ_PORTFOLIO_PLUS_USE_LIGHTBOX"
-               description="COM_TZ_PORTFOLIO_PLUS_USE_LIGHTBOX_DESC">
-            <option value="0">JNO</option>
-            <option value="1">JYES</option>
-        </field>
-        <field name="tz_lightbox_transition" type="list"
-               default="elastic"
-               label="COM_TZ_PORTFOLIO_PLUS_LIGHT_BOX_TRANSITION"
-               description="COM_TZ_PORTFOLIO_PLUS_LIGHT_BOX_TRANSITION_DESC">
-            <option value="none">JNONE</option>
-            <option value="elastic">COM_TZ_PORTFOLIO_PLUS_ELASTIC</option>
-            <option value="fade">COM_TZ_PORTFOLIO_PLUS_FADE</option>
-        </field>
-        <field name="tz_lightbox_speed" type="text"
-               default="350"
-               label="COM_TZ_PORTFOLIO_PLUS_LIGHT_BOX_SPEED"
-               description="COM_TZ_PORTFOLIO_PLUS_LIGHT_BOX_SPEED_DESC"/>
-        <field name="tz_lightbox_opacity" type="text"
-               default="0.7"
-               label="COM_TZ_PORTFOLIO_PLUS_OPACITY"
-               description="COM_TZ_PORTFOLIO_PLUS_OPACITY_DESC"/>
-        <field name="tz_lightbox_width" type="text"
-               label="COM_TZ_PORTFOLIO_PLUS_LIGHT_BOX_WIDTH"
-               description="COM_TZ_PORTFOLIO_PLUS_LIGHT_BOX_WIDTH_DESC"/>
-        <field name="tz_lightbox_height" type="text"
-               label="COM_TZ_PORTFOLIO_PLUS_LIGHT_BOX_HEIGHT"
-               description="COM_TZ_PORTFOLIO_PLUS_LIGHT_BOX_HEIGHT_DESC"/>
-        <!-- END THE LIGHTBOX'S PARAMETERS FOR ALL PAGE -->
-
         <!-- Start Feed options -->
         <field type="spacer" hr="true"/>
         <field type="spacer" name="spacer_feed_name"
@@ -1004,6 +967,9 @@
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
+
+        <!--<field type="text" name="apikey"-->
+               <!--label="COM_TZ_PORTFOLIO_PLUS_API_KEY"/>-->
 
         <field name="tz_portfolio_plus_router" type="spacer"
                class="alert alert-warning btn-block"

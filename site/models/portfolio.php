@@ -38,7 +38,7 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
         parent::__construct($config);
     }
 
-    function populateState($ordering = null, $direction = null){
+    protected function populateState($ordering = null, $direction = null){
         parent::populateState($ordering,$direction);
 
         $app    = JFactory::getApplication('site');
@@ -116,10 +116,16 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
         $db     = JFactory::getDbo();
         $query  = $db -> getQuery(true);
 
-        $query -> select('c.*,t.title AS tagName, m.catid AS catid ,cc.title AS category_title,u.name AS author');
-        $query -> select('CASE WHEN CHAR_LENGTH(c.alias) THEN CONCAT_WS(":", c.id, c.alias) ELSE c.id END as slug');
-        $query -> select('CASE WHEN CHAR_LENGTH(cc.alias) THEN CONCAT_WS(":", cc.id, cc.alias) ELSE cc.id END as catslug');
-        $query -> select('CASE WHEN CHAR_LENGTH(c.fulltext) THEN c.fulltext ELSE null END as readmore');
+        $query -> select(
+            $this->getState(
+                'list.select',
+                'c.*,t.title AS tagName, m.catid AS catid ,cc.title AS category_title, u.name AS author'.
+                ',CASE WHEN CHAR_LENGTH(c.alias) THEN CONCAT_WS(":", c.id, c.alias) ELSE c.id END as slug'.
+                ',CASE WHEN CHAR_LENGTH(cc.alias) THEN CONCAT_WS(":", cc.id, cc.alias) ELSE cc.id END as catslug'.
+                ',CASE WHEN CHAR_LENGTH(c.fulltext) THEN c.fulltext ELSE null END as readmore'.
+                ',parent.title as parent_title, parent.id as parent_id, parent.path as parent_route, parent.alias as parent_alias'
+            )
+        );
 
         $query -> from($db -> quoteName('#__tz_portfolio_plus_content').' AS c');
 
@@ -129,11 +135,7 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
         $query -> join('LEFT',$db -> quoteName('#__tz_portfolio_plus_tags').' AS t ON t.id=x.tagsid');
         $query -> join('LEFT',$db -> quoteName('#__users').' AS u ON u.id=c.created_by');
 
-        // Condition for sql
-//        $query -> where('c.state=1');
-
         // Join over the categories to get parent category titles
-        $query->select('parent.title as parent_title, parent.id as parent_id, parent.path as parent_route, parent.alias as parent_alias');
         $query->join('LEFT', '#__tz_portfolio_plus_categories as parent ON parent.id = cc.parent_id');
 
         // Filter by published state

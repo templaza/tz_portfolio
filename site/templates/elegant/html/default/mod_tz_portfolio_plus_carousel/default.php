@@ -22,12 +22,17 @@
 // no direct access
 defined('_JEXEC') or die;
 $tzTemplate = TZ_Portfolio_PlusTemplate::getTemplateById($params -> get('template_id'));
+if (!$tzTemplate) $tzTemplate = TZ_Portfolio_PlusTemplate::getTemplate(true);
 $tplParams = $tzTemplate->params;
 if($list){
 ?>
 <div id="module__<?php echo $module -> id;?>" class="tplElegant tpp-module-carousel tpp-module__carousel<?php echo $moduleclass_sfx;?>">
     <div class="owl-carousel owl-theme element">
         <?php foreach($list as $i => $item){
+            // Get article's extrafields
+            $extraFields    = TZ_Portfolio_PlusFrontHelperExtraFields::getExtraFields($item, null,
+                false, array('filter.list_view' => true, 'filter.group' => $params -> get('order_fieldgroup', 'rdate')));
+            $item -> extrafields    = $extraFields;
             ?>
             <div class="TzInner">
                 <?php
@@ -129,7 +134,22 @@ if($list){
                             ?>
                             <div class="TzPortfolioIntrotext" itemprop="description"><?php echo $item->introtext;?></div>
                         <?php }
-
+                        if(isset($item -> extrafields) && !empty($item -> extrafields)):
+                            ?>
+                            <ul class="tz-extrafields">
+                                <?php foreach($item -> extrafields as $field):?>
+                                    <li class="tz_extrafield-item">
+                                        <?php if($field -> hasTitle()):?>
+                                            <div class="tz_extrafield-label"><?php echo $field -> getTitle();?></div>
+                                        <?php endif;?>
+                                        <div class="tz_extrafield-value pull-left">
+                                            <?php echo $field -> getListing();?>
+                                        </div>
+                                    </li>
+                                <?php endforeach;?>
+                            </ul>
+                            <?php
+                        endif;
                         if(isset($item -> event -> contentDisplayListView)) {
                             echo $item->event->contentDisplayListView;
                         }

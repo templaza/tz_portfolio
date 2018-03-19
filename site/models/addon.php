@@ -18,6 +18,7 @@
 -------------------------------------------------------------------------*/
 
 class TZ_Portfolio_PlusModelAddOn extends JModelLegacy{
+
     protected function populateState(){
         $app    = JFactory::getApplication();
         $params = $app -> getParams();

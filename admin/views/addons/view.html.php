@@ -66,7 +66,7 @@ class TZ_Portfolio_PlusViewAddons extends JViewLegacy
         JToolBarHelper::title(JText::_('COM_TZ_PORTFOLIO_PLUS_ADDONS_MANAGER'), 'puzzle');
 
         if ($canDo->get('core.create')) {
-            JToolbarHelper::addNew('addon.upload', 'JTOOLBAR_UPLOAD');
+            JToolbarHelper::addNew('addon.upload', 'JTOOLBAR_INSTALL');
         }
 
         if ($canDo->get('core.edit' )) {

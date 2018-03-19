@@ -26,7 +26,7 @@ use Joomla\CMS\User\UserWrapper;
 
 //jimport('joomla.user.user');
 
-class TZ_Portfolio_PlusUser extends User{
+class TZ_Portfolio_PlusUser extends \JUser{
 
     protected static $instances = array();
 
@@ -54,7 +54,11 @@ class TZ_Portfolio_PlusUser extends User{
     {
         if (null === $userHelper)
         {
-            $userHelper = new UserWrapper;
+            if(version_compare(JVERSION, '3.8', '>=')){
+                $userHelper = new UserWrapper;
+            }else{
+                $userHelper	= new JUserWrapperHelper;
+            }
         }
 
         // Find the user id

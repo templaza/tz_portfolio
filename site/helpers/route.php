@@ -189,7 +189,7 @@ abstract class TZ_Portfolio_PlusHelperRoute
     }
 
     public static function getUserRoute($id, $menuActive = null){
-        $itemId = self::_findTagItemId($id, $menuActive);
+        $itemId = self::_findUserItemId($id, $menuActive);
         $link   = 'index.php?option=com_tz_portfolio_plus&amp;view=users&amp;id='.$id.'&amp;Itemid='.$itemId;
         return $link;
     }
@@ -198,6 +198,24 @@ abstract class TZ_Portfolio_PlusHelperRoute
         $itemId = self::_findDateItemId($menuActive);
         $link   = 'index.php?option=com_tz_portfolio_plus&amp;view=date'
             .($year?'&amp;year='.$year:'').(($year && $month)?'&amp;month='.$month:'').'&amp;Itemid='.$itemId;
+
+        return $link;
+    }
+
+    public static function getSearchRoute(){
+        $menu   = JFactory::getApplication() -> getMenu();
+
+        //Create the link
+        $link = 'index.php?option=com_tz_portfolio_plus&view=search';
+
+        $menuItems  = $menu -> getItems('link', $link);
+
+        if(count($menuItems)){
+            $link   .= '&Itemid='.$menuItems[0] -> id;
+        }
+//        elseif ($item = self::_findItem()) {
+//            $link .= '&Itemid='.$item;
+//        }
 
         return $link;
     }
@@ -415,7 +433,8 @@ abstract class TZ_Portfolio_PlusHelperRoute
                                     $sCatids = array_filter($sCatids);
                                     if(count($sCatids)){
                                         foreach($sCatids as $sc){
-                                            if(!isset(self::$lookup[$language][$sView][$sc])){
+                                            if(!isset(self::$lookup[$language][$sView][$sc]) ||
+                                                (isset(self::$lookup[$language][$sView][$sc]) && count($sCatids) == 1)){
                                                 $tzCatids[] = $sc;
                                                 self::$lookup[$language][$sView][$sc] = $sItem -> id;
                                             }

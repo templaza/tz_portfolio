@@ -458,9 +458,9 @@ class TZ_Portfolio_PlusRouter extends JComponentRouterBase
         }
 
         if($view == 'search'){
-            if($menuItemGiven){
+            if($menuItemGiven && isset($menuItem->query['view']) && $menuItem->query['view'] != $view){
                 $segments[] = $query['view'];
-            }else{
+            }elseif(!$menuItemGiven){
                 $segments[] = $view;
             }
             unset($query['view']);

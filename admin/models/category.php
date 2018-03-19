@@ -463,130 +463,6 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
         }
         return true;
     }
-    
-    function uploadImages($file,$url=null){
-        if($file){
-            $maxSize    = 2*1024*1024;
-            $arr        = array('image/jpeg','image/jpg','image/bmp','image/gif','image/png','image/ico');
-
-            // Create folder
-            $tzFolder           = 'tz_portfolio_plus';
-            $tzUserFolder       = 'categories';
-            $tzFolderPath       = JPATH_ROOT.DIRECTORY_SEPARATOR.'media'.DIRECTORY_SEPARATOR.$tzFolder;
-            $tzUserFolderPath   = $tzFolderPath.DIRECTORY_SEPARATOR.$tzUserFolder;
-
-            if(!JFolder::exists($tzFolderPath)){
-                JFolder::create($tzFolderPath);
-                if(!JFile::exists($tzFolderPath.DIRECTORY_SEPARATOR.'index.html')){
-                    JFile::write($tzFolderPath.DIRECTORY_SEPARATOR.'index.html'
-                        ,htmlspecialchars_decode('<!DOCTYPE html><title></title>'));
-                }
-            }
-            if(JFolder::exists($tzFolderPath)){
-                if(!JFolder::exists($tzUserFolderPath)){
-                    JFolder::create($tzUserFolderPath);
-                    if(!JFile::exists($tzUserFolderPath.DIRECTORY_SEPARATOR.'index.html'))
-                        JFile::write($tzUserFolderPath.DIRECTORY_SEPARATOR.'index.html'
-                            ,htmlspecialchars_decode('<!DOCTYPE html><title></title>'));
-                }
-            }
-            $params     = JComponentHelper::getParams('com_tz_portfolio_plus');
-            if(!$url){
-
-                $image      = new JImage(JPATH_SITE.DIRECTORY_SEPARATOR.str_replace('/',DIRECTORY_SEPARATOR,$file));
-
-                $desFileName    = 'categories_'.time().uniqid().'.'.JFile::getExt($file);
-                $desPath        = $tzUserFolderPath.DIRECTORY_SEPARATOR.$desFileName;
-
-                if($params -> get('tz_catimage_width',400))
-                    $newWidth  = $params -> get('tz_catimage_width',400);
-
-                $type       = strtolower(JFile::getExt($file));
-                $_type  = null;
-                if($type == 'gif'){
-                    $_type  = IMAGETYPE_GIF;
-                }
-                elseif($type == 'png'){
-                    $_type  = IMAGETYPE_PNG;
-                }
-                $height     = ceil( ( ($image -> getHeight()) * $newWidth ) / ($image -> getWidth()) );
-                $image      = $image -> resize($newWidth,$height);
-                $image -> toFile($desPath,$_type);
-
-                return 'media/'.$tzFolder.'/'.$tzUserFolder.'/'.$desFileName;
-            }
-            else{
-                tzportfolioplusimport('HTTPFetcher');
-                tzportfolioplusimport('readfile');
-
-                $image  = new Services_Yadis_PlainHTTPFetcher();
-                $image  = $image -> get($file);
-
-                if(!in_array($image -> headers['Content-Type'],$arr)){
-                    $this -> setError(JText::_('COM_TZ_PORTFOLIO_PLUS_INVALID_FILE'));
-                    return false;
-                }
-
-                if($image -> headers['Content-Length'] > $maxSize){
-                    $this -> setError(JText::_('COM_TZ_PORTFOLIO_PLUS_IMAGE_SIZE_TOO_LARGE'));
-                    return false;
-                }
-
-                $desFileName    = 'categories_'.time().uniqid().'.'
-                                  .str_replace('image/','',$image -> headers['Content-Type'] );
-                $desPath        = $tzUserFolderPath.DIRECTORY_SEPARATOR.$desFileName;
-
-                if(JFolder::exists($tzFolderPath)){
-                    if(!JFile::write($desPath,$image -> body)){
-                        $this -> setError(JText::_('COM_TZ_PORTFOLIO_PLUS_CAN_NOT_UPLOADED_FILEs'));
-                        return false;
-                    }
-                    $image  = new JImage($desPath);
-                    $newWidth    = $params -> get('tz_catimage_width',400);
-                    $newHeight  = ceil( ( ($image -> getHeight()) * $newWidth ) / ($image -> getWidth()) );
-                    $newImage   = $image -> resize((int) $newWidth,$newHeight,false);
-                    $type       = strtolower(JFile::getExt($file));
-                    $_type  = ($type == 'gif')?IMAGETYPE_GIF:($type == 'png')?IMAGETYPE_PNG:null;
-                    $newImage -> toFile($desPath,$_type);
-                    return 'media/'.$tzFolder.'/'.$tzUserFolder.'/'.$desFileName;
-                }
-            }
-        }
-        return true;
-    }
-
-    function delete(&$pks){
-//        if($pks){
-//            $catId  = implode(',',$pks);
-//            $query  = 'SELECT * FROM #__tz_portfolio_plus_categories'
-//                      .' WHERE catid IN('.$catId.')';
-//            $db     = JFactory::getDbo();
-//            $db -> setQuery($query);
-//            if(!$db -> query()){
-//                $this -> setError($db -> getErrorMsg());
-//                return false;
-//            }
-//            if($rows = $db -> loadObjectList()){
-//                foreach($rows as $row){
-//                    if(!empty($row -> images)){
-//                        $path   = JPATH_SITE.DIRECTORY_SEPARATOR.str_replace('/',DIRECTORY_SEPARATOR,$row -> images);
-//                        if(JFile::exists($path)){
-//                            JFile::delete($path);
-//                        }
-//                    }
-//                }
-//            }
-//            $query  = 'DELETE FROM #__tz_portfolio_plus_categories'
-//                      .' WHERE catid IN('.$catId.')';
-//            $db -> setQuery($query);
-//            if(!$db -> query()){
-//                $this -> setError($db -> getErrorMsg());
-//                return false;
-//            }
-//        }
-        parent::delete($pks);
-        
-    }
 
 	/**
 	 * Method to save the form data.
@@ -601,21 +477,6 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 	{
 
 		$input				= JFactory::getApplication() -> input;
-        $groupid            = $input -> post -> get('groupid',array(),'array');
-        $currentId          = $input -> getCmd('id');
-        $post               = $input -> post -> getArray();
-        
-        if(isset($post['jform']['params']['tz_fieldsid'])){
-            $fieldsId   = $post['jform']['params']['tz_fieldsid'];
-            if(count($fieldsId) == 1 && !empty($fieldsId[0])){
-                $data['params']['tz_fieldsid'] = $fieldsId;
-            }
-            elseif(count($fieldsId) > 1){
-                if(empty($fieldsId[0]))
-                    array_shift($fieldsId);
-                $data['params']['tz_fieldsid'] = $fieldsId;
-            }
-        }
 
 		// Initialise variables;
 		$dispatcher = JDispatcher::getInstance();
@@ -645,49 +506,6 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 			list($title, $alias) = $this->generateNewTitle($data['parent_id'], $data['alias'], $data['title']);
 			$data['title'] = $title;
 			$data['alias'] = $alias;
-
-            if($groupid){
-                if(empty($groupid[0])){
-                    $groupid[0] = 0;
-                }
-                $db     = JFactory::getDbo();
-
-                $image  = '';
-                if(!empty($data['tz_category_image_server'])){
-                    if(isset($data['tz_category_hidden'])){
-                        $this -> deleteImages($data['tz_category_hidden']);
-                    }
-                    $image  = $this -> uploadImages($data['tz_category_image_server']);
-                }
-                elseif(!empty($data['tz_image_url'])){
-                    if(isset($data['tz_category_hidden'])){
-                        $this -> deleteImages($data['tz_category_hidden']);
-                    }
-                    $image  = $this -> uploadImages($data['tz_image_url'],true);
-                }
-                else{
-                    if(isset($data['tz_category_hidden'])){
-                        $image  = $this -> uploadImages($data['tz_category_hidden']);
-                    }
-                }
-                if(isset($data['tz_category_del_image']) && $data['tz_category_del_image'] == 1){
-                    $this -> deleteImages($data['tz_category_hidden']);
-                    $image  = '';
-                }
-				$table -> images	= $image;
-
-//                $query  = 'UPDATE #__tz_portfolio_plus_categories SET `groupid`='.$groupid[0]
-//                          .',`images`="'.$image.'"'
-//                          .' WHERE catid='.(int) $post['jform']['id'];
-//
-//                $db -> setQuery($query);
-//                if(!$db -> query()){
-//                    $this -> setError($db -> getErrorMsg());
-//                    return false;
-//                }
-            }
-
-
 		}
 
 		// Bind the data.
@@ -726,67 +544,6 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 			$this->setError($table->getError());
 			return false;
 		}
-
-        // Save category with field group
-        if($table -> id){
-
-            if($groupid){
-                if(empty($groupid[0])){
-                    $groupid[0] = 0;
-                }
-
-                    $query  ='DELETE FROM #__tz_portfolio_plus_categories'
-                             .' WHERE id='.(int) $table -> id;
-                    $db     = JFactory::getDbo();
-                    $db -> setQuery($query);
-
-                    if(!$db -> query()){
-                        $this -> setError($db -> getErrorMsg());
-                        return false;
-                    }
-
-                    $image  = '';
-                    if(!empty($post['tz_category_image_server'])){
-                        if(isset($post['tz_category_hidden'])){
-                            $this -> deleteImages($post['tz_category_hidden']);
-                        }
-                        $image  = $this -> uploadImages($post['tz_category_image_server']);
-                    }
-                    elseif(!empty($post['tz_image_url'])){
-                        if(isset($post['tz_category_hidden'])){
-                            $this -> deleteImages($post['tz_category_hidden']);
-                        }
-                        $image  = $this -> uploadImages($post['tz_image_url'],true);
-                    }
-                    else{
-                        if(isset($post['tz_category_hidden'])){
-                            $image  = $post['tz_category_hidden'];
-                        }
-                    }
-                    if(isset($post['tz_category_del_image']) && $post['tz_category_del_image'] == 1){
-                        $this -> deleteImages($post['tz_category_hidden']);
-                        $image  = '';
-                    }
-
-                    $value  = array();
-
-                    foreach($groupid as $row){
-                        $value[]  = '('.$table -> id.','.$row.',"'.$image.'",'.$data['template_id'].')';
-                    }
-
-                    $value  = implode(',',$value);
-                    $query  = 'INSERT INTO #__tz_portfolio_plus_categories(`catid`,`groupid`,`images`,'
-                        .$db -> quoteName('template_id').')'
-                                  .' VALUES'.$value;
-
-                    $db -> setQuery($query);
-                    if(!$db -> query()){
-                        $this -> setError($db -> getErrorMsg());
-                        return false;
-                    }
-                //}
-            }
-        }
 
 		$assoc = $this->getAssoc();
 		if ($assoc)

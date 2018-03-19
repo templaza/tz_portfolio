@@ -93,6 +93,11 @@ class TZ_Portfolio_PlusViewUsers extends JViewLegacy
 
             foreach($items as $i => &$item){
 
+                $item->params   = clone($params);
+
+                $articleParams = new JRegistry;
+                $articleParams->loadString($item->attribs);
+
                 if($mainCategories && isset($mainCategories[$item -> id])){
                     $mainCategory   = $mainCategories[$item -> id];
                     if($mainCategory){
@@ -100,12 +105,37 @@ class TZ_Portfolio_PlusViewUsers extends JViewLegacy
                         $item -> category_title = $mainCategory -> title;
                         $item -> catslug        = $mainCategory -> id.':'.$mainCategory -> alias;
                         $item -> category_link  = $mainCategory -> link;
+
+                        // Merge main category's params to article
+                        $catParams  = new JRegistry($mainCategory ->  params);
+                        if($inheritFrom = $catParams -> get('inheritFrom', 0)){
+                            if($inheritCategory    = TZ_Portfolio_PlusFrontHelperCategories::getCategoriesById($inheritFrom)) {
+                                $inheritCatParams   = new JRegistry($inheritCategory->params);
+                                $catParams          = clone($inheritCatParams);
+                            }
+                        }
+                        $item -> params -> merge($catParams);
                     }
                 }else {
 
                     // Create main category's link
                     $item -> category_link      = TZ_Portfolio_PlusHelperRoute::getCategoryRoute($item -> catid);
+
+                    // Merge main category's params to article
+                    if($mainCategory = TZ_Portfolio_PlusFrontHelperCategories::getCategoriesById($item -> catid)) {
+                        $catParams = new JRegistry($mainCategory->params);
+                        if ($inheritFrom = $catParams->get('inheritFrom', 0)) {
+                            if ($inheritCategory = TZ_Portfolio_PlusFrontHelperCategories::getCategoriesById($inheritFrom)) {
+                                $inheritCatParams = new JRegistry($inheritCategory->params);
+                                $catParams = clone($inheritCatParams);
+                            }
+                        }
+                        $item->params->merge($catParams);
+                    }
                 }
+
+                // Merge with article params
+                $item -> params -> merge($articleParams);
 
                 // Get all second categories
                 $item -> second_categories  = null;
@@ -278,58 +308,6 @@ class TZ_Portfolio_PlusViewUsers extends JViewLegacy
         $model -> setState('filter.userId',$state -> get('users.id'));
         $this -> char           = $state -> get('filter.char');
         $this -> availLetter    = $model -> getAvailableLetter();
-
-        if($params -> get('tz_use_lightbox',0) == 1){
-            $doc -> addCustomTag('<script type="text/javascript" src="components/com_tz_portfolio_plus/js'
-                .'/jquery.fancybox.pack.js"></script>');
-            $doc -> addStyleSheet('components/com_tz_portfolio_plus/css/fancybox.min.css');
-
-            $width      = null;
-            $height     = null;
-            $autosize   = null;
-            if($params -> get('tz_lightbox_width')){
-                if(preg_match('/%|px/',$params -> get('tz_lightbox_width'))){
-                    $width  = 'width:\''.$params -> get('tz_lightbox_width').'\',';
-                }
-                else
-                    $width  = 'width:'.$params -> get('tz_lightbox_width').',';
-            }
-            if($params -> get('tz_lightbox_height')){
-                if(preg_match('/%|px/',$params -> get('tz_lightbox_height'))){
-                    $height  = 'height:\''.$params -> get('tz_lightbox_height').'\',';
-                }
-                else
-                    $height  = 'height:'.$params -> get('tz_lightbox_height').',';
-            }
-            if($width || $height){
-                $autosize   = 'fitToView: false,autoSize: false,';
-            }
-            $scrollHidden   = null;
-            if($params -> get('use_custom_scrollbar',1)){
-                $scrollHidden   = ',scrolling: "no"
-                                    ,iframe: {
-                                        scrolling : "no",
-                                    }';
-            }
-            $doc -> addCustomTag('<script type="text/javascript">
-                jQuery(\'.fancybox\').fancybox({
-                    type:\'iframe\',
-                    openSpeed:'.$params -> get('tz_lightbox_speed',350).',
-                    openEffect: "'.$params -> get('tz_lightbox_transition','elastic').'",
-                    '.$width.$height.$autosize.'
-		            helpers:  {
-                        title : {
-                            type : "inside"
-                        },
-                        overlay : {
-                            css : {background: "rgba(0,0,0,'.$params -> get('tz_lightbox_opacity',0.75).')"}
-                        }
-                    }'
-                    .$scrollHidden.'
-                });
-                </script>
-            ');
-        }
 
         $doc -> addStyleSheet('components/com_tz_portfolio_plus/css/tzportfolioplus.min.css');
 

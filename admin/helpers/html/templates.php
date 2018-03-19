@@ -19,7 +19,6 @@
 
 defined('_JEXEC') or die;
 
-
 class JHtmlTemplates
 {
     public static function thumb($template, $clientId = 0)
@@ -27,28 +26,21 @@ class JHtmlTemplates
         $client = JApplicationHelper::getClientInfo($clientId);
         $basePath = $client->path . '/components/com_tz_portfolio_plus/templates/' . $template;
         $baseUrl = ($clientId == 0) ? JUri::root(true) : JUri::root(true) . '/administrator';
-//        $thumb = $basePath . '/template_thumbnail.png';
         $preview = $basePath . '/template_preview.png';
         $html = '';
 
-//        if (file_exists($thumb))
-//        {
+        if (file_exists($preview))
+        {
+            JHtml::_('bootstrap.tooltip');
+            JHtml::_('behavior.modal');
 
-//            $clientPath = ($clientId == 0) ? '' : 'administrator/';
-//            $thumb = $clientPath . 'components/com_tz_portfolio_plus/templates/' . $template . '/template_thumbnail.png';
-//            $html = JHtml::_('image', $thumb, JText::_('COM_TEMPLATES_PREVIEW'));
+            $preview = $baseUrl . '/components/com_tz_portfolio_plus/templates/' . $template . '/template_preview.png';
 
-            if (file_exists($preview))
-            {
-                JHtml::_('bootstrap.tooltip');
-                JHtml::_('behavior.modal');
-
-                $preview = $baseUrl . '/components/com_tz_portfolio_plus/templates/' . $template . '/template_preview.png';
-                $html = JHtml::_('image', '/components/com_tz_portfolio_plus/templates/' . $template . '/template_preview.png', JText::_('COM_TEMPLATES_PREVIEW'));
-                $html = '<a href="' . $preview . '" class="thumbnail pull-left modal hasTooltip" title="' .
-                    JHtml::tooltipText('COM_TEMPLATES_CLICK_TO_ENLARGE') . '">' . $html . '</a>';
-            }
-//        }
+            $html = JHtml::_('image', 'components/com_tz_portfolio_plus/templates/' . $template . '/template_preview.png'
+                , JText::_('COM_TEMPLATES_PREVIEW'));
+            $html = '<a href="' . $preview . '" class="thumbnail pull-left modal hasTooltip" title="' .
+                JHtml::tooltipText('COM_TEMPLATES_CLICK_TO_ENLARGE') . '">' . $html . '</a>';
+        }
 
         return $html;
     }

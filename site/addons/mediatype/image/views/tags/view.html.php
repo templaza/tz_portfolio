@@ -20,6 +20,8 @@
 // No direct access.
 defined('_JEXEC') or die;
 
+use Joomla\Registry\Registry;
+
 class PlgTZ_Portfolio_PlusMediaTypeImageViewTags extends JViewLegacy{
 
     protected $item     = null;
@@ -30,9 +32,9 @@ class PlgTZ_Portfolio_PlusMediaTypeImageViewTags extends JViewLegacy{
     public function display($tpl = null){
         $state          = $this -> get('State');
         $params         = $state -> get('params');
-        $item = $this -> get('Item');
-        $this -> params = $params;
+        $item           = $this -> get('Item');
         $this -> image  = null;
+        $this -> params = $params;
 
         if($item){
             if($media = $item -> media){
@@ -42,7 +44,7 @@ class PlgTZ_Portfolio_PlusMediaTypeImageViewTags extends JViewLegacy{
                     if(isset($image -> url) && $image -> url) {
                         if(!$this -> head) {
                             $doc = JFactory::getDocument();
-                            $doc->addStyleSheet(JUri::base() . '/addons/mediatype/image/css/style.css');
+                            $doc->addStyleSheet(TZ_Portfolio_PlusUri::base(true). '/addons/mediatype/image/css/style.css');
                             $this -> head   = true;
                         }
 

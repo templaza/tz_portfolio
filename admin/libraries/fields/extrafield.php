@@ -597,13 +597,19 @@ class TZ_Portfolio_PlusExtraField{
                     $html .= '<ul class="value-list">';
                 }
                 foreach ($_options as $option) {
+                    $text   = $option -> text;
+                    if($this -> isSearchLink()){
+                        $text   = '<a href="'.JRoute::_(TZ_Portfolio_PlusHelperRoute::getSearchRoute().'&fields['.
+                                $this -> id.']='.urlencode($option -> value)).'">'.$option -> text.'</a>';
+                    }
                     if ($this->multiple) {
                         if((is_array($value) && in_array($option->value, $value))
                             || (!is_array($value) && $option->value == $value)){
-                            $html .= '<li ' . $this->getAttribute(null, null, "output") . '>' . $option->text . '</li>';
+                            $html .= '<li ' . $this->getAttribute(null, null, "output") . '>'
+                                . $text . '</li>';
                         }
                     }elseif(!$this->multiple && $option->value == $value){
-                        $html   .= $option -> text;
+                        $html   .= $text;
                     }
                 }
                 if($this->multiple) {
@@ -611,7 +617,12 @@ class TZ_Portfolio_PlusExtraField{
                 }
             }
         } else {
-            $html .= '<div '. $this->getAttribute(null, null, "output") . '>'.$value.'</div>';
+            $text   = $value;
+            if($this -> isSearchLink()){
+                $text   = '<a href="'.JRoute::_(TZ_Portfolio_PlusHelperRoute::getSearchRoute().'&fields['.
+                        $this -> id.']='.urlencode($value)).'">'.$value.'</a>';
+            }
+            $html .= '<div '. $this->getAttribute(null, null, "output") . '>'.$text.'</div>';
         }
 
         return $html;
@@ -650,13 +661,19 @@ class TZ_Portfolio_PlusExtraField{
                     $html .= '<ul class="value-list">';
                 }
                 foreach ($_options as $option) {
+                    $text   = $option -> text;
+                    if($this -> isSearchLink()){
+                        $text   = '<a href="'.JRoute::_(TZ_Portfolio_PlusHelperRoute::getSearchRoute().'&fields['.
+                                $this -> id.']='.urlencode($option -> value)).'">'.$option -> text.'</a>';
+                    }
+
                     if ($this->multiple) {
                         if((is_array($value) && in_array($option->value, $value))
                             || (!is_array($value) && $option->value == $value)){
-                            $html .= '<li ' . $this->getAttribute(null, null, "listing") . '>' . $option->text . '</li>';
+                            $html .= '<li ' . $this->getAttribute(null, null, "listing") . '>' . $text . '</li>';
                         }
                     }elseif(!$this->multiple && $option->value == $value){
-                        $html   .= $option -> text;
+                        $html   .= $text;
                     }
                 }
                 if($this->multiple) {
@@ -664,7 +681,12 @@ class TZ_Portfolio_PlusExtraField{
                 }
             }
         } else {
-            $html .= '<div '. $this->getAttribute(null, null, "listing") . '>'.$value.'</div>';
+            $text   = $value;
+            if($this -> isSearchLink()){
+                $text   = '<a href="'.JRoute::_(TZ_Portfolio_PlusHelperRoute::getSearchRoute().'&fields['.
+                        $this -> id.']='.urlencode($value)).'">'.$value.'</a>';
+            }
+            $html .= '<div '. $this->getAttribute(null, null, "listing") . '>'.$text.'</div>';
         }
 
         return $html;
@@ -722,6 +744,13 @@ class TZ_Portfolio_PlusExtraField{
 
     public function getId(){
         return $this -> formcontrol.'_'.$this -> group.'_'.$this -> id;
+    }
+
+    public function isSearchLink(){
+        if($this -> params -> get('enable_search_link',0)){
+            return true;
+        }
+        return false;
     }
 
     protected function getValue()

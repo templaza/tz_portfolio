@@ -148,6 +148,17 @@ class TZ_Portfolio_PlusModelForm extends TZ_Portfolio_PlusModelArticle
             $value -> media  = $media -> toArray();
         }
 
+        if (!empty($itemId))
+        {
+            $value -> tags   = null;
+            $tags   = TZ_Portfolio_PlusHelperTags::getTagsByArticleId($itemId);
+            if($tags && count($tags)) {
+                $tags = ArrayHelper::getColumn($tags, 'id');
+                $tags = implode(',', $tags);
+                $value->tags = $tags;
+            }
+        }
+
 
         return $value;
     }

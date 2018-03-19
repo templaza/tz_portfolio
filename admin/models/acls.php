@@ -24,7 +24,7 @@ defined('_JEXEC') or die;
 
 class TZ_Portfolio_PlusModelAcls extends JModelList{
     public function getItems(){
-        $sections   = COM_TZ_PORTFOLIO_PLUS_ACL_SECTIONS;
+        $sections   = json_decode(COM_TZ_PORTFOLIO_PLUS_ACL_SECTIONS);
         $items      = array();
         foreach($sections as $i => $section){
             $item               = new stdClass();

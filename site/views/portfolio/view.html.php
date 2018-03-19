@@ -119,49 +119,6 @@ class TZ_Portfolio_PlusViewPortfolio extends JViewLegacy
             }
         }
 
-        if($params -> get('tz_use_lightbox',0)){
-            $doc -> addScript('components/com_tz_portfolio_plus/js/jquery.fancybox.pack.js');
-            $doc -> addStyleSheet('components/com_tz_portfolio_plus/css/fancybox.min.css');
-
-            $width      = null;
-            $height     = null;
-            $autosize   = null;
-            if($params -> get('tz_lightbox_width')){
-                if(preg_match('/%|px/',$params -> get('tz_lightbox_width'))){
-                    $width  = 'width:"'.$params -> get('tz_lightbox_width').'",';
-                }
-                else
-                    $width  = 'width:'.$params -> get('tz_lightbox_width').',';
-            }
-            if($params -> get('tz_lightbox_height')){
-                if(preg_match('/%|px/',$params -> get('tz_lightbox_height'))){
-                    $height  = 'height:"'.$params -> get('tz_lightbox_height').'",';
-                }
-                else
-                    $height  = 'height:'.$params -> get('tz_lightbox_height').',';
-            }
-            if($width || $height){
-                $autosize   = 'fitToView: false,autoSize: false,';
-            }
-
-            $doc -> addScriptDeclaration('
-                jQuery(".fancybox").fancybox({
-                    type:"iframe",
-                    openSpeed:'.$params -> get('tz_lightbox_speed',350).',
-                    openEffect: "'.$params -> get('tz_lightbox_transition','elastic').'",
-                    '.$width.$height.$autosize.'
-                    helpers:  {
-                        title : {
-                            type : "inside"
-                        },
-                        overlay : {
-                            css : {background: "rgba(0,0,0,'.$params -> get('tz_lightbox_opacity',0.75).')"}
-                        }
-                    }
-                });
-            ');
-        }
-
         $list   = $this -> get('Items');
         
         if($params -> get('show_all_filter',0)){

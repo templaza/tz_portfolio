@@ -35,7 +35,7 @@ JHtml::_('behavior.keepalive');
     <form name="adminForm" method="post" id="adminForm"
           enctype="multipart/form-data"
           action="index.php?option=com_tz_portfolio_plus&view=template&layout=upload">
-        <div class="container-fluid" id="plazart_layout_builder">
+        <div class="<?php echo $this -> state -> get('list.dataserver')?'collapse':''; ?>" id="tpp-template__upload">
             <fieldset class="adminForm">
                 <legend><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_UPLOAD_AND_INSTALL_TEMPLATE');?></legend>
                 <div class="form-horizontal">
@@ -44,15 +44,16 @@ JHtml::_('behavior.keepalive');
                         <div class="controls"><?php echo $this -> form -> getInput('install_package');?></div>
                     </div>
                     <div class="form-actions">
-                        <button class="btn btn-small btn-primary" onclick="Joomla.submitbutton('template.install')">
+                        <button type="button" class="btn btn-small btn-primary" onclick="Joomla.submitbutton('template.install')">
                             <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_UPLOAD_AND_INSTALL');?></button>
                     </div>
                 </div>
             </fieldset>
         </div>
 
-        <input type="hidden" value="com_tz_portfolio_plus" name="option">
-        <input type="hidden" value="template.install" name="task">
+        <?php echo $this -> loadTemplate('list'); ?>
+
+        <input type="hidden" value="" name="task">
         <?php echo JHTML::_('form.token');?>
     </form>
 <?php if(!empty($this -> sidebar) AND COM_TZ_PORTFOLIO_PLUS_JVERSION_COMPARE):?>

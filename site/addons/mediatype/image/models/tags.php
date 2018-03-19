@@ -20,5 +20,4 @@
 // No direct access.
 defined('_JEXEC') or die;
 
-class PlgTZ_Portfolio_PlusMediaTypeImageModelTags extends TZ_Portfolio_PlusPluginModelItem{
-}
+class PlgTZ_Portfolio_PlusMediaTypeImageModelTags extends TZ_Portfolio_PlusPluginModelItem{}

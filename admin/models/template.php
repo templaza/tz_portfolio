@@ -34,6 +34,8 @@ class TZ_Portfolio_PlusModelTemplate extends TZ_Portfolio_PlusModelAddon
         parent::populateState();
 
         $this -> setState('template.id',JFactory::getApplication() -> input -> getInt('id'));
+
+        $this -> setState('cache.filename', 'template_list');
     }
     public function getTable($type = 'Extensions', $prefix = 'TZ_Portfolio_PlusTable', $config = array())
     {
@@ -220,5 +222,13 @@ class TZ_Portfolio_PlusModelTemplate extends TZ_Portfolio_PlusModelAddon
         }
 
         return parent::canEditState($record);
+    }
+
+    protected function getUrlFromServer($xmlTag = 'templateurl'){
+        return parent::getUrlFromServer($xmlTag);
+    }
+
+    protected function getManifest_Cache($element, $folder = null, $type = 'tz_portfolio_plus-template'){
+        return parent::getManifest_Cache($element, $folder, $type);
     }
 }

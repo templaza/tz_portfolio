@@ -151,10 +151,13 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
 
         require_once JPATH_COMPONENT.'/helpers/categories.php';
 
+
+        $display    = parent::display($cachable, $urlparams);
+
         // Footer
         JLayoutHelper::render('footer');
 
-        return parent::display($cachable, $urlparams);
+        return $display;
 	}
 
 	protected function _checkAccess($view){

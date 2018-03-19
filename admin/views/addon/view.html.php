@@ -31,13 +31,16 @@ class TZ_Portfolio_PlusViewAddon extends JViewLegacy
     protected $state;
     protected $addonItems;
     protected $return_link;
+    protected $itemsServer;
+    protected $paginationServer;
+    public    $filterForm;
 
     public function display($tpl = null)
     {
-        $this->state            = $this->get('State');
-        $this->item             = $this->get('Item');
-        $this -> return_link    = $this -> get('ReturnLink');
-        $canDo	                = TZ_Portfolio_PlusHelper::getActions(COM_TZ_PORTFOLIO_PLUS, 'addon', $this -> item -> id);
+        $this->state                = $this->get('State');
+        $this->item                 = $this->get('Item');
+        $this -> return_link        = $this -> get('ReturnLink');
+        $canDo	                    = TZ_Portfolio_PlusHelper::getActions(COM_TZ_PORTFOLIO_PLUS, 'addon', $this -> item -> id);
         $this -> canDo	= $canDo;
 
         if($this -> getLayout() == 'manager') {
@@ -45,6 +48,10 @@ class TZ_Portfolio_PlusViewAddon extends JViewLegacy
         }
 
         $this -> form       = $this -> get('form');
+
+        $this -> itemsServer       = $this -> get('ItemsFromServer');
+        $this -> paginationServer   = $this -> get('PaginationFromServer');
+        $this -> filterForm   = $this -> get('FilterForm');
 
         // Check for errors.
         if (count($errors = $this->get('Errors')))

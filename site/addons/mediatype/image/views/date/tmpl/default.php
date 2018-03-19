@@ -24,14 +24,11 @@ $item   = $this -> item;
 $image  = $this -> image;
 $params = $this -> params;
 
-if($item && $image && isset($image -> url) && !empty($image -> url)):
-    $class  = null;
-    if($params -> get('tz_use_lightbox',0)){
-        $class=' class = "fancybox fancybox.iframe"';
-    }
+if($item && $image && isset($image -> url) && !empty($image -> url)
+    && $item -> params -> get('mt_image_show_image_date', 1)):
 ?>
 <div class="tz_portfolio_plus_image">
-    <a<?php echo $class;?> href="<?php echo $item -> link;?>">
+    <a href="<?php echo $item -> link;?>">
         <img src="<?php echo $image -> url;?>"
              alt="<?php echo isset($image -> caption)?$image -> caption:$item -> title;?>"
              title="<?php echo isset($image -> caption)?$image -> caption:$item -> title;?>"

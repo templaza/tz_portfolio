@@ -66,7 +66,6 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
                 <thead>
                 <tr>
                     <th width="1%">
-
                     </th>
                     <th class="col1template hidden-phone">
                         <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_THUMBNAIL');?>

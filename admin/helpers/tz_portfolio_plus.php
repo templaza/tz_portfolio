@@ -22,9 +22,9 @@ defined('_JEXEC') or die;
 
 class TZ_Portfolio_PlusHelper
 {
-	public static $extension = 'com_tz_portfolio_plus';
-
+	public static $extension        = 'com_tz_portfolio_plus';
 	protected static $submenus		= array();
+	protected static $cache         = array();
 
 	/**
 	 * Configure the Linkbar.
@@ -495,4 +495,66 @@ class TZ_Portfolio_PlusHelper
 			return $links;
 		}
 	}
+
+	public static function checkConnectServer($url){
+
+        $url    = trim($url);
+
+	    $store  = __METHOD__.'::'.md5($url);
+	    $store2 = __CLASS__.'::getDataFromServer::'.$url;
+
+	    if(!isset(self::$cache[$store])){
+	        self::$cache[$store]    = false;
+        }
+
+        try {
+            $response = \JHttpFactory::getHttp()->get($url, array());
+            self::$cache[$store2]   = $response;
+        }
+        catch (\RuntimeException $exception){
+
+            self::$cache[$store]    = false;
+            \JLog::add(\JText::sprintf('JLIB_INSTALLER_ERROR_DOWNLOAD_SERVER_CONNECT', $exception->getMessage()), \JLog::WARNING, 'jerror');
+
+            return false;
+        }
+
+        if (200 == $response->code)
+        {
+            self::$cache[$store]    = true;
+        }
+
+        return self::$cache[$store];
+    }
+
+    public static function getDataFromServer($url = null){
+
+        $url    = trim($url);
+	    $storeId    = __METHOD__.'::'.$url;
+
+	    if(!isset(self::$cache[$storeId])){
+	        self::$cache[$storeId]  = false;
+        }
+
+	    if($url){
+	        if(!$check = self::checkConnectServer($url)){
+	            return $check;
+            }
+        }
+        return self::$cache[$storeId];
+    }
+
+    public static function prepareUpdate(&$update, &$table){
+        $params = JComponentHelper::getParams('com_tz_portfolio_plus');
+
+        if($apikey = $params -> get('apikey')){
+            $downloadUrl    = $update -> get('downloadurl');
+            $url    = $downloadUrl -> _data;
+            if(strpos($url, 'apikey=')){
+                $url    = str_replace('apikey=', 'apikey='.$apikey, $url);
+            }
+            $downloadUrl -> _data   = $url;
+            $update -> set('downloadurl', $downloadUrl);
+        }
+    }
 }

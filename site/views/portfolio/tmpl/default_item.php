@@ -108,8 +108,7 @@ if($this -> items):
             <?php if($params -> get('show_cat_title',1)): ?>
             <h3 class="TzPortfolioTitle name" itemprop="name">
                 <?php if($params->get('cat_link_titles',1)) : ?>
-                    <a<?php if($params -> get('tz_use_lightbox', 1)){echo ' class="fancybox fancybox.iframe"';}?>
-                        href="<?php echo $item ->link; ?>"  itemprop="url">
+                    <a href="<?php echo $item ->link; ?>"  itemprop="url">
                         <?php echo $this->escape($item -> title); ?>
                     </a>
                 <?php else : ?>
@@ -255,8 +254,7 @@ if($this -> items):
             <?php echo $this -> loadTemplate('extrafields');?>
 
             <?php if($params -> get('show_cat_readmore',1)):?>
-            <a class="btn btn-primary TzPortfolioReadmore<?php if($params -> get('tz_use_lightbox', 1)){
-                echo ' fancybox fancybox.iframe';}?>" href="<?php echo $item ->link; ?>">
+            <a class="btn btn-primary TzPortfolioReadmore" href="<?php echo $item ->link; ?>">
                 <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_READ_MORE'); ?>
             </a>
             <?php endif;?>

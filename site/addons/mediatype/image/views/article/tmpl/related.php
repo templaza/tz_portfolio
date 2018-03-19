@@ -29,8 +29,7 @@ if($item && $image && isset($image -> url) && !empty($image -> url)):
 ?>
 <div class="TzImage">
 
-    <a<?php echo $params -> get('tz_use_lightbox', 1)?' class="fancybox fancybox.iframe"':'';?>
-        href="<?php echo $item -> link;?>">
+    <a href="<?php echo $item -> link;?>">
         <img src="<?php echo $image -> related_url;?>"
              alt="<?php echo isset($image -> caption)?$image -> caption:$item -> title;?>"
              title="<?php echo isset($image -> caption)?$image -> caption:$item -> title;?>"

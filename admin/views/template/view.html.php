@@ -23,15 +23,24 @@ defined('_JEXEC') or die('Restricted access');
 
 class TZ_Portfolio_PlusViewTemplate extends JViewLegacy
 {
+    protected $state;
     protected $item = null;
     protected $tzlayout = null;
     protected $form = null;
     protected $childrens = null;
+    protected $itemsServer;
+    protected $paginationServer;
+    public    $filterForm;
 
     public function display($tpl=null)
     {
 
+        $this -> state      = $this->get('State');
         $this -> form       = $this -> get('Form');
+
+        $this -> itemsServer       = $this -> get('ItemsFromServer');
+        $this -> paginationServer   = $this -> get('PaginationFromServer');
+        $this -> filterForm   = $this -> get('FilterForm');
 
         TZ_Portfolio_PlusHelper::addSubmenu('templates');
         $this -> sidebar    = JHtmlSidebar::render();

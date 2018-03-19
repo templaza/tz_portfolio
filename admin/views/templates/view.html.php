@@ -65,7 +65,7 @@ class TZ_Portfolio_PlusViewTemplates extends JViewLegacy
         JToolBarHelper::title(JText::_('COM_TZ_PORTFOLIO_PLUS_TEMPLATES_MANAGER'),'eye');
 
         if($canDo -> get('core.create')) {
-            JToolbarHelper::addNew('template.upload', 'JTOOLBAR_UPLOAD');
+            JToolbarHelper::addNew('template.upload', 'JTOOLBAR_INSTALL');
         }
 
         if ($canDo->get('core.delete')){

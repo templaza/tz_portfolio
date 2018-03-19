@@ -19,7 +19,6 @@
 
 // no direct access
 defined('_JEXEC') or die('Restricted access');
-
 if($item = $this -> item) {
     if($item->event->onContentDisplayMediaType && !empty($item->event->onContentDisplayMediaType)){
 ?>

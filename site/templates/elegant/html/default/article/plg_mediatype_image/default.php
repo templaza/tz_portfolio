@@ -19,11 +19,9 @@
 
 // No direct access.
 defined('_JEXEC') or die;
-
 $item   = $this -> item;
 $image  = $this -> image;
 $params = $this -> params;
-
 if($item && $image && isset($image -> url) && !empty($image -> url)):
 ?>
     <?php

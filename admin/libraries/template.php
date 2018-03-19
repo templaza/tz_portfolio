@@ -195,6 +195,27 @@ class TZ_Portfolio_PlusTemplate {
         return false;
     }
 
+    public static function getTemplateByOption($option){
+        if(!$option){
+            return false;
+        }
+
+        $option = array_merge(array('type' => 'tz_portfolio_plus-template'), $option );
+
+        $table  = JTable::getInstance('Extensions', 'TZ_Portfolio_PlusTable');
+
+        if(!$table -> load($option)){
+            return false;
+        }
+
+        $data   = $table -> getDbo() -> loadObject();
+        if(isset($data -> manifest_cache) && $data -> manifest_cache && is_string($data -> manifest_cache)){
+            $data -> manifest_cache    = json_decode($data -> manifest_cache);
+        }
+
+        return $data;
+    }
+
 
     protected static function getTemplateId($artId = null,$catId = null){
 

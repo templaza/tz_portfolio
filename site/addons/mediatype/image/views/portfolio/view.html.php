@@ -43,7 +43,7 @@ class PlgTZ_Portfolio_PlusMediaTypeImageViewPortfolio extends JViewLegacy{
 
                         if(!$this -> head) {
                             $doc = JFactory::getDocument();
-                            $doc->addStyleSheet(TZ_Portfolio_PlusUri::base() . '/addons/mediatype/image/css/style.css');
+                            $doc->addStyleSheet(TZ_Portfolio_PlusUri::base(true) . '/addons/mediatype/image/css/style.css');
                             $this -> head   = true;
                         }
 

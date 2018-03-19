@@ -55,23 +55,6 @@ class PlgTZ_Portfolio_PlusMediaTypeImageViewArticle extends JViewLegacy{
                             }
                         }
 
-                        if ($params->get('mt_image_use_cloud', 1)) {
-                            $doc = JFactory::getDocument();
-
-                            if(!$this -> head) {
-                                $doc->addStyleSheet(TZ_Portfolio_PlusUri::base(true) . '/addons/mediatype/image/css/cloud-zoom.min.css');
-                                $doc->addScript(TZ_Portfolio_PlusUri::base(true) . '/addons/mediatype/image/js/cloud-zoom.1.0.3.min.js');
-                                $this -> head   = true;
-                            }
-
-                            if ($params->get('mt_image_cloud_size', 'o')) {
-                                $image_url_ext = JFile::getExt($image->url);
-                                $image_url = str_replace('.' . $image_url_ext, '_' . $params->get('mt_image_cloud_size', 'o') . '.'
-                                    . $image_url_ext, $image->url);
-                                $image->url_cloud_zoom = JURI::root() . $image_url;
-                            }
-                        }
-
                         if ($size = $params->get('mt_image_size', 'o')) {
                             if (isset($image->url) && !empty($image->url)) {
                                 $image_url_ext = JFile::getExt($image->url);

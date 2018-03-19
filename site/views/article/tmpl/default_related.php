@@ -53,7 +53,7 @@ if (!$this->print) :
             if($params -> get('show_related_title',1)){
         ?>
         <a href="<?php echo $itemR -> link;?>"
-           class="TzTitle<?php if($params -> get('tz_use_lightbox',0) == 1){echo ' fancybox fancybox.iframe';}?>">
+           class="TzTitle">
             <?php echo $itemR -> title;?>
         </a>
         <?php }

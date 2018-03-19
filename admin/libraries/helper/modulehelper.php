@@ -190,10 +190,12 @@ class TZ_Portfolio_PlusModuleHelper extends JModuleHelper{
         }
 
         // Get template
+        $tpTemplate = null;
         if($tplId = (int) $modParams -> def('template_id', 0)) {
             $tpTemplate = TZ_Portfolio_PlusTemplate::getTemplateById($tplId);
         }
-        else{
+
+        if(!$tpTemplate){
             $tpTemplate = TZ_Portfolio_PlusTemplate::getTemplate(true);
         }
 
@@ -231,6 +233,13 @@ class TZ_Portfolio_PlusModuleHelper extends JModuleHelper{
 //        // Path from AddOn with module's default layout
 //        $dPath = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/' . $group . '/' . $name . '/'.$folder.'/'.$module
 //            .'/default.php';
+
+        if($files = JFolder::files(COM_TZ_PORTFOLIO_PLUS_SITE_HELPERS_PATH,'.php')){
+//            var_dump($files); die();
+            foreach ($files as $file){
+                JLoader::import('com_tz_portfolio_plus.helpers.'.JFile::stripExt($file), JPATH_SITE.'/components');
+            }
+        }
 
         // If the template has a layout override use it
         if ($tplParams->get('override_html_template_site', 0)) {

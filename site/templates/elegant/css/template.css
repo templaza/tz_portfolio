@@ -2674,11 +2674,15 @@
 .tplElegant .element .TzInner .TzPortfolioDescription .tpMeta {
   margin: 7px 0 0;
 }
-.tplElegant .element .TzInner .TzPortfolioDescription .tpMeta div {
+.tplElegant .element .TzInner .TzPortfolioDescription .tpMeta > div {
   display: inline-block;
   line-height: 1;
   margin: 0 10px 0 0;
   vertical-align: middle;
+}
+.tplElegant .element .TzInner .TzPortfolioDescription .tpMeta .item-causes {
+  display: block;
+  margin: 0;
 }
 .tplElegant .element .TzInner .TzPortfolioDescription .charity {
   margin-top: 20px;
