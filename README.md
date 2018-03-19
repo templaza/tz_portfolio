@@ -12,7 +12,7 @@ Demo: http://demo.tzportfolio.com/
 
 19/03/2018 - 1.2.5
 
-	- Fix error: Use of undefined constant COM_TZ_PORTFOLIO_PLUS_ACL_SECTIONS with php v5.6
+	- Fix error: Use of undefined constant COM_TZ_PORTFOLIO_PLUS_ACL_SECTIONS
 	- Remove lightbox feature of core.
 	- Remove Cloud Zoom of Image Addon.
 	- Remove styles of charity addon and added styles for social addon in elegant template.
