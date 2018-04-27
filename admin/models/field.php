@@ -21,6 +21,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
+use Joomla\Utilities\ArrayHelper;
 
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
@@ -46,13 +47,20 @@ class TZ_Portfolio_PlusModelField extends JModelAdmin
     }
 
     public function getForm($data = array(), $loadData = true){
-        $form = $this->loadForm('com_tz_portfolio_plus.field', 'field', array('control' => 'jform', 'load_data' => $loadData));
-
-        if (isset($data['type']))
+        if (empty($data))
         {
-            // This is needed that the plugins can determine the type
-            $this->setState('field.type', $data['type']);
+            $item   = $this -> getItem();
+            $type   = $item -> type;
         }
+        else
+        {
+            $type  = ArrayHelper::getValue($data, 'type');
+        }
+
+        // This is needed that the plugins can determine the type
+        $this->setState('field.type', $type);
+
+        $form = $this->loadForm('com_tz_portfolio_plus.field', 'field', array('control' => 'jform', 'load_data' => $loadData));
 
         if (empty($form)) {
             return false;
@@ -143,7 +151,8 @@ class TZ_Portfolio_PlusModelField extends JModelAdmin
 
     protected function preprocessForm(JForm $form, $data, $group = 'content')
     {
-        $type   = null;
+        $type       = $this->getState('field.type');
+
         if($data){
             if(is_array($data)){
                 if(isset($data['type']) && $data['type']){
@@ -162,7 +171,8 @@ class TZ_Portfolio_PlusModelField extends JModelAdmin
             }
         }
 
-        if($type){
+        if($type ){
+
             $core_path  = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.DIRECTORY_SEPARATOR.'extrafields';
             $core_f_xml_path    = $core_path.DIRECTORY_SEPARATOR.$type.DIRECTORY_SEPARATOR
                 .'admin'.DIRECTORY_SEPARATOR.'models'.DIRECTORY_SEPARATOR.'forms'.DIRECTORY_SEPARATOR.'field.xml';

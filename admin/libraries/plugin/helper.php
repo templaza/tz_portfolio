@@ -226,7 +226,7 @@ class TZ_Portfolio_PlusPluginHelper extends JPluginHelper{
         , 'title' => JText::_('JGLOBAL_TITLE')
         , 'author' => JText::_('JAUTHOR')
         , 'author_about' => JText::_('COM_TZ_PORTFOLIO_PLUS_ABOUT_AUTHOR')
-        ,'tags' => JText::_('COM_TZ_PORTFOLIO_PLUS_TAGS')
+        , 'tags' => JText::_('COM_TZ_PORTFOLIO_PLUS_TAGS')
         , 'icons' => JText::_('COM_TZ_PORTFOLIO_PLUS_ICONS')
         , 'media' => JText::_('COM_TZ_PORTFOLIO_PLUS_TAB_MEDIA')
         , 'extrafields' => JText::_('COM_TZ_PORTFOLIO_PLUS_TAB_FIELDS')
@@ -238,6 +238,7 @@ class TZ_Portfolio_PlusPluginHelper extends JPluginHelper{
         , 'related' => JText::_('COM_TZ_PORTFOLIO_PLUS_FIELD_RELATED_ARTICLE')
         , 'published_date' => JText::_('COM_TZ_PORTFOLIO_PLUS_PUBLISHED_DATE')
         , 'parent_category' => JText::_('COM_TZ_PORTFOLIO_PLUS_PARENT_CATEGORY')
+        , 'project_link' => JText::_('COM_TZ_PORTFOLIO_PLUS_PROJECT_LINK_LABEL')
         );
 
         $std				= new stdClass();

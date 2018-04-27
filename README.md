@@ -10,6 +10,19 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+27/04/2018 - 1.2.6
+
+	- Fix error when upload image from server of Image addon.
+	- Fix error can't save params in add or edit field (backend).
+	- Fix error getItem() function of template in libraries.
+	- Added field addon_id for table tz_portfolio_plus_addon_meta.
+	- Added tables/tag_content_map.php file in admin.
+	- Added Project Link type of article view in template style.
+	- Optimize code of file path models/article.php in admin.
+	- Optimize code of file path models/tag.php in admin.
+	- Optimize code of file path models/addon.php in admin.
+	- Optimize code of file path helpers/tags.php in admin.
+
 19/03/2018 - 1.2.5
 
 	- Fix error: Use of undefined constant COM_TZ_PORTFOLIO_PLUS_ACL_SECTIONS

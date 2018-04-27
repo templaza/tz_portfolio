@@ -184,6 +184,42 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
         return false;
     }
 
+    public function delete(&$pks)
+    {
+        $_pks = (array)$pks;
+        $result = parent::delete($pks);
+        if($result){
+            if ($_pks && count($_pks)) {
+                $db     = $this->getDbo();
+                $query  = $db->getQuery(true);
+
+                // Remove content map to category
+                $query -> delete('#__tz_portfolio_plus_content_category_map');
+                $query -> where('contentid IN(' . implode(',', $_pks) . ')');
+
+                $db -> setQuery($query);
+                $db -> execute();
+
+                // Remove tag map to content
+                $query -> clear();
+                $query -> delete('#__tz_portfolio_plus_tag_content_map');
+                $query -> where('contentid IN(' . implode(',', $_pks) . ')');
+
+                $db -> setQuery($query);
+                $db -> execute();
+
+                // Remove field map to content
+                $query -> clear();
+                $query -> delete('#__tz_portfolio_plus_field_content_map');
+                $query -> where('contentid IN(' . implode(',', $_pks) . ')');
+
+                $db -> setQuery($query);
+                $db -> execute();
+            }
+        }
+        return $result;
+    }
+
     /**
      * Method to test whether a record can have its state edited.
      *
@@ -591,18 +627,24 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
             return false;
         }
 
-//        unset($data['catid']);
-
         $tags   = null;
         if(isset($data['tags'])){
             $tags   = $data['tags'];
             unset($data['tags']);
         }
 
+        $mCatid     = (isset($data['catid']) && $data['catid'])?(int) $data['catid']:null;
+        $sCatIds    = isset($data['second_catid'])?$data['second_catid']:array();
+
         if (parent::save($data))
         {
+            $artId      = $this->getState($this->getName() . '.id');
+
             // Save categories
-            $this -> saveArticleCategories($data);
+            if($this -> saveArticleCategories($artId, $mCatid, $sCatIds)){
+                unset($data['catid']);
+                unset($data['second_catid']);
+            }
 
             $table  = $this -> getTable();
             $table -> load($this->getState($this->getName() . '.id'));
@@ -685,7 +727,6 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
                 }
             }
 
-
             // Tags
             $articleId  = $this->getState($this->getName() . '.id');
             if (isset($articleId) && $articleId) {
@@ -701,41 +742,107 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
         return false;
     }
 
-    public function saveArticleCategories($data, $table = null, $isNew = true){
+    public function saveArticleCategories($artId, $mainCatid, $secondCatids = array()){
         // Insert categories
         $db     = $this -> getDbo();
         $query  = $db -> getQuery(true);
 
-        //// Before insert new categories must delete old categories
-        $query -> delete('#__tz_portfolio_plus_content_category_map');
-        $query -> where('contentid = '.$this->getState($this->getName() . '.id'));
-        $db -> setQuery($query);
-        $db -> execute();
-
-        $query -> clear();
-
-        $query -> insert('#__tz_portfolio_plus_content_category_map');
-        $query -> columns('contentid, catid, main');
-
-        if(isset($data['catid'])){
-            $query -> values($this->getState($this->getName() . '.id').', '.$data['catid'].', 1');
-            unset($data['catid']);
+        if(!$artId || !$mainCatid){
+            return false;
         }
 
-        if(isset($data['second_catid']) && count($data['second_catid'])){
-            foreach($data['second_catid'] as $catid){
-                $query -> values($this->getState($this->getName() . '.id').', '.$catid.', 0');
+        $catIds = array($mainCatid);
+
+        $table  = $this -> getTable('Content_Category_Map', 'TZ_Portfolio_PlusTable');
+
+        // Check contentid map catid and store it
+        $table -> set('id', 0);
+        if($table -> load(array('contentid' => $artId, 'catid' => $mainCatid))){
+            if(!$table -> main){
+                $table -> main  = 1;
+                if(!$table -> store()){
+                    $this->setError($table->getError());
+                    return false;
+                }
             }
-            unset($data['second_catid']);
+        }else{
+            if(!$table -> bind(array('contentid' => $artId, 'catid' => $mainCatid, 'main' => 1))){
+                $this->setError($table->getError());
+                return false;
+            }
+            if(!$table -> store()){
+                $this->setError($table->getError());
+                return false;
+            }
         }
 
+        // Check and store second category map to content
+        if($secondCatids && count($secondCatids)){
+            $catIds = array_merge($catIds, $secondCatids);
+            foreach($secondCatids as $sCatid){
+                if(!$table -> load(array('contentid' => $artId, 'catid' => $sCatid))){
+                    $table -> resetAll();
+                }
+                if(!$table -> bind(array('contentid' => $artId, 'catid' => $sCatid, 'main' => 0))){
+                    $this->setError($table->getError());
+                    return false;
+                }
+                if(!$table -> store()){
+                    $this->setError($table->getError());
+                    return false;
+                }
+            }
+        }
+
+        // Delete all categories did not map article
+        $query -> delete('#__tz_portfolio_plus_content_category_map');
+        $query -> where('contentid = '.$artId);
+        $query -> where('catid NOT IN('.implode(',', $catIds).')');
         $db -> setQuery($query);
+
         if(!$db -> execute()){
             $this -> setError($db -> getErrorMsg());
             return false;
         }
-        // End insert categories
+
+        return true;
     }
+
+//    public function saveArticleCategories($data, $table = null, $isNew = true){
+//        // Insert categories
+//        $db     = $this -> getDbo();
+//        $query  = $db -> getQuery(true);
+//
+//        //// Before insert new categories must delete old categories
+//        $query -> delete('#__tz_portfolio_plus_content_category_map');
+//        $query -> where('contentid = '.$this->getState($this->getName() . '.id'));
+//        $db -> setQuery($query);
+//        $db -> execute();
+//
+//        $query -> clear();
+//
+//        $query -> insert('#__tz_portfolio_plus_content_category_map');
+//        $query -> columns('contentid, catid, main');
+//
+//        if(isset($data['catid'])){
+//            $query -> values($this->getState($this->getName() . '.id').', '.$data['catid'].', 1');
+//            unset($data['catid']);
+//        }
+//
+//        if(isset($data['second_catid']) && count($data['second_catid'])){
+//            foreach($data['second_catid'] as $catid){
+//                $query -> values($this->getState($this->getName() . '.id').', '.$catid.', 0');
+//            }
+//            unset($data['second_catid']);
+//        }
+//
+//        $db -> setQuery($query);
+//        if(!$db -> execute()){
+//            $this -> setError($db -> getErrorMsg());
+//            return false;
+//        }
+//        // End insert categories
+//    }
 
     public function saveArticleFields($fieldsData, $table, $isNew = true){
 //        if($fieldsData){

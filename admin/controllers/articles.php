@@ -30,6 +30,9 @@ jimport('joomla.application.component.controlleradmin');
 class TZ_Portfolio_PlusControllerArticles extends JControllerAdmin
 {
     protected $input    = null;
+
+    protected $text_prefix  = 'COM_TZ_PORTFOLIO_PLUS_ARTICLE';
+
 	/**
 	 * Constructor.
 	 *
@@ -93,19 +96,19 @@ class TZ_Portfolio_PlusControllerArticles extends JControllerAdmin
 			{
 				if ($value == 1)
 				{
-					$ntext = $this->text_prefix . '_ARTICLE_N_ITEMS_PUBLISHED';
+					$ntext = $this->text_prefix . '_N_ITEMS_PUBLISHED';
 				}
 				elseif ($value == 0)
 				{
-					$ntext = $this->text_prefix . '_ARTICLE_N_ITEMS_UNPUBLISHED';
+					$ntext = $this->text_prefix . '_N_ITEMS_UNPUBLISHED';
 				}
 				elseif ($value == 2)
 				{
-					$ntext = $this->text_prefix . '_ARTICLE_N_ITEMS_ARCHIVED';
+					$ntext = $this->text_prefix . '_N_ITEMS_ARCHIVED';
 				}
 				else
 				{
-					$ntext = $this->text_prefix . '_ARTICLE_N_ITEMS_TRASHED';
+					$ntext = $this->text_prefix . '_N_ITEMS_TRASHED';
 				}
 				$this->setMessage(JText::plural($ntext, count($cid)));
 			}

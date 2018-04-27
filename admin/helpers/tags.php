@@ -115,14 +115,17 @@ class TZ_Portfolio_PlusHelperTags{
             $db     = JFactory::getDbo();
             $query  = $db -> getQuery(true);
 
-            $query -> delete('#__tz_portfolio_plus_tag_content_map');
-            if(is_array($articleId)){
-                $query->where('contentid IN(' . implode(',', $articleId).')');
-            }else {
-                $query->where('contentid = ' . (int)$articleId);
+            if(!$tagTitles || ($tagTitles && !count($tagTitles))) {
+                $query->delete('#__tz_portfolio_plus_tag_content_map');
+                if (is_array($articleId)) {
+                    $query->where('contentid IN(' . implode(',', $articleId) . ')');
+                } else {
+                    $query->where('contentid = ' . (int)$articleId);
+                }
+                $db->setQuery($query);
+                $db->execute();
+                return true;
             }
-            $db -> setQuery($query);
-            $db -> execute();
 
             if($tagTitles){
                 $tagsIds        = array();
@@ -149,18 +152,29 @@ class TZ_Portfolio_PlusHelperTags{
 
                 // Assign new tags for article
                 if (count($tagsIds) > 0) {
+                    JTable::addIncludePath(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/tables');
+                    $table  = JTable::getInstance('Tag_Content_Map', 'TZ_Portfolio_PlusTable');
+
                     // Execute sql assign new tags for article
-                    $query -> clear();
-                    $query -> insert('#__tz_portfolio_plus_tag_content_map');
-                    $query -> columns('contentid, tagsid');
                     foreach ($tagsIds as $id) {
-                        $query -> values($articleId . ',' . $id);
+                        $table -> set('id', 0);
+                        if(!$table -> load(array('tagsid' => ((int) $id), 'contentid' => $articleId))){
+                            $table -> bind(array('tagsid' => ((int) $id), 'contentid' => $articleId));
+                            $table -> store();
+                        }
                     }
-                    $db -> setQuery($query);
-                    if (!$db -> execute()) {
-                        self::_setError($db -> getErrorMsg());
-                        return false;
+
+                    $query -> clear();
+                    $query->delete('#__tz_portfolio_plus_tag_content_map');
+                    if (is_array($articleId)) {
+                        $query->where('contentid IN(' . implode(',', $articleId) . ')');
+                    } else {
+                        $query->where('contentid = ' . (int) $articleId);
                     }
+
+                    $query -> where('tagsid NOT IN('.implode(',',$tagsIds).')');
+                    $db->setQuery($query);
+                    $db->execute();
                 }
             }
         }

@@ -568,6 +568,32 @@ class com_tz_portfolio_plusInstallerScript{
             }
         }
 
+        // Add fields for table tz_portfolio_plus_addon_data
+        $arr        = array();
+        $tblName    = '#__tz_portfolio_plus_addon_meta';
+        $fields     = $db -> getTableColumns($tblName, false);
+
+        if(!array_key_exists('addon_id',$fields)){
+            $arr[]  = 'ADD `addon_id` INT UNSIGNED NOT NULL AFTER `id`';
+        }
+
+        if($arr && count($arr)>0){
+            $arr    = implode(',',$arr);
+            if($arr){
+                $query  = 'ALTER TABLE `'.$tblName.'` '.$arr;
+                $db -> setQuery($query);
+                $db -> execute();
+            }
+        }
+
+        if($fields && count($fields) && isset($fields['id']) && $fields['id']){
+            if(empty($fields['id'] -> Extra)){
+                $query  = 'ALTER TABLE `'.$tblName.'` CHANGE `id` `id` INT(11) NOT NULL AUTO_INCREMENT';
+                $db -> setQuery($query);
+                $db -> execute();
+            }
+        }
+
 
     }
 

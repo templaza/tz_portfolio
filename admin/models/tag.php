@@ -214,6 +214,27 @@ class TZ_Portfolio_PlusModelTag extends JModelAdmin
         return true;
     }
 
+    public function delete(&$pks)
+    {
+        $_pks = (array)$pks;
+        $result = parent::delete($pks);
+        if($result){
+            if ($_pks && count($_pks)) {
+                $db     = $this->getDbo();
+                $query  = $db->getQuery(true);
+
+                // Remove tag map to content
+                $query -> clear();
+                $query -> delete('#__tz_portfolio_plus_tag_content_map');
+                $query -> where('tagsid IN(' . implode(',', $_pks) . ')');
+
+                $db -> setQuery($query);
+                $db -> execute();
+            }
+        }
+        return $result;
+    }
+
     protected function prepareTable($table){
         if(isset($table -> title) && $table -> title){
             $table -> title   = str_replace(array(',',';','\'','"','.','?'

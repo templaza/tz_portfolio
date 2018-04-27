@@ -231,15 +231,19 @@ class TZ_Portfolio_PlusTemplate {
         }
 
         $input  = $app -> input;
-        switch($input -> get('view')){
-            case 'article':
+        if($input -> get('option') == 'com_tz_portfolio_plus'){
+            switch($input -> get('view')){
+                case 'article':
                 case 'p_article':
-                $_artId = $input -> get('id',null,'int');
-                $artModel   = JModelItem::getInstance('Article','TZ_Portfolio_PlusModel');
-                if($artItem    = $artModel -> getItem($_artId)){
-                    $_catId = $artItem -> catid;
-                }
-                break;
+                    JLoader::register('TZ_Portfolio_PlusModelArticle', COM_TZ_PORTFOLIO_PLUS_PATH_SITE
+                        .'/models/article.php');
+                    $_artId = $input -> get('id',null,'int');
+                    $artModel   = JModelItem::getInstance('Article','TZ_Portfolio_PlusModel');
+                    if($artItem    = $artModel -> getItem($_artId)){
+                        $_catId = $artItem -> catid;
+                    }
+                    break;
+            }
         }
 
         if(!empty($catId)){

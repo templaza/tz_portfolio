@@ -24,7 +24,7 @@
 	</fields>
 	<fields name="list">
 		<field type="list" name="fullordering"
-			   default="id DESC" onchange="this.form.submit();"
+			   default="folder ASC" onchange="this.form.submit();"
 			   label="COM_TZ_PORTFOLIO_PLUS_LIST_FULL_ORDERING"
 			   description="COM_TZ_PORTFOLIO_PLUS_LIST_FULL_ORDERING_DESC">
 			<option value="">JGLOBAL_SORT_BY</option>

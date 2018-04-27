@@ -863,7 +863,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
             $option['folder']   = $folder;
         }
 
-        $table  = JTable::getInstance('Extensions', 'TZ_Portfolio_PlusTable');
+        $table  = $this -> getTable();
 
         if(!$table -> load($option)){
             return false;
@@ -873,13 +873,13 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
             return false;
         }
 
-        $data = $table -> getDbo() -> loadObject();
-        if(isset($data -> manifest_cache) && $data -> manifest_cache && is_string($data -> manifest_cache)){
-            $data -> manifest_cache    = json_decode($data -> manifest_cache);
+        $manifestCache  = false;
+        if(isset($table -> manifest_cache) && $table -> manifest_cache && is_string($table -> manifest_cache)){
+            $manifestCache    = json_decode($table -> manifest_cache);
         }
 
 
-        return $data -> manifest_cache;
+        return $manifestCache;
     }
 
     protected function getUrlFromServer($xmlTag = 'addonurl'){

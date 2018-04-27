@@ -44,7 +44,8 @@ CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_addon_data` (
 
 
 CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_addon_meta` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `addon_id` INT UNSIGNED NOT NULL,
   `data_id` int(11) NOT NULL,
   `meta_id` int(11) NOT NULL,
   `meta_key` varchar(255) NOT NULL,

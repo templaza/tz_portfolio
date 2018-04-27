@@ -220,11 +220,11 @@ class PlgTZ_Portfolio_PlusMediaTypeModelImage extends TZ_Portfolio_PlusPluginMod
                 // Get image's mime type
                 $imageObj -> loadFile(JPATH_ROOT . DIRECTORY_SEPARATOR
                     . $image_data['url_server']);
-                $imageMimeType  = $imageObj->getImageFileProperties($imageObj->getPath());
-                $imageMimeType  = $imageMimeType -> mime;
+                $imageProperty  = $imageObj->getImageFileProperties($imageObj->getPath());
+                $imageMimeType  = $imageProperty -> mime;
 
                 // Get image's size
-                $imageSize  = $imageMimeType -> filesize;
+                $imageSize  = $imageProperty -> filesize;
 
                 $path   = COM_TZ_PORTFOLIO_PLUS_MEDIA_ARTICLE_ROOT.DIRECTORY_SEPARATOR;
                 $path  .=  $data -> alias . '-' . $data -> id . '_o';
@@ -262,11 +262,11 @@ class PlgTZ_Portfolio_PlusMediaTypeModelImage extends TZ_Portfolio_PlusPluginMod
                 $imageObj -> loadFile(JPATH_ROOT . DIRECTORY_SEPARATOR
                     . $image_data['url_detail_server']);
 
-                $image_hoverMimeType    = $imageObj->getImageFileProperties($imageObj->getPath());
-                $image_hoverMimeType    = $image_hoverMimeType -> mime;
+                $image_hoverProperty    = $imageObj->getImageFileProperties($imageObj->getPath());
+                $image_hoverMimeType    = $image_hoverProperty -> mime;
 
                 // Get image hover's size
-                $image_hoverSize  = $image_hoverMimeType -> filesize;
+                $image_hoverSize  = $image_hoverProperty -> filesize;
 
                 $path_hover     = COM_TZ_PORTFOLIO_PLUS_MEDIA_ARTICLE_ROOT.DIRECTORY_SEPARATOR;
                 $path_hover    .=  $data -> alias . '-' . $data -> id . '-h_o';
