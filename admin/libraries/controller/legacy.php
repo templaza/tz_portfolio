@@ -93,7 +93,6 @@ class TZ_Portfolio_Plus_AddOnControllerLegacy extends JControllerLegacy{
 
                 // Create template path of tz_portfolio_plus
                 $template = TZ_Portfolio_PlusTemplate::getTemplate(true);
-                $tplparams = $template->params;
 
                 // Create default template of tz_portfolio_plus
                 $defaultPath = null;
@@ -126,34 +125,17 @@ class TZ_Portfolio_Plus_AddOnControllerLegacy extends JControllerLegacy{
                 $jPathSite = JPATH_SITE . '/templates/' . $_template . '/html/com_tz_portfolio_plus/'
                     . $viewName . '/plg_' . $addon -> type . '_' . $addon -> name;
 
-                if ($tplparams->get('override_html_template_site', 0)) {
-
-                    // Add default template path
-                    if ($defaultPath && !in_array($defaultPath, $vpaths)) {
-                        $view->addTemplatePath($defaultPath);
-                    }
-
-                    // Add template path which chosen in menu
-                    if ($tpath && !in_array($tpath, $vpaths)) {
-                        $view->addTemplatePath($tpath);
-                    }
-
-                    if (!in_array($jPathSite, $vpaths)) {
-                        $view->addTemplatePath($jPathSite);
-                    }
-                } else {
-                    // Add template path from template site
-                    if (!in_array($jPathSite, $vpaths)) {
-                        $view->addTemplatePath($jPathSite);
-                    }
-                    // Add default template path
-                    if ($defaultPath && !in_array($defaultPath, $vpaths)) {
-                        $view->addTemplatePath($defaultPath);
-                    }
-                    // Add template path which chosen in menu
-                    if ($tpath && !in_array($tpath, $vpaths)) {
-                        $view->addTemplatePath($tpath);
-                    }
+                // Add default template path
+                if ($defaultPath && !in_array($defaultPath, $vpaths)) {
+                    $view->addTemplatePath($defaultPath);
+                }
+                // Add template path which chosen in menu
+                if ($tpath && !in_array($tpath, $vpaths)) {
+                    $view->addTemplatePath($tpath);
+                }
+                // Add template path from template site
+                if (!in_array($jPathSite, $vpaths)) {
+                    $view->addTemplatePath($jPathSite);
                 }
             }
         }

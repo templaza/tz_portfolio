@@ -10,6 +10,10 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+04/07/2018 - 1.2.8
+
+	- Fix error override codes of addon from Template site.
+	
 04/07/2018 - 1.2.7
 
 	- Fix error articles count of module TZ Portfolio Plus Categories when some articles unpublished.
