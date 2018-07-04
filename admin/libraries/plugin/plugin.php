@@ -207,8 +207,10 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
             $link           = false;
 
             if($data){
-                if(isset($data['link']) && !empty($data['link'])){
+                if(is_array($data) && isset($data['link']) && !empty($data['link'])){
                     $link   = $data['link'];
+                }elseif(is_object($data) && isset($data -> link) && !empty($data -> link)){
+                    $link = $data -> link;
                 }
             }
 

@@ -36,12 +36,20 @@ class modTZ_Portfolio_PlusCategoriesHelper
         $catIds = null;
         $catIds = $params->get('catid');
 
-        if ($params->get('show_total', 1))
-            $total = ',(SELECT COUNT(*) FROM #__tz_portfolio_plus_content_category_map AS c WHERE c.catid = a.id) AS total';
         $query = $db->getQuery(true);
         $query->select('a.*');
         $query->select('l.title AS language_title,ag.title AS access_level');
-        $query->select('ua.name AS author_name' . $total);
+        $query->select('ua.name AS author_name');
+
+        if ($params->get('show_total', 1)) {
+            $subQuery   = $db -> getQuery(true);
+            $subQuery -> select('COUNT(DISTINCT mc.contentid)');
+            $subQuery -> from('#__tz_portfolio_plus_content_category_map AS mc');
+            $subQuery -> join('INNER', '#__tz_portfolio_plus_content AS c ON c.id = mc.contentid AND c.state = 1');
+            $subQuery -> where('mc.catid = a.id');
+            $query -> select('('.(string) $subQuery.') AS total');
+        }
+
         $query->from($db->quoteName('#__tz_portfolio_plus_categories') . ' AS a');
         $query->join('LEFT', $db->quoteName('#__languages') . ' AS l ON l.lang_code = a.language');
         $query->join('LEFT', $db->quoteName('#__users') . ' AS uc ON uc.id=a.checked_out');

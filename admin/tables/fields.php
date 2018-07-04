@@ -198,5 +198,18 @@ class TZ_Portfolio_PlusTableFields extends JTable
         }
         return parent::bind($array, $ignore);
     }
+
+    public function check()
+    {
+        if (!$this->id)
+        {
+            // Field params can be an empty json string
+            if (!isset($this->params))
+            {
+                $this->params = '{}';
+            }
+        }
+        return true;
+    }
     
 }

@@ -10,6 +10,11 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+04/07/2018 - 1.2.7
+
+	- Fix error articles count of module TZ Portfolio Plus Categories when some articles unpublished.
+	- Fix error create menu with TZ Portfolio Plus views of Joomla 3.8.10
+	
 27/04/2018 - 1.2.6
 
 	- Fix error when upload image from server of Image addon.

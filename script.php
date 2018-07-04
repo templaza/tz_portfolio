@@ -28,7 +28,24 @@ class com_tz_portfolio_plusInstallerScript{
 
     function postflight($type, $parent){
 
-        $db     = JFactory::getDbo();
+        $db         = JFactory::getDbo();
+        $asset      = null;
+        $query      = $db -> getQuery(true);
+        $query->select('*');
+        $query->from('#__assets');
+        $query->where('name = ' . $db->quote('com_tz_portfolio_plus.category'));
+        $db->setQuery($query);
+        if(!$asset = $db->loadObject()){
+            $query -> clear();
+            $query->select('*');
+            $query->from('#__assets');
+            $query->where('name = ' . $db->quote('com_tz_portfolio_plus'));
+            $db->setQuery($query);
+            $asset = $db->loadObject();
+        }
+
+        $assetTbl   = JTable::getInstance('Asset');
+        $assetTblLoaded = $assetTbl -> loadByName('com_tz_portfolio_plus.category.2');
 
         if($this -> install_new) {
             $user = JFactory::getUser();
@@ -39,38 +56,45 @@ class com_tz_portfolio_plusInstallerScript{
             $db->setQuery($query);
             $db->execute();
 
-            $query->clear();
-            $query->select('*');
-            $query->from('#__assets');
-            $query->where('name = ' . $db->quote('com_tz_portfolio_plus'));
-            $db->setQuery($query);
-            $asset = $db->loadObject();
+            $new_asset_id   = null;
 
-            $assetTbl  = JTable::getInstance('Asset');
-
-            if(!$assetTbl -> loadByName('com_tz_portfolio_plus.category.2')) {
+            if($asset && !$assetTblLoaded) {
                 $query->clear();
 
                 $query->insert('#__assets');
                 $query->columns('parent_id, lft, rgt, level, name, title, rules');
                 $query->values($asset->id . ',' . ($asset->lft + 1) . ',' . ($asset->rgt + 1)
                     . ',2,' . $db->quote('com_tz_portfolio_plus.category.2') . ',' . $db->quote('Uncategorised')
-                    . ',' . $db->quote('{"core.create":{"6":1,"3":1},"core.delete":{"6":1},"core.edit":{"6":1,"4":1},'
-                        . '"core.edit.state":{"6":1,"5":1},"core.edit.own":{"6":1,"3":1}}'));
+                    . ',' . $db->quote('{}'));
                 $db->setQuery($query);
                 $db->execute();
 
                 $new_asset_id = $db->insertid();
             }else{
-                $new_asset_id   = $assetTbl -> id;
+                if($assetTblLoaded){
+                    $new_asset_id   = $assetTbl -> id;
+                }
             }
 
-            $query->clear();
-            $query->update('#__tz_portfolio_plus_categories');
-            $query->set('asset_id = ' . $new_asset_id);
-            $query->where('id = 2');
-            $db->setQuery($query);
-            $db->execute();
+            if($new_asset_id) {
+                $query->clear();
+                $query->update('#__tz_portfolio_plus_categories');
+                $query->set('asset_id = ' . $new_asset_id);
+                $query->where('id = 2');
+                $db->setQuery($query);
+                $db->execute();
+            }
+        }
+
+        if($assetTblLoaded && $assetTbl -> parent_id != $asset -> id){
+            if($asset){
+                $query -> clear();
+                $query -> update('#__assets');
+                $query -> set('parent_id='.(int) $asset -> id);
+                $query -> where('id = '.(int) $assetTbl -> id);
+                $db -> setQuery($query);
+                $db -> execute();
+            }
         }
 
         JFactory::getLanguage() -> load('com_tz_portfolio_plus');
