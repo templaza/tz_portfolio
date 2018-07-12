@@ -58,6 +58,10 @@
                label="COM_TZ_PORTFOLIO_PLUS_TEMPLATE_LABEL">
             <option value="0">JOPTION_USE_DEFAULT</option>
         </field>
+		<field type="number" name="priority"
+			   default="0" min="0" step="1"
+			   label="COM_TZ_PORTFOLIO_PLUS_PRIORITY"
+			   description="COM_TZ_PORTFOLIO_PLUS_PRIORITY_DESC"/>
 
 		<field
 			name="buttonspacer"

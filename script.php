@@ -412,6 +412,22 @@ class com_tz_portfolio_plusInstallerScript{
         $db -> alterTableCharacterSet('#__tz_portfolio_plus_addon_data');
         $db -> alterTableCharacterSet('#__tz_portfolio_plus_content');
 
+        // Add fields for table tz_portfolio_plus_content;
+        $fields = $db -> getTableColumns('#__tz_portfolio_plus_content');
+        $arr    = array();
+        if(!array_key_exists('priority',$fields)){
+            $arr[]  = 'ADD `priority` INT NOT NULL DEFAULT \'0\' ';
+        }
+
+        if($arr && count($arr)>0){
+            $arr    = implode(',',$arr);
+            if($arr){
+                $query  = 'ALTER TABLE `#__tz_portfolio_plus_content` '.$arr;
+                $db -> setQuery($query);
+                $db -> execute();
+            }
+        }
+
         // Add fields for table tz_portfolio_plus_extensions;
         $fields = $db -> getTableColumns('#__tz_portfolio_plus_extensions');
         $arr    = array();

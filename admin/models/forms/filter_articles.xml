@@ -93,6 +93,8 @@
 			<option value="groupname DESC">COM_TZ_PORTFOLIO_PLUS_HEADING_GROUP_DESC</option>
 			<option value="a.access ASC">JGRID_HEADING_ACCESS_ASC</option>
 			<option value="a.access DESC">JGRID_HEADING_ACCESS_DESC</option>
+			<option value="association ASC" requires="associations">JASSOCIATIONS_ASC</option>
+			<option value="association DESC" requires="associations">JASSOCIATIONS_DESC</option>
 			<option value="a.created_by ASC">JAUTHOR_ASC</option>
 			<option value="a.created_by DESC">JAUTHOR_DESC</option>
 			<option value="a.publish_up ASC">COM_TZ_PORTFOLIO_PLUS_PUBLISH_UP_ASC</option>
@@ -109,6 +111,8 @@
 			<option value="rating_count DESC" requires="vote">JGLOBAL_VOTES_DESC</option>
 			<option value="rating ASC" requires="vote">JGLOBAL_RATINGS_ASC</option>
 			<option value="rating DESC" requires="vote">JGLOBAL_RATINGS_DESC</option>
+			<option value="a.priority ASC">COM_TZ_PORTFOLIO_PLUS_HEADING_PRIORITY_ASC</option>
+			<option value="a.priority DESC">COM_TZ_PORTFOLIO_PLUS_HEADING_PRIORITY_DESC</option>
 			<option value="a.id ASC">JGRID_HEADING_ID_ASC</option>
 			<option value="a.id DESC">JGRID_HEADING_ID_DESC</option>
 		</field>

@@ -54,6 +54,9 @@ class TZ_Portfolio_PlusControllerArticles extends JControllerAdmin
 		}
 
 		$this->registerTask('unfeatured',	'featured');
+
+        $this->registerTask('priorityup', 'repriority');
+        $this->registerTask('prioritydown', 'repriority');
 	}
 
     /**
@@ -200,5 +203,69 @@ class TZ_Portfolio_PlusControllerArticles extends JControllerAdmin
 
         // Close the application
         JFactory::getApplication()->close();
+    }
+
+    public function savepriority()
+    {
+        // Check for request forgeries.
+        JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
+        // Get the input
+        $pks = $this->input->post->get('cid', array(), 'array');
+        $order = $this->input->post->get('priority', array(), 'array');
+
+        // Sanitize the input
+        ArrayHelper::toInteger($pks);
+        ArrayHelper::toInteger($order);
+
+        // Get the model
+        $model = $this->getModel();
+
+        // Save the ordering
+        $return = $model->savepriority($pks, $order);
+
+        if ($return === false)
+        {
+            // Reorder failed
+            $message = JText::sprintf('JLIB_APPLICATION_ERROR_REORDER_FAILED', $model->getError());
+            $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false), $message, 'error');
+            return false;
+        }
+        else
+        {
+            // Reorder succeeded.
+            $this->setMessage(JText::_('COM_TZ_PORTFOLIO_PLUS_SUCCESS_PRIORITY_SAVED'));
+            $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
+            return true;
+        }
+    }
+
+    public function repriority()
+    {
+        // Check for request forgeries.
+        \JSession::checkToken() or jexit(\JText::_('JINVALID_TOKEN'));
+
+        $ids = $this->input->post->get('cid', array(), 'array');
+        $inc = $this->getTask() === 'priorityup' ? -1 : 1;
+
+        $model = $this->getModel();
+        $return = $model->repriority($ids, $inc);
+
+        if ($return === false)
+        {
+            // Reorder failed.
+            $message = \JText::sprintf('JLIB_APPLICATION_ERROR_REORDER_FAILED', $model->getError());
+            $this->setRedirect(\JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false), $message, 'error');
+
+            return false;
+        }
+        else
+        {
+            // Reorder succeeded.
+            $message = \JText::_('COM_TZ_PORTFOLIO_PLUS_SUCCESS_PRIORITY_SAVED');
+            $this->setRedirect(\JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false), $message);
+
+            return true;
+        }
     }
 }

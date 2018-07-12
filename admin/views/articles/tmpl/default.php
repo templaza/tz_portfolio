@@ -35,14 +35,16 @@ JHtml::_('formbehavior.chosen', '.multipleCategories', null,
     array('placeholder_text_multiple' => JText::_('JOPTION_SELECT_CATEGORY')));
 JHtml::_('formbehavior.chosen', 'select');
 
-$user		= JFactory::getUser();
-$userId		= $user->get('id');
-$listOrder	= $this->escape($this->state->get('list.ordering'));
-$listDirn	= $this->escape($this->state->get('list.direction'));
-$canOrder	= $user->authorise('core.edit.state', 'com_tz_portfolio_plus.article');
-$archived	= $this->state->get('filter.published') == 2 ? true : false;
-$trashed	= $this->state->get('filter.published') == -2 ? true : false;
-$saveOrder	= $listOrder == 'a.ordering';
+$user		    = JFactory::getUser();
+$userId		    = $user->get('id');
+$listOrder	    = $this->escape($this->state->get('list.ordering'));
+$listDirn	    = $this->escape($this->state->get('list.direction'));
+$canOrder	    = $user->authorise('core.edit.state', 'com_tz_portfolio_plus.article');
+$archived	    = $this->state->get('filter.published') == 2 ? true : false;
+$trashed	    = $this->state->get('filter.published') == -2 ? true : false;
+$saveOrder	    = $listOrder == 'a.ordering';
+$savePriority   = $listOrder == 'a.priority';
+
 if ($saveOrder)
 {
 	$saveOrderingUrl = 'index.php?option=com_tz_portfolio_plus&task=articles.saveOrderAjax&tmpl=component';
@@ -123,11 +125,19 @@ $assoc		= JLanguageAssociations::isEnabled();
                         <th width="5%" class="nowrap hidden-phone">
                             <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
                         </th>
-                        <th width="10%" class="nowrap hidden-phone">
+                        <th width="8%" class="nowrap hidden-phone">
                             <?php echo JHtml::_('searchtools.sort', 'JDATE', 'a.created', $listDirn, $listOrder); ?>
                         </th>
-                        <th width="1%" class="nowrap hidden-phone">
+                        <th width="5%" class="nowrap center text-center hidden-phone">
                             <?php echo JHtml::_('searchtools.sort', 'JGLOBAL_HITS', 'a.hits', $listDirn, $listOrder); ?>
+                        </th>
+                        <th width="1%" class="nowrap center text-center hidden-phone">
+                            <?php echo JHtml::_('searchtools.sort', 'COM_TZ_PORTFOLIO_PLUS_PRIORITY', 'a.priority', $listDirn, $listOrder); ?>
+                            <?php
+                            if($savePriority) {
+                                echo JHTML::_('grid.order', $this->items, 'filesave.png', 'articles.savepriority');
+                            }
+                            ?>
                         </th>
                         <th width="1%" class="nowrap hidden-phone">
                             <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
@@ -259,6 +269,21 @@ $assoc		= JLanguageAssociations::isEnabled();
                             </td>
                             <td class="center hidden-phone">
                                 <?php echo (int) $item->hits; ?>
+                            </td>
+                            <td class="nowrap hidden-phone order" style="text-align: right;">
+                                <?php if ($savePriority){ ?>
+                                <div class="btn-group">
+                                    <?php echo $this -> pagination -> orderUpIcon($i, true, 'articles.priorityup', 'Move Up');?>
+                                    <?php if($orderDown = $this -> pagination -> orderDownIcon($i, $this -> pagination -> pagesTotal, true, 'articles.prioritydown')){
+                                        echo $orderDown;
+                                    }?>
+                                </div>
+                                <?php }
+                                ?>
+                                <input type="text" name="priority[]" class="width-auto text-center" min="0"<?php
+                                echo $savePriority ?  '' : ' disabled="disabled"';
+                                ?> style="margin-bottom: 0;" size="1" step="1" value="<?php
+                                echo (int) $item -> priority; ?>"/>
                             </td>
                             <td class="center">
                                 <?php echo (int) $item->id; ?>

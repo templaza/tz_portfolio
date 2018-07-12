@@ -10,6 +10,12 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+12/07/2018 - 1.2.9
+
+	- Added priority order for Articles.
+	- Added trigger onAddOnAfterSave for addon when saved article.
+	- Remove mootools libraries from portfolio, date, tags, users view.
+
 04/07/2018 - 1.2.8
 
 	- Fix error override codes of addon from Template site.

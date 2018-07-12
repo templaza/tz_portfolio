@@ -149,6 +149,8 @@
                 <option value="rhits">JGLOBAL_LEAST_HITS</option>
                 <option value="order">JGLOBAL_ORDERING</option>
                 <option	value="rorder">JGLOBAL_REVERSE_ORDERING</option>
+                <option value="priority">COM_TZ_PORTFOLIO_PLUS_PRIORITY_ORDER</option>
+                <option	value="rpriority">COM_TZ_PORTFOLIO_PLUS_PRIORITY_REVERSE_ORDER</option>
             </field>
             <!-- End order options -->
 

@@ -24,6 +24,13 @@ class PlgTZ_Portfolio_PlusContentVote extends TZ_Portfolio_PlusPlugin
 {
     protected $autoloadLanguage     = true;
 
+    public function __construct($subject, array $config = array())
+    {
+        parent::__construct($subject, $config);
+
+        JLoader::import('addons.content.vote.helpers.vote', COM_TZ_PORTFOLIO_PLUS_PATH_SITE);
+    }
+
     public function onAddContentType(){
         $type = new stdClass();
         $lang = JFactory::getLanguage();
@@ -54,6 +61,7 @@ class PlgTZ_Portfolio_PlusContentVote extends TZ_Portfolio_PlusPlugin
     }
 
     public function onBeforeDisplayAdditionInfo($context, &$article, $params, $page = 0, $layout = 'default'){
+
         list($extension, $vName)   = explode('.', $context);
 
         $item   = $article;
@@ -62,14 +70,7 @@ class PlgTZ_Portfolio_PlusContentVote extends TZ_Portfolio_PlusPlugin
             $item -> rating_count   = 0;
             $item -> rating_sum     = 0;
 
-            $db	    = JFactory::getDBO();
-            $query  = $db -> getQuery(true);
-            $query -> select('*');
-            $query -> from('#__tz_portfolio_plus_content_rating');
-            $query -> where('content_id = '. $item -> id);
-            $db -> setQuery($query);
-
-            if($vote = $db->loadObject()) {
+            if($vote = TZ_Portfolio_PlusAddOnContentVoteHelper::getVoteByArticleId($item -> id)) {
                 foreach($vote as $key => $value){
                     $item -> $key   = $value;
                 }
@@ -111,14 +112,7 @@ class PlgTZ_Portfolio_PlusContentVote extends TZ_Portfolio_PlusPlugin
             $item -> rating_count   = 0;
             $item -> rating_sum     = 0;
 
-            $db	    = JFactory::getDBO();
-            $query  = $db -> getQuery(true);
-            $query -> select('*');
-            $query -> from('#__tz_portfolio_plus_content_rating');
-            $query -> where('content_id = '. $item -> id);
-            $db -> setQuery($query);
-
-            if($vote = $db->loadObject()) {
+            if($vote = TZ_Portfolio_PlusAddOnContentVoteHelper::getVoteByArticleId($item -> id)) {
                 foreach($vote as $key => $value){
                     $item -> $key   = $value;
                 }

@@ -523,5 +523,134 @@ class TZ_Portfolio_PlusTableContent extends JTable
         return parent::store($updateNulls);
     }
 
+    public function repriority($where = '')
+    {
+        // Check if there is an ordering field set
+        $orderingField = $this->getColumnAlias('priority');
 
+        if (!property_exists($this, $orderingField))
+        {
+            throw new \UnexpectedValueException(sprintf('%s does not support ordering.', get_class($this)));
+        }
+
+        $quotedOrderingField = $this->_db->quoteName($orderingField);
+
+        $subquery = $this->_db->getQuery(true)
+            ->from($this->_tbl)
+            ->selectRowNumber($quotedOrderingField, 'new_ordering');
+
+        $query = $this->_db->getQuery(true)
+            ->update($this->_tbl)
+            ->set($quotedOrderingField . ' = sq.new_ordering');
+
+        $innerOn = array();
+
+        // Get the primary keys for the selection.
+        foreach ($this->_tbl_keys as $i => $k)
+        {
+            $subquery->select($this->_db->quoteName($k, 'pk__' . $i));
+            $innerOn[] = $this->_db->quoteName($k) . ' = sq.' . $this->_db->quoteName('pk__' . $i);
+        }
+
+        // Setup the extra where and ordering clause data.
+        if ($where)
+        {
+            $subquery->where($where);
+            $query->where($where);
+        }
+
+        $subquery->where($quotedOrderingField . ' >= 0');
+        $query->where($quotedOrderingField . ' >= 0');
+
+        $query->innerJoin('(' . (string) $subquery . ') AS sq ON ' . implode(' AND ', $innerOn));
+
+        $this->_db->setQuery($query);
+        $this->_db->execute();
+
+        return true;
+    }
+
+    public function movepriority($delta, $where = '')
+    {
+        // Check if there is an ordering field set
+        $orderingField = $this->getColumnAlias('priority');
+
+        if (!property_exists($this, $orderingField))
+        {
+            throw new \UnexpectedValueException(sprintf('%s does not support ordering.', get_class($this)));
+        }
+
+        $quotedOrderingField = $this->_db->quoteName($orderingField);
+
+        // If the change is none, do nothing.
+        if (empty($delta))
+        {
+            return true;
+        }
+
+        $row   = null;
+        $query = $this->_db->getQuery(true);
+
+        // Select the primary key and ordering values from the table.
+        $query->select(implode(',', $this->_tbl_keys) . ', ' . $quotedOrderingField)
+            ->from($this->_tbl);
+
+        // If the movement delta is negative move the row up.
+        if ($delta < 0)
+        {
+            $query->where($quotedOrderingField . ' < ' . (int) $this->$orderingField)
+                ->order($quotedOrderingField . ' DESC');
+        }
+        // If the movement delta is positive move the row down.
+        elseif ($delta > 0)
+        {
+            $query->where($quotedOrderingField . ' > ' . (int) $this->$orderingField)
+                ->order($quotedOrderingField . ' ASC');
+        }
+
+        // Add the custom WHERE clause if set.
+        if ($where)
+        {
+            $query->where($where);
+        }
+
+        // Select the first row with the criteria.
+        $this->_db->setQuery($query, 0, 1);
+        $row = $this->_db->loadObject();
+
+        // If a row is found, move the item.
+        if (!empty($row))
+        {
+            // Update the ordering field for this instance to the row's ordering value.
+            $query->clear()
+                ->update($this->_tbl)
+                ->set($quotedOrderingField . ' = ' . (int) $row->$orderingField);
+            $this->appendPrimaryKeys($query);
+            $this->_db->setQuery($query);
+            $this->_db->execute();
+
+            // Update the ordering field for the row to this instance's ordering value.
+            $query->clear()
+                ->update($this->_tbl)
+                ->set($quotedOrderingField . ' = ' . (int) $this->$orderingField);
+            $this->appendPrimaryKeys($query, $row);
+            $this->_db->setQuery($query);
+            $this->_db->execute();
+
+            // Update the instance value.
+            $this->$orderingField = $row->$orderingField;
+        }
+        else
+        {
+            // Update the ordering field for this instance.
+            $query->clear()
+                ->update($this->_tbl)
+                ->set($quotedOrderingField . ' = ' . (int) $this->$orderingField);
+            $this->appendPrimaryKeys($query);
+            $this->_db->setQuery($query);
+            $this->_db->execute();
+        }
+
+        return true;
+    }
 }

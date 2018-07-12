@@ -42,6 +42,8 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
     public $typeAlias = 'com_tz_portfolio_plus.article';
     protected $associationsContext = 'com_tz_portfolio_plus.article.item';
 
+    protected $event_addon_after_save = 'onAddOnAfterSave';
+
     protected function batchCopy($value, $pks, $contexts)
     {
         $categoryId = (int) $value;
@@ -638,6 +640,8 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
 
         if (parent::save($data))
         {
+            $context    = $this->option . '.' . $this->name;
+            $isNew      = $this->getState($this->getName() . '.new');
             $artId      = $this->getState($this->getName() . '.id');
 
             // Save categories
@@ -735,6 +739,9 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
                     return false;
                 }
             }
+
+            // Trigger the addon after save event.
+            \JFactory::getApplication()->triggerEvent($this->event_addon_after_save, array($context, $table, $isNew, $data));
 
             return true;
         }
@@ -1152,6 +1159,134 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
         }
 
         return false;
+    }
+
+    public function savepriority($pks = array(), $order = null)
+    {
+        // Initialize re-usable member properties
+        $this->initBatch();
+
+        $conditions = array();
+
+        if (empty($pks))
+        {
+            return \JError::raiseWarning(500, \JText::_($this->text_prefix . '_ERROR_NO_ITEMS_SELECTED'));
+        }
+
+        $orderingField = $this->table->getColumnAlias('priority');
+
+        // Update ordering values
+        foreach ($pks as $i => $pk)
+        {
+            $this->table->load((int) $pk);
+
+            // Access checks.
+            if (!$this->canEditState($this->table))
+            {
+                // Prune items that you can't change.
+                unset($pks[$i]);
+                \JLog::add(\JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'), \JLog::WARNING, 'jerror');
+            }
+            elseif ($this->table->$orderingField != $order[$i])
+            {
+                $this->table->$orderingField = $order[$i];
+
+                if (!$this->table->store())
+                {
+                    $this->setError($this->table->getError());
+
+                    return false;
+                }
+
+                // Remember to reorder within position and client_id
+                $condition = array();
+                $found = false;
+
+                foreach ($conditions as $cond)
+                {
+                    if ($cond[1] == $condition)
+                    {
+                        $found = true;
+                        break;
+                    }
+                }
+
+                if (!$found)
+                {
+                    $key = $this->table->getKeyName();
+                    $conditions[] = array($this->table->$key, $condition);
+                }
+            }
+        }
+
+        // Execute reorder for each articles.
+        foreach ($conditions as $cond)
+        {
+            $this->table->load($cond[0]);
+            $this->table->repriority($cond[1]);
+        }
+
+        // Clear the component's cache
+        $this->cleanCache();
+
+        return true;
+    }
+
+
+    public function repriority($pks, $delta = 0)
+    {
+        $table = $this->getTable();
+        $pks = (array) $pks;
+        $result = true;
+
+        $allowed = true;
+
+        foreach ($pks as $i => $pk)
+        {
+            $table->reset();
+
+            if ($table->load($pk) && $this->checkout($pk))
+            {
+                // Access checks.
+                if (!$this->canEditState($table))
+                {
+                    // Prune items that you can't change.
+                    unset($pks[$i]);
+                    $this->checkin($pk);
+                    \JLog::add(\JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'), \JLog::WARNING, 'jerror');
+                    $allowed = false;
+                    continue;
+                }
+
+                if (!$table->movepriority($delta, array()))
+                {
+                    $this->setError($table->getError());
+                    unset($pks[$i]);
+                    $result = false;
+                }
+
+                $this->checkin($pk);
+            }
+            else
+            {
+                $this->setError($table->getError());
+                unset($pks[$i]);
+                $result = false;
+            }
+        }
+
+        if ($allowed === false && empty($pks))
+        {
+            $result = null;
+        }
+
+        // Clear the component's cache
+        if ($result == true)
+        {
+            $this->cleanCache();
+        }
+
+        return $result;
     }
 
     /**

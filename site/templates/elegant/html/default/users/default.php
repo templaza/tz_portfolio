@@ -25,7 +25,6 @@ $params = &$this -> params;
 
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers');
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
-JHtml::_('behavior.framework');
 ?>
 
 <?php if($items):?>
