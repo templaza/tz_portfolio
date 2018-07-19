@@ -10,6 +10,10 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+19/07/2018 - 1.3.0
+
+	- Fix error priority of v1.2.9.
+
 12/07/2018 - 1.2.9
 
 	- Added priority order for Articles.
