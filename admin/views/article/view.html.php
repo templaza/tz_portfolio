@@ -41,7 +41,9 @@ class TZ_Portfolio_PlusViewArticle extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-        if(JFactory::getApplication()->input->getCmd('task')!='lists'){
+	    $app    = JFactory::getApplication();
+	    $input  = $app -> input;
+        if($input->get('task')!='lists'){
             if ($this->getLayout() == 'pagebreak') {
                 $eName		= JFactory::getApplication()->input->get('e_name');
                 $eName		= preg_replace( '#[^A-Z0-9\-\_\[\]]#i', '', $eName );
@@ -70,10 +72,13 @@ class TZ_Portfolio_PlusViewArticle extends JViewLegacy
             $this -> extraFields	= $this -> get('ExtraFields');
 
 			// Load Tabs's title from plugin group tz_portfolio_plus_mediatype
-			$dispatcher	= JDispatcher::getInstance();
 			TZ_Portfolio_PlusPluginHelper::importPlugin('mediatype');
-			if($mediaType  = $dispatcher -> trigger('onAddMediaType')){
-				$mediaForm	= $dispatcher -> trigger('onMediaTypeDisplayArticleForm',array($this -> item));
+			if($mediaType  = $app -> triggerEvent('onAddMediaType')){
+			    $mediaType  = array_filter($mediaType);
+			    $mediaType  = array_reverse($mediaType);
+				$mediaForm	= $app -> triggerEvent('onMediaTypeDisplayArticleForm',array($this -> item));
+                $mediaForm  = array_filter($mediaForm);
+                $mediaForm  = array_reverse($mediaForm);
 				if(count($mediaType)){
 					$plugin	= array();
 					foreach($mediaType as $i => $type){
@@ -83,13 +88,13 @@ class TZ_Portfolio_PlusViewArticle extends JViewLegacy
 						if($mediaForm && count($mediaForm) && isset($mediaForm[$i])) {
 							$plugin[$i]->html = $mediaForm[$i];
 						}
-						$this -> pluginsMediaTypeTab[$i]	= $plugin[$i];
 					}
+					$this -> pluginsMediaTypeTab    = $plugin;
 				}
 			}
 
             // If we are forcing a language in modal (used for associations).
-            if ($this->getLayout() === 'modal' && $forcedLanguage = JFactory::getApplication()->input->get('forcedLanguage', '', 'cmd')) {
+            if ($this->getLayout() === 'modal' && $forcedLanguage = $input->get('forcedLanguage', '', 'cmd')) {
                 // Set the language field to the forcedLanguage and disable changing it.
                 $this->form->setValue('language', null, $forcedLanguage);
                 $this->form->setFieldAttribute('language', 'readonly', 'true');

@@ -7,7 +7,7 @@
     <license>GNU/GPL v2 or later http://www.gnu.org/licenses/gpl-2.0.html</license>
     <authorEmail>support@templaza.com</authorEmail>
     <authorUrl>www.templaza.com/</authorUrl>
-    <version>1.3.0</version>
+    <version>2.0.0</version>
     <description>MOD_TZ_PORTFOLIO_PLUS_CATEGORIES_XML_DESCRIPTION</description>
 
     <files>
@@ -34,22 +34,22 @@
                        label="COM_TZ_PORTFOLIO_PLUS_TEMPLATE_LABEL">
                     <option value="0">JOPTION_USE_DEFAULT</option>
                 </field>
-                <field type="radio" class="btn-group" name="show_total" default="1"
+                <field type="radio" class="btn-group switcher" name="show_total" default="1"
                        label="MOD_TZ_PORTFOLIO_PLUS_CATEGORIES_SHOW_TOTAL">
                     <option value="1">JSHOW</option>
                     <option value="0">JHIDE</option>
                 </field>
-                <field type="radio" class="btn-group" name="show_desc" default="1"
+                <field type="radio" class="btn-group switcher" name="show_desc" default="1"
                        label="MOD_TZ_PORTFOLIO_PLUS_CATEGORIES_SHOW_DESC">
                     <option value="1">JSHOW</option>
                     <option value="0">JHIDE</option>
                 </field>
-                <field type="radio" class="btn-group" name="show_image" default="1"
+                <field type="radio" class="btn-group switcher" name="show_image" default="1"
                        label="MOD_TZ_PORTFOLIO_PLUS_CATEGORIES_SHOW_IMAGE">
                     <option value="1">JSHOW</option>
                     <option value="0">JHIDE</option>
                 </field>
-                <field type="radio" class="btn-group" name="show_title" default="1"
+                <field type="radio" class="btn-group switcher" name="show_title" default="1"
                        label="MOD_TZ_PORTFOLIO_PLUS_CATEGORIES_SHOW_TITLE">
                     <option value="1">JSHOW</option>
                     <option value="0">JHIDE</option>

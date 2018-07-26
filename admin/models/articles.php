@@ -21,6 +21,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\Utilities\ArrayHelper;
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 jimport('joomla.application.component.modellist');
 
@@ -57,12 +58,22 @@ class TZ_Portfolio_PlusModelArticles extends JModelList
 				'hits', 'a.hits',
 				'publish_up', 'a.publish_up',
 				'publish_down', 'a.publish_down',
-				'priority', 'a.priority',
+                'priority', 'a.priority',
                 'groupname','g.name'
 			);
 		}
 
 		parent::__construct($config);
+
+        // Set the model dbo
+        if (array_key_exists('dbo', $config))
+        {
+            $this->_db = $config['dbo'];
+        }
+        else
+        {
+            $this->_db = TZ_Portfolio_PlusDatabase::getDbo();
+        }
 	}
 
 	/**
@@ -430,9 +441,8 @@ class TZ_Portfolio_PlusModelArticles extends JModelList
         if($items){
 			$texts		= array();
 			$values		= array();
-			$dispatcher	= JEventDispatcher::getInstance();
 			TZ_Portfolio_PlusPluginHelper::importPlugin('mediatype');
-			$results	= $dispatcher -> trigger('onAddMediaType');
+			$results	= \JFactory::getApplication() -> triggerEvent('onAddMediaType');
 			if(count($results)) {
 				$texts = ArrayHelper::getColumn($results, 'text');
 				$values = ArrayHelper::getColumn($results, 'value');

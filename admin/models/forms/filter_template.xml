@@ -12,4 +12,16 @@
 			<option value="tag">COM_TZ_PORTFOLIO_PLUS_TAG</option>
 		</field>
 	</fields>
+	<fields name="list">
+		<field type="list" name="fullordering"
+			   default="rdate" onchange="this.form.submit();"
+			   label="COM_TZ_PORTFOLIO_PLUS_LIST_FULL_ORDERING"
+			   description="COM_TZ_PORTFOLIO_PLUS_LIST_FULL_ORDERING_DESC">
+			<option value="">JGLOBAL_SORT_BY</option>
+			<option value="rdate">JGLOBAL_MOST_RECENT_FIRST</option>
+			<option value="date">JGLOBAL_OLDEST_FIRST</option>
+			<option value="alpha">JGLOBAL_TITLE_ALPHABETICAL</option>
+			<option value="ralpha">JGLOBAL_TITLE_REVERSE_ALPHABETICAL</option>
+		</field>
+	</fields>
 </form>

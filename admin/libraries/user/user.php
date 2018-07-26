@@ -23,6 +23,7 @@ defined('_JEXEC') or die('Restricted access');
 use Joomla\Registry\Registry;
 use Joomla\CMS\User\User;
 use Joomla\CMS\User\UserWrapper;
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 //jimport('joomla.user.user');
 
@@ -96,7 +97,7 @@ class TZ_Portfolio_PlusUser extends \JUser{
     {
         // Brute force method: get all published category rows for the component and check each one
         // TODO: Modify the way permissions are stored in the db to allow for faster implementation and better scaling
-        $db = JFactory::getDbo();
+        $db     = TZ_Portfolio_PlusDatabase::getDbo();
 
         $subQuery = $db->getQuery(true)
             ->select('id,asset_id')
@@ -128,7 +129,7 @@ class TZ_Portfolio_PlusUser extends \JUser{
     {
         // Brute force method: get all published category rows for the component and check each one
         // TODO: Modify the way permissions are stored in the db to allow for faster implementation and better scaling
-        $db = JFactory::getDbo();
+        $db     = TZ_Portfolio_PlusDatabase::getDbo();
 
         $subQuery = $db->getQuery(true)
             ->select('id,asset_id')

@@ -22,10 +22,26 @@ defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 class TZ_Portfolio_PlusModelAddon_Datas extends JModelList{
 
     protected $addon_element   = null;
+
+    public function __construct($config = array(), MVCFactoryInterface $factory = null)
+    {
+        parent::__construct($config, $factory);
+
+        // Set the model dbo
+        if (array_key_exists('dbo', $config))
+        {
+            $this->_db = $config['dbo'];
+        }
+        else
+        {
+            $this->_db = TZ_Portfolio_PlusDatabase::getDbo();
+        }
+    }
 
     protected function populateState($ordering = 'id', $direction = 'desc'){
 
@@ -133,7 +149,7 @@ class TZ_Portfolio_PlusModelAddon_Datas extends JModelList{
             $properties = $table->getProperties(1);
             $this->cache[$storeId] = ArrayHelper::toObject($properties, 'JObject');
 
-            $dispatcher     = JEventDispatcher::getInstance();
+            $dispatcher     = TZ_Portfolio_PlusPluginHelper::getDispatcher();
             if($plugin         = TZ_Portfolio_PlusPluginHelper::getInstance($table -> folder,
                 $table -> element, false, $dispatcher)){
                 if(method_exists($plugin, 'onAddOnDisplayManager')) {

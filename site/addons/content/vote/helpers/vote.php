@@ -49,10 +49,8 @@ class TZ_Portfolio_PlusAddOnContentVoteHelper{
 
         if($item = $db -> loadObject()) {
             self::$cache[$storeId]  = $item;
-//            return $item;
+            return $item;
         }
-
-        self::$cache[$storeId]  = false;
-        return self::$cache[$storeId];
+//        return self::$cache[$storeId];
     }
 }

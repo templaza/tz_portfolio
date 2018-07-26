@@ -28,14 +28,15 @@ $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
 ?>
 <form action="index.php?option=com_tz_portfolio_plus&view=template_styles" method="post" name="adminForm" id="adminForm">
-    <?php if(!empty($this -> sidebar)):?>
-    <div id="j-sidebar-container" class="span2">
-        <?php echo $this -> sidebar; ?>
-    </div>
-    <div id="j-main-container" class="span10">
-    <?php else:?>
-        <div id="j-main-container">
-    <?php endif;?>
+
+<?php echo JHtml::_('tzbootstrap.addrow');?>
+    <?php if(!empty($this -> sidebar)){?>
+        <div id="j-sidebar-container" class="span2 col-md-2">
+            <?php echo $this -> sidebar; ?>
+        </div>
+    <?php } ?>
+
+    <?php echo JHtml::_('tzbootstrap.startcontainer', '10', !empty($this -> sidebar));?>
 
         <div class="tpContainer">
             <?php
@@ -44,7 +45,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
             ?>
 
             <?php if (empty($this->items)){ ?>
-                <div class="alert alert-no-items">
+                <div class="alert alert-warning alert-no-items">
                     <?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
                 </div>
             <?php }else{ ?>
@@ -56,13 +57,13 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
                     <th class="title">
                         <?php echo JHtml::_('searchtools.sort','COM_TEMPLATES_HEADING_STYLE','name',$listDirn,$listOrder);?>
                     </th>
-                    <th width="1%" style="min-width:55px" class="nowrap center">
+                    <th width="1%" style="min-width:55px" class="nowrap center text-center">
                         <?php echo JHtml::_('searchtools.sort', 'COM_TEMPLATES_HEADING_DEFAULT', 'home', $listDirn, $listOrder); ?>
                     </th>
                     <th nowrap="nowrap" width="1%">
                         <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_HEADING_ASSIGNED'); ?>
                     </th>
-                    <th nowrap="nowrap" class="center" width="15%">
+                    <th nowrap="nowrap" class="center text-center" width="15%">
                         <?php echo JHtml::_('searchtools.sort', 'COM_TZ_PORTFOLIO_PLUS_TEMPLATE', 'template', $listDirn, $listOrder); ?>
                     </th>
                     <th nowrap="nowrap" width="1%">
@@ -81,7 +82,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 
                     ?>
                         <tr class="<?php echo ($i%2==0)?'row0':'row1';?>">
-                            <td class="center">
+                            <td class="center text-center">
                                 <?php echo JHtml::_('grid.id', $i, $item->id); ?>
                             </td>
                             <td class="nowrap has-context">
@@ -96,7 +97,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
                                 </div>
                             </td>
 
-                            <td class="center">
+                            <td class="center text-center">
                                 <?php if ($item->home == '0' || $item->home == '1'):?>
                                     <?php echo JHtml::_('jgrid.isdefault', $item->home != '0', $i, 'template_styles.', $canChange && $item->home != '1');?>
                                 <?php elseif ($canChange):?>
@@ -108,15 +109,15 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
                                 <?php endif;?>
                             </td>
 
-                            <td class="center">
+                            <td class="center text-center">
                                 <?php if((isset($item -> category_assigned) AND $item -> category_assigned > 0)
                                     OR (isset($item -> content_assigned) AND $item -> content_assigned > 0)
                                     OR (isset($item -> menu_assigned) AND $item -> menu_assigned > 0)):?>
                                 <i class="icon-ok tip hasTooltip" title="<?php echo JText::plural('COM_TZ_PORTFOLIO_PLUS_ASSIGNED_MORE',$item -> menu_assigned, $item->category_assigned,$item -> content_assigned); ?>"></i>
                                 <?php endif;?>
                             </td>
-                            <td class="center"><?php echo $item -> template;?></td>
-                            <td class="center"><?php echo $item -> id;?></td>
+                            <td class="center text-center"><?php echo $item -> template;?></td>
+                            <td class="center text-center"><?php echo $item -> id;?></td>
                         </tr>
                     <?php endforeach;?>
                     </tbody>
@@ -136,5 +137,6 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
         <input type="hidden" name="task" value="">
         <input type="hidden" name="boxchecked" value="0">
         <?php echo JHtml::_('form.token');?>
-    </div>
+    <?php echo JHtml::_('tzbootstrap.endcontainer');?>
+<?php echo JHtml::_('tzbootstrap.endrow');?>
 </form>

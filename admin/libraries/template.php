@@ -21,11 +21,22 @@
 defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 class TZ_Portfolio_PlusTemplate {
 
+    protected static $cache    = array();
+
     public static function getTemplate($params = false)
     {
+        $storeId    = __METHOD__;
+        $storeId    .= ':'.$params;
+        $storeId    = md5($storeId);
+
+        if(isset(self::$cache[$storeId])){
+            return self::$cache[$storeId];
+        }
+
         $templateId = self::getTemplateId();
         $template   = new stdClass;
 
@@ -37,8 +48,9 @@ class TZ_Portfolio_PlusTemplate {
         $template -> params     = new JRegistry();
         $template -> layout     = null;
 
-        $db                     = JFactory::getDbo();
+        $db                     = TZ_Portfolio_PlusDatabase::getDbo();
         $query                  = $db -> getQuery(true);
+
         $query -> select('COUNT(t.id)');
         $query -> from('#__tz_portfolio_plus_templates AS t');
         $query -> join('INNER', '#__tz_portfolio_plus_extensions AS e On e.element = t.template');
@@ -47,6 +59,7 @@ class TZ_Portfolio_PlusTemplate {
         $query -> where('t.id =' . $templateId);
         $query -> group('t.id');
         $db -> setQuery($query);
+
         if(!$db -> loadResult()){
             $templateId = null;
         }
@@ -108,13 +121,22 @@ class TZ_Portfolio_PlusTemplate {
 
         if ($params)
         {
+            self::$cache[$storeId]  = $template;
             return $template;
         }
 
+        self::$cache[$storeId]  = $template -> template;
         return $template->template;
     }
 
     public static function getTemplateDefault(){
+
+        $storeId    = __METHOD__;
+        $storeId    = md5($storeId);
+
+        if(isset(self::$cache[$storeId])){
+            return self::$cache[$storeId];
+        }
 
         $template   = new stdClass;
 
@@ -135,25 +157,37 @@ class TZ_Portfolio_PlusTemplate {
             }
         }
 
+        self::$cache[$storeId]  = $template;
         return $template;
     }
 
     public static function getTemplateById($id, $params = true){
+
         if(!$id){
-            return false;
+            return self::getTemplate($params);
         }
+
+        $storeId    = __METHOD__;
+        $storeId    .= ':'.$id;
+        $storeId    .= ':'.$params;
+        $storeId    = md5($storeId);
+
+        if(isset(self::$cache[$storeId])){
+            return self::$cache[$storeId];
+        }
+
         JTable::addIncludePath(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.DIRECTORY_SEPARATOR.'tables');
 
         $table  = JTable::getInstance('Templates','TZ_Portfolio_PlusTable');
-
 
         $table -> reset();
 
         if(!$table -> load($id)){
             return false;
         }
-
         if($db = $table -> getDbo()){
+            $query  = $db -> getQuery();
+            $db -> setQuery($query);
             $template   = $db -> loadObject();
             if(is_string($template -> params)){
                 $_params = new Registry();
@@ -187,9 +221,11 @@ class TZ_Portfolio_PlusTemplate {
 
             if ($params)
             {
+                self::$cache[$storeId]  = $template;
                 return $template;
             }
 
+            self::$cache[$storeId]  = $template -> template;
             return $template -> template;
         }
         return false;
@@ -199,6 +235,15 @@ class TZ_Portfolio_PlusTemplate {
         if(!$option){
             return false;
         }
+
+        $storeId    = __METHOD__;
+        $storeId    .= ':'.serialize($option);
+        $storeId    = md5($storeId);
+
+        if(isset(self::$cache[$storeId])){
+            return self::$cache[$storeId];
+        }
+
 
         $option = array_merge(array('type' => 'tz_portfolio_plus-template'), $option );
 
@@ -213,13 +258,14 @@ class TZ_Portfolio_PlusTemplate {
             $data -> manifest_cache    = json_decode($data -> manifest_cache);
         }
 
+        self::$cache[$storeId]  = $data;
         return $data;
     }
 
 
     protected static function getTemplateId($artId = null,$catId = null){
 
-        $db         = JFactory::getDbo();
+        $db         = TZ_Portfolio_PlusDatabase::getDbo();
         $app        = JFactory::getApplication('site');
         $templateId = null;
         $_catId     = null;
@@ -235,12 +281,9 @@ class TZ_Portfolio_PlusTemplate {
             switch($input -> get('view')){
                 case 'article':
                 case 'p_article':
-                    JLoader::register('TZ_Portfolio_PlusModelArticle', COM_TZ_PORTFOLIO_PLUS_PATH_SITE
-                        .'/models/article.php');
                     $_artId = $input -> get('id',null,'int');
-                    $artModel   = JModelItem::getInstance('Article','TZ_Portfolio_PlusModel');
-                    if($artItem    = $artModel -> getItem($_artId)){
-                        $_catId = $artItem -> catid;
+                    if($_catId = TZ_Portfolio_PlusHelperCategories::getCategoriesByArticleId($_artId, true)){
+                        $_catId = $_catId -> id;
                     }
                     break;
             }
@@ -276,9 +319,6 @@ class TZ_Portfolio_PlusTemplate {
                     $templateId = $row -> template_id;
                 }
             }
-        }
-        if(!$templateId){
-
         }
         return (int) $templateId;
     }

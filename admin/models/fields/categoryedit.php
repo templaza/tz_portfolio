@@ -10,6 +10,7 @@
 defined('JPATH_BASE') or die;
 
 use Joomla\Utilities\ArrayHelper;
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 JFormHelper::loadFieldClass('list');
 
@@ -27,6 +28,17 @@ class JFormFieldCategoryEdit extends JFormFieldList
 	 * @since   1.6
 	 */
 	public $type = 'CategoryEdit';
+
+    public function setup(\SimpleXMLElement $element, $value, $group = null)
+    {
+        $setup  = parent::setup($element, $value, $group);
+
+        if($this -> multiple) {
+            JHtml::_('formbehavior.chosen', '#' . $this->id);
+        }
+
+        return $setup;
+    }
 
 	/**
 	 * Method to get a list of categories that respects access controls and can be used for
@@ -63,7 +75,7 @@ class JFormFieldCategoryEdit extends JFormFieldList
 			$extension = $this->element['extension'] ? (string) $this->element['extension'] : (string) $jinput->get('option', 'com_tz_portfolio_plus');
 		}
 
-		$db = JFactory::getDbo();
+		$db = TZ_Portfolio_PlusDatabase::getDbo();
 		$query = $db->getQuery(true)
 			->select('DISTINCT a.id AS value, a.title AS text, a.level, a.published, a.lft');
 		$subQuery = $db->getQuery(true)

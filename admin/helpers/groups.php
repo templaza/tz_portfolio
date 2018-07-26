@@ -21,6 +21,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\Utilities\ArrayHelper;
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 class TZ_Portfolio_PlusHelperGroups{
 
@@ -40,7 +41,7 @@ class TZ_Portfolio_PlusHelperGroups{
 
             $user       = JFactory::getUser();
             $viewlevels = ArrayHelper::toInteger($user->getAuthorisedViewLevels());
-            $db         = JFactory::getDbo();
+            $db         = TZ_Portfolio_PlusDatabase::getDbo();
             $query      = $db -> getQuery(true);
 
             $query -> select('*');

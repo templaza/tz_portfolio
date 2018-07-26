@@ -24,7 +24,7 @@ $params = $this -> item -> params;
 if($params -> get('show_category',1)){
 ?>
 
-<span class="TzArticleCategory">
+<span class="tpp-item-category">
     <?php
     $title = $this->escape($this->item->category_title);
     $url    = $title;

@@ -25,10 +25,9 @@ class JHtmlMediaTypes
     public static function options($group = 'mediatype')
     {
         $options    = array();
-        $dispatcher	= JEventDispatcher::getInstance();
         TZ_Portfolio_PlusPluginHelper::importPlugin($group);
 
-        if($results	= $dispatcher -> trigger('onAddMediaType')){
+        if($results	= \JFactory::getApplication()->triggerEvent('onAddMediaType')){
             if(count($results)){
                 foreach($results as $item) {
                     $options[]  = JHtml::_('select.option', $item->value, $item->text);

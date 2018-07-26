@@ -46,9 +46,6 @@ class TZ_Portfolio_PlusViewField extends JViewLegacy
             $this->groups = $groupModel->getItems();
         }
 
-        $editor = JFactory::getEditor();
-        $this -> assign('editor',$editor);
-
         if($this -> item -> id == 0){
             $this -> item -> published = 'P';
         }

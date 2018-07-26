@@ -26,7 +26,6 @@ $params = &$this->item->params;
 $images = json_decode($this->item->images);
 $canEdit	= $this->item->params->get('access-edit');
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
-
 $blogLink   = $this -> item ->link;
 $item   = $this -> item;
 ?>
@@ -51,7 +50,7 @@ if(!isset($item -> mediatypes) || (isset($item -> mediatypes) && !in_array($item
         <?php if ($params->get('show_date_print_icon', 0) || $params->get('show_date_email_icon', 0) || $canEdit) : ?>
             <div class="tp-item-tools row-table">
                 <div class="btn-group pull-right">
-                    <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"<?php echo $params->get('enable_bootstrap',1) ? ' href="#"' :''; ?>>
+                    <a class="btn btn-default btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown"<?php echo $params->get('enable_bootstrap',1) ? ' href="#"' :''; ?>>
                         <i class="icon-cog"></i> <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
@@ -71,7 +70,7 @@ if(!isset($item -> mediatypes) || (isset($item -> mediatypes) && !in_array($item
 
         <?php if ($params->get('show_date_title',1)) : ?>
             <h3 class="tpTitle reset-heading" itemprop="name">
-                <?php if ($params->get('cat_link_titles',1) && $params->get('access-view')) : ?>
+                <?php if ($params->get('date_link_titles',1) && $params->get('access-view')) : ?>
                     <a<?php if($params -> get('tz_use_lightbox') == 1) echo ' class="fancybox fancybox.iframe"';?>
                         href="<?php echo $blogLink; ?>" itemprop="url">
                         <?php echo $this->escape($this->item->title); ?></a>
@@ -240,7 +239,7 @@ if(!isset($item -> mediatypes) || (isset($item -> mediatypes) && !in_array($item
 
             <?php if($params -> get('show_date_readmore',1)):?>
                 <a href="<?php echo $link; ?>"
-                   class="btn btn-default TzReadmore<?php echo $params -> get('tz_use_lightbox', 1)?' fancybox fancybox.iframe':'';?>"
+                   class="btn btn-default btn-secondary TzReadmore<?php echo $params -> get('tz_use_lightbox', 1)?' fancybox fancybox.iframe':'';?>"
                     >
                     <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_READ_MORE');?>
                 </a>

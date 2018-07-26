@@ -26,37 +26,23 @@ JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
 ?>
 
-<?php if(!empty($this -> sidebar)):?>
-    <div id="j-sidebar-container" class="span2">
-        <?php echo $this -> sidebar; ?>
-    </div>
-    <div id="j-main-container" class="span10">
-<?php endif;?>
-    <form name="adminForm" method="post" id="adminForm"
+<?php echo JHtml::_('tzbootstrap.addrow');?>
+    <?php if(!empty($this -> sidebar)){?>
+        <div id="j-sidebar-container" class="span2 col-md-2">
+            <?php echo $this -> sidebar; ?>
+        </div>
+    <?php } ?>
+
+    <?php echo JHtml::_('tzbootstrap.startcontainer', '10', !empty($this -> sidebar));?>
+    <form name="adminForm" method="post" id="adminForm" class="tpp-extension__upload"
           enctype="multipart/form-data"
           action="index.php?option=com_tz_portfolio_plus&view=addon&layout=upload">
-        <div class="<?php echo $this -> state -> get('list.dataserver')?'collapse':''; ?>" id="tpp-addon__upload">
-            <fieldset class="adminForm">
-                <legend><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_UPLOAD_AND_INSTALL_ADDON');?></legend>
-                <div class="form-horizontal">
-                    <div class="control-group">
-                        <div class="control-label"><?php echo $this -> form -> getLabel('install_package');?></div>
-                        <div class="controls"><?php echo $this -> form -> getInput('install_package');?></div>
-                    </div>
-                    <div class="form-actions">
-                        <button class="btn btn-small btn-primary" type="button" onclick="Joomla.submitbutton('addon.install')">
-                            <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_UPLOAD_AND_INSTALL');?></button>
-                    </div>
-                </div>
-            </fieldset>
-        </div>
 
         <?php echo $this -> loadTemplate('list'); ?>
 
-<!--        <input type="hidden" value="com_tz_portfolio_plus" name="option">-->
         <input type="hidden" value="" name="task">
         <?php echo JHTML::_('form.token');?>
     </form>
-<?php if(!empty($this -> sidebar)):?>
-    </div>
-<?php endif;?>
+
+    <?php echo JHtml::_('tzbootstrap.endcontainer');?>
+<?php echo JHtml::_('tzbootstrap.endrow');?>

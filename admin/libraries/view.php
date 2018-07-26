@@ -21,6 +21,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Application\ApplicationHelper;
 
 jimport('joomla.application.component.view');
 
@@ -43,7 +44,7 @@ class TZ_Portfolio_PlusViewLegacy extends JViewLegacy{
         return false;
     }
 
-    protected function _generateLayout(&$article,&$params, JEventDispatcher $dispatcher){
+    protected function _generateLayout(&$article,&$params, $dispatcher){
         if($template   = TZ_Portfolio_PlusTemplate::getTemplate(true)){
             $theme  = $template;
             $html   = null;
@@ -60,7 +61,7 @@ class TZ_Portfolio_PlusViewLegacy extends JViewLegacy{
                         $childRows  = array();
                         $rowName    = null;
                         if(isset($tplItems -> name) && $tplItems -> name){
-                            $rowName    = JApplication::stringURLSafe($tplItems -> name);
+                            $rowName    = ApplicationHelper::stringURLSafe($tplItems -> name);
                         }
 
                         if($tplItems && isset($tplItems -> children)){
@@ -222,7 +223,7 @@ class TZ_Portfolio_PlusViewLegacy extends JViewLegacy{
             $responsive = null;
 
             if(isset($children -> name) && $children -> name){
-                $rowName    = JApplication::stringURLSafe($children -> name);
+                $rowName    = ApplicationHelper::stringURLSafe($children -> name);
             }
             if(isset($children->{"class"}) && $children->{"class"}){
                 $class  = $children->{"class"};

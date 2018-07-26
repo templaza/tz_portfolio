@@ -25,7 +25,7 @@ if($params -> get('show_author',1)) {
 ?>
 
 <?php if (!empty($this->item->author )){ ?>
-    <span class="TzCreatedby" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <span class="tpp-item-created-by" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <?php $author = $this->item->created_by_alias ? $this->item->created_by_alias : $this->item->author; ?>
     <?php $author = '<span itemprop="name">' . $author . '</span>'; ?>
     <?php if ($params->get('link_author', 1)){ ?>

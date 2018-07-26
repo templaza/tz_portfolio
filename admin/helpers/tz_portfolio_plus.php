@@ -20,6 +20,8 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
+
 class TZ_Portfolio_PlusHelper
 {
 	public static $extension        = 'com_tz_portfolio_plus';
@@ -372,7 +374,7 @@ class TZ_Portfolio_PlusHelper
 
 	public static function getMenuLinks($menuType = null, $parentId = 0, $mode = 0, $published = array(), $languages = array())
 	{
-		$db = JFactory::getDbo();
+        $db     = TZ_Portfolio_PlusDatabase::getDbo();
 		$query = $db->getQuery(true)
 			->select('a.id AS value, a.title AS text, a.alias, a.level, a.component_id,'
 				.' a.menutype, a.type, a.template_style_id, a.checked_out, a.params')
@@ -418,7 +420,8 @@ class TZ_Portfolio_PlusHelper
 		}
 
 		$query->where('a.published != -2')
-			->group('a.id, a.title, a.alias, a.level, a.menutype, a.type, a.template_style_id, a.checked_out, a.lft')
+			->group('a.id, a.title, a.alias, a.level, a.menutype, a.type,a.template_style_id')
+			->group('a.checked_out, a.lft, a.component_id, a.params')
 			->order('a.lft ASC');
 
 		// Get the options.

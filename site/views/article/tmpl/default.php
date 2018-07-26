@@ -24,22 +24,19 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers');
 
 $app    = JFactory::getApplication();
 
-//JFactory::getLanguage()->load('com_content');
-
 // Create shortcuts to some parameters.
 $item       = $this -> item;
 $params		= $item->params;
 $images     = json_decode($item->images);
 $urls       = json_decode($item->urls);
 $canEdit	= $item->params->get('access-edit');
-JHtml::_('behavior.caption');
 $user		= JFactory::getUser();
 $doc        = JFactory::getDocument();
 
 ?>
 
-<div class="tzpp_bootstrap3 TzItemPage item-page<?php echo $this->pageclass_sfx?>"  itemscope itemtype="http://schema.org/Article">
-    <div class="TzItemPageInner row">
+<div class="tzpp_bootstrap3 tpp-item-page item-page<?php echo $this->pageclass_sfx?>"  itemscope itemtype="http://schema.org/Article">
+    <div class="tpp-item-page__inner row">
         <meta itemprop="inLanguage" content="<?php echo ($item->language === '*') ? JFactory::getConfig()->get('language') : $item->language; ?>" />
         <?php if ($this->params->get('show_page_heading', 1)) : ?>
             <h1 class="TzHeadingTitle">
@@ -90,22 +87,20 @@ $doc        = JFactory::getDocument();
             </div>
             <?php endif;?>
             <?php if($introtext = $this -> loadTemplate('introtext')):?>
-            <div class="">
+            <div class="tpp-item-introtext">
                 <?php echo $introtext;?>
             </div>
             <?php endif;?>
             <?php if($fulltext = $this -> loadTemplate('fulltext')):?>
-            <div class="">
+            <div class="tpp-item-fulltext">
                 <?php echo $fulltext;?>
             </div>
             <?php endif;?>
             <?php if($extrafields = $this -> loadTemplate('extrafields')):?>
-            <div class="">
                 <?php echo $extrafields;?>
-            </div>
             <?php endif;?>
             <?php if($tag = $this -> loadTemplate('tags')):?>
-            <div class="">
+            <div class="tpp-item-tags">
                 <?php echo $tag;?>
             </div>
             <?php endif;?>

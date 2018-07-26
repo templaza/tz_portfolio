@@ -1,8 +1,11 @@
+.tz_portfolio_plus_portfolio .element {
+    background: none;
+}
 .tz_portfolio_plus_portfolio .TzInner {
     margin: 10px;
     padding: 10px;
     overflow: hidden;
-    border: 1px solid #ccc;
+    border: 1px solid #ebebeb;
 }
 .tz_portfolio_plus_portfolio .element img{
     max-width: 100%;
@@ -10,4 +13,7 @@
 }
 .tz_portfolio_plus_portfolio .element .tzpp_media{
     overflow: hidden;
+}
+.tz_portfolio_plus_portfolio .element .information{
+    padding: 9px 0;
 }

@@ -25,7 +25,7 @@ $params = $this -> item -> params;
 if($params -> get('show_modify_date',1)){
     if(isset($this -> item -> modified)) {
     ?>
-<span class="TzModified">
+<span class="tpp-item-modified">
     <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_LAST_UPDATED', JHtml::_('date', $this->item->modified, JText::_('DATE_FORMAT_LC2'))); ?>
 </span>
     <?php

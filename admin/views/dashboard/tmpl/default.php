@@ -57,62 +57,76 @@ $xml	= simplexml_load_file(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/tz_portfolio_plus.
         });
     })(jQuery);
 </script>
-<?php if(!empty( $this->sidebar)): ?>
-    <div id="j-sidebar-container" class="span2">
-        <?php echo $this->sidebar; ?>
-    </div>
-    <div id="j-main-container" class="span10 tpDashboard">
-<?php else : ?>
-    <div id="j-main-container" class="tpDashboard">
-<?php endif;?>
-        <div class="tpHeadline">
-            <h2 class="reset-heading"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_DASHBOARD'); ?></h2>
-            <p><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_DASHBOARD_DESC'); ?></p>
+
+<?php echo JHtml::_('tzbootstrap.addrow');?>
+    <?php if(!empty($this -> sidebar)){?>
+        <div id="j-sidebar-container" class="span2 col-md-2">
+            <?php echo $this -> sidebar; ?>
         </div>
-        <div class="row-fluid">
-            <div class="span7">
-                <div class="tpQuicklink">
-                    <?php
-                    $this->_quickIcon('index.php?option=com_tz_portfolio_plus&view=articles', 'icon-64-articles.png', 'COM_TZ_PORTFOLIO_PLUS_ARTICLES');
-                    $this->_quickIcon('index.php?option=com_tz_portfolio_plus&view=categories', 'icon-64-categories.png', 'COM_TZ_PORTFOLIO_PLUS_CATEGORIES');
-                    $this->_quickIcon('index.php?option=com_tz_portfolio_plus&view=featured', 'icon-64-featured.png', 'COM_TZ_PORTFOLIO_PLUS_FEATURED');
-                    $this->_quickIcon('index.php?option=com_tz_portfolio_plus&view=fields', 'icon-64-fields.png', 'COM_TZ_PORTFOLIO_PLUS_FIELDS');
-                    $this->_quickIcon('index.php?option=com_tz_portfolio_plus&view=groups', 'icon-64-groups.png', 'COM_TZ_PORTFOLIO_PLUS_FIELD_GROUPS');
-                    $this->_quickIcon('index.php?option=com_tz_portfolio_plus&view=tags', 'icon-64-tags.png', 'COM_TZ_PORTFOLIO_PLUS_TAGS');
-                    $this->_quickIcon('index.php?option=com_tz_portfolio_plus&view=addons', 'icon-64-addons.png', 'COM_TZ_PORTFOLIO_PLUS_ADDONS');
-                    $this->_quickIcon('index.php?option=com_tz_portfolio_plus&view=template_styles', 'icon-64-styles.png', 'COM_TZ_PORTFOLIO_PLUS_TEMPLATE_STYLES');
-                    $this->_quickIcon('index.php?option=com_tz_portfolio_plus&view=templates', 'icon-64-templates.png', 'COM_TZ_PORTFOLIO_PLUS_TEMPLATES');
-                    $this->_quickIcon('index.php?option=com_tz_portfolio_plus&view=acls', 'icon-64-security.png', 'COM_TZ_PORTFOLIO_PLUS_ACL');
-                    $this->_quickIcon('index.php?option=com_config&view=component&component=com_tz_portfolio_plus&return=' . urlencode(base64_encode(JUri::getInstance())), 'icon-64-configure.png', 'COM_TZ_PORTFOLIO_PLUS_CONFIGURE');
-                    ?>
-                </div>
+    <?php } ?>
+
+    <?php echo JHtml::_('tzbootstrap.startcontainer', '10', !empty($this -> sidebar),
+        array('containerclass' => false));?>
+
+        <div class="tpDashboard">
+            <div class="tpHeadline">
+                <h2 class="reset-heading"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_DASHBOARD'); ?></h2>
+                <p><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_DASHBOARD_DESC'); ?></p>
             </div>
-            <div class="span5 tpInfo">
-                <div class="tpDesc">
-                    <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_DESCRIPTION_2'); ?>
-                </div>
-                <div class="tpVersion">
-                    <b class="checking">
-                        <i class="fa fa-circle-o-notch fa-spin"></i>Checking For Updates ...</b>
-                    <b class="latest">Software Is Up To Date</b>
-                    <b class="requires-updating">
-                        Requires Updating
-                        <a href="http://www.tzportfolio.com/" class="btn btn-default btn-sm">Update Now</a>
-                    </b>
-                    <div class="versions-meta">
-                        <div class="text-muted local-version">Installed Version: <span data-local-version="<?php echo $xml->version; ?>"><?php echo $xml->version; ?></span></div>
-                        <div class="text-muted latest-version">Latest Version: <span data-online-version="">N/A</span></div>
+            <?php echo JHtml::_('tzbootstrap.addrow');?>
+                <div class="span7 col-md-7">
+                    <div class="tpQuicklink">
+                        <?php
+                        $this->_quickIcon('index.php?option=com_tz_portfolio_plus&view=articles', 'icon-64-articles.png', 'COM_TZ_PORTFOLIO_PLUS_ARTICLES');
+                        $this->_quickIcon('index.php?option=com_tz_portfolio_plus&view=categories', 'icon-64-categories.png', 'COM_TZ_PORTFOLIO_PLUS_CATEGORIES');
+                        $this->_quickIcon('index.php?option=com_tz_portfolio_plus&view=featured', 'icon-64-featured.png', 'COM_TZ_PORTFOLIO_PLUS_FEATURED');
+                        $this->_quickIcon('index.php?option=com_tz_portfolio_plus&view=fields', 'icon-64-fields.png', 'COM_TZ_PORTFOLIO_PLUS_FIELDS');
+                        $this->_quickIcon('index.php?option=com_tz_portfolio_plus&view=groups', 'icon-64-groups.png', 'COM_TZ_PORTFOLIO_PLUS_FIELD_GROUPS');
+                        $this->_quickIcon('index.php?option=com_tz_portfolio_plus&view=tags', 'icon-64-tags.png', 'COM_TZ_PORTFOLIO_PLUS_TAGS');
+                        $this->_quickIcon('index.php?option=com_tz_portfolio_plus&view=addons', 'icon-64-addons.png', 'COM_TZ_PORTFOLIO_PLUS_ADDONS');
+                        $this->_quickIcon('index.php?option=com_tz_portfolio_plus&view=template_styles', 'icon-64-styles.png', 'COM_TZ_PORTFOLIO_PLUS_TEMPLATE_STYLES');
+                        $this->_quickIcon('index.php?option=com_tz_portfolio_plus&view=templates', 'icon-64-templates.png', 'COM_TZ_PORTFOLIO_PLUS_TEMPLATES');
+                        $this->_quickIcon('index.php?option=com_tz_portfolio_plus&view=acls', 'icon-64-security.png', 'COM_TZ_PORTFOLIO_PLUS_ACL');
+                        $this->_quickIcon('index.php?option=com_config&view=component&component=com_tz_portfolio_plus&return=' . urlencode(base64_encode(JUri::getInstance())), 'icon-64-configure.png', 'COM_TZ_PORTFOLIO_PLUS_CONFIGURE');
+                        ?>
                     </div>
                 </div>
-                <div class="tpDetail">
-                    <ul>
-                        <li><span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_AUTHOR'); ?>:</span> <a href="<?php echo $xml -> authorUrl;?>" target="_blank"><?php echo $xml->author; ?></a></li>
-                        <li><span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_COPYRIGHT'); ?>:</span> <?php echo $xml->copyright; ?></li>
-                        <li><span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SUPPORT'); ?>:</span> <a href="<?php echo $xml->forumUrl; ?>" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SUPPORT'); ?>" target="_blank"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SUPPORT_DESC'); ?></a></li>
-                        <li><span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_GROUP'); ?>:</span> <a href="<?php echo $xml->facebookGroupUrl; ?>" target="_blank"><?php echo $xml->facebookGroupUrl; ?></a></li>
-                        <li><span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_FANPAGE'); ?>:</span> <a href="<?php echo $xml->facebookUrl; ?>" target="_blank"><?php echo $xml->facebookUrl; ?></a></li>
-                    </ul>
+                <div class="span5 col-md-5">
+                    <div class="version-notice alert alert-primary">
+                        <p>In the next version. TZ Portfolio+ will have 2 versions are free and pro.</p>
+
+                        <p><b>Free Version</b>: That you can still use the full features included (Addons, Templates, Extension, etc). It will only limited you in 50 articles. It suitable for developer who want to test product and present to customer. To unlock limited you have to upgrade to Pro version.
+                        <br/><b>Pro Version</b>: You will get TZ Portfolio+ full features without limited</p>
+                    </div>
+                    <div class="tpInfo">
+                        <div class="tpDesc">
+                            <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_DESCRIPTION_2'); ?>
+                        </div>
+                        <div class="tpVersion">
+                            <b class="checking">
+                                <i class="fa fa-circle-o-notch fa-spin"></i>Checking For Updates ...</b>
+                            <b class="latest">Software Is Up To Date</b>
+                            <b class="requires-updating">
+                                Requires Updating
+                                <a href="http://www.tzportfolio.com/" class="btn btn-default btn-sm btn-secondary">Update Now</a>
+                            </b>
+                            <div class="versions-meta">
+                                <div class="text-muted local-version">Installed Version: <span data-local-version="<?php echo $xml->version; ?>"><?php echo $xml->version; ?></span></div>
+                                <div class="text-muted latest-version">Latest Version: <span data-online-version="">N/A</span></div>
+                            </div>
+                        </div>
+                        <div class="tpDetail">
+                            <ul>
+                                <li><span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_AUTHOR'); ?>:</span> <a href="<?php echo $xml -> authorUrl;?>" target="_blank"><?php echo $xml->author; ?></a></li>
+                                <li><span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_COPYRIGHT'); ?>:</span> <?php echo $xml->copyright; ?></li>
+                                <li><span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SUPPORT'); ?>:</span> <a href="<?php echo $xml->forumUrl; ?>" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SUPPORT'); ?>" target="_blank"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SUPPORT_DESC'); ?></a></li>
+                                <li><span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_GROUP'); ?>:</span> <a href="<?php echo $xml->facebookGroupUrl; ?>" target="_blank"><?php echo $xml->facebookGroupUrl; ?></a></li>
+                                <li><span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_FANPAGE'); ?>:</span> <a href="<?php echo $xml->facebookUrl; ?>" target="_blank"><?php echo $xml->facebookUrl; ?></a></li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            <?php echo JHtml::_('tzbootstrap.endrow');?>
         </div>
-    </div>
+    <?php echo JHtml::_('tzbootstrap.endcontainer');?>
+<?php echo JHtml::_('tzbootstrap.endrow');?>

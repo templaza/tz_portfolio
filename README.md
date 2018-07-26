@@ -10,6 +10,14 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+26/07/2018 - 2.0.0
+
+	​- Remove Tag Articles and User Articles views (Replace by filter of Portfolio view).
+	- Optimize codes.
+	- Added notification for vote.
+	- Added code filter for portfolio view when module TZ Portfolio Plus chose menu item is Portfolio view.
+	- Support for Joomla 4 Alpha.
+
 19/07/2018 - 1.3.0
 
 	- Fix error priority of v1.2.9.

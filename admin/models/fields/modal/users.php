@@ -18,6 +18,9 @@
 -------------------------------------------------------------------------*/
 
 defined('JPATH_BASE') or die;
+
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
+
 JLoader::import('framework',JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/includes');
 
 /**
@@ -60,7 +63,7 @@ class JFormFieldModal_Users extends JFormField
 		$html	= array();
 		$link	= 'index.php?option=com_tz_portfolio_plus&amp;view=users&amp;layout=modal&amp;tmpl=component&amp;field='.$this -> id.'&amp;function=jSelectUser_'.$this->id;
 
-		$db	= JFactory::getDBO();
+		$db	= TZ_Portfolio_PlusDatabase::getDbo();
 		$db->setQuery(
 			'SELECT name' .
 			' FROM #__users' .

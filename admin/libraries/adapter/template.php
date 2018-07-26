@@ -17,29 +17,37 @@
 
 -------------------------------------------------------------------------*/
 
+namespace TZ_Portfolio_Plus\Installer\Adapter;
 
 // No direct access
 defined('_JEXEC') or die;
 
-JLoader::import('com_tz_portfolio_plus.includes.framework',JPATH_ADMINISTRATOR.'/components');
+use Joomla\CMS\Installer\Adapter\TemplateAdapter;
 
-class TZ_Portfolio_PlusInstallerAdapterTemplate extends JInstallerAdapterTemplate{
+\JLoader::import('com_tz_portfolio_plus.includes.framework',JPATH_ADMINISTRATOR.'/components');
 
-    public function __construct(JInstaller $parent, JDatabaseDriver $db, array $options = array())
+class TZ_Portfolio_PlusInstallerTemplateAdapter extends TemplateAdapter{
+
+    public function __construct(\JInstaller $parent, \JDatabaseDriver $db, array $options = array())
     {
 
         parent::__construct($parent, $db, $options);
 
         // Get a generic TZ_Portfolio_PlusTableExtension instance for use if not already loaded
         if (!($this->extension instanceof TZ_Portfolio_PlusTableExtensions)) {
-            JTable::addIncludePath(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH . DIRECTORY_SEPARATOR . 'tables');
-            $this->extension = JTable::getInstance('Extensions', 'TZ_Portfolio_PlusTable');
+            \JTable::addIncludePath(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH . DIRECTORY_SEPARATOR . 'tables');
+            $this->extension = \JTable::getInstance('Extensions', 'TZ_Portfolio_PlusTable');
         }
 
         if(is_object($this -> extension) && isset($this -> extension -> id)) {
             $this->extension->extension_id = $this->extension->id;
         }
-        $this->type = 'tz_portfolio_plus-'.strtolower(str_replace('TZ_Portfolio_PlusInstallerAdapter', '', get_called_class()));
+
+        $type   = strtolower($this -> type);
+        $type   = preg_replace('/^TZ_Portfolio_PlusInstaller/i', '', $type);
+        $type   = preg_replace('/^TZ_Portfolio_PlusInstallerAdapter/i', '', $type);
+
+        $this->type = 'tz_portfolio_plus-'.strtolower($type);
     }
 
     protected function checkExistingExtension()
@@ -57,9 +65,9 @@ class TZ_Portfolio_PlusInstallerAdapterTemplate extends JInstallerAdapterTemplat
         {
             // Install failed, roll back changes
             throw new RuntimeException(
-                JText::sprintf(
+                \JText::sprintf(
                     'JLIB_INSTALLER_ABORT_ROLLBACK',
-                    JText::_('JLIB_INSTALLER_' . $this->route),
+                    \JText::_('JLIB_INSTALLER_' . $this->route),
                     $e->getMessage()
                 ),
                 $e->getCode(),
@@ -74,9 +82,9 @@ class TZ_Portfolio_PlusInstallerAdapterTemplate extends JInstallerAdapterTemplat
         if (empty($this->element))
         {
             throw new RuntimeException(
-                JText::sprintf(
+                \JText::sprintf(
                     'JLIB_INSTALLER_ABORT_MOD_INSTALL_NOFILE',
-                    JText::_('JLIB_INSTALLER_' . strtoupper($this->route))
+                    \JText::_('JLIB_INSTALLER_' . strtoupper($this->route))
                 )
             );
         }
@@ -89,7 +97,7 @@ class TZ_Portfolio_PlusInstallerAdapterTemplate extends JInstallerAdapterTemplat
         // Discover installs are stored a little differently
         if ($this->route == 'discover_install')
         {
-            $manifest_details = JInstaller::parseXMLInstallFile($this->parent->getPath('manifest'));
+            $manifest_details = \JInstaller::parseXMLInstallFile($this->parent->getPath('manifest'));
 
             $this->extension->manifest_cache    = json_encode($manifest_details);
             $this->extension->state             = 0;
@@ -98,10 +106,15 @@ class TZ_Portfolio_PlusInstallerAdapterTemplate extends JInstallerAdapterTemplat
             $this->extension->params            = $this->parent->getParams();
             $this->extension->access            = 1;
 
+            if(!isset($this ->extension ->protected) || (isset($this -> extension ->protected)
+                    && !$this ->extension ->protected)) {
+                $this->extension->protected = 0;
+            }
+
             if (!$this->extension->store())
             {
                 // Install failed, roll back changes
-                throw new RuntimeException(JText::_('JLIB_INSTALLER_ERROR_TPL_DISCOVER_STORE_DETAILS'));
+                throw new RuntimeException(\JText::_('JLIB_INSTALLER_ERROR_TPL_DISCOVER_STORE_DETAILS'));
             }
 
             return;
@@ -114,7 +127,7 @@ class TZ_Portfolio_PlusInstallerAdapterTemplate extends JInstallerAdapterTemplat
             {
                 // Install failed, roll back changes
                 throw new RuntimeException(
-                    JText::_('JLIB_INSTALLER_ABORT_TPL_INSTALL_ALREADY_INSTALLED')
+                    \JText::_('JLIB_INSTALLER_ABORT_TPL_INSTALL_ALREADY_INSTALLED')
                 );
             }
 
@@ -129,9 +142,13 @@ class TZ_Portfolio_PlusInstallerAdapterTemplate extends JInstallerAdapterTemplat
             // There is no folder for templates
             $this->extension->folder = '';
             $this->extension->published = 1;
-            $this->extension->protected = 0;
             $this->extension->access = 1;
             $this->extension->params = $this->parent->getParams();
+
+            if(!isset($this ->extension ->protected) || (isset($this -> extension ->protected)
+                    && !$this ->extension ->protected)) {
+                $this->extension->protected = 0;
+            }
         }
 
         // Name might change in an update
@@ -144,9 +161,9 @@ class TZ_Portfolio_PlusInstallerAdapterTemplate extends JInstallerAdapterTemplat
         {
             // Install failed, roll back changes
             throw new RuntimeException(
-                JText::sprintf(
+                \JText::sprintf(
                     'JLIB_INSTALLER_ABORT_ROLLBACK',
-                    JText::_('JLIB_INSTALLER_' . strtoupper($this->route)),
+                    \JText::_('JLIB_INSTALLER_' . strtoupper($this->route)),
                     $this->extension->getError()
                 )
             );
@@ -162,19 +179,25 @@ class TZ_Portfolio_PlusInstallerAdapterTemplate extends JInstallerAdapterTemplat
         if (in_array($this->route, array('install', 'discover_install')))
         {
             $db    = $this->db;
-            $lang  = JFactory::getLanguage();
+            $lang  = \JFactory::getLanguage();
             $debug = $lang->setDebug(false);
 
             $columns = array($db->quoteName('template'),
                 $db->quoteName('home'),
                 $db->quoteName('title'),
-                $db->quoteName('params')
+                $db->quoteName('params'),
+                $db->quoteName('protected'),
+                $db->quoteName('layout'),
+                $db->quoteName('preset')
             );
 
             $values = array(
                 $db->quote($this->extension->element), $db->quote(0),
-                $db->quote(JText::sprintf('JLIB_INSTALLER_DEFAULT_STYLE', JText::_($this->extension->name))),
-                $db->quote($this->extension->params));
+                $db->quote(\JText::sprintf('JLIB_INSTALLER_DEFAULT_STYLE', \JText::_($this->extension->name))),
+                $db->quote($this->extension->params),
+                $this->extension->protected,
+                $db->quote(''),
+                $db->quote(''));
 
             $lang->setDebug($debug);
 

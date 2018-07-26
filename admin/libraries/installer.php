@@ -17,23 +17,28 @@
 
 -------------------------------------------------------------------------*/
 
+namespace TZ_Portfolio_Plus\Installer;
+
 // No direct access
 defined('_JEXEC') or die;
 
-JLoader::import('com_tz_portfolio_plus.includes.framework',JPATH_ADMINISTRATOR.'/components');
+use Joomla\String\StringHelper;
+use Joomla\CMS\Installer\Installer;
 
-class TZ_Portfolio_PlusInstaller extends JInstaller
+\JLoader::import('com_tz_portfolio_plus.includes.framework',JPATH_ADMINISTRATOR.'/components');
+
+class TZ_Portfolio_PlusInstaller extends Installer
 {
     protected static $instances;
 
-    public function __construct($basepath = __DIR__, $classprefix = 'TZ_Portfolio_PlusInstallerAdapter', $adapterfolder = 'adapter')
+    public function __construct($basepath = __DIR__, $classprefix = 'TZ_Portfolio_Plus\\Installer\\Adapter', $adapterfolder = 'adapter')
     {
         parent::__construct($basepath, $classprefix, $adapterfolder);
 
         // Get a generic TZ_Portfolio_PlusTableExtension instance for use if not already loaded
         if (!($this->extension instanceof TZ_Portfolio_PlusTableExtensions)) {
-            JTable::addIncludePath(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH . DIRECTORY_SEPARATOR . 'tables');
-            $this->extension = JTable::getInstance('Extensions', 'TZ_Portfolio_PlusTable');
+            \JTable::addIncludePath(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH . DIRECTORY_SEPARATOR . 'tables');
+            $this->extension = \JTable::getInstance('Extensions', 'TZ_Portfolio_PlusTable');
         }
 
         if(is_object($this -> extension) && isset($this -> extension -> id)) {
@@ -41,16 +46,19 @@ class TZ_Portfolio_PlusInstaller extends JInstaller
         }
     }
 
-    public static function getInstance($basepath = __DIR__, $classprefix = 'TZ_Portfolio_PlusInstallerAdapter', $adapterfolder = 'adapter')
+    public static function getInstance($basepath = __DIR__, $classprefix = 'TZ_Portfolio_Plus\\Installer\\Adapter', $adapterfolder = 'adapter')
     {
         if (!isset(self::$instances[$basepath]))
         {
-            self::$instances[$basepath] = new TZ_Portfolio_PlusInstaller($basepath, $classprefix, $adapterfolder);
+            self::$instances[$basepath] = new static($basepath, $classprefix, $adapterfolder);
 
             // For B/C, we load the first instance into the static $instance container, remove at 4.0
-            if (!isset(self::$instance))
-            {
-                self::$instance = self::$instances[$basepath];
+            if(!version_compare(JVERSION, '4.0', 'ge')){
+
+                if (!isset(self::$instance))
+                {
+                    self::$instance = self::$instances[$basepath];
+                }
             }
         }
 
@@ -59,20 +67,20 @@ class TZ_Portfolio_PlusInstaller extends JInstaller
 
     public function install($path = null)
     {
-        if ($path && JFolder::exists($path))
+        if ($path && \JFolder::exists($path))
         {
             $this->setPath('source', $path);
         }
         else
         {
-            $this->abort(JText::_('JLIB_INSTALLER_ABORT_NOINSTALLPATH'));
+            $this->abort(\JText::_('JLIB_INSTALLER_ABORT_NOINSTALLPATH'));
 
             return false;
         }
 
         if (!$adapter = $this->setupInstall('install', true))
         {
-            $this->abort(JText::_('JLIB_INSTALLER_ABORT_DETECTMANIFEST'));
+            $this->abort(\JText::_('JLIB_INSTALLER_ABORT_DETECTMANIFEST'));
 
             return false;
         }
@@ -113,12 +121,24 @@ class TZ_Portfolio_PlusInstaller extends JInstaller
         if ($result !== false)
         {
             // Refresh versionable assets cache
-            JFactory::getApplication()->flushAssets();
+            \JFactory::getApplication()->flushAssets();
 
             return true;
         }
 
         return false;
+    }
+
+    public function getAdapter($name, $options = array())
+    {
+        $this->getAdapters($options);
+
+        if (!$this->setAdapter($name, $this->_adapters[$name]))
+        {
+            return false;
+        }
+
+        return $this->_adapters[$name];
     }
 
     public function setupInstall($route = 'install', $returnAdapter = false)
@@ -131,11 +151,20 @@ class TZ_Portfolio_PlusInstaller extends JInstaller
 
         // Load the adapter(s) for the install manifest
         $type   = (string) $this->manifest->attributes()->type;
-        $type   = JString::str_ireplace('tz_portfolio_plus-','',$type);
+        $type   = StringHelper::str_ireplace('tz_portfolio_plus-','',$type);
         $params = array('route' => $route, 'manifest' => $this->getManifest());
 
-        // Load the adapter
-        $adapter = $this->getAdapter($type, $params);
+        // Include adapter folder
+        $path = $this->_basepath . '/' . $this->_adapterfolder . '/' . $type . '.php';
+
+        $adapterPrefix  = 'TZ_Portfolio_PlusInstaller'.ucfirst($type);
+
+        $class = rtrim($this->_classprefix, '\\') . '\\' . $adapterPrefix . 'Adapter';
+
+        // Try once more to find the class
+        \JLoader::register($class, $path);
+
+        $adapter = $this->loadAdapter($adapterPrefix, $params);
 
         if ($returnAdapter)
         {

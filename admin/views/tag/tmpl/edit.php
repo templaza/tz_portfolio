@@ -22,7 +22,13 @@ defined('_JEXEC') or die('Restricted access');
 
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.tooltip');
-JHtml::_('formbehavior.chosen', 'select');
+JHtml::_('behavior.tabstate');
+if(!COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+    JHtml::_('formbehavior.chosen', 'select');
+}
+else{
+    JHtml::_('formbehavior.chosen', 'select[multiple]');
+}
 
 $form   = $this -> form;
 
@@ -47,23 +53,23 @@ JFactory::getDocument()->addScriptDeclaration('
             <?php
             $article_assign = $form -> getField('articles_assignment');
             ?>
-            <ul class="nav nav-tabs">
-                <li class="active"><a href="#details" data-toggle="tab"><?php echo JText::_('JDETAILS');?></a></li>
-                <li><a href="#articles_assignment" data-toggle="tab"><?php echo JText::_($article_assign -> getAttribute('label'));?></a></li>
-            </ul>
-            <div class="tab-content">
-                <div class="tab-pane active" id="details">
+
+            <?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'details')); ?>
+
+                <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'details', JText::_('JDETAILS', true)); ?>
                     <?php echo $this -> form -> renderField('title');?>
                     <?php echo $this -> form -> renderField('alias');?>
                     <?php echo $this -> form -> renderField('published');?>
                     <?php echo $this -> form -> renderField('id');?>
                     <?php echo $this -> form -> renderField('description');?>
-                </div>
+                <?php echo JHtml::_('bootstrap.endtab'); ?>
 
-                <div class="tab-pane assignment" id="articles_assignment">
+                <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'articles_assignment',
+                    JText::_($article_assign -> getAttribute('label'), true)); ?>
                     <?php echo $form->getInput('articles_assignment'); ?>
-                </div>
-            </div>
+                <?php echo JHtml::_('bootstrap.endtab'); ?>
+
+            <?php echo JHtml::_('bootstrap.endTabSet'); ?>
         </fieldset>
 
     </div>

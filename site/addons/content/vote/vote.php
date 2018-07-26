@@ -22,6 +22,9 @@ defined('_JEXEC') or die;
 
 class PlgTZ_Portfolio_PlusContentVote extends TZ_Portfolio_PlusPlugin
 {
+    protected $addon;
+    protected $cache                = array();
+    protected $head                 = array();
     protected $autoloadLanguage     = true;
 
     public function __construct($subject, array $config = array())
@@ -29,6 +32,9 @@ class PlgTZ_Portfolio_PlusContentVote extends TZ_Portfolio_PlusPlugin
         parent::__construct($subject, $config);
 
         JLoader::import('addons.content.vote.helpers.vote', COM_TZ_PORTFOLIO_PLUS_PATH_SITE);
+
+        $this -> head  = array();
+        $this -> addon = TZ_Portfolio_PlusPluginHelper::getPlugin($this -> _type, $this -> _name);
     }
 
     public function onAddContentType(){
@@ -51,56 +57,118 @@ class PlgTZ_Portfolio_PlusContentVote extends TZ_Portfolio_PlusPlugin
     public function onAlwaysLoadDocument($context){
         $document = JFactory::getDocument();
         $document->addStyleSheet(TZ_Portfolio_PlusUri::root(true).'/addons/content/vote/css/vote.css');
-        $document->addScript(TZ_Portfolio_PlusUri::root(true).'/addons/content/vote/js/vote.js');
-        $document->addScriptDeclaration( 'var tzPortfolioVoteFolder = "'.TZ_Portfolio_PlusUri::base(true).'";
-        var tzPortfolioPlusBase = "'.TZ_Portfolio_PlusUri::base(true).'/addons/content/vote";
-        var TzPortfolioPlusVote_text=Array("'.JTEXT::_('PLG_CONTENT_VOTE_NO_AJAX').'","'
-            .JTEXT::_('PLG_CONTENT_VOTE_LOADING').'","'.JTEXT::_('PLG_CONTENT_VOTE_THANKS').'","'
-            .JTEXT::_('PLG_CONTENT_VOTE_LOGIN').'","'.JTEXT::_('PLG_CONTENT_VOTE_RATED').'","'
-            .JTEXT::_('PLG_CONTENT_VOTE_VOTES').'","'.JTEXT::_('PLG_CONTENT_VOTE_VOTE').'");');
+
+        $document -> addScript(TZ_Portfolio_PlusUri::root(true) . '/js/modernizr.custom.js',
+            array('version' => 'auto', 'relative' => true));
+        $document -> addScript(TZ_Portfolio_PlusUri::root(true) . '/js/classie.min.js',
+            array('version' => 'auto', 'relative' => true));
+        $document -> addScript(TZ_Portfolio_PlusUri::root(true) . '/js/notificationfx.min.js',
+            array('version' => 'auto', 'relative' => true));
     }
 
-    public function onBeforeDisplayAdditionInfo($context, &$article, $params, $page = 0, $layout = 'default'){
-
+    public function onBeforeDisplayAdditionInfo($context, &$article, $params, $page = 0, $layout = 'default'
+        , $module = null){
         list($extension, $vName)   = explode('.', $context);
 
         $item   = $article;
 
-        if(isset($article -> id)){
-            $item -> rating_count   = 0;
-            $item -> rating_sum     = 0;
-
-            if($vote = TZ_Portfolio_PlusAddOnContentVoteHelper::getVoteByArticleId($item -> id)) {
-                foreach($vote as $key => $value){
-                    $item -> $key   = $value;
-                }
-            }
+        if(!isset($this -> head[$vName])){
+            $this -> head[$vName]   = false;
         }
+        if($module && !isset($this -> head[$vName.$module -> id])){
+            $this -> head[$vName.$module -> id]   = false;
+        }
+
+        JText::script('PLG_CONTENT_VOTE_VOTES');
+        JText::script('PLG_CONTENT_VOTE_VOTES_1');
 
         if($extension == 'module' || $extension == 'modules'){
             if($path = $this -> getModuleLayout($this -> _type, $this -> _name, $extension, $vName, $layout)){
+                if(!$this -> head[$vName]){
+                    $document   = JFactory::getDocument();
+                    $document->addScript(TZ_Portfolio_PlusUri::root(true)
+                        .'/addons/content/vote/js/vote.min.js');
+
+                    $document -> addStyleSheet(TZ_Portfolio_PlusUri::root(true) . '/css/ns-default.min.css',
+                        array('version' => 'auto'));
+
+                    switch ($params -> get('ct_vote_notice_layout', 'growl')){
+
+                        case 'growl':
+                            $document -> addStyleSheet(TZ_Portfolio_PlusUri::root(true)
+                                . '/css/ns-style-growl.min.css', array('version' => 'auto'));
+                            break;
+                        case 'attached':
+                            $document -> addStyleSheet(TZ_Portfolio_PlusUri::root(true)
+                                . '/css/ns-style-attached.min.css', array('version' => 'auto'));
+                            break;
+                        case 'bar':
+                            $document -> addStyleSheet(TZ_Portfolio_PlusUri::root(true)
+                                . '/css/ns-style-bar.min.css', array('version' => 'auto'));
+                            break;
+                        case 'other':
+                            $document -> addStyleSheet(TZ_Portfolio_PlusUri::root(true)
+                                . '/css/ns-style-other.min.css', array('version' => 'auto'));
+                            break;
+                    }
+
+                    $document -> addScript(TZ_Portfolio_PlusUri::root(true) . '/js/modernizr.custom.js',
+                        array('version' => 'auto', 'relative' => true));
+                    $document -> addScript(TZ_Portfolio_PlusUri::root(true) . '/js/classie.min.js',
+                        array('version' => 'auto', 'relative' => true));
+                    $document -> addScript(TZ_Portfolio_PlusUri::root(true) . '/js/notificationfx.min.js',
+                        array('version' => 'auto', 'relative' => true));
+
+                    $document -> addScriptDeclaration('
+                    if(typeof TZ_Portfolio_PlusAddOnContentVote !== undefined){
+                        TZ_Portfolio_PlusAddOnContentVote.basePath = "'.TZ_Portfolio_PlusUri::base(true)
+                            .'/addons/content/vote";
+                        TZ_Portfolio_PlusAddOnContentVote.addonId = '.$this -> addon -> id.';
+                    }');
+                }
+
+
+                if(isset($article -> id)){
+                    $item -> rating_count   = 0;
+                    $item -> rating_sum     = 0;
+
+                    if($vote = TZ_Portfolio_PlusAddOnContentVoteHelper::getVoteByArticleId($item -> id)) {
+                        foreach($vote as $key => $value){
+                            $item -> $key   = $value;
+                        }
+                    }
+                }
+
                 // Display html
                 ob_start();
-                include $path;
+                require $path;
                 $html = ob_get_contents();
                 ob_end_clean();
                 $html = trim($html);
-                return $html;
-            }
-        }elseif(in_array($context, array('com_tz_portfolio_plus.portfolio', 'com_tz_portfolio_plus.date'
-        , 'com_tz_portfolio_plus.featured', 'com_tz_portfolio_plus.tags', 'com_tz_portfolio_plus.users'))){
-            if($html = $this -> _getViewHtml($context,$item, $params, $layout)){
+
+                $this -> head[$vName]   = true;
+                $this -> head[$vName.($module?$module -> id:'')]   = true;
+
                 return $html;
             }
         }
-    }
-
-    public function onAfterDisplayAdditionInfo($context, &$article, $params, $page = 0, $layout = 'default'){
-
-    }
-
-    public function onContentDisplayListView($context, &$article, $params, $page = 0, $layout = 'default'){
-
+        elseif(in_array($context, array('com_tz_portfolio_plus.portfolio', 'com_tz_portfolio_plus.date'
+        , 'com_tz_portfolio_plus.featured', 'com_tz_portfolio_plus.tags', 'com_tz_portfolio_plus.users'))){
+            if($html = $this -> _getViewHtml($context,$item, $params, $layout)){
+                if(!$this -> head[$vName]){
+                    $document   = JFactory::getDocument();
+                    $document -> addScriptDeclaration('
+                        if(typeof TZ_Portfolio_PlusAddOnContentVote !== undefined){
+                            TZ_Portfolio_PlusAddOnContentVote.basePath = "' . TZ_Portfolio_PlusUri::base(true)
+                                . '/addons/content/vote";
+                            TZ_Portfolio_PlusAddOnContentVote.addonId = "'.$this -> addon -> id.'";
+                        }
+                    ');
+                }
+                $this -> head[$vName]   = true;
+                return $html;
+            }
+        }
     }
 
     public function onContentDisplayArticleView($context, &$article, $params, $page = 0, $layout = null){
@@ -118,6 +186,29 @@ class PlgTZ_Portfolio_PlusContentVote extends TZ_Portfolio_PlusPlugin
                 }
             }
         }
-        return parent::onContentDisplayArticleView($context, $item, $params, $page, $layout);
+
+        if(!isset($this -> head[$vName])){
+            $this -> head[$vName]   = false;
+        }
+
+
+        $html   = parent::onContentDisplayArticleView($context, $item, $params, $page, $layout);
+        if(!$this -> head[$vName]){
+            $document   = JFactory::getDocument();
+            $document -> addScriptDeclaration('
+                if(typeof TZ_Portfolio_PlusAddOnContentVote !== undefined){
+                    TZ_Portfolio_PlusAddOnContentVote.basePath = "' . TZ_Portfolio_PlusUri::base(true)
+                . '/addons/content/vote";
+                    TZ_Portfolio_PlusAddOnContentVote.addonId = "'.$this -> addon -> id.'";
+                }
+            ');
+        }
+        $this -> head[$vName]   = true;
+
+        return $html;
     }
+
+    public function onAfterDisplayAdditionInfo($context, &$article, $params, $page = 0, $layout = 'default', $module = null){}
+    public function onContentDisplayListView($context, &$article, $params, $page = 0, $layout = 'default', $module = null){}
+    public function onContentAfterSave($context, $data, $isnew){}
 }

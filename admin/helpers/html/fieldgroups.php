@@ -19,12 +19,13 @@
 
 defined('_JEXEC') or die;
 
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 class JHtmlFieldGroups
 {
     public static function options()
     {
-        $db = JFactory::getDbo();
+        $db     = TZ_Portfolio_PlusDatabase::getDbo();
         $query = $db->getQuery(true)
             ->select('*')
             ->from('#__tz_portfolio_plus_fieldgroups');

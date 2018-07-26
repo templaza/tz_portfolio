@@ -23,7 +23,7 @@ defined('_JEXEC') or die('Restricted access');
 if($item = $this -> item) {
     if($item->event->onContentDisplayMediaType && !empty($item->event->onContentDisplayMediaType)){
 ?>
-<div class="TzArticleMedia">
+<div class="tpp-item-media">
     <?php echo $item->event->onContentDisplayMediaType; ?>
 </div>
 <?php }

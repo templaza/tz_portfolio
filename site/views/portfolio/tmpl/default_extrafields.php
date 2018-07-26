@@ -23,13 +23,13 @@ defined('_JEXEC') or die;
 if($item = $this -> item):
     if(isset($item -> extrafields) && !empty($item -> extrafields)):
 ?>
-<ul class="tz-extrafields">
+<ul class="tpp-extrafield__list">
 <?php foreach($item -> extrafields as $field):?>
-    <li class="tz_extrafield-item">
+    <li class="tpp-extrafield__item">
         <?php if($field -> hasTitle()):?>
-        <div class="tz_extrafield-label"><?php echo $field -> getTitle();?></div>
+        <div class="tpp-extrafield__label"><?php echo $field -> getTitle();?></div>
         <?php endif;?>
-        <div class="tz_extrafield-value pull-left">
+        <div class="tpp-extrafield__value pull-left">
             <?php echo $field -> getListing();?>
         </div>
     </li>

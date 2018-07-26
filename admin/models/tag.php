@@ -20,13 +20,30 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\String\StringHelper;
 use Joomla\Utilities\ArrayHelper;
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 jimport('joomla.application.component.modeladmin');
 JLoader::import('tags', COM_TZ_PORTFOLIO_PLUS_ADMIN_HELPERS_PATH);
 
 class TZ_Portfolio_PlusModelTag extends JModelAdmin
 {
+
+    public function __construct($config = array(), MVCFactoryInterface $factory = null)
+    {
+        parent::__construct($config, $factory);
+
+        // Set the model dbo
+        if (array_key_exists('dbo', $config))
+        {
+            $this->_db = $config['dbo'];
+        }
+        else
+        {
+            $this->_db = TZ_Portfolio_PlusDatabase::getDbo();
+        }
+    }
 
     public function populateState(){
         parent::populateState();
@@ -84,7 +101,9 @@ class TZ_Portfolio_PlusModelTag extends JModelAdmin
         if (property_exists($item, 'params'))
         {
             $registry = new JRegistry;
-            $registry->loadString($item->params);
+            if($item -> params) {
+                $registry->loadString($item->params);
+            }
             $item->params = $registry->toArray();
         }
 
@@ -108,7 +127,9 @@ class TZ_Portfolio_PlusModelTag extends JModelAdmin
     }
 
     public function save($data){
-        $input = JFactory::getApplication()->input;
+        $app    = JFactory::getApplication();
+        $input = $app->input;
+        $articlesAssignment = null;
 
         if(isset($data['articles_assignment']) && count($data['articles_assignment'])){
             $articlesAssignment  = $data['articles_assignment'];
@@ -141,7 +162,7 @@ class TZ_Portfolio_PlusModelTag extends JModelAdmin
 
                     if (isset($msg))
                     {
-                        JFactory::getApplication()->enqueueMessage($msg, 'warning');
+                        $app->enqueueMessage($msg, 'warning');
                     }
                 }
             }
@@ -174,8 +195,6 @@ class TZ_Portfolio_PlusModelTag extends JModelAdmin
 
                 $query -> select('DISTINCT contentid');
                 $query -> from($db -> quoteName('#__tz_portfolio_plus_tag_content_map'));
-//                $query -> where($db -> quoteName('contentid').' IN('
-//                    .implode(',',$articlesAssignment).')');
                 $query->where('tagsid = ' . (int) $id);
                 $db -> setQuery($query);
 
@@ -198,17 +217,17 @@ class TZ_Portfolio_PlusModelTag extends JModelAdmin
 
             // Remove tags mappings for article items this tag is NOT assigned to.
             // If unassigned then all existing maps will be removed.
-            $query -> clear();
-            $query -> delete('#__tz_portfolio_plus_tag_content_map');
 
             if (!empty($articlesAssignment) && count($articlesAssignment))
             {
+                $query -> clear();
+                $query -> delete('#__tz_portfolio_plus_tag_content_map');
                 $query->where('contentid NOT IN (' . implode(',', $articlesAssignment) . ')');
-            }
-            $query->where('tagsid = ' . (int) $id);
+                $query->where('tagsid = ' . (int) $id);
 
-            $db->setQuery($query);
-            $db->execute();
+                $db->setQuery($query);
+                $db->execute();
+            }
             return true;
         }
         return true;
@@ -254,8 +273,8 @@ class TZ_Portfolio_PlusModelTag extends JModelAdmin
 
         while ($table->load(array('alias' => $alias)))
         {
-            $title = JString::increment($title);
-            $alias = JString::increment($alias, 'dash');
+            $title = StringHelper::increment($title);
+            $alias = StringHelper::increment($alias, 'dash');
         }
 
         return array($title, $alias);

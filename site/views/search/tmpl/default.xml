@@ -58,7 +58,7 @@
                 <option value="0">JNO</option>
             </field>
             <field type="fieldgroups" name="search_groupid"
-                   multiple="true"
+                   multiple="true" style="width: 220px;"
                    label="COM_TZ_PORTFOLIO_PLUS_GROUP_FIELD">
                 <option value="">COM_TZ_PORTFOLIO_PLUS_OPTION_SELECT_FIELDS_GROUP</option>
             </field>

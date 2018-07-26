@@ -20,10 +20,13 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
+
 class TZ_Portfolio_PlusHelperAddons{
     public static function folderOptions()
     {
-        $db = JFactory::getDbo();
+        $db = TZ_Portfolio_PlusDatabase::getDbo();
+
         $query = $db->getQuery(true)
             ->select('DISTINCT(folder) AS value, folder AS text')
             ->from('#__tz_portfolio_plus_extensions')
@@ -45,7 +48,7 @@ class TZ_Portfolio_PlusHelperAddons{
     }
 
     public static function getAddons($options = array()){
-        $db     = JFactory::getDbo();
+        $db     = TZ_Portfolio_PlusDatabase::getDbo();
         $query  = $db -> getQuery(true);
         $query -> select('e.*');
         $query -> from($db -> quoteName('#__tz_portfolio_plus_extensions').' AS e');

@@ -20,8 +20,11 @@
 // No direct access
 defined('JPATH_PLATFORM') or die;
 
-use Joomla\Registry\Registry;
 use Joomla\CMS\Access\Rules;
+use Joomla\Registry\Registry;
+use Joomla\String\StringHelper;
+use Joomla\CMS\Event\AbstractEvent;
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 /**
  * Content table
@@ -285,7 +288,7 @@ class TZ_Portfolio_PlusTableContent extends JTable
             $bad_characters = array("\n", "\r", "\"", "<", ">");
 
             // Remove bad characters
-            $after_clean = JString::str_ireplace($bad_characters, "", $this->metakey);
+            $after_clean = StringHelper::str_ireplace($bad_characters, "", $this->metakey);
 
             // Create array using commas as delimiter
             $keys = explode(',', $after_clean);
@@ -309,8 +312,22 @@ class TZ_Portfolio_PlusTableContent extends JTable
 
     public function load($keys = null, $reset = true)
     {
-        // Implement JObservableInterface: Pre-processing by observers
-        $this->_observers->update('onBeforeLoad', array($keys, $reset));
+        if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+
+            // Pre-processing by observers
+            $event = AbstractEvent::create(
+                'onTableBeforeLoad',
+                [
+                    'subject'	=> $this,
+                    'keys'		=> $keys,
+                    'reset'		=> $reset,
+                ]
+            );
+            $this->getDispatcher()->dispatch('onTableBeforeLoad', $event);
+        }else {
+            // Implement JObservableInterface: Pre-processing by observers
+            $this->_observers->update('onBeforeLoad', array($keys, $reset));
+        }
 
         if (empty($keys))
         {
@@ -395,8 +412,21 @@ class TZ_Portfolio_PlusTableContent extends JTable
             $result = $this->bind($row);
         }
 
-        // Implement JObservableInterface: Post-processing by observers
-        $this->_observers->update('onAfterLoad', array(&$result, $row));
+        if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+            // Post-processing by observers
+            $event = AbstractEvent::create(
+                'onTableAfterLoad',
+                [
+                    'subject'		=> $this,
+                    'result'		=> &$result,
+                    'row'			=> $row,
+                ]
+            );
+            $this->getDispatcher()->dispatch('onTableAfterLoad', $event);
+        }else{
+            // Implement JObservableInterface: Post-processing by observers
+            $this->_observers->update('onAfterLoad', array(&$result, $row));
+        }
 
         return $result;
     }
@@ -469,7 +499,7 @@ class TZ_Portfolio_PlusTableContent extends JTable
     protected function getDefaultAssetValues($component)
     {
         // Need to find the asset id by the name of the component.
-        $db = JFactory::getDbo();
+        $db = TZ_Portfolio_PlusDatabase::getDbo();
         $query = $db->getQuery(true)
             ->select($db->quoteName('id'))
             ->from($db->quoteName('#__assets'))
@@ -514,6 +544,26 @@ class TZ_Portfolio_PlusTableContent extends JTable
             {
                 $this->created_by = $user->get('id');
             }
+        }
+
+        // Set xreference to empty string if not set
+        if (!$this->xreference)
+        {
+            $this->xreference = '';
+        }
+
+        if(!$this -> groupid){
+            $this -> groupid = 0;
+        }
+
+        $columns = $this ->_db -> getTableColumns($this -> _tbl);
+
+        if(array_key_exists('links', $columns) && !$this -> links){
+            $this -> links  = '';
+        }
+
+        if(array_key_exists('attachs', $columns) && !$this -> attachs){
+            $this -> attachs  = '';
         }
 
         if(isset($this -> catid)){

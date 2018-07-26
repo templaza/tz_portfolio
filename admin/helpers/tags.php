@@ -21,6 +21,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\Utilities\ArrayHelper;
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 class TZ_Portfolio_PlusHelperTags{
 
@@ -37,7 +38,7 @@ class TZ_Portfolio_PlusHelperTags{
             }
 
             if(!isset(self::$cache[$storeId])){
-                $db     = JFactory::getDbo();
+                $db     = TZ_Portfolio_PlusDatabase::getDbo();
                 $query  = $db -> getQuery(true);
                 $query -> select('t.*');
                 $query -> from('#__tz_portfolio_plus_tags AS t');
@@ -62,8 +63,10 @@ class TZ_Portfolio_PlusHelperTags{
 
     public static function getTagsByTitle($title){
 
-        $db     = JFactory::getDbo();
+
+        $db     = TZ_Portfolio_PlusDatabase::getDbo();
         $query  = $db -> getQuery(true);
+
         $query -> select('*');
         $query -> from('#__tz_portfolio_plus_tags');
         if(is_array($title) && count($title)) {
@@ -83,8 +86,7 @@ class TZ_Portfolio_PlusHelperTags{
     }
 
     public static function getTagsByAlias($alias){
-
-        $db     = JFactory::getDbo();
+        $db     = TZ_Portfolio_PlusDatabase::getDbo();
         $query  = $db -> getQuery(true);
         $query -> select('*');
         $query -> from('#__tz_portfolio_plus_tags');
@@ -112,7 +114,7 @@ class TZ_Portfolio_PlusHelperTags{
 
         if($articleId) {
             // Delete old article's tag
-            $db     = JFactory::getDbo();
+            $db     = TZ_Portfolio_PlusDatabase::getDbo();
             $query  = $db -> getQuery(true);
 
             if(!$tagTitles || ($tagTitles && !count($tagTitles))) {
@@ -191,7 +193,7 @@ class TZ_Portfolio_PlusHelperTags{
 
     public static function getTagByKey($keys = array(), $not = null){
         if($keys && count($keys)){
-            $db     = JFactory::getDbo();
+            $db     = TZ_Portfolio_PlusDatabase::getDbo();
             $query  = $db -> getQuery(true);
             foreach($keys as $key => $value) {
                 $query -> select($key);
@@ -222,7 +224,7 @@ class TZ_Portfolio_PlusHelperTags{
 
     public static function searchTags($filters = array())
     {
-        $db = \JFactory::getDbo();
+        $db     = TZ_Portfolio_PlusDatabase::getDbo();
         $query = $db->getQuery(true)
             ->select('id AS value')
             ->select('title AS text')
@@ -269,8 +271,9 @@ class TZ_Portfolio_PlusHelperTags{
 
     protected static function _insertTagsByTitle($titles){
         if($titles && is_array($titles) && count($titles)>0){
-            $db     = JFactory::getDbo();
+            $db     = TZ_Portfolio_PlusDatabase::getDbo();
             $query  = $db -> getQuery(true);
+
             $query -> insert('#__tz_portfolio_plus_tags');
             $query -> columns('title, alias, published');
 

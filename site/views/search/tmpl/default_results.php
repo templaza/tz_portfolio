@@ -51,10 +51,10 @@ if($this -> items):
     </div>
 
     <?php if (($params->def('show_pagination', 1) == 1
-        || ($params->get('show_pagination', 1) == 2)) && ($this->pagination->get('pages.total') > 1)) : ?>
-        <div class="pagination">
+        || ($params->get('show_pagination', 1) == 2)) && ($this->pagination->pagesTotal > 1)) : ?>
+        <div class="tpp-pagination w-100">
             <?php  if ($params->def('show_pagination_results', 1)) : ?>
-            <p class="counter">
+            <p class="counter float-right pt-3 pr-2">
                 <?php echo $this->pagination->getPagesCounter(); ?>
             </p>
             <?php endif; ?>

@@ -24,17 +24,14 @@ JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 JHtml::_('behavior.formvalidator');
 JHtml::_('behavior.tabstate');
-JHtml::_('formbehavior.chosen', 'select');
+if(!COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+    JHtml::_('formbehavior.chosen', 'select');
+}
+else{
+    JHtml::_('formbehavior.chosen', 'select[multiple]');
+}
 $this->fieldsets = $this->form->getFieldsets('params');
 
-JFactory::getDocument()->addScriptDeclaration("
-	Joomla.submitbutton = function(task)
-	{
-		if (task == 'addon.cancel' || document.formvalidator.isValid(document.getElementById('addon-form'))) {
-			Joomla.submitform(task, document.getElementById('plugin-form'));
-		}
-	};
-");
 ?>
 
 <form action="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&view=addon&layout=edit&id=' . (int) $this->item->id); ?>"
@@ -45,30 +42,31 @@ JFactory::getDocument()->addScriptDeclaration("
 
         <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'general', JText::_('COM_TZ_PORTFOLIO_PLUS_ADDON', true)); ?>
 
-        <div class="row-fluid">
-            <div class="span9">
-                <?php if ($this->item->xml) : ?>
-                    <?php if ($this->item->xml->description) : ?>
-                        <h3>
-                            <?php
-                            if ($this->item->xml)
-                            {
-                                echo ($text = (string) $this->item->xml->name) ? JText::_($text) : $this->item->name;
-                            }
-                            else
-                            {
-                                echo JText::_('COM_TZ_PORTFOLIO_PLUS_ADDON_XML_ERR');
-                            }
-                            ?>
-                        </h3>
-                        <div class="info-labels">
-							<span class="label hasTooltip" title="<?php echo JHtml::tooltipText('COM_TZ_PORTFOLIO_PLUS_ADDON_FIELD_FOLDER_LABEL', 'COM_TZ_PORTFOLIO_PLUS_ADDON_FIELD_FOLDER_DESC'); ?>">
+            <?php echo JHtml::_('tzbootstrap.addrow');?>
+            <div class="span9 col-md-9">
+                <?php if ($this->item->xml){ ?>
+                    <h3>
+                    <?php
+                    if ($this->item->xml)
+                    {
+                        echo ($text = (string) $this->item->xml->name) ? JText::_($text) : $this->item->name;
+                    }
+                    else
+                    {
+                        echo JText::_('COM_TZ_PORTFOLIO_PLUS_ADDON_XML_ERR');
+                    }
+                    ?>
+                    </h3>
+                    <div class="info-labels">
+							<span class="badge badge-secondary hasTooltip" title="<?php echo JHtml::tooltipText('COM_TZ_PORTFOLIO_PLUS_ADDON_FIELD_FOLDER_LABEL', 'COM_TZ_PORTFOLIO_PLUS_ADDON_FIELD_FOLDER_DESC'); ?>">
 								<?php echo $this -> item -> folder; ?>
 							</span> /
-							<span class="label hasTooltip" title="<?php echo JHtml::tooltipText('COM_TZ_PORTFOLIO_PLUS_ADDON_FIELD_ELEMENT_LABEL', 'COM_TZ_PORTFOLIO_PLUS_ADDON_FIELD_ELEMENT_DESC'); ?>">
+                        <span class="badge badge-secondary hasTooltip" title="<?php echo JHtml::tooltipText('COM_TZ_PORTFOLIO_PLUS_ADDON_FIELD_ELEMENT_LABEL', 'COM_TZ_PORTFOLIO_PLUS_ADDON_FIELD_ELEMENT_DESC'); ?>">
 								<?php echo $this -> item -> element; ?>
 							</span>
-                        </div>
+                    </div>
+                    <?php if ($this->item->xml->description){ ?>
+
                         <div>
                             <?php
                             $short_description = JText::_($this->item->xml->description);
@@ -86,18 +84,18 @@ JFactory::getDocument()->addScriptDeclaration("
                             }
                             ?>
                             <p><?php echo $short_description; ?></p>
-                            <?php if ($long_description) : ?>
+                            <?php if ($long_description){ ?>
                                 <p class="readmore">
                                     <a href="#" onclick="jQuery('.nav-tabs a[href=#description]').tab('show');">
                                         <?php echo JText::_('JGLOBAL_SHOW_FULL_DESCRIPTION'); ?>
                                     </a>
                                 </p>
-                            <?php endif; ?>
+                            <?php } ?>
                         </div>
-                    <?php endif; ?>
-                <?php else : ?>
+                    <?php } ?>
+                <?php }else{ ?>
                     <div class="alert alert-error"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ADDON_XML_ERR'); ?></div>
-                <?php endif; ?>
+                <?php } ?>
 
                 <?php
                 $this->fieldset = 'basic';
@@ -105,14 +103,18 @@ JFactory::getDocument()->addScriptDeclaration("
                 echo $html ? '<hr />' . $html : '';
                 ?>
             </div>
-            <div class="span3">
-                <?php echo JLayoutHelper::render('joomla.edit.global', $this); ?>
-                <div class="form-vertical">
-                    <?php echo $this -> form -> renderField('folder');?>
-                    <?php echo $this -> form -> renderField('element');?>
+            <div class="span3 col-md-3">
+                <div class="card card-light">
+                    <div class="card-body">
+                        <?php echo JLayoutHelper::render('joomla.edit.global', $this); ?>
+                        <div class="form-vertical form-no-margin">
+                            <?php echo $this -> form -> renderField('folder');?>
+                            <?php echo $this -> form -> renderField('element');?>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+            <?php echo JHtml::_('tzbootstrap.endrow');?>
         <?php echo JHtml::_('bootstrap.endTab'); ?>
 
         <?php if (isset($long_description) && $long_description != '') : ?>

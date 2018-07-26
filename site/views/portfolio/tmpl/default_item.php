@@ -65,7 +65,7 @@ if($this -> items):
      class="element <?php echo $class.$tzItemClass.$tzItemFeatureClass;?>"
      itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 
-    <div class="TzInner">
+    <div class="tpp-portfolio__inner">
 
         <?php
         // Display media from plugin of group tz_portfolio_plus_mediatype
@@ -76,18 +76,18 @@ if($this -> items):
         if(!isset($item -> mediatypes) || (isset($item -> mediatypes) && !in_array($item -> type,$item -> mediatypes))):
         // Start Description and some info
         ?>
-        <div class="TzPortfolioDescription">
+        <div class="tpp-portfolio__description">
             <?php
             // Begin Icon print, Email or Edit
             if ($params->get('show_cat_print_icon', 0) || $params->get('show_cat_email_icon', 0)
                     || $params -> get('access-edit')) : ?>
-            <div class="TzIcon">
+            <div class="tpp-item-icon">
                 <div class="btn-group pull-right" role="presentation">
-                    <a class="btn btn-default btn-sm dropdown-toggle"
+                    <a class="btn btn-default btn-secondary btn-sm dropdown-toggle"
                        data-target="#" data-toggle="dropdown" href="#">
                         <i class="icon-cog"></i> <span class="caret"></span>
                     </a>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu dropdown-menu-right">
                         <?php if ($params->get('show_cat_print_icon', 0)) : ?>
                             <li class="print-icon"> <?php echo JHtml::_('icon.print_popup', $item, $params); ?> </li>
                         <?php endif; ?>
@@ -106,7 +106,7 @@ if($this -> items):
             ?>
 
             <?php if($params -> get('show_cat_title',1)): ?>
-            <h3 class="TzPortfolioTitle name" itemprop="name">
+            <h3 class="tpp-item-title name" itemprop="name">
                 <?php if($params->get('cat_link_titles',1)) : ?>
                     <a href="<?php echo $item ->link; ?>"  itemprop="url">
                         <?php echo $this->escape($item -> title); ?>
@@ -135,7 +135,7 @@ if($this -> items):
             ?>
 
             <?php  if ($params->get('show_cat_intro',1) AND !empty($item -> introtext)) :?>
-            <div class="TzPortfolioIntrotext" itemprop="description">
+            <div class="tpp-item-introtext" itemprop="description">
                 <?php echo $item -> introtext;?>
             </div>
             <?php endif; ?>
@@ -149,12 +149,12 @@ if($this -> items):
                 or !empty($item -> event -> beforeDisplayAdditionInfo)
                 or !empty($item -> event -> afterDisplayAdditionInfo)) :
             ?>
-            <div class="muted TzArticle-info">
+            <div class="tpp-portfolio__info muted text-muted">
 
                 <?php echo $item -> event -> beforeDisplayAdditionInfo;?>
 
                 <?php if ($params->get('show_cat_category',0)) : ?>
-                <div class="TZcategory-name">
+                <div class="tpp-item-category">
                     <?php $title = $this->escape($item->category_title);
                     $url = '<a href="' . $item -> category_link
                         . '" itemprop="genre">' . $title . '</a>';
@@ -184,7 +184,7 @@ if($this -> items):
                 <?php endif; ?>
 
                 <?php if ($params->get('show_cat_parent_category', 0) && $item->parent_id != 1) : ?>
-                <div class="TzParentCategoryName">
+                <div class="tpp-item-parent-category">
                     <?php $title = $this->escape($item->parent_title);
                     $url = '<a href="' . JRoute::_(TZ_Portfolio_PlusHelperRoute::getCategoryRoute($item->parent_id)) . '" itemprop="genre">' . $title . '</a>'; ?>
                     <?php if ($params->get('cat_link_parent_category', 1)) : ?>
@@ -202,25 +202,25 @@ if($this -> items):
                 ?>
 
                 <?php if ($params->get('show_cat_create_date',0)) : ?>
-                <div class="TzPortfolioDate" itemprop="dateCreated">
+                <div class="tpp-item-created" itemprop="dateCreated">
                     <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_CREATED_DATE_ON', JHtml::_('date', $item->created, JText::_('DATE_FORMAT_LC2'))); ?>
                 </div>
                 <?php endif; ?>
 
                 <?php if ($params->get('show_cat_modify_date', 0)) : ?>
-                <div class="TzPortfolioModified" itemprop="dateModified">
+                <div class="tpp-item-modified" itemprop="dateModified">
                     <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_LAST_UPDATED', JHtml::_('date', $item->modified, JText::_('DATE_FORMAT_LC2'))); ?>
                 </div>
                 <?php endif; ?>
 
                 <?php if ($params->get('show_cat_publish_date',0)) : ?>
-                <div class="published" itemprop="datePublished">
+                <div class="tpp-item-published" itemprop="datePublished">
                     <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_PUBLISHED_DATE_ON', JHtml::_('date', $item->publish_up, JText::_('DATE_FORMAT_LC2'))); ?>
                 </div>
                 <?php endif; ?>
 
                 <?php if ($params->get('show_cat_author', 0) && !empty($item->author )) : ?>
-                <div class="TzPortfolioCreatedby" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <div class="tpp-item-created-by" itemprop="author" itemscope itemtype="http://schema.org/Person">
                     <?php $author =  $item->author; ?>
                     <?php $author = ($item->created_by_alias ? $item->created_by_alias : $author);?>
                     <?php $author = '<span itemprop="name">' . $author . '</span>'; ?>
@@ -235,7 +235,7 @@ if($this -> items):
                 <?php endif; ?>
 
                 <?php if ($params->get('show_cat_hits', 0)) : ?>
-                <div class="TzPortfolioHits">
+                <div class="tpp-item-hit">
                     <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_ARTICLE_HITS', $item->hits); ?>
                     <meta itemprop="interactionCount" content="UserPageVisits:<?php echo $item->hits; ?>" />
                 </div>
@@ -254,7 +254,7 @@ if($this -> items):
             <?php echo $this -> loadTemplate('extrafields');?>
 
             <?php if($params -> get('show_cat_readmore',1)):?>
-            <a class="btn btn-primary TzPortfolioReadmore" href="<?php echo $item ->link; ?>">
+            <a class="btn btn-primary tpp-item-readmore" href="<?php echo $item ->link; ?>">
                 <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_READ_MORE'); ?>
             </a>
             <?php endif;?>

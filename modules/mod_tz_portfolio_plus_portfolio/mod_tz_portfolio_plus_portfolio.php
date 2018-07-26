@@ -25,7 +25,10 @@ require_once dirname(__FILE__) . '/helper.php';
 
 JLoader::import('com_tz_portfolio_plus.libraries.helper.modulehelper', JPATH_ADMINISTRATOR.'/components');
 
-$list = modTZ_Portfolio_PlusPortfolioHelper::getList($params);
+$doc    = JFactory::getDocument();
+$doc -> addScript(TZ_Portfolio_PlusUri::root(true).'/js/core.min.js');
+
+$list = modTZ_Portfolio_PlusPortfolioHelper::getList($params, $module);
 $categories = modTZ_Portfolio_PlusPortfolioHelper::getCategoriesByArticle($params);
 $tags = modTZ_Portfolio_PlusPortfolioHelper::getTagsByArticle($params);
 $show_filter = $params->get('show_filter',1);

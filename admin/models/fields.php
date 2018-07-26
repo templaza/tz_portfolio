@@ -21,6 +21,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 use Joomla\Utilities\ArrayHelper;
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 jimport('joomla.application.component.modellist');
 
@@ -42,6 +43,16 @@ class TZ_Portfolio_PlusModelFields extends JModelList{
             );
         }
         parent::__construct($config);
+
+        // Set the model dbo
+        if (array_key_exists('dbo', $config))
+        {
+            $this->_db = $config['dbo'];
+        }
+        else
+        {
+            $this->_db = TZ_Portfolio_PlusDatabase::getDbo();
+        }
     }
 
     public function populateState($ordering = 'f.id', $direction = 'desc'){
@@ -78,24 +89,37 @@ class TZ_Portfolio_PlusModelFields extends JModelList{
         $query  = $db -> getQuery(true);
         $user   = TZ_Portfolio_PlusUser::getUser();
 
-        $query -> select('f.*, fg.id AS groupid');
+        $query->select(
+            $this->getState(
+                'list.select',
+                'DISTINCT f.id, f.*'
+            )
+        );
+
         $query -> from('#__tz_portfolio_plus_fields AS f');
         $query -> join('LEFT','#__tz_portfolio_plus_field_fieldgroup_map AS x ON f.id=x.fieldsid');
-        $query -> join('INNER','#__tz_portfolio_plus_fieldgroups AS fg ON fg.id=x.groupid');
+
+        $query -> join('LEFT','#__tz_portfolio_plus_fieldgroups AS fg ON fg.id=x.groupid');
+
         $query -> join('INNER', '#__tz_portfolio_plus_extensions AS e ON e.element = f.type')
             -> where('e.type = '.$db -> quote('tz_portfolio_plus-plugin'))
             -> where('e.folder = '.$db -> quote('extrafields'))
             -> where('e.published = 1');
 
         // Join over the users for the checked out user.
-        $query->select('uc.name AS editor')->join('LEFT', '#__users AS uc ON uc.id=f.checked_out');
+        $query->select('uc.name AS editor')
+            ->join('LEFT', '#__users AS uc ON uc.id=f.checked_out');
 
         // Join over the asset groups.
         $query -> select('v.title AS access_level')
             ->join('LEFT', '#__viewlevels AS v ON v.id = f.access');
 
+        // Join over the users for the author.
+        $query->select('ua.name AS author_name')
+            ->join('LEFT', '#__users AS ua ON ua.id = f.created_by');
+
         if($search = $this -> getState('filter.search'))
-            $query -> where('title LIKE '.$db -> quote('%'.$search.'%'));
+            $query -> where('f.title LIKE '.$db -> quote('%'.$search.'%'));
 
         // Filter by published state
         $published = $this->getState('filter.published');
@@ -165,7 +189,7 @@ class TZ_Portfolio_PlusModelFields extends JModelList{
             $query -> where('e.access IN('.$groups.')');
         }
 
-        $query -> group('f.id');
+//        $query -> group('f.id');
 
         // Add the list ordering clause
         $listOrdering   = $this->getState('list.ordering', 'f.id');
@@ -177,6 +201,7 @@ class TZ_Portfolio_PlusModelFields extends JModelList{
         }
 
         $query->order($db->escape($listOrdering) . ' ' . $db->escape($listDirn));
+//        $query -> group('f.id');
 //        var_dump($query -> dump()); die();
 
         return $query;

@@ -23,7 +23,14 @@ defined('_JEXEC') or die;
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.multiselect');
-JHtml::_('dropdown.init');
+
+$j4Compare  = COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE;
+if(!$j4Compare) {
+    JHtml::_('dropdown.init');
+    JHtml::_('formbehavior.chosen', 'select');
+}else{
+    JHtml::_('formbehavior.chosen', 'select[multiple]');
+}
 
 JHtml::_('formbehavior.chosen', '.multipleMediaType', null,
     array('placeholder_text_multiple' => JText::_('COM_TZ_PORTFOLIO_PLUS_OPTION_SELECT_MEDIA_TYPE')));
@@ -33,7 +40,6 @@ JHtml::_('formbehavior.chosen', '.multipleAccessLevels', null,
     array('placeholder_text_multiple' => JText::_('JOPTION_SELECT_ACCESS')));
 JHtml::_('formbehavior.chosen', '.multipleCategories', null,
     array('placeholder_text_multiple' => JText::_('JOPTION_SELECT_CATEGORY')));
-JHtml::_('formbehavior.chosen', 'select');
 
 $user		    = JFactory::getUser();
 $userId		    = $user->get('id');
@@ -48,34 +54,26 @@ $savePriority   = $listOrder == 'a.priority';
 if ($saveOrder)
 {
 	$saveOrderingUrl = 'index.php?option=com_tz_portfolio_plus&task=articles.saveOrderAjax&tmpl=component';
-	JHtml::_('sortablelist.sortable', 'articleList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
+    if($j4Compare){
+        JHtml::_('draggablelist.draggable');
+    }else {
+        JHtml::_('sortablelist.sortable', 'articleList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
+    }
 }
 
 $assoc		= JLanguageAssociations::isEnabled();
 ?>
-<script type="text/javascript">
-	Joomla.orderTable = function() {
-		table = document.getElementById("sortTable");
-		direction = document.getElementById("directionTable");
-		order = table.options[table.selectedIndex].value;
-		if (order != '<?php echo $listOrder; ?>') {
-			dirn = 'asc';
-		} else {
-			dirn = direction.options[direction.selectedIndex].value;
-		}
-		Joomla.tableOrdering(order, dirn, '');
-	}
-</script>
 
 <form action="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&view=articles');?>" method="post" name="adminForm" id="adminForm">
-    <?php if(!empty( $this->sidebar)): ?>
-    <div id="j-sidebar-container" class="span2">
-        <?php echo $this->sidebar; ?>
-    </div>
-    <div id="j-main-container" class="span10">
-    <?php else : ?>
-    <div id="j-main-container">
-    <?php endif;?>
+
+<?php echo JHtml::_('tzbootstrap.addrow');?>
+    <?php if(!empty($this -> sidebar)){?>
+        <div id="j-sidebar-container" class="span2 col-md-2">
+            <?php echo $this -> sidebar; ?>
+        </div>
+    <?php } ?>
+
+    <?php echo JHtml::_('tzbootstrap.startcontainer', '10', !empty($this -> sidebar));?>
 
         <div class="tpContainer">
             <?php
@@ -84,20 +82,20 @@ $assoc		= JLanguageAssociations::isEnabled();
             ?>
 
             <?php if (empty($this->items)){ ?>
-                <div class="alert alert-no-items">
+                <div class="alert alert-warning alert-no-items">
                     <?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
                 </div>
             <?php }else{ ?>
             <table class="table table-striped" id="articleList">
                 <thead>
                     <tr>
-                        <th width="1%" class="nowrap center hidden-phone">
+                        <th width="1%" class="nowrap center text-center hidden-phone">
                             <?php echo JHtml::_('searchtools.sort', '', 'a.ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2'); ?>
                         </th>
                         <th width="1%" class="hidden-phone">
                             <?php echo JHtml::_('grid.checkall'); ?>
                         </th>
-                        <th width="1%" style="min-width:55px" class="nowrap center">
+                        <th width="1%" style="min-width:55px" class="nowrap center text-center">
                             <?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
                         </th>
                         <th>
@@ -128,7 +126,7 @@ $assoc		= JLanguageAssociations::isEnabled();
                         <th width="8%" class="nowrap hidden-phone">
                             <?php echo JHtml::_('searchtools.sort', 'JDATE', 'a.created', $listDirn, $listOrder); ?>
                         </th>
-                        <th width="5%" class="nowrap center text-center hidden-phone">
+                        <th width="5%" class="nowrap text-center hidden-phone">
                             <?php echo JHtml::_('searchtools.sort', 'JGLOBAL_HITS', 'a.hits', $listDirn, $listOrder); ?>
                         </th>
                         <th width="1%" class="nowrap center text-center hidden-phone">
@@ -149,7 +147,8 @@ $assoc		= JLanguageAssociations::isEnabled();
                     <td colspan="13"><?php echo $this->pagination->getListFooter(); ?></td>
                 </tr>
                 </tfoot>
-                <tbody>
+                <tbody <?php if ($saveOrder) :?> class="js-draggable" data-url="<?php echo $saveOrderingUrl;
+                ?>" data-direction="<?php echo strtolower($listDirn); ?>" data-nested="true"<?php endif; ?>>
                 <?php
                 if($this -> items):
                     foreach ($this->items as $i => $item) :
@@ -166,36 +165,35 @@ $assoc		= JLanguageAssociations::isEnabled();
                                             .$item->id)
                                             && $item->created_by == $userId)) && $canCheckin;
                         ?>
-                        <tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item -> catid;?>">
-                            <td class="order nowrap center hidden-phone">
-                            <?php if ($canChange) :
-                                $disableClassName = '';
-                                $disabledLabel	  = '';
-
-                                if (!$saveOrder) :
-                                    $disabledLabel    = JText::_('JORDERINGDISABLED');
-                                    $disableClassName = 'inactive tip-top';
-                                endif; ?>
-                                <span class="sortable-handler hasTooltip <?php echo $disableClassName?>" title="<?php echo $disabledLabel?>">
-                                    <i class="icon-menu"></i>
+                        <tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item -> catid;
+                        ?>" data-dragable-group="<?php echo $item->catid; ?>">
+                            <td class="order nowrap center text-center hidden-phone">
+                                <?php
+                                $iconClass = '';
+                                if (!$canChange)
+                                {
+                                    $iconClass = ' inactive';
+                                }
+                                elseif (!$saveOrder)
+                                {
+                                    $iconClass = ' inactive tip-top hasTooltip" title="' . JHtml::_('tooltipText', 'JORDERINGDISABLED');
+                                }
+                                ?>
+                                <span class="sortable-handler<?php echo $iconClass ?>">
+                                    <span class="icon-menu" aria-hidden="true"></span>
                                 </span>
                                 <input type="text" style="display:none" name="order[]" size="5" value="<?php echo $item->ordering;?>" class="width-20 text-area-order " />
-                            <?php else : ?>
-                                <span class="sortable-handler inactive" >
-                                    <i class="icon-menu"></i>
-                                </span>
-                            <?php endif; ?>
                             </td>
 
-                            <td class="center">
+                            <td class="center text-center">
                                 <?php echo JHtml::_('grid.id', $i, $item->id); ?>
                             </td>
-                            <td class="center">
+                            <td class="center text-center">
                                 <div class="btn-group">
                                     <?php echo JHtml::_('jgrid.published', $item->state, $i, 'articles.', $canChange, 'cb', $item->publish_up, $item->publish_down); ?>
                                     <?php echo JHtml::_('contentadministrator.featured', $item->featured, $i, $canChange); ?>
                                     <?php // Create dropdown items and render the dropdown list.
-                                    if ($canChange)
+                                    if (!$j4Compare && $canChange)
                                     {
                                         JHtml::_('actionsdropdown.' . ((int) $item->state === -2 ? 'un' : '') . 'trash', 'cb' . $i, 'articles');
                                         echo JHtml::_('actionsdropdown.render', $this->escape($item->title));
@@ -208,8 +206,14 @@ $assoc		= JLanguageAssociations::isEnabled();
                                     <?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'articles.', $canCheckin); ?>
                                 <?php endif; ?>
                                 <?php if ($canEdit || $canEditOwn) : ?>
+                                    <?php
+                                    $editIcon   = '';
+                                    if($j4Compare){
+                                        $editIcon = $item->checked_out ? '' : '<span class="fa fa-pencil-square mr-2" aria-hidden="true"></span>';
+                                    }
+                                    ?>
                                     <a href="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&task=article.edit&id='.$item->id);?>">
-                                        <?php echo $this->escape($item->title); ?></a>
+                                        <?php echo $editIcon.$this->escape($item->title); ?></a>
                                 <?php else : ?>
                                     <?php echo $this->escape($item->title); ?>
                                 <?php endif; ?>
@@ -267,17 +271,17 @@ $assoc		= JLanguageAssociations::isEnabled();
                             <td class="small nowrap hidden-phone">
                                 <?php echo JHtml::_('date', $item->created, JText::_('DATE_FORMAT_LC4')); ?>
                             </td>
-                            <td class="center hidden-phone">
+                            <td class="center text-center hidden-phone">
                                 <?php echo (int) $item->hits; ?>
                             </td>
                             <td class="nowrap hidden-phone order" style="text-align: right;">
                                 <?php if ($savePriority){ ?>
-                                <div class="btn-group">
-                                    <?php echo $this -> pagination -> orderUpIcon($i, true, 'articles.priorityup', 'Move Up');?>
-                                    <?php if($orderDown = $this -> pagination -> orderDownIcon($i, $this -> pagination -> pagesTotal, true, 'articles.prioritydown')){
-                                        echo $orderDown;
-                                    }?>
-                                </div>
+                                    <div class="btn-group">
+                                        <?php echo $this -> pagination -> orderUpIcon($i, true, 'articles.priorityup', 'Move Up');?>
+                                        <?php if($orderDown = $this -> pagination -> orderDownIcon($i, $this -> pagination -> pagesTotal, true, 'articles.prioritydown')){
+                                            echo $orderDown;
+                                        }?>
+                                    </div>
                                 <?php }
                                 ?>
                                 <input type="text" name="priority[]" class="width-auto text-center" min="0"<?php
@@ -285,7 +289,7 @@ $assoc		= JLanguageAssociations::isEnabled();
                                 ?> style="margin-bottom: 0;" size="1" step="1" value="<?php
                                 echo (int) $item -> priority; ?>"/>
                             </td>
-                            <td class="center">
+                            <td class="center text-center">
                                 <?php echo (int) $item->id; ?>
                             </td>
                         </tr>
@@ -302,5 +306,6 @@ $assoc		= JLanguageAssociations::isEnabled();
             <input type="hidden" name="boxchecked" value="0" />
             <?php echo JHtml::_('form.token'); ?>
         </div>
-    </div>
+    <?php echo JHtml::_('tzbootstrap.endcontainer');?>
+<?php echo JHtml::_('tzbootstrap.endrow');?>
 </form>

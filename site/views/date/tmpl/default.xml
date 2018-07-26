@@ -13,9 +13,8 @@
     <fields name="params">
         <!-- Add fields to the request variables for the layout. -->
         <fieldset name="request" addfieldpath="administrator/components/com_tz_portfolio_plus/models/fields">
-            <field name="tz_catid" type="category"
+            <field name="tz_catid" type="tzcategory"
                 description="JGLOBAL_CHOOSE_CATEGORY_DESC"
-                extension="com_content"
                 multiple="true"
                 default=""
                 label="JGLOBAL_CHOOSE_CATEGORY_LABEL">
@@ -75,8 +74,6 @@
                 <option value="rhits">JGLOBAL_LEAST_HITS</option>
                 <option value="order">JGLOBAL_ORDERING</option>
                 <option	value="rorder">JGLOBAL_REVERSE_ORDERING</option>
-                <option value="priority">COM_TZ_PORTFOLIO_PLUS_PRIORITY_ORDER</option>
-                <option	value="rpriority">COM_TZ_PORTFOLIO_PLUS_PRIORITY_REVERSE_ORDER</option>
             </field>
             <field type="list" name="order_fieldgroup"
                    label="COM_TZ_PORTFOLIO_PLUS_FIELD_GROUP_ORDER_LABEL">

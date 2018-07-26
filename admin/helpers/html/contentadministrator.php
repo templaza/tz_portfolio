@@ -10,6 +10,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\Utilities\ArrayHelper;
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 JLoader::register('TZ_Portfolio_PlusHelper', JPATH_ADMINISTRATOR . '/components/com_tz_portfolio_plus/helpers/tz_portfolio_plus.php');
 JLoader::import('com_tz_portfolio_plus.helpers.association',JPATH_ADMINISTRATOR . '/components');
@@ -42,7 +43,7 @@ abstract class JHtmlContentAdministrator
             }
 
             // Get the associated menu items
-            $db = JFactory::getDbo();
+            $db = TZ_Portfolio_PlusDatabase::getDbo();
             $query = $db->getQuery(true)
                 ->select('c.*')
                 ->select('l.sef as lang_sef')
@@ -111,14 +112,22 @@ abstract class JHtmlContentAdministrator
         $state	= ArrayHelper::getValue($states, (int) $value, $states[1]);
         $icon	= $state[0];
 
+        $class  = 'btn btn-micro';
+        if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE){
+            $class = 'tbody-icon';
+        }
+
         if ($canChange)
         {
-            $html	= '<a href="#" onclick="return listItemTask(\'cb' . $i . '\',\'' . $state[1] . '\')" class="btn btn-micro hasTooltip' . ($value == 1 ? ' active' : '') . '" title="' . JHtml::tooltipText($state[3]) . '"><span class="icon-'
+            $html	= '<a href="#" onclick="return listItemTask(\'cb' . $i . '\',\'' . $state[1]
+                . '\')" class="'.$class.' hasTooltip' . ($value == 1 ? ' active' : '') . '" title="'
+                . JHtml::tooltipText($state[3]) . '"><span class="icon-'
                 . $icon . '"></span></a>';
         }
         else
         {
-            $html	= '<a class="btn btn-micro hasTooltip disabled' . ($value == 1 ? ' active' : '') . '" title="' . JHtml::tooltipText($state[2]) . '"><span class="icon-'
+            $html	= '<a class="'.$class.' hasTooltip disabled' . ($value == 1 ? ' active' : '')
+                . '" title="' . JHtml::tooltipText($state[2]) . '"><span class="icon-'
                 . $icon . '"></span></a>';
         }
 

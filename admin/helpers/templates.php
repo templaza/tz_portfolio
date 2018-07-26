@@ -20,12 +20,14 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
+
 class TZ_Portfolio_PlusHelperTemplates{
     public static function getTemplateOptions()
     {
         // Build the filter options.
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
+        $db     = TZ_Portfolio_PlusDatabase::getDbo();
+        $query  = $db->getQuery(true);
 
         $query->select('element as value, name as text, id as e_id')
             ->from('#__tz_portfolio_plus_extensions')

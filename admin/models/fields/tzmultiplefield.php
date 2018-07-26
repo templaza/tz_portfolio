@@ -85,7 +85,7 @@ class JFormFieldTZMultipleField extends JFormField
                 <span class="icon-plus icon-white" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_UPDATE');?>"></span>
                 <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_UPDATE');?>
             </button>
-            <button type="button" class="btn tz_btn-reset">
+            <button type="button" class="btn btn-secondary tz_btn-reset">
                 <span class="icon-cancel" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_RESET');?>"></span>
                 <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_RESET');?>
             </button>
@@ -195,9 +195,9 @@ class JFormFieldTZMultipleField extends JFormField
                         ?>
                         <td style="text-align: center;">
                             <div class="btn-group">
-                                <button class="btn btn-small tz_btn-edit hasTooltip"
+                                <button class="btn btn-secondary btn-small btn-sm tz_btn-edit hasTooltip"
                                         type="button" title="<?php echo JText::_('JACTION_EDIT');?>"><i class="icon-edit"></i></button>
-                                <button class="btn btn-danger btn-small tz_btn-remove hasTooltip"
+                                <button class="btn btn-danger btn-small btn-sm tz_btn-remove hasTooltip"
                                         type="button" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_REMOVE');?>"><i class="icon-trash"></i></button>
                             </div>
                             <input type="hidden" name="<?php echo $this -> getName($this -> fieldname);?>"
@@ -215,9 +215,9 @@ class JFormFieldTZMultipleField extends JFormField
 
         $tbody_row_html[]   = '<td style="text-align: center;">'
             .'<div class="btn-group">'
-            .'<button type="button" class="btn btn-small tz_btn-edit hasTooltip" title="'
+            .'<button type="button" class="btn btn-secondary btn-small btn-sm tz_btn-edit hasTooltip" title="'
             .JText::_('JACTION_EDIT').'"><i class="icon-edit"></i></button>'
-            .'<button type="button" class="btn btn-danger btn-small tz_btn-remove hasTooltip" title="'
+            .'<button type="button" class="btn btn-danger btn-small btn-sm tz_btn-remove hasTooltip" title="'
             .JText::_('COM_TZ_PORTFOLIO_PLUS_REMOVE').'">'
             .'<i class="icon-trash"></i></button>'
             .'</div>'

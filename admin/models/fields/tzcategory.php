@@ -34,9 +34,19 @@ class JFormFieldTZCategory extends JFormFieldList
      * The form field type.
      *
      * @var    string
-     * @since  11.1
      */
     public $type = 'TZCategory';
+
+    public function setup(\SimpleXMLElement $element, $value, $group = null)
+    {
+        $setup  = parent::setup($element, $value, $group);
+
+        if($this -> multiple) {
+            JHtml::_('formbehavior.chosen', '#' . $this->id);
+        }
+
+        return $setup;
+    }
 
     /**
      * Method to get the field options for category
@@ -46,7 +56,6 @@ class JFormFieldTZCategory extends JFormFieldList
      *
      * @return  array    The field option objects.
      *
-     * @since   11.1
      */
     protected function getOptions()
     {

@@ -76,8 +76,7 @@ class TZ_Portfolio_PlusControllerAddon extends JControllerForm
         // Access check.
         if (!$this->allowEdit(array($key => $recordId), $key))
         {
-            $this->setError(JText::_('JLIB_APPLICATION_ERROR_EDIT_NOT_PERMITTED'));
-            $this->setMessage($this->getError(), 'error');
+            $this->setMessage(JText::_('JLIB_APPLICATION_ERROR_EDIT_NOT_PERMITTED'), 'error');
 
             $this->setRedirect(
                 JRoute::_(
@@ -93,8 +92,7 @@ class TZ_Portfolio_PlusControllerAddon extends JControllerForm
         if ($checkin && !$model->checkout($recordId))
         {
             // Check-out failed, display a notice but allow the user to see the record.
-            $this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_CHECKOUT_FAILED', $model->getError()));
-            $this->setMessage($this->getError(), 'error');
+            $this->setMessage(JText::sprintf('JLIB_APPLICATION_ERROR_CHECKOUT_FAILED', $model->getError()), 'error');
 
             $this->setRedirect(
                 JRoute::_(
@@ -132,8 +130,7 @@ class TZ_Portfolio_PlusControllerAddon extends JControllerForm
         if (!$this->allowAdd())
         {
             // Set the internal error and also the redirect error.
-            $this->setError(\JText::_('JLIB_APPLICATION_ERROR_CREATE_RECORD_NOT_PERMITTED'));
-            $this->setMessage($this->getError(), 'error');
+            $this->setMessage(\JText::_('JLIB_APPLICATION_ERROR_CREATE_RECORD_NOT_PERMITTED'), 'error');
 
             $this->setRedirect(
                 \JRoute::_(
@@ -163,8 +160,7 @@ class TZ_Portfolio_PlusControllerAddon extends JControllerForm
         if (!$this->allowAdd())
         {
             // Set the internal error and also the redirect error.
-            $this->setError(\JText::_('JLIB_APPLICATION_ERROR_CREATE_RECORD_NOT_PERMITTED'));
-            $this->setMessage($this->getError(), 'error');
+            $this->setMessage(\JText::_('JLIB_APPLICATION_ERROR_CREATE_RECORD_NOT_PERMITTED'), 'error');
 
             $this->setRedirect(
                 \JRoute::_(
@@ -177,7 +173,12 @@ class TZ_Portfolio_PlusControllerAddon extends JControllerForm
         }
 
         $model  = $this -> getModel();
-        $model -> install();
+        if(!$model -> install()){
+            $this -> setMessage($model -> getError(), 'error');
+        }else{
+            $this -> setMessage(JText::sprintf('COM_TZ_PORTFOLIO_PLUS_INSTALL_SUCCESS',
+                JText::_('COM_TZ_PORTFOLIO_PLUS_ADDON')));
+        }
 
         $this -> setRedirect('index.php?option=com_tz_portfolio_plus&view='.$this -> view_item.'&layout=upload');
     }
@@ -323,8 +324,7 @@ class TZ_Portfolio_PlusControllerAddon extends JControllerForm
 
         // Access check.
         if (!$this->allowEdit(array($key => $recordId), $key)) {
-            $this->setError(\JText::_('JERROR_ALERTNOAUTHOR'));
-            $this->setMessage($this->getError(), 'error');
+            $this->setMessage(\JText::_('JERROR_ALERTNOAUTHOR'), 'error');
 
             $this->setRedirect(
                 \JRoute::_(
@@ -352,8 +352,7 @@ class TZ_Portfolio_PlusControllerAddon extends JControllerForm
         if (!$this->allowAdd())
         {
             // Set the internal error and also the redirect error.
-            $this->setError(\JText::_('JLIB_APPLICATION_ERROR_CREATE_RECORD_NOT_PERMITTED'));
-            $app->enqueueMessage($this->getError(), 'error');
+            $app->enqueueMessage(\JText::_('JLIB_APPLICATION_ERROR_CREATE_RECORD_NOT_PERMITTED'), 'error');
         }else{
             $model  = $this -> getModel();
             if($result = $model -> install()){
@@ -362,7 +361,7 @@ class TZ_Portfolio_PlusControllerAddon extends JControllerForm
             }
         }
 
-        $message    = $this -> getError();
+        $message = $this->message;
 
         $this->setRedirect(
             \JRoute::_(
@@ -375,6 +374,7 @@ class TZ_Portfolio_PlusControllerAddon extends JControllerForm
         // Push message queue to session because we will redirect page by Javascript, not $app->redirect().
         // The "application.queue" is only set in redirect() method, so we must manually store it.
         $app->getSession()->set('application.queue', $app->getMessageQueue());
+
 
         header('Content-Type: application/json');
 

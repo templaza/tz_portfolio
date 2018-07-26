@@ -30,7 +30,7 @@ if (!$this->print) :
     if($lists):
         if($params -> get('show_related_article',1)):
 ?>
-<div class="TzRelated">
+<div class="tpp-item-related">
     <?php if($params -> get('show_related_heading',1)):?>
         <?php
             $title    = JText::_('COM_TZ_PORTFOLIO_PLUS_RELATED_ARTICLE');
@@ -38,12 +38,12 @@ if (!$this->print) :
                 $title  = $params -> get('related_heading');
             }
         ?>
-        <h3 class="TzRelatedTitle"><?php echo $title;?></h3>
+        <h3 class="title"><?php echo $title;?></h3>
     <?php endif;?>
-    <ul>
+    <ul class="list-unstyled">
 
     <?php foreach($lists as $i => $itemR):?>
-    <li class="TzItem<?php if($i == 0) echo ' first'; if($i == count($lists) - 1) echo ' last';?>">
+    <li class="tpp-item-related__item<?php if($i == 0) echo ' first'; if($i == count($lists) - 1) echo ' last';?>">
         <?php
         if($itemR->event->onContentDisplayMediaType && !empty($itemR->event->onContentDisplayMediaType)) {
             echo $itemR->event->onContentDisplayMediaType;

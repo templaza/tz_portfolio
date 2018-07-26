@@ -30,6 +30,17 @@ class JFormFieldTZExtraFields extends JFormFieldGroupedList
     protected $tzscript = false;
     protected $tzgroups = array();
 
+    public function setup(\SimpleXMLElement $element, $value, $group = null)
+    {
+        $setup  = parent::setup($element, $value, $group);
+
+        if($this -> multiple) {
+            JHtml::_('formbehavior.chosen', '#' . $this->id);
+        }
+
+        return $setup;
+    }
+
     protected function getInput()
     {
 

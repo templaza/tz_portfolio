@@ -22,10 +22,8 @@ defined('_JEXEC') or die('Restricted access');
 
 class TZ_Portfolio_PlusTableFields extends JTable
 {
-
     function __construct(&$db) {
         parent::__construct('#__tz_portfolio_plus_fields','id',$db);
-
     }
 
     public function updateState($pks = null, $state = 1, $userId = 0)
@@ -197,19 +195,6 @@ class TZ_Portfolio_PlusTableFields extends JTable
             $this->setRules($rules);
         }
         return parent::bind($array, $ignore);
-    }
-
-    public function check()
-    {
-        if (!$this->id)
-        {
-            // Field params can be an empty json string
-            if (!isset($this->params))
-            {
-                $this->params = '{}';
-            }
-        }
-        return true;
     }
     
 }

@@ -20,8 +20,10 @@
 //no direct access
 defined('_JEXEC') or die('Restricted access');
 
-jimport('joomla.filesystem.folder');
-jimport('joomla.filesystem.file');
+use Joomla\Filesystem\Folder;
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
+
+jimport('joomla.filesytem.folder');
 jimport('joomla.application.component.modeladmin');
 JLoader::import('addon', COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.DIRECTORY_SEPARATOR.'models');
 
@@ -30,6 +32,21 @@ class TZ_Portfolio_PlusModelTemplate extends TZ_Portfolio_PlusModelAddon
     protected $type         = 'tz_portfolio_plus-template';
     protected $folder       = 'templates';
 
+    public function __construct($config = array(), MVCFactoryInterface $factory = null)
+    {
+        parent::__construct($config, $factory);
+
+        // Set the model dbo
+        if (array_key_exists('dbo', $config))
+        {
+            $this->_db = $config['dbo'];
+        }
+        else
+        {
+            $this->_db = TZ_Portfolio_PlusDatabase::getDbo();
+        }
+    }
+
     protected function populateState(){
         parent::populateState();
 
@@ -37,6 +54,7 @@ class TZ_Portfolio_PlusModelTemplate extends TZ_Portfolio_PlusModelAddon
 
         $this -> setState('cache.filename', 'template_list');
     }
+
     public function getTable($type = 'Extensions', $prefix = 'TZ_Portfolio_PlusTable', $config = array())
     {
         return JTable::getInstance($type, $prefix, $config);
@@ -151,12 +169,12 @@ class TZ_Portfolio_PlusModelTemplate extends TZ_Portfolio_PlusModelAddon
                     $tpl_path   = COM_TZ_PORTFOLIO_PLUS_PATH_SITE.DIRECTORY_SEPARATOR.'templates'
                         .DIRECTORY_SEPARATOR.$table -> element;
 
-                    if(JFolder::exists($tpl_path)){
+                    if(\JFolder::exists($tpl_path)){
                         if(!$template_style -> deleteTemplate($table -> name)){
                             $app -> enqueueMessage($template_style -> getError(),'warning');
                             return false;
                         }
-                        if(JFolder::delete($tpl_path)){
+                        if(Folder::delete($tpl_path)){
                             $result = $this->delete($id);
                         }
                     }

@@ -20,9 +20,11 @@
 
 $params     = $this -> item -> params;
 if($params -> get('show_cat_tags',0) && $this -> item && isset($this -> item -> tags)):
-    echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_TAGS','');
 ?>
+<div class="tpp-item-tags">
+    <i class="tp tp-tags"></i>
     <?php foreach($this -> item -> tags as $i => $item): ?>
         <a href="<?php echo $item ->link; ?>"><?php echo $item -> title;?></a><?php if($i != count($this -> item -> tags) - 1):?><span><?php echo ','?></span><?php endif;?>
     <?php endforeach;?>
+</div>
 <?php endif;?>

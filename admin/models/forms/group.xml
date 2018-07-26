@@ -49,7 +49,7 @@
             <option value="2">COM_TZ_PORTFOLIO_PLUS_ORDER_BY_GROUP</option>
         </field>
 
-        <field type="categoriesassignment" name="categories_assignment" class="checkbox"/>
+        <field type="categoriesassignment" name="categories_assignment" class="checkbox menu-assignment"/>
 
         <field name="description" type="editor" class="inputbox"
                filter="JComponentHelper::filterText" buttons="true"

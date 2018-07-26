@@ -28,6 +28,7 @@ jimport('joomla.application.component.controller');
 class TZ_Portfolio_PlusController extends TZ_Portfolio_PlusControllerLegacy
 {
     protected $input;
+
 	function __construct($config = array())
 	{
         $this->input    = JFactory::getApplication()->input;
@@ -65,8 +66,6 @@ class TZ_Portfolio_PlusController extends TZ_Portfolio_PlusControllerLegacy
 
 		$user = JFactory::getUser();
 
-		JHtml::_('behavior.caption');
-
 		// Set the default view name and format from the Request.
 		// Note we are using a_id to avoid collisions with the router and the return page.
 		// Frontend is a bit messier than the backend.
@@ -89,16 +88,17 @@ class TZ_Portfolio_PlusController extends TZ_Portfolio_PlusControllerLegacy
 			return JError::raiseError(403, JText::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $id));
 		}
 
-		//Add Script to the header
-		if($params -> get('enable_jquery',0)){
-			$doc -> addScript(TZ_Portfolio_PlusUri::base(true).'/js/jquery-1.11.3.min.js');
-			$doc -> addScript(TZ_Portfolio_PlusUri::base(true).'/js/jquery-noconflict.min.js');
-			$doc -> addScript(TZ_Portfolio_PlusUri::base(true).'/js/jquery-migrate-1.2.1.js');
-		}
-		if($params -> get('enable_bootstrap',1)) {
+        //Add Script to the header
+        JHtml::_('bootstrap.framework');
+        if($params -> get('enable_jquery',0)){
+            $doc -> addScript(TZ_Portfolio_PlusUri::base(true).'/js/jquery-1.11.3.min.js');
+            $doc -> addScript(TZ_Portfolio_PlusUri::base(true).'/js/jquery-noconflict.min.js');
+            $doc -> addScript(TZ_Portfolio_PlusUri::base(true).'/js/jquery-migrate-1.2.1.js');
+        }
+        if($params -> get('enable_bootstrap',1)) {
             $doc->addStyleSheet(TZ_Portfolio_PlusUri::base(true) . '/bootstrap/css/bootstrap.min.css');
-			$doc -> addScript(TZ_Portfolio_PlusUri::base(true).'/bootstrap/js/bootstrap.min.js');
-			$doc -> addScriptDeclaration('
+            $doc -> addScript(TZ_Portfolio_PlusUri::base(true).'/bootstrap/js/bootstrap.min.js');
+            $doc -> addScriptDeclaration('
             (function($){
                 $(document).off("click.modal.data-api")
                 .on("click.modal.data-api", "[data-toggle=modal]", function (e) {
@@ -145,8 +145,12 @@ class TZ_Portfolio_PlusController extends TZ_Portfolio_PlusControllerLegacy
                 });
             })(jQuery);
 			');
-		}
+        }
 
-		return parent::display($cachable, $safeurlparams);
+        $doc -> addScript(TZ_Portfolio_PlusUri::base(true).'/js/core.min.js');
+
+		$result = parent::display($cachable, $safeurlparams);
+
+		return $result;
 	}
 }

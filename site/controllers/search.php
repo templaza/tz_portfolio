@@ -48,12 +48,24 @@ class TZ_Portfolio_PlusControllerSearch extends JControllerLegacy
 		}
 
 		// The Itemid from the request, we will use this if it's a search page or if there is no search page available
-		$post['Itemid'] = $this->input->getInt('Itemid');
+        $itemId         = $this -> input -> getInt('Itemid');
+		$post['Itemid'] = $itemId;
 
 		// Set Itemid id for links from menu
-		$app  = JFactory::getApplication();
-		$menu = $app->getMenu();
-		$item = $menu->getItem($post['Itemid']);
+
+        $uri    = JUri::getInstance();
+		$app    = JFactory::getApplication();
+		$menu   = $app->getMenu();
+		$item   = $menu->getItem($post['Itemid']);
+
+        $uri->setQuery($post);
+        $uri->setVar('option', 'com_tz_portfolio_plus');
+
+		if($item -> query['view'] == 'portfolio'){
+		    $uri -> setVar('view', 'portfolio');
+        }else{
+		    $uri -> setVar('view', 'search');
+        }
 
 		// The requested Item is not a search page so we need to find one
 		if ($item->component != 'com_tz_portfolio_plus' || $item->query['view'] != 'search')
@@ -83,7 +95,11 @@ class TZ_Portfolio_PlusControllerSearch extends JControllerLegacy
 		$uri = JUri::getInstance();
 		$uri->setQuery($post);
 		$uri->setVar('option', 'com_tz_portfolio_plus');
-		$uri->setVar('view', 'search');
+        if($item->query['view'] == 'portfolio') {
+            $uri->setVar('view', 'portfolio');
+        }else{
+            $uri->setVar('view', 'search');
+        }
 
 		$this->setRedirect(JRoute::_('index.php' . $uri->toString(array('query', 'fragment')), false));
 	}

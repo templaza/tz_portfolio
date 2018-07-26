@@ -20,11 +20,15 @@
 // No direct access
 defined('_JEXEC') or die;
 
+tzportfolioplusimport('database.database');
+
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
-jimport('joomla.filesystem.folder');
-jimport('joomla.filesystem.file');
+jimport('joomla.filesytem.file');
 
 class TZ_Portfolio_PlusFrontHelperExtraFields{
 
@@ -147,7 +151,7 @@ class TZ_Portfolio_PlusFrontHelperExtraFields{
         $storeId = md5(__METHOD__ . "::" . (int) $fieldGroupId);
         if (!isset(self::$cache[$storeId]))
         {
-            $db    = JFactory::getDbo();
+            $db    = TZ_Portfolio_PlusDatabase::getDbo();
             $query = $db->getQuery(true);
 
             $query -> select('*');
@@ -176,7 +180,7 @@ class TZ_Portfolio_PlusFrontHelperExtraFields{
         if (!isset(self::$cache[$storeId]))
         {
             if($articleId) {
-                $db = JFactory::getDbo();
+                $db = TZ_Portfolio_PlusDatabase::getDbo();
                 $query = $db->getQuery(true);
                 $subquery = $db->getQuery(true);
 
@@ -218,7 +222,7 @@ class TZ_Portfolio_PlusFrontHelperExtraFields{
         if (!isset(self::$cache[$storeId]))
         {
             if($catId) {
-                $db     = JFactory::getDbo();
+                $db     = TZ_Portfolio_PlusDatabase::getDbo();
                 $query  = $db->getQuery(true);
 
                 $query -> select('g.*, c.id AS catid, c.title AS category_title');
@@ -268,10 +272,10 @@ class TZ_Portfolio_PlusFrontHelperExtraFields{
         $storeId = md5(__METHOD__ . "::$name");
         if(!isset(self::$cache[$storeId])){
             $core_path  = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.DIRECTORY_SEPARATOR.'extrafields';
-            if($core_folders = JFolder::folders($core_path)){
+            if($core_folders = Folder::folders($core_path)){
                 $core_f_xml_path    = $core_path.DIRECTORY_SEPARATOR.$name
                     .DIRECTORY_SEPARATOR.$name.'.xml';
-                if(JFile::exists($core_f_xml_path)){
+                if(\JFile::exists($core_f_xml_path)){
                     self::$cache[$storeId]  = true;
                     return self::$cache[$storeId];
                 }
@@ -295,7 +299,7 @@ class TZ_Portfolio_PlusFrontHelperExtraFields{
         {
             if (!is_object($fieldObj))
             {
-                $db    = JFactory::getDbo();
+                $db    = TZ_Portfolio_PlusDatabase::getDbo();
                 $query = $db->getQuery(true);
                 $query->select('field.*, fg.id AS groupid')
                     ->from('#__tz_portfolio_plus_fields AS field');
@@ -349,7 +353,7 @@ class TZ_Portfolio_PlusFrontHelperExtraFields{
             }
             if (!isset(self::$cache[$storeId])) {
                 if($groupid){
-                    $db     = JFactory::getDbo();
+                    $db     = TZ_Portfolio_PlusDatabase::getDbo();;
                     $query  = $db->getQuery(true);
 
                     $query -> select('f.*');
@@ -421,7 +425,7 @@ class TZ_Portfolio_PlusFrontHelperExtraFields{
         $storeId    = md5($storeId);
 
         if(!isset(self::$cache[$storeId])){
-            $db         = JFactory::getDbo();
+            $db         = TZ_Portfolio_PlusDatabase::getDbo();;
             $query      = $db -> getQuery(true);
 
             $query -> select('f.*, fm.groupid');
@@ -531,7 +535,7 @@ class TZ_Portfolio_PlusFrontHelperExtraFields{
         {
             if (!is_object($fieldObj))
             {
-                $db    = JFactory::getDbo();
+                $db    = TZ_Portfolio_PlusDatabase::getDbo();;
                 $query = $db->getQuery(true);
                 $query->select('field.*, fg.id AS groupid')
                     ->from('#__tz_portfolio_plus_fields AS field');
@@ -619,7 +623,12 @@ class TZ_Portfolio_PlusFrontHelperExtraFields{
         if (!isset(self::$cache[$storeId]))
         {
             $app      = JFactory::getApplication();
-            $db       = JFactory::getDbo();
+//            $db       = TZ_Portfolio_PlusDatabase::getDbo();;
+            $db     = TZ_Portfolio_PlusDatabase::getDbo();
+
+//            $db->setQuery("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
+//            $db->execute();
+
             $query    = $db->getQuery(true);
             $query->select('e.folder, f.*, fg.name AS field_group_name, fg.id AS groupid');
             $query->from('#__tz_portfolio_plus_fields AS f');
@@ -698,6 +707,8 @@ class TZ_Portfolio_PlusFrontHelperExtraFields{
                 $query -> order('IF(fg.field_ordering_type = 2, '.$db -> quoteName('fm.ordering')
                     .',IF(fg.field_ordering_type = 1,'.$db -> quoteName('f.ordering').',NULL))');
             }
+
+//            var_dump($query -> dump()); die();
 
             $db -> setQuery($query);
             if($fields = $db -> loadObjectList()){

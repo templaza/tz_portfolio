@@ -22,10 +22,16 @@ defined('_JEXEC') or die;
 
 // Include the component HTML helpers.
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
-JHtml::_('behavior.tooltip');
+
 JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
-JHtml::_('formbehavior.chosen', 'select');
+
+$j4Compare  = COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE;
+if(!$j4Compare) {
+    JHtml::_('formbehavior.chosen', 'select');
+}else{
+    JHtml::_('formbehavior.chosen', 'select[multiple]');
+}
 
 $user		= JFactory::getUser();
 $userId		= $user->get('id');
@@ -34,30 +40,36 @@ $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
 $ordering 	= ($listOrder == 'a.lft');
 $saveOrder 	= ($listOrder == 'a.lft' && $listDirn == 'asc');
+
+$j4Compare  = COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE;
 if ($saveOrder)
 {
 	$saveOrderingUrl = 'index.php?option=com_tz_portfolio_plus&task=categories.saveOrderAjax&tmpl=component';
-	JHtml::_('sortablelist.sortable', 'categoryList', 'adminForm', strtolower($listDirn), $saveOrderingUrl, false, true);
+
+	if($j4Compare){
+        JHtml::_('draggablelist.draggable');
+    }else {
+        JHtml::_('sortablelist.sortable', 'categoryList', 'adminForm', strtolower($listDirn), $saveOrderingUrl, false, true);
+    }
 }
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&view=categories');?>" method="post" name="adminForm" id="adminForm">
-    <?php if(!empty($this -> sidebar)):?>
-    <div id="j-sidebar-container" class="span2">
-		<?php echo $this -> sidebar; ?>
-	</div>
-    <div id="j-main-container" class="span10">
-    <?php else:?>
-        <div id="j-main-container">
-    <?php endif;?>
 
+<?php echo JHtml::_('tzbootstrap.addrow');?>
+    <?php if(!empty($this -> sidebar)){?>
+        <div id="j-sidebar-container" class="span2 col-md-2">
+            <?php echo $this -> sidebar; ?>
+        </div>
+    <?php } ?>
 
+    <?php echo JHtml::_('tzbootstrap.startcontainer', '10', !empty($this -> sidebar));?>
         <div class="tpContainer">
             <?php
             // Search tools bar
             echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
             ?>
             <?php if (empty($this->items)){ ?>
-                <div class="alert alert-no-items">
+                <div class="alert alert-warning alert-no-items">
                     <?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
                 </div>
             <?php }else{ ?>
@@ -65,19 +77,19 @@ if ($saveOrder)
             <table class="table table-striped" id="categoryList">
                 <thead>
                     <tr>
-                        <th width="1%" class="nowrap center hidden-phone">
+                        <th width="1%" class="nowrap center text-center hidden-phone">
                             <?php echo JHtml::_('searchtools.sort', '', 'a.lft', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2'); ?>
                         </th>
                         <th width="1%" class="hidden-phone">
                             <input type="checkbox" name="checkall-toggle" value="" title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
                         </th>
-                        <th width="5%" class="nowrap center">
+                        <th width="5%" class="nowrap center text-center">
                             <?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'a.published', $listDirn, $listOrder); ?>
                         </th>
                         <th>
                             <?php echo JHtml::_('searchtools.sort', 'JGLOBAL_TITLE', 'a.title', $listDirn, $listOrder); ?>
                         </th>
-                        <th class="center hidden-phone">
+                        <th class="center text-center hidden-phone">
                             <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_INHERITS_PARAMETERS_FROM'); ?>
                         </th>
                         <th width="20%">
@@ -101,11 +113,12 @@ if ($saveOrder)
                         </td>
                     </tr>
                 </tfoot>
-                <tbody>
+
+                <tbody <?php if ($saveOrder) :?> class="js-draggable" data-url="<?php echo $saveOrderingUrl;
+                ?>" data-direction="<?php echo strtolower($listDirn); ?>" data-nested="true"<?php endif; ?>>
                     <?php
                     $originalOrders = array();
                     foreach ($this->items as $i => $item) :
-                        $orderkey   = array_search($item->id, $this->ordering[$item->parent_id]);
                         $canEdit    = $user->authorise('core.edit',       $extension . '.category.' . $item->id);
                         $canCheckin = $user->authorise('core.admin',      'com_checkin') || $item->checked_out == $userId || $item->checked_out == 0;
                         $canEditOwn = $user->authorise('core.edit.own',   $extension . '.category.' . $item->id) && $item->created_user_id == $userId;
@@ -140,33 +153,31 @@ if ($saveOrder)
                         }
                         ?>
                         <tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item->parent_id;?>" item-id="<?php echo $item->id?>" parents="<?php echo $parentsStr?>" level="<?php echo $item->level?>">
-                            <td class="order nowrap center hidden-phone">
-                            <?php if ($canChange) :
-                                $disableClassName = '';
-                                $disabledLabel    = '';
-                                if (!$saveOrder) :
-                                    $disabledLabel    = JText::_('JORDERINGDISABLED');
-                                    $disableClassName = 'inactive tip-top';
-                                endif; ?>
-                                <span class="sortable-handler hasTooltip <?php echo $disableClassName?>" title="<?php echo $disabledLabel?>">
-                                    <i class="icon-menu"></i>
-                                </span>
-
-                            <?php else : ?>
-                                <span class="sortable-handler inactive">
-                                    <i class="icon-menu"></i>
-                                </span>
-                            <?php endif; ?>
-                                <input type="text" style="display:none" name="order[]" size="5" value="<?php echo $orderkey + 1;?>" />
+                            <td class="order nowrap center text-center hidden-phone">
+                                <?php
+                                $iconClass = '';
+                                if (!$canChange)
+                                {
+                                    $iconClass = ' inactive';
+                                }
+                                elseif (!$saveOrder)
+                                {
+                                    $iconClass = ' inactive tip-top hasTooltip" title="' . JHtml::_('tooltipText', 'JORDERINGDISABLED');
+                                }
+                                ?>
+                                <span class="sortable-handler<?php echo $iconClass ?>">
+								<span class="icon-menu" aria-hidden="true"></span>
+							</span>
+                                <input type="text" style="display:none" name="order[]" size="5" value="<?php echo $item->lft; ?>" />
                             </td>
-                            <td class="center hidden-phone">
+                            <td class="center text-center hidden-phone">
                                 <?php echo JHtml::_('grid.id', $i, $item->id); ?>
                             </td>
-                            <td class="center">
+                            <td class="center text-center">
                                 <div class="btn-group">
                                     <?php echo JHtml::_('jgrid.published', $item->published, $i, 'categories.', $canChange);?>
                                     <?php
-                                    if ($canChange)
+                                    if (!$j4Compare && $canChange)
                                     {
                                         // Create dropdown items
                                         JHtml::_('actionsdropdown.' . ((int) $item->published === 2 ? 'un' : '') . 'archive', 'cb' . $i, 'categories');
@@ -179,13 +190,23 @@ if ($saveOrder)
                                 </div>
                             </td>
                             <td>
-                                <?php echo str_repeat('<span class="gi">&mdash;</span>', $item->level - 1) ?>
+                                <?php
+                                if($j4Compare) {
+                                    echo str_repeat('<span class="gi">&mdash;</span>', $item->level - 1);
+                                }
+                                ?>
                                 <?php if ($item->checked_out) : ?>
                                     <?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'categories.', $canCheckin); ?>
                                 <?php endif; ?>
                                 <?php if ($canEdit || $canEditOwn) : ?>
+                                    <?php
+                                    $editIcon   = '';
+                                    if($j4Compare) {
+                                        $editIcon = $item->checked_out ? '' : '<span class="fa fa-pencil-square mr-2" aria-hidden="true"></span>';
+                                    }
+                                    ?>
                                     <a href="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&task=category.edit&id='.$item->id.'&extension='.$extension);?>">
-                                        <?php echo $this->escape($item->title); ?></a>
+                                        <?php echo $editIcon.$this->escape($item->title); ?></a>
                                 <?php else : ?>
                                     <?php echo $this->escape($item->title); ?>
                                 <?php endif; ?>
@@ -197,7 +218,7 @@ if ($saveOrder)
                                     <?php endif; ?>
                                 </span>
                             </td>
-                            <td class="center"><?php echo $item -> inheritFrom;?></td>
+                            <td class="center text-center"><?php echo $item -> inheritFrom;?></td>
                             <td class="small hidden-phone">
                                 <a href="index.php?option=com_tz_portfolio_plus&task=group.edit&id=<?php echo $item -> groupid;?>"><?php echo $item -> groupname;?></a>
                             </td>
@@ -211,7 +232,7 @@ if ($saveOrder)
                                 <?php echo $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
                             <?php endif;?>
                             </td>
-                            <td class="center">
+                            <td class="center text-center">
                                 <span title="<?php echo sprintf('%d-%d', $item->lft, $item->rgt);?>">
                                     <?php echo (int) $item->id; ?></span>
                             </td>
@@ -219,10 +240,16 @@ if ($saveOrder)
                     <?php endforeach; ?>
                 </tbody>
             </table>
-            <?php
-                //Load the batch processing form.
-                echo $this->loadTemplate('batch');
-            ?>
+            <?php //Load the batch processing form. ?>
+                <?php echo JHtml::_(
+                    'bootstrap.renderModal',
+                    'collapseModal',
+                    array(
+                        'title'  => JText::_('COM_TZ_PORTFOLIO_PLUS_CATEGORIES_BATCH_OPTIONS'),
+                        'footer' => $this->loadTemplate('batch_footer'),
+                    ),
+                    $this->loadTemplate('batch_body')
+                ); ?>
             <?php }?>
 
             <input type="hidden" name="task" value="" />
@@ -230,5 +257,6 @@ if ($saveOrder)
             <input type="hidden" name="original_order_values" value="<?php echo implode($originalOrders, ','); ?>" />
             <?php echo JHtml::_('form.token'); ?>
         </div>
-    </div>
+    <?php echo JHtml::_('tzbootstrap.endcontainer');?>
+<?php echo JHtml::_('tzbootstrap.endrow');?>
 </form>

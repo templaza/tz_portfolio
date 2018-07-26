@@ -32,11 +32,21 @@ class modTZ_Portfolio_PlusPortfolioHelper
 {
     protected static $cache;
 
-    public static function getList(&$params)
+    public static function getList(&$params, $module = null)
     {
+        $storeId    = __METHOD__;
+        $storeId   .= ':'.serialize($params);
+        $storeId    = md5($storeId);
+
+        if(isset(self::$cache[$storeId])){
+            return self::$cache[$storeId];
+        }
+
         // Get the dbo
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
+        $app    = JFactory::getApplication();
+        $db     = JFactory::getDbo();
+        $query  = $db->getQuery(true);
+
         $query->select('c.*, c.id as content_id, u.name as user_name, u.id as user_id');
         $query->select('CASE WHEN CHAR_LENGTH(c.alias) THEN CONCAT_WS(":", c.id, c.alias) ELSE c.id END as slug');
         $query->select('CASE WHEN CHAR_LENGTH(cc.alias) THEN CONCAT_WS(":", cc.id, cc.alias) ELSE cc.id END as catslug');
@@ -139,14 +149,12 @@ class modTZ_Portfolio_PlusPortfolioHelper
         $items = $db->loadObjectList();
 
         if ($items) {
-
-            $dispatcher = JDispatcher::getInstance();
             JPluginHelper::importPlugin('content');
             TZ_Portfolio_PlusPluginHelper::importPlugin('content');
             TZ_Portfolio_PlusPluginHelper::importPlugin('mediatype');
 
-            $dispatcher -> trigger('onAlwaysLoadDocument', array('modules.mod_tz_portfolio_plus_portfolio'));
-            $dispatcher -> trigger('onLoadData', array('modules.mod_tz_portfolio_plus_portfolio', $items, $params));
+            $app -> triggerEvent('onAlwaysLoadDocument', array('modules.mod_tz_portfolio_plus_portfolio'));
+            $app -> triggerEvent('onLoadData', array('modules.mod_tz_portfolio_plus_portfolio', $items, $params));
 
             foreach ($items as $i => &$item) {
                 $item->link = JRoute::_(TZ_Portfolio_PlusHelperRoute::getArticleRoute($item->slug, $item->catslug));
@@ -172,40 +180,58 @@ class modTZ_Portfolio_PlusPortfolioHelper
                 $item -> event  = new stdClass();
 
                 //Call trigger in group content
-                $results = $dispatcher->trigger('onContentPrepare', array ('modules.mod_tz_portfolio_plus_portfolio', &$item, &$params, 0));
+                $results = $app -> triggerEvent('onContentPrepare', array ('modules.mod_tz_portfolio_plus_portfolio', &$item, &$params, 0));
                 $item->introtext = $item->text;
 
                 if($introtext_limit = $params -> get('introtext_limit')){
                     $item -> introtext  = '<p>'.JHtml::_('string.truncate', $item->introtext, $introtext_limit, true, false).'</p>';
                 }
-//
-                $results = $dispatcher->trigger('onContentBeforeDisplay', array('modules.mod_tz_portfolio_plus_portfolio',
-                    &$item, &$params, 0, $params->get('layout', 'default')));
+
+                $results = $app -> triggerEvent('onContentBeforeDisplay', array('modules.mod_tz_portfolio_plus_portfolio',
+                    &$item, &$params, 0, $params->get('layout', 'default'), $module));
+                if(is_array($results)){
+                    $results    = array_unique($results);
+                }
                 $item->event->beforeDisplayContent = trim(implode("\n", $results));
 
-                $results = $dispatcher->trigger('onContentAfterDisplay', array('modules.mod_tz_portfolio_plus_portfolio',
-                    &$item, &$params, 0, $params->get('layout', 'default')));
+                $results = $app -> triggerEvent('onContentAfterDisplay', array('modules.mod_tz_portfolio_plus_portfolio',
+                    &$item, &$params, 0, $params->get('layout', 'default'), $module));
+                if(is_array($results)){
+                    $results    = array_unique($results);
+                }
                 $item->event->afterDisplayContent = trim(implode("\n", $results));
 
                 // Process the tz portfolio's content plugins.
-                $results    = $dispatcher -> trigger('onBeforeDisplayAdditionInfo',array('modules.mod_tz_portfolio_plus_portfolio',
-                    &$item, &$params, 0, $params->get('layout', 'default')));
+                $results    = $app -> triggerEvent('onBeforeDisplayAdditionInfo',array('modules.mod_tz_portfolio_plus_portfolio',
+                    &$item, &$params, 0, $params->get('layout', 'default'), $module));
+                if(is_array($results)){
+                    $results    = array_unique($results);
+                }
                 $item -> event -> beforeDisplayAdditionInfo   = trim(implode("\n", $results));
 
-                $results    = $dispatcher -> trigger('onAfterDisplayAdditionInfo',array('modules.mod_tz_portfolio_plus_portfolio',
-                    &$item, &$params, 0, $params->get('layout', 'default')));
+                $results    = $app -> triggerEvent('onAfterDisplayAdditionInfo',array('modules.mod_tz_portfolio_plus_portfolio',
+                    &$item, &$params, 0, $params->get('layout', 'default'), $module));
+                if(is_array($results)){
+                    $results    = array_unique($results);
+                }
                 $item -> event -> afterDisplayAdditionInfo   = trim(implode("\n", $results));
 
-                $results    = $dispatcher -> trigger('onContentDisplayListView',array('modules.mod_tz_portfolio_plus_portfolio',
-                    &$item, &$params, 0, $params->get('layout', 'default')));
+                $results    = $app -> triggerEvent('onContentDisplayListView',array('modules.mod_tz_portfolio_plus_portfolio',
+                    &$item, &$params, 0, $params->get('layout', 'default'), $module));
+                if(is_array($results)){
+                    $results    = array_unique($results);
+                }
                 $item -> event -> contentDisplayListView   = trim(implode("\n", $results));
 
                 //Call trigger in group tz_portfolio_plus_mediatype
-                $results    = $dispatcher -> trigger('onContentDisplayMediaType',array('modules.mod_tz_portfolio_plus_portfolio',
-                    &$item, &$params, 0, $params->get('layout', 'default')));
+                $results    = $app -> triggerEvent('onContentDisplayMediaType',array('modules.mod_tz_portfolio_plus_portfolio',
+                    &$item, &$params, 0, $params->get('layout', 'default'), $module));
+                if(is_array($results)){
+                    $results    = array_unique($results);
+                }
                 if(isset($item) && $item){
                     $item -> event -> onContentDisplayMediaType    = trim(implode("\n", $results));
-                    if($results    = $dispatcher -> trigger('onAddMediaType')){
+                    if($results    = $app -> triggerEvent('onAddMediaType')){
                         $mediatypes = array();
                         foreach($results as $result){
                             if(isset($result -> special) && $result -> special) {
@@ -218,6 +244,7 @@ class modTZ_Portfolio_PlusPortfolioHelper
                     unset($items[$i]);
                 }
             }
+            self::$cache[$storeId]  = $items;
             return $items;
         }
         return false;

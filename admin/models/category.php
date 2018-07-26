@@ -20,11 +20,14 @@
 // No direct access.
 defined('_JEXEC') or die;
 
+use Joomla\Filesystem\File;
+use Joomla\Registry\Registry;
+use Joomla\String\StringHelper;
 use Joomla\Utilities\ArrayHelper;
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
+jimport('joomla.filesytem.file');
 jimport('joomla.application.component.modeladmin');
-jimport('joomla.filesystem.folder');
-jimport('joomla.filesystem.file');
 
 /**
  * Categories Component Category Model
@@ -36,6 +39,21 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 	 * @since  1.6
 	 */
 	protected $text_prefix = 'COM_TZ_PORTFOLIO_PLUS_CATEGORIES';
+
+    public function __construct($config = array(), MVCFactoryInterface $factory = null)
+    {
+        parent::__construct($config, $factory);
+
+        // Set the model dbo
+        if (array_key_exists('dbo', $config))
+        {
+            $this->_db = $config['dbo'];
+        }
+        else
+        {
+            $this->_db = TZ_Portfolio_PlusDatabase::getDbo();
+        }
+    }
 
 	/**
 	 * Method to test whether a record can be deleted.
@@ -176,8 +194,8 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 			}
 
 			// Convert the metadata field to an array.
-			$registry = new JRegistry();
-			$registry->loadString($result->metadata);
+			$registry = new Registry($result->metadata);
+//			$registry->loadString();
 			$result->metadata = $registry->toArray();
 
 			// Convert the created and modified dates to local user time for display in the form.
@@ -455,11 +473,11 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
     function deleteImages($fileName){
         if($fileName){
             $file   = JPATH_SITE.DIRECTORY_SEPARATOR.str_replace('/',DIRECTORY_SEPARATOR,$fileName);
-            if(!JFile::exists($file)){
+            if(!\JFile::exists($file)){
                 $this -> setError(JText::_('COM_TZ_PORTFOLIO_PLUS_INVALID_FILE'));
                 return false;
             }
-            JFile::delete($file);
+            File::delete($file);
         }
         return true;
     }
@@ -476,10 +494,10 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 	public function save($data)
 	{
 
-		$input				= JFactory::getApplication() -> input;
+	    $app    = JFactory::getApplication();
+		$input	= $app -> input;
 
 		// Initialise variables;
-		$dispatcher = JDispatcher::getInstance();
 		$table = $this->getTable();
 		$pk = (!empty($data['id'])) ? $data['id'] : (int) $this->getState($this->getName() . '.id');
 		$isNew = true;
@@ -531,7 +549,7 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 		}
 
 		// Trigger the onContentBeforeSave event.
-		$result = $dispatcher->trigger($this->event_before_save, array($this->option . '.' . $this->name, &$table, $isNew));
+		$result = $app -> triggerEvent($this->event_before_save, array($this->option . '.' . $this->name, &$table, $isNew));
 		if (in_array(false, $result, true))
 		{
 			$this->setError($table->getError());
@@ -571,7 +589,7 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 			$associations[$table->language] = $table->id;
 
 			// Deleting old association for these items
-			$db = JFactory::getDbo();
+			$db = $this -> getDbo();
 			$query = $db->getQuery(true)
 				->delete('#__associations')
 				->where($db->quoteName('context') . ' = ' . $db->quote('com_tz_portfolio_plus.categories.item'))
@@ -609,7 +627,7 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 		}
 
 		// Trigger the onContentAfterSave event.
-		$dispatcher->trigger($this->event_after_save, array($this->option . '.' . $this->name, &$table, $isNew));
+		$app -> triggerEvent($this->event_after_save, array($this->option . '.' . $this->name, &$table, $isNew));
 
 		// Rebuild the path for the category:
 		if (!$table->rebuildPath($table->id))
@@ -647,14 +665,14 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 	{
 		if (parent::publish($pks, $value)) {
 			// Initialise variables.
-			$dispatcher	= JDispatcher::getInstance();
-			$extension	= JFactory::getApplication() -> input -> getCmd('extension');
+            $app        = JFactory::getApplication();
+			$extension	= $app -> input -> getCmd('extension');
 
 			// Include the content plugins for the change of category state event.
 			JPluginHelper::importPlugin('content');
 
 			// Trigger the onCategoryChangeState event.
-			$dispatcher->trigger('onCategoryChangeState', array($extension, $pks, $value));
+            $app -> triggerEvent('onCategoryChangeState', array($extension, $pks, $value));
 
 			return true;
 		}
@@ -1100,8 +1118,8 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 		$table = $this->getTable();
 		while ($table->load(array('alias' => $alias, 'parent_id' => $parent_id)))
 		{
-			$title = JString::increment($title);
-			$alias = JString::increment($alias, 'dash');
+			$title = StringHelper::increment($title);
+			$alias = StringHelper::increment($alias, 'dash');
 		}
 
 		return array($title, $alias);

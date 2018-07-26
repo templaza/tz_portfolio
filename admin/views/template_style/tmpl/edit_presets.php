@@ -92,14 +92,14 @@ if($presets = $this -> presets):
                     <div class="preset-bar-table">
                         <div class="preset-bar-table-cell">
                             <span data-preset="<?php echo $preset -> name;?>" data-target="#loadPreset" data-toggle="modal"
-                                  class="load-preset btn btn-warning btn-small"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_LOAD_PRESET');?></span>
+                                  class="load-preset btn btn-warning btn-small btn-sm"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_LOAD_PRESET');?></span>
                             <?php if(isset($preset -> doc_link) && $preset -> doc_link){ ?>
-                                <a target="_blank" class="btn btn-primary btn-small"
+                                <a target="_blank" class="btn btn-primary btn-small btn-sm"
                                    href="<?php echo $preset -> doc_link;?>"><?php echo JText::_('JTOOLBAR_HELP');?></a>
                             <?php }
                             if(isset($preset -> demo_link) && $preset -> demo_link){
                                 ?>
-                                <a target="_blank" class="btn btn-success btn-small"
+                                <a target="_blank" class="btn btn-success btn-small btn-sm"
                                    href="<?php echo $preset -> demo_link;?>"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_LIVE_PREVIEW');?></a>
                             <?php }?>
                         </div>

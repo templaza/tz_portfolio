@@ -24,13 +24,13 @@
         <fields name="params">
             <fieldset name="basic">
                 <field type="radio" name="use_single_layout_builder"
-                       default="1" class="btn-group"
+                       default="1" class="btn-group switcher"
                        label="COM_TZ_PORTFOLIO_PLUS_USE_SINGLE_LAYOUT_BUILDER_LABEL">
                     <option value="1">JYES</option>
                     <option value="0">JNO</option>
                 </field>
                 <field type="radio" name="load_style"
-                       default="0" class="btn-group"
+                       default="0" class="btn-group switcher"
                        label="TPL_SYSTEM_LOAD_STYLE_LABEL">
                     <option value="1">JYES</option>
                     <option value="0">JNO</option>

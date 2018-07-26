@@ -181,7 +181,7 @@ if($this -> items):
 
                         <?php if ($params->get('show_cat_author', 0) && !empty($item->author )) : ?>
                             <div class="TzPortfolioCreatedby" itemprop="author" itemscope itemtype="http://schema.org/Person">
-                                <i class="tp tp-pencil"></i>
+                                <i class="tp tp-user"></i>
                                 <?php $author =  $item->author; ?>
                                 <?php $author = ($item->created_by_alias ? $item->created_by_alias : $author);?>
                                 <?php $author = '<span itemprop="name">' . $author . '</span>'; ?>

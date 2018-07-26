@@ -88,4 +88,19 @@ class TZ_Portfolio_PlusTableAddon_Data extends JTable
             return parent::_getAssetParentId($table, $id);
         }
     }
+
+    public function store($updateNulls = false)
+    {
+        $user = JFactory::getUser();
+
+        if (empty($this->modified_by))
+        {
+            $this->modified_by = 0;
+        }
+        if (empty($this->created_by))
+        {
+            $this->created_by = $user->get('id');
+        }
+        return parent::store($updateNulls);
+    }
 }

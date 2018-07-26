@@ -19,7 +19,10 @@
 
 defined('_JEXEC') or die;
 
-class TZ_Portfolio_PlusRouter extends JComponentRouterBase
+use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\CMS\Component\Router\RouterBase;
+
+class TZ_Portfolio_PlusRouter extends RouterBase
 {
     protected $addonRouters     = array();
 
@@ -79,10 +82,17 @@ class TZ_Portfolio_PlusRouter extends JComponentRouterBase
                     $segments = array_merge($segments, $addonSegments);
                 }
             }
-            return $segments;
         }else{
-            return $this -> notSefBuild($query);
+            $segments = $this -> notSefBuild($query);
         }
+
+        $total = count($segments);
+        for ($i = 0; $i < $total; $i++)
+        {
+            $segments[$i] = str_replace(':', '-', $segments[$i]);
+        }
+
+        return $segments;
     }
 
 
@@ -117,11 +127,19 @@ class TZ_Portfolio_PlusRouter extends JComponentRouterBase
 
         $params		= JComponentHelper::getParams('com_tz_portfolio_plus');
         if($params -> get('tzSef',1)) {
-            $vars   = $this -> sefParse($segments);
+            $vars   = $this -> sefParse($segments, $addonVars);
         }else{
             $vars   = $this -> notSefParse($segments);
         }
+
         $vars   = array_merge($vars, $addonVars);
+
+        // Remove all segments
+        //** @since joomla 4 */
+        foreach($segments as $i => $segment){
+            unset($segments[$i]);
+        }
+
         return $vars;
     }
 
@@ -200,6 +218,12 @@ class TZ_Portfolio_PlusRouter extends JComponentRouterBase
                     return $segments;
                 }
             } else {
+                // Build tag router
+                $this -> _getTagSegment($query, $segments);
+
+                // Build user router
+                $this -> _getUserSegment($query, $segments);
+
                 if (isset($query['id'])) {
                     $catid = $query['id'];
                 } else {
@@ -400,7 +424,7 @@ class TZ_Portfolio_PlusRouter extends JComponentRouterBase
 
                         $alias  = null;
                         if($params -> get('sef_use_user_alias',1)) {
-                            $alias = JApplication::stringURLSafe($db->loadResult());
+                            $alias = ApplicationHelper::stringURLSafe($db->loadResult());
                         }
                         if($params -> get('sef_user_separator','slash_revert_id') == 'slash_revert_id'){
                             if($alias && !empty($alias)) {
@@ -667,7 +691,7 @@ class TZ_Portfolio_PlusRouter extends JComponentRouterBase
                     ->from('#__tz_portfolio_plus_tags')
                     ->where('id=' . (int)$query['id'])
                 );
-                $alias = JApplication::stringURLSafe($db->loadResult());
+                $alias = ApplicationHelper::stringURLSafe($db->loadResult());
                 $segments[] = (int)$query['id'].':'.$alias;
             }else {
                 $segments[] = $query['id'];
@@ -699,7 +723,7 @@ class TZ_Portfolio_PlusRouter extends JComponentRouterBase
                     ->where('id=' . (int)$query['id'])
 
                 );
-                $alias = JApplication::stringURLSafe($db->loadResult());
+                $alias = ApplicationHelper::stringURLSafe($db->loadResult());
                 $query['id'] = $query['id'] . ':' . $alias;
 
             }
@@ -822,7 +846,75 @@ class TZ_Portfolio_PlusRouter extends JComponentRouterBase
         return $segments;
     }
 
-    protected function sefParse(&$segments){
+    protected function _getTagSegment(&$query, &$segments){
+        $params = JComponentHelper::getParams('com_tz_portfolio_plus');
+        if(isset($query['tid'])){
+            $segments[] = $params -> get('sef_tags_prefix', 'tags');
+            $db         = JFactory::getDbo();
+            $aquery     = $db -> getQuery(true);
+
+            $aquery -> select('alias');
+            $aquery -> from('#__tz_portfolio_plus_tags');
+            $aquery -> where('id='.$query['tid']);
+            $db -> setQuery($aquery);
+
+            $alias  = '';
+            if($params -> get('sef_use_tag_alias',1)) {
+                $alias = $db->loadResult();
+            }
+
+            switch ($params -> get('sef_tag_separator', 'slash_revert_id')){
+                default:
+                case 'dash':
+                    $segments[] = $query['tid'].':'.$alias;
+                    break;
+                case 'slash':
+                    $segments[] = $query['tid'];
+                    $segments[] = $alias;
+                    break;
+                case 'slash_revert_id':
+                    $segments[] = $alias;
+                    $segments[] = $query['tid'];
+                    break;
+            }
+
+            unset($query['tid']);
+        }
+    }
+
+    protected function _getUserSegment(&$query, &$segments){
+        $params = JComponentHelper::getParams('com_tz_portfolio_plus');
+        if(isset($query['uid'])){
+            $uid        = $query['uid'];
+            $segments[] = $params -> get('sef_users_prefix', 'users');
+
+            $user   = JFactory::getUser($uid);
+
+            $alias  = '';
+            if($params -> get('sef_use_user_alias',1)) {
+                $alias = ApplicationHelper::stringURLSafe($user -> name);
+            }
+
+            switch ($params -> get('sef_user_separator', 'slash_revert_id')){
+                default:
+                case 'dash':
+                    $segments[] = $uid.':'.$alias;
+                    break;
+                case 'slash':
+                    $segments[] = $uid;
+                    $segments[] = $alias;
+                    break;
+                case 'slash_revert_id':
+                    $segments[] = $alias;
+                    $segments[] = $uid;
+                    break;
+            }
+
+            unset($query['uid']);
+        }
+    }
+
+    protected function sefParse(&$segments, $addOnVars = false){
         $total = count($segments);
         $vars = array();
 
@@ -902,6 +994,16 @@ class TZ_Portfolio_PlusRouter extends JComponentRouterBase
                 return $vars;
             }
 
+            if($segments[0] == $params -> get('sef_date_prefix','date')){
+                $vars['view']   = 'date';
+                return $vars;
+            }
+
+            if($addOnVars && $segments[0] == 'addon'){
+                $vars['view']   = 'addon';
+                return $vars;
+            }
+
             // we check to see if an alias is given.  If not, we assume it is an article
             //Old
             if (strpos($segments[0], ':') === false) {
@@ -955,34 +1057,34 @@ class TZ_Portfolio_PlusRouter extends JComponentRouterBase
         if (!$advanced && $count) {
 
             if ($segments[0] == $params -> get('sef_tags_prefix','tags')) {
-                $vars['view'] = 'tags';
+                $vars['view'] = 'portfolio';
                 if($params -> get('sef_tag_separator','slash_revert_id') == 'slash_revert_id'
                     || $params -> get('sef_tag_separator','slash_revert_id') == 'dash'){
-                    $vars['id'] = $segments[count($segments) - 1];
+                    $vars['tid'] = $segments[count($segments) - 1];
                 }else{
                     if($params -> get('sef_use_tag_alias',1)){
-                        $vars['id'] = $segments[count($segments) - 2];
+                        $vars['tid'] = $segments[count($segments) - 2];
                     }else{
-                        $vars['id'] = (int) $segments[count($segments) - 1];
+                        $vars['tid'] = (int) $segments[count($segments) - 1];
                     }
                 }
 
                 return $vars;
             }
             if ($segments[0] == $params -> get('sef_users_prefix','users')) {
-                $vars['view'] = 'users';
+                $vars['view'] = 'portfolio';
                 if($params -> get('sef_user_separator','slash_revert_id') == 'slash_revert_id'
                     || $params -> get('sef_user_separator','slash_revert_id') == 'dash'){
                     if($params -> get('sef_use_user_alias',1)) {
-                        $vars['id'] = $segments[count($segments) - 1];
+                        $vars['uid'] = $segments[count($segments) - 1];
                     }else{
-                        $vars['id'] = (int) $segments[count($segments) - 1];
+                        $vars['uid'] = (int) $segments[count($segments) - 1];
                     }
                 }else{
                     if($params -> get('sef_use_user_alias',1)){
-                        $vars['id'] = $segments[count($segments) - 2];
+                        $vars['uid'] = $segments[count($segments) - 2];
                     }else{
-                        $vars['id'] = (int) $segments[count($segments) - 1];
+                        $vars['uid'] = (int) $segments[count($segments) - 1];
                     }
                 }
                 return $vars;
@@ -1112,7 +1214,7 @@ class TZ_Portfolio_PlusRouter extends JComponentRouterBase
         return $vars;
     }
 
-    protected function notSefParse(&$segments){
+    protected function notSefParse(&$segments, $addOnVars = false){
 
         $total = count($segments);
         $vars = array();
@@ -1168,6 +1270,11 @@ class TZ_Portfolio_PlusRouter extends JComponentRouterBase
 
             if($segments[0] == 'search'){
                 $vars['view']   = 'search';
+                return $vars;
+            }
+
+            if($addOnVars && $segments[0] == 'addon'){
+                $vars['view']   = 'addon';
                 return $vars;
             }
 

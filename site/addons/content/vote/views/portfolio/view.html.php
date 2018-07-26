@@ -21,10 +21,14 @@
 defined('_JEXEC') or die;
 
 class PlgTZ_Portfolio_PlusContentVoteViewPortfolio extends JViewLegacy{
+
+    protected $addon;
     protected $item     = null;
     protected $params   = null;
     protected $audio    = null;
-    protected $head     = false;
+
+    /* To add script once */
+    protected $head     = array();
 
     public function display($tpl = null){
         $this -> item   = $this -> get('Item');
@@ -32,19 +36,59 @@ class PlgTZ_Portfolio_PlusContentVoteViewPortfolio extends JViewLegacy{
         $params         = $state -> get('params');
         $this -> params = $params;
 
-        if(!$this -> head) {
-            $document = JFactory::getDocument();
-            $document->addStyleSheet(TZ_Portfolio_PlusUri::root(true) . '/addons/content/vote/css/vote.css');
-            $document->addScript(TZ_Portfolio_PlusUri::root(true) . '/addons/content/vote/js/vote.js');
-            $document->addScriptDeclaration('var tzPortfolioVoteFolder = "' . TZ_Portfolio_PlusUri::base(true) . '";
-        var tzPortfolioPlusBase = "' . TZ_Portfolio_PlusUri::base(true) . '/addons/content/vote";
-        var TzPortfolioPlusVote_text=Array("' . JTEXT::_('PLG_CONTENT_VOTE_NO_AJAX') . '","'
-                . JTEXT::_('PLG_CONTENT_VOTE_LOADING') . '","' . JTEXT::_('PLG_CONTENT_VOTE_THANKS') . '","'
-                . JTEXT::_('PLG_CONTENT_VOTE_LOGIN') . '","' . JTEXT::_('PLG_CONTENT_VOTE_RATED') . '","'
-                . JTEXT::_('PLG_CONTENT_VOTE_VOTES') . '","' . JTEXT::_('PLG_CONTENT_VOTE_VOTE') . '");');
-            $this -> head   = true;
+        $addon          = $state -> get($this -> getName().'.addon');
+        $this -> addon  = $addon;
+
+        if(!isset($this -> head['display'])){
+            $this -> head['display']    = false;
+        }
+        if(!isset($this -> head['layout_'.$this -> getLayout()])){
+            $this -> head['layout_'.$this -> getLayout()]    = false;
+        }
+
+        if(!$this -> head['display']) {
+            $this -> document -> addStyleSheet(TZ_Portfolio_PlusUri::root(true) . '/css/ns-default.min.css',
+                array('version' => 'auto'));
+
+            switch ($params -> get('ct_vote_notice_layout', 'growl')){
+
+                case 'growl':
+                    $this -> document -> addStyleSheet(TZ_Portfolio_PlusUri::root(true)
+                        . '/css/ns-style-growl.min.css', array('version' => 'auto'));
+                    break;
+                case 'attached':
+                    $this -> document -> addStyleSheet(TZ_Portfolio_PlusUri::root(true)
+                        . '/css/ns-style-attached.min.css', array('version' => 'auto'));
+                    break;
+                case 'bar':
+                    $this -> document -> addStyleSheet(TZ_Portfolio_PlusUri::root(true)
+                        . '/css/ns-style-bar.min.css', array('version' => 'auto'));
+                    break;
+                case 'other':
+                    $this -> document -> addStyleSheet(TZ_Portfolio_PlusUri::root(true)
+                        . '/css/ns-style-other.min.css', array('version' => 'auto'));
+                    break;
+            }
+
+            $this -> document -> addScript(TZ_Portfolio_PlusUri::root(true) . '/js/modernizr.custom.js',
+                array('version' => 'auto', 'relative' => true));
+            $this -> document -> addScript(TZ_Portfolio_PlusUri::root(true) . '/js/classie.min.js',
+                array('version' => 'auto', 'relative' => true));
+            $this -> document -> addScript(TZ_Portfolio_PlusUri::root(true) . '/js/notificationfx.min.js',
+                array('version' => 'auto', 'relative' => true));
+
+            $this -> document -> addStyleSheet(TZ_Portfolio_PlusUri::root(true) . '/addons/content/vote/css/vote.css',
+                array('version' => 'auto'));
+
+
+            $this -> document -> addScript(TZ_Portfolio_PlusUri::root(true) . '/addons/content/vote/js/vote.min.js',
+                array('version' => 'auto', 'relative' => true));
+
+            $this -> head['display']   = true;
         }
 
         parent::display($tpl);
+
+        $this -> head['layout_'.$this -> getLayout()]   = true;
     }
 }

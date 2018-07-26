@@ -27,9 +27,11 @@ jimport('joomla.application.component.view');
  */
 class TZ_Portfolio_PlusViewCategories extends JViewLegacy
 {
+    protected $state;
 	protected $items;
+    protected $f_levels;
 	protected $pagination;
-	protected $state;
+	protected $listsGroup;
 
 	/**
 	 * Display the view
@@ -68,8 +70,8 @@ class TZ_Portfolio_PlusViewCategories extends JViewLegacy
 		$options[]	= JHtml::_('select.option', '9', JText::_('J9'));
 		$options[]	= JHtml::_('select.option', '10', JText::_('J10'));
 
-		$this->assign('f_levels', $options);
-        $this -> assign('listsGroup',$this -> get('Groups'));
+		$this -> f_levels   = $options;
+        $this -> listsGroup = $this -> get('Groups');
 
         if($this->getLayout() !== 'modal') {
             $this->addToolbar();
@@ -152,7 +154,7 @@ class TZ_Portfolio_PlusViewCategories extends JViewLegacy
 
 		if ($this->state->get('filter.published') == -2 && ($canDo->get('core.delete', $component)
                 || $canDo -> get('core.delete.own'))) {
-			JToolBarHelper::deleteList('', 'categories.delete', 'JTOOLBAR_EMPTY_TRASH');
+			JToolBarHelper::deleteList('JGLOBAL_CONFIRM_DELETE', 'categories.delete', 'JTOOLBAR_EMPTY_TRASH');
 		}
 		elseif ($canDo->get('core.edit.state') || $canDo -> get('core.edit.state.own')) {
 			JToolBarHelper::trash('categories.trash');
@@ -160,15 +162,12 @@ class TZ_Portfolio_PlusViewCategories extends JViewLegacy
         // Add a batch button
 		if ($canDo->get('core.edit'))
 		{
-			JHtml::_('bootstrap.modal', 'collapseModal');
+            $title = JText::_('JTOOLBAR_BATCH');
 
-            $title      = JText::_('JTOOLBAR_BATCH');
-            $batchIcon  = '<i class="icon-checkbox-partial" title="'.$title.'"></i>';
-            $batchClass = ' class="btn btn-small"';
+            // Instantiate a new JLayoutFile instance and render the batch button
+            $layout = new JLayoutFile('joomla.toolbar.batch');
 
-            $dhtml = '<a'.$batchClass.' href="#" data-toggle="modal" data-target="#collapseModal">';
-            $dhtml .= $batchIcon.$title.'</a>';
-
+            $dhtml = $layout->render(array('title' => $title));
             $bar->appendButton('Custom', $dhtml, 'batch');
 		}
 

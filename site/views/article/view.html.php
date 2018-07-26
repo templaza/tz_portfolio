@@ -22,8 +22,6 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.component.view');
 
-JHtml::addIncludePath(JPATH_COMPONENT . '/helpers');
-
 /**
  * HTML Article View class for the Content component.
  */
@@ -56,7 +54,7 @@ class TZ_Portfolio_PlusViewArticle extends TZ_Portfolio_PlusViewLegacy
         }
 
 		$user		= JFactory::getUser();
-		$dispatcher	= JDispatcher::getInstance();
+		$dispatcher	= TZ_Portfolio_PlusPluginHelper::getDispatcher();
 
         $this->state	= $this->get('State');
         $params	        = $this->state->get('params');
@@ -86,7 +84,7 @@ class TZ_Portfolio_PlusViewArticle extends TZ_Portfolio_PlusViewLegacy
 
 
         $mediatypes = array();
-        if($results    = $dispatcher -> trigger('onAddMediaType')){
+        if($results    = $app -> triggerEvent('onAddMediaType')){
             foreach($results as $result){
                 if(isset($result -> special) && $result -> special) {
                     $mediatypes[] = $result -> value;
@@ -192,10 +190,6 @@ class TZ_Portfolio_PlusViewArticle extends TZ_Portfolio_PlusViewLegacy
         $item -> author_link    = JRoute::_(TZ_Portfolio_PlusHelperRoute::getUserRoute($item -> created_by,
             $params -> get('user_menu_active','auto')));
 
-        $url    = JURI::getInstance() -> toString();
-
-        $this -> assign('linkCurrent',$url);
-
 		// Check the view access to the article (the model has already computed the values).
 		if ($item->params->get('access-view') != true && (($item->params->get('show_noauth') != true &&  $user->get('guest') ))) {
             JError::raiseWarning(403, JText::_('JERROR_ALERTNOAUTHOR'));
@@ -207,8 +201,8 @@ class TZ_Portfolio_PlusViewArticle extends TZ_Portfolio_PlusViewLegacy
         // Process the content plugins.
         //
 
-        $dispatcher -> trigger('onAlwaysLoadDocument', array('com_tz_portfolio_plus.portfolio'));
-        $dispatcher -> trigger('onLoadData', array('com_tz_portfolio_plus.portfolio', $this -> item, $params));
+        $app -> triggerEvent('onAlwaysLoadDocument', array('com_tz_portfolio_plus.portfolio'));
+        $app -> triggerEvent('onLoadData', array('com_tz_portfolio_plus.portfolio', $this -> item, $params));
 
 		if ($item->params->get('show_intro', 1)) {
 			$item->text = $item->introtext.' '.$item->fulltext;
@@ -232,59 +226,72 @@ class TZ_Portfolio_PlusViewArticle extends TZ_Portfolio_PlusViewLegacy
 
         if($item -> introtext && !empty($item -> introtext)) {
             $item->text = $item->introtext;
-            $results = $dispatcher->trigger('onContentPrepare', array('com_tz_portfolio_plus.article', &$item, &$this->params, $offset));
-            $results = $dispatcher->trigger('onContentAfterTitle', array('com_tz_portfolio_plus.article', &$item, &$this->params, $offset));
-            $results = $dispatcher->trigger('onContentBeforeDisplay', array('com_tz_portfolio_plus.article', &$item, &$this->params, $offset));
-            $results = $dispatcher->trigger('onContentAfterDisplay', array('com_tz_portfolio_plus.article', &$item, &$this->params, $offset));
+            $results = $app -> triggerEvent('onContentPrepare', array('com_tz_portfolio_plus.article', &$item, &$this->params, $offset));
+            $results = $app -> triggerEvent('onContentAfterTitle', array('com_tz_portfolio_plus.article', &$item, &$this->params, $offset));
+            $results = $app -> triggerEvent('onContentBeforeDisplay', array('com_tz_portfolio_plus.article', &$item, &$this->params, $offset));
+            $results = $app -> triggerEvent('onContentAfterDisplay', array('com_tz_portfolio_plus.article', &$item, &$this->params, $offset));
 
             $item->introtext = $item->text;
         }
         if($item -> fulltext && !empty($item -> fulltext)) {
             $item->text = $item->fulltext;
-            $results = $dispatcher->trigger('onContentPrepare', array('com_tz_portfolio_plus.article', &$item, &$this->params, $offset));
-            $results = $dispatcher->trigger('onContentAfterTitle', array('com_tz_portfolio_plus.article', &$item, &$this->params, $offset));
-            $results = $dispatcher->trigger('onContentBeforeDisplay', array('com_tz_portfolio_plus.article', &$item, &$this->params, $offset));
-            $results = $dispatcher->trigger('onContentAfterDisplay', array('com_tz_portfolio_plus.article', &$item, &$this->params, $offset));
+            $results = $app -> triggerEvent('onContentPrepare', array('com_tz_portfolio_plus.article', &$item, &$this->params, $offset));
+            $results = $app -> triggerEvent('onContentAfterTitle', array('com_tz_portfolio_plus.article', &$item, &$this->params, $offset));
+            $results = $app -> triggerEvent('onContentBeforeDisplay', array('com_tz_portfolio_plus.article', &$item, &$this->params, $offset));
+            $results = $app -> triggerEvent('onContentAfterDisplay', array('com_tz_portfolio_plus.article', &$item, &$this->params, $offset));
 
             $item->fulltext = $item->text;
         }
 
         $item -> text   = $text;
-        $results = $dispatcher->trigger('onContentPrepare', array ('com_tz_portfolio_plus.article', &$item, &$this->params, $offset));
+        $results = $app -> triggerEvent('onContentPrepare', array ('com_tz_portfolio_plus.article', &$item, &$this->params, $offset));
 
         $item->event = new stdClass();
-        $results = $dispatcher->trigger('onContentAfterTitle', array('com_tz_portfolio_plus.article', &$item, &$this->params, $offset));
+        $results = $app -> triggerEvent('onContentDisplayAuthorAbout',
+            array('com_tz_portfolio_plus.article', $item -> author_id, &$this->params, &$item, $offset));
+        $item->event->authorAbout = trim(implode("\n", $results));
+
+        $results = $app -> triggerEvent('onContentAfterTitle',
+            array('com_tz_portfolio_plus.article', &$item, &$this->params, $offset));
         $item->event->afterDisplayTitle = trim(implode("\n", $results));
 
-        $results = $dispatcher->trigger('onContentBeforeDisplay', array('com_tz_portfolio_plus.article', &$item, &$this->params, $offset));
+        $results = $app -> triggerEvent('onContentBeforeDisplay',
+            array('com_tz_portfolio_plus.article', &$item, &$this->params, $offset));
         $item->event->beforeDisplayContent = trim(implode("\n", $results));
 
-        $results = $dispatcher->trigger('onContentAfterDisplay', array('com_tz_portfolio_plus.article', &$item, &$this->params, $offset));
+        $results = $app -> triggerEvent('onContentAfterDisplay',
+            array('com_tz_portfolio_plus.article', &$item, &$this->params, $offset));
         $item->event->afterDisplayContent = trim(implode("\n", $results));
 
         // Trigger portfolio's plugin
-        $results = $dispatcher -> trigger('onContentDisplayCommentCount',array('com_tz_portfolio_plus.article',&$item,&$item -> params,$offset));
+        $results = $app -> triggerEvent('onContentDisplayCommentCount',
+            array('com_tz_portfolio_plus.article',&$item,&$item -> params,$offset));
         $item -> event -> contentDisplayCommentCountCount  = trim(implode("\n",$results));
 
-        $results = $dispatcher->trigger('onContentDisplayVote', array('com_tz_portfolio_plus.article', &$item, &$item -> params, $offset));
+        $results = $app -> triggerEvent('onContentDisplayVote',
+            array('com_tz_portfolio_plus.article', &$item, &$item -> params, $offset));
         $item->event->contentDisplayVote = trim(implode("\n", $results));
 
-        $results    = $dispatcher -> trigger('onBeforeDisplayAdditionInfo',array('com_tz_portfolio_plus.article',
+        $results    = $app -> triggerEvent('onBeforeDisplayAdditionInfo',
+            array('com_tz_portfolio_plus.article',
             &$item, &$item -> params, $offset));
         $item -> event -> beforeDisplayAdditionInfo   = trim(implode("\n", $results));
 
-        $results    = $dispatcher -> trigger('onAfterDisplayAdditionInfo',array('com_tz_portfolio_plus.article',
+        $results    = $app -> triggerEvent('onAfterDisplayAdditionInfo',
+            array('com_tz_portfolio_plus.article',
             &$item, &$item -> params, $offset));
         $item -> event -> afterDisplayAdditionInfo   = trim(implode("\n", $results));
 
-        $results    = $dispatcher -> trigger('onContentDisplayMediaType',array('com_tz_portfolio_plus.article',
+        $results    = $app -> triggerEvent('onContentDisplayMediaType',
+            array('com_tz_portfolio_plus.article',
             &$item, &$item -> params, $offset));
         $item -> event -> onContentDisplayMediaType    = trim(implode("\n", $results));
 
         if($template   = TZ_Portfolio_PlusTemplate::getTemplate(true)){
             $tplparams  = $template -> params;
             if(!$tplparams -> get('use_single_layout_builder',1)){
-                $results = $dispatcher->trigger('onContentDisplayArticleView', array('com_tz_portfolio_plus.article',
+                $results = $app -> triggerEvent('onContentDisplayArticleView',
+                    array('com_tz_portfolio_plus.article',
                     &$item, &$item->params, $offset));
                 $item->event->contentDisplayArticleView = trim(implode("\n", $results));
             }
@@ -307,7 +314,7 @@ class TZ_Portfolio_PlusViewArticle extends TZ_Portfolio_PlusViewLegacy
             $itemR -> media     = $media;
 
             $itemR -> event = new stdClass();
-            $results    = $dispatcher -> trigger('onContentDisplayMediaType',array('com_tz_portfolio_plus.article',
+            $results    = $app -> triggerEvent('onContentDisplayMediaType',array('com_tz_portfolio_plus.article',
                 &$itemR, &$item -> params, $offset, 'related'));
 
             if($itemR) {

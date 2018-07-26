@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS `#__tz_portfolio_plus_categories`
 ,`#__tz_portfolio_plus_addon_data`
+,`#__tz_portfolio_plus_addon_meta`
 ,`#__tz_portfolio_plus_content`
 ,`#__tz_portfolio_plus_content_category_map`
 ,`#__tz_portfolio_plus_content_featured_map`

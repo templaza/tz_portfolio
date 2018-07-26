@@ -27,6 +27,17 @@ class JFormFieldTZMediaTypes extends JFormFieldList
 
     protected $type     = 'TZMediaTypes';
 
+    public function setup(\SimpleXMLElement $element, $value, $group = null)
+    {
+        $setup  = parent::setup($element, $value, $group);
+
+        if($this -> multiple) {
+            JHtml::_('formbehavior.chosen', '#' . $this->id);
+        }
+
+        return $setup;
+    }
+
     protected function getOptions(){
         $element        = $this -> element;
         $options        = array();

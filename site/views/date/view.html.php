@@ -92,7 +92,6 @@ class TZ_Portfolio_PlusViewDate extends JViewLegacy{
         }
 
         $_params    = null;
-        $dispatcher = JDispatcher::getInstance();
 
         $mainCategories     = TZ_Portfolio_PlusFrontHelperCategories::getCategoriesByArticleId($content_ids,
             array('main' => true));
@@ -103,17 +102,19 @@ class TZ_Portfolio_PlusViewDate extends JViewLegacy{
         TZ_Portfolio_PlusPluginHelper::importPlugin('content');
         TZ_Portfolio_PlusPluginHelper::importPlugin('mediatype');
 
-        $dispatcher -> trigger('onAlwaysLoadDocument', array('com_tz_portfolio_plus.date'));
-        $dispatcher -> trigger('onLoadData', array('com_tz_portfolio_plus.date', $items, $params));
+        $app -> triggerEvent('onAlwaysLoadDocument', array('com_tz_portfolio_plus.date'));
+        $app -> triggerEvent('onLoadData', array('com_tz_portfolio_plus.date', $items, $params));
 
         $mediatypes = array();
-        if($results    = $dispatcher -> trigger('onAddMediaType')){
+        if($results    = $app -> triggerEvent('onAddMediaType')){
             foreach($results as $result){
                 if(isset($result -> special) && $result -> special) {
                     $mediatypes[] = $result -> value;
                 }
             }
         }
+
+        $groups	= $user->getAuthorisedViewLevels();
 
         for ($i = 0, $n = count($items); $i < $n; $i++)
         {
@@ -212,42 +213,42 @@ class TZ_Portfolio_PlusViewDate extends JViewLegacy{
                 $item->text = $item->introtext;
             }
             //Call trigger in group content
-            $results = $dispatcher->trigger('onContentPrepare', array ('com_tz_portfolio_plus.date', &$item, &$item->params, 0));
+            $results = $app -> triggerEvent('onContentPrepare', array ('com_tz_portfolio_plus.date', &$item, &$item->params, 0));
             $item->introtext = $item->text;
 
-            $results = $dispatcher->trigger('onContentAfterTitle', array('com_tz_portfolio_plus.date', &$item, &$item->params, 0));
+            $results = $app -> triggerEvent('onContentAfterTitle', array('com_tz_portfolio_plus.date', &$item, &$item->params, 0));
             $item->event->afterDisplayTitle = trim(implode("\n", $results));
 
-            $results = $dispatcher->trigger('onContentBeforeDisplay', array('com_tz_portfolio_plus.date', &$item, &$item->params, 0));
+            $results = $app -> triggerEvent('onContentBeforeDisplay', array('com_tz_portfolio_plus.date', &$item, &$item->params, 0));
             $item->event->beforeDisplayContent = trim(implode("\n", $results));
 
-            $results = $dispatcher->trigger('onContentAfterDisplay', array('com_tz_portfolio_plus.date', &$item, &$item->params, 0));
+            $results = $app -> triggerEvent('onContentAfterDisplay', array('com_tz_portfolio_plus.date', &$item, &$item->params, 0));
             $item->event->afterDisplayContent = trim(implode("\n", $results));
 
             // Process the tz portfolio's content plugins.
-            $results    = $dispatcher -> trigger('onContentDisplayVote',array('com_tz_portfolio_plus.date',
+            $results    = $app -> triggerEvent('onContentDisplayVote',array('com_tz_portfolio_plus.date',
                 &$item, &$item->params, 0));
             $item -> event -> contentDisplayVote   = trim(implode("\n", $results));
 
-            $results    = $dispatcher -> trigger('onBeforeDisplayAdditionInfo',array('com_tz_portfolio_plus.date',
+            $results    = $app -> triggerEvent('onBeforeDisplayAdditionInfo',array('com_tz_portfolio_plus.date',
                 &$item, &$item->params, 0));
             $item -> event -> beforeDisplayAdditionInfo   = trim(implode("\n", $results));
 
-            $results    = $dispatcher -> trigger('onAfterDisplayAdditionInfo',array('com_tz_portfolio_plus.date',
+            $results    = $app -> triggerEvent('onAfterDisplayAdditionInfo',array('com_tz_portfolio_plus.date',
                 &$item, &$item->params, 0));
             $item -> event -> afterDisplayAdditionInfo   = trim(implode("\n", $results));
 
-            $results    = $dispatcher -> trigger('onContentDisplayListView',array('com_tz_portfolio_plus.date',
+            $results    = $app -> triggerEvent('onContentDisplayListView',array('com_tz_portfolio_plus.date',
                 &$item, &$item->params, 0));
             $item -> event -> contentDisplayListView   = trim(implode("\n", $results));
 
             //Call trigger in group tz_portfolio_plus_mediatype
             if($item) {
-                $results = $dispatcher->trigger('onContentDisplayMediaType', array('com_tz_portfolio_plus.date',
+                $results = $app -> triggerEvent('onContentDisplayMediaType', array('com_tz_portfolio_plus.date',
                     &$item, &$item->params, 0));
                 if($item) {
                     $item->event->onContentDisplayMediaType = trim(implode("\n", $results));
-                    if($results    = $dispatcher -> trigger('onAddMediaType')){
+                    if($results    = $app -> triggerEvent('onAddMediaType')){
                         $mediatypes = array();
                         foreach($results as $result){
                             if(isset($result -> special) && $result -> special) {
@@ -265,6 +266,22 @@ class TZ_Portfolio_PlusViewDate extends JViewLegacy{
             $extraFields    = TZ_Portfolio_PlusFrontHelperExtraFields::getExtraFields($item, $item -> params,
                 false, array('filter.list_view' => true, 'filter.group' => $params -> get('order_fieldgroup', 'rdate')));
             $item -> extrafields    = $extraFields;
+
+            $access = $state -> get('filter.access');
+
+            if ($access) {
+                // If the access filter has been set, we already have only the articles this user can view.
+                $item->params->set('access-view', true);
+            }
+            else {
+                // If no access filter is set, the layout takes some responsibility for display of limited information.
+                if ($item->catid == 0 || $item->category_access === null) {
+                    $item->params->set('access-view', in_array($item->access, $groups));
+                }
+                else {
+                    $item->params->set('access-view', in_array($item->access, $groups) && in_array($item->category_access, $groups));
+                }
+            }
         }
 
         //Escape strings for HTML output
@@ -274,8 +291,6 @@ class TZ_Portfolio_PlusViewDate extends JViewLegacy{
         $this -> params     = $params;
         $this -> items      = $items;
         $this -> pagination = $pagination;
-        $this->assignRef('user', $user);
-        $this -> assign('listImage',$this -> get('CatImages'));
 
         JModelLegacy::addIncludePath(COM_TZ_PORTFOLIO_PLUS_PATH_SITE.DIRECTORY_SEPARATOR.'models');
         $model  = JModelLegacy::getInstance('Portfolio','TZ_Portfolio_PlusModel',array('ignore_request' => true));
@@ -286,8 +301,6 @@ class TZ_Portfolio_PlusViewDate extends JViewLegacy{
         $model -> setState('filter.month',$state -> get('filter.month'));
         $this -> char           = $state -> get('filter.char');
         $this -> availLetter    = $model -> getAvailableLetter();
-
-        $this -> assign('mediaParams',$params);
 
         $doc -> addStyleSheet('components/com_tz_portfolio_plus/css/tzportfolioplus.min.css');
 

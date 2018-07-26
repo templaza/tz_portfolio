@@ -22,7 +22,7 @@
 <?php if($this -> itemTags):?>
     <?php foreach($this -> itemTags as $item):?>
         <a href="#<?php echo $item -> alias; ?>"
-           class="btn btn-default btn-sm"
+           class="btn btn-default btn-secondary btn-sm"
            data-option-value=".<?php echo $item -> alias; ?>">
             <?php echo $item -> title;?>
         </a>

@@ -53,7 +53,7 @@ if($fieldGroups = $this -> extraFields){
 }else{
 ?>
     <div id="system-message-container"><div id="system-message">
-            <div class="alert alert-message">
+            <div class="alert alert-warning">
                 <h4 class="alert-heading"><?php echo JText::_('WARNING');?></h4>
                 <div>
                     <p><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_FIELD_GROUP_DESC');?></p>

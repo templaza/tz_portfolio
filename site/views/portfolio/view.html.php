@@ -22,24 +22,25 @@ defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.view');
 jimport('joomla.event.dispatcher');
 
-JHtml::addIncludePath(COM_TZ_PORTFOLIO_PLUS_PATH_SITE . '/helpers');
-
-tzportfolioplusimport('http_fetcher');
+//JHtml::addIncludePath(COM_TZ_PORTFOLIO_PLUS_PATH_SITE . '/helpers/html');
 
 class TZ_Portfolio_PlusViewPortfolio extends JViewLegacy
 {
+    protected $char             = null;
     protected $item             = null;
     protected $items            = null;
     protected $media            = null;
-    protected $ajaxLink         = null;
-    protected $lang_sef         = '';
-    protected $itemTags         = null;
-    protected $itemCategories   = null;
+    protected $state            = null;
     protected $params           = null;
-    protected $pagination       = null;
     protected $Itemid           = null;
-    protected $char             = null;
+    protected $lang_sef         = '';
+    protected $tagAbout         = null;
+    protected $ajaxLink         = null;
+    protected $itemTags         = null;
+    protected $pagination       = null;
+    protected $authorAbout      = null;
     protected $availLetter      = null;
+    protected $itemCategories   = null;
 
     function __construct($config = array()){
         $this -> item           = new stdClass();
@@ -56,7 +57,6 @@ class TZ_Portfolio_PlusViewPortfolio extends JViewLegacy
             $language   = JLanguageHelper::getLanguages('sef');
         }
 
-        JHtml::_('behavior.framework');
         $menus		= JMenu::getInstance('site');
         $active     = $menus->getActive();
 
@@ -64,12 +64,33 @@ class TZ_Portfolio_PlusViewPortfolio extends JViewLegacy
 
         $params         = null;
         $state          = $this -> get('State');
+
+        // Get filter tag information
+        if($tagId = $state -> get('filter.tagId')) {
+            $this -> tagAbout   = TZ_Portfolio_PlusFrontHelperTags::getTagById($tagId);
+        }
+
+        $this -> state  = $state;
         $params         = $state -> get('params');
+
+        // Get filter user information
+        if(($authorId = $state -> get('filter.userId')) &&
+            ($author = JFactory::getUser($state -> get('filter.userId')))){
+
+            TZ_Portfolio_PlusPluginHelper::importPlugin('users');
+            $results = $app -> triggerEvent('onContentDisplayAuthorAbout', array(
+                'com_tz_portfolio_plus.portfolio',
+                $authorId,
+                &$params));
+            $this -> authorAbout    = trim(implode("\n", $results));
+        }
 
         // Create ajax link
         $this -> ajaxLink   = JURI::root().'index.php?option=com_tz_portfolio_plus&amp;view=portfolio&amp;task=portfolio.ajax'
             .'&amp;layout=default:item'.(($state -> get('filter.char'))?'&amp;char='.$state -> get('filter.char'):'')
-            .($state -> get('filter.category_id')?'&amp;catid='.$state -> get('filter.category_id'):'');
+            .($state -> get('filter.category_id')?'&amp;catid='.$state -> get('filter.category_id'):'')
+            .(($uid = $state -> get('filter.userId'))?'&amp;uid='.$uid:'')
+            .(($tid = $state -> get('filter.tagId'))?'&amp;tid='.$tid:'');
 
         if($active) {
             $this->ajaxLink .= '&amp;Itemid=' . $active->id;
@@ -77,11 +98,12 @@ class TZ_Portfolio_PlusViewPortfolio extends JViewLegacy
         $this -> ajaxLink   .=  '&amp;page=2';
 
         $doc -> addStyleSheet('components/com_tz_portfolio_plus/css/isotope.min.css');
-        $doc -> addScript('components/com_tz_portfolio_plus/js/jquery.isotope.min.js');
+        $this -> document -> addScript('components/com_tz_portfolio_plus/js/jquery.isotope.min.js', array('version' => 'auto', 'relative' => true));
 
         if($params -> get('tz_portfolio_plus_layout', 'ajaxButton') == 'ajaxButton'
             || $params -> get('tz_portfolio_plus_layout', 'ajaxButton') == 'ajaxInfiScroll'){
-            $doc -> addScript('components/com_tz_portfolio_plus/js/jquery.infinitescroll.min.js');
+            $this -> document -> addScript('components/com_tz_portfolio_plus/js/jquery.infinitescroll.min.js', array('version' => 'auto', 'relative' => true));
+
             if($params -> get('tz_portfolio_plus_layout', 'ajaxButton') == 'ajaxButton'){
                 $doc->addStyleDeclaration('
                     #infscr-loading {
@@ -118,6 +140,12 @@ class TZ_Portfolio_PlusViewPortfolio extends JViewLegacy
                 ');
             }
         }
+
+
+        $this -> document -> addStyleSheet('components/com_tz_portfolio_plus/css/tzportfolioplus.min.css',
+            array('version' => 'auto'));
+        $this -> document -> addScript('components/com_tz_portfolio_plus/js/tz_portfolio_plus.min.js',
+            array('version' => 'auto', 'relative' => true));
 
         $list   = $this -> get('Items');
         
@@ -158,9 +186,8 @@ class TZ_Portfolio_PlusViewPortfolio extends JViewLegacy
         $this -> char           = $state -> get('filter.char');
         $this -> availLetter    = $this -> get('AvailableLetter');
 
-        $doc -> addStyleSheet('components/com_tz_portfolio_plus/css/tzportfolioplus.min.css');
-
-        $doc -> addScript('components/com_tz_portfolio_plus/js/tz_portfolio_plus.min.js');
+//        $doc -> addStyleSheet('components/com_tz_portfolio_plus/css/tzportfolioplus.min.css');
+//        $this -> document -> addScript('components/com_tz_portfolio_plus/js/tz_portfolio_plus.min.js', array('version' => 'auto', 'relative' => true));
 
         $this -> _prepareDocument();
 

@@ -57,7 +57,8 @@ JHtml::addIncludePath(JPATH_COMPONENT.'/helpers');
                 $cols       = TZ_Portfolio_PlusContentHelper::getBootstrapColumns($col);
                 $colCounter = 0;
 
-                foreach ($this->items as $key => &$item) : ?>
+                foreach ($this->items as $key => &$item) :
+                    ?>
 
                     <?php if(isset($item -> date_group) AND !empty($item -> date_group)
                         AND $date != strtotime(date(JText::_('COM_TZ_PORTFOLIO_PLUS_DATE_FORMAT_LC3'),strtotime($item -> date_group))) ):?>
@@ -87,7 +88,7 @@ JHtml::addIncludePath(JPATH_COMPONENT.'/helpers');
             <?php endif; ?>
             <div class="clearfix"></div>
 
-            <?php if (($this->params->def('show_pagination', 1) == 1  || ($this->params->get('show_pagination', 1) == 2)) && ($this->pagination->get('pages.total') > 1)) : ?>
+            <?php if (($this->params->def('show_pagination', 1) == 1  || ($this->params->get('show_pagination', 1) == 2)) && ($this->pagination->pagesTotal > 1)) : ?>
                 <div class="pagination">
                     <?php echo $this->pagination->getPagesLinks(); ?>
 

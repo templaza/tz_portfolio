@@ -82,9 +82,9 @@ class TZ_Portfolio_PlusExtraFieldDropDownList extends TZ_Portfolio_PlusExtraFiel
         }
 
         $this->setAttribute("class", $this->getInputClass(), "input");
-        if ((int) $this->params->get("size", 5))
+        if ((int) $this->params->get("size"))
         {
-            $this->setAttribute("size", (int) $this->params->get("size", 5), "input");
+            $this->setAttribute("size", (int) $this->params->get("size"), "input");
         }
 
         $this->setVariable('value', $value);

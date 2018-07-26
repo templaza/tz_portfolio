@@ -25,42 +25,42 @@ CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_addon_data` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `extension_id` int(11) NOT NULL,
   `element` varchar(255) NOT NULL,
-  `value` longtext NOT NULL,
-  `content_id` int(11) NOT NULL,
+  `value` longtext NULL,
+  `content_id` int(11) NULL,
   `published` tinyint(4) NOT NULL DEFAULT '0',
   `ordering` int(11) NOT NULL DEFAULT '0',
   `asset_id` INT UNSIGNED NOT NULL DEFAULT '0',
   `created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `created_by` INT UNSIGNED NOT NULL,
+  `created_by` INT UNSIGNED NOT NULL DEFAULT '0',
   `modified` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `modified_by` INT UNSIGNED NOT NULL,
+  `modified_by` INT UNSIGNED NOT NULL DEFAULT '0',
   `checked_out` INT NOT NULL DEFAULT '0',
   `checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   `publish_up` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   `publish_down` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   `access` INT(10) UNSIGNED NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
 CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_addon_meta` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `addon_id` INT UNSIGNED NOT NULL,
-  `data_id` int(11) NOT NULL,
-  `meta_id` int(11) NOT NULL,
-  `meta_key` varchar(255) NOT NULL,
-  `meta_value` longtext NOT NULL,
+  `addon_id` INT UNSIGNED NOT NULL DEFAULT '0',
+  `data_id` int(11) NOT NULL DEFAULT '0',
+  `meta_id` int(11) NOT NULL DEFAULT '0',
+  `meta_key` varchar(255) NOT NULL DEFAULT '',
+  `meta_value` longtext NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `#__tz_portfolio_plus_categories`
 --
 CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `groupid` int(11) NOT NULL,
-  `images` text NOT NULL,
-  `template_id` int(10) unsigned NOT NULL,
+  `groupid` int(11) NOT NULL DEFAULT '0',
+  `images` text NULL,
+  `template_id` int(10) unsigned NOT NULL DEFAULT '0',
   `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `parent_id` int(10) unsigned NOT NULL DEFAULT '0',
   `lft` int(11) NOT NULL DEFAULT '0',
@@ -68,15 +68,15 @@ CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_categories` (
   `level` int(10) unsigned NOT NULL DEFAULT '0',
   `path` varchar(255) NOT NULL DEFAULT '',
   `extension` varchar(50) NOT NULL DEFAULT '',
-  `title` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL DEFAULT '',
   `alias` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '',
   `note` varchar(255) NOT NULL DEFAULT '',
-  `description` mediumtext NOT NULL,
+  `description` mediumtext NULL,
   `published` tinyint(1) NOT NULL DEFAULT '0',
   `checked_out` int(11) unsigned NOT NULL DEFAULT '0',
   `checked_out_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `access` int(10) unsigned NOT NULL DEFAULT '0',
-  `params` text NOT NULL,
+  `params` text NULL,
   `metadesc` varchar(1024) NOT NULL COMMENT 'The meta description for the page.',
   `metakey` varchar(1024) NOT NULL COMMENT 'The meta keywords for the page.',
   `metadata` varchar(2048) NOT NULL COMMENT 'JSON encoded metadata properties.',
@@ -85,9 +85,8 @@ CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_categories` (
   `modified_user_id` int(10) unsigned NOT NULL DEFAULT '0',
   `modified_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `hits` int(10) unsigned NOT NULL DEFAULT '0',
-  `language` char(7) NOT NULL,
+  `language` char(7) NOT NULL DEFAULT '',
   `version` int(10) unsigned NOT NULL DEFAULT '1',
-  `priority` INT NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `cat_idx` (`extension`,`published`,`access`),
   KEY `idx_access` (`access`),
@@ -96,7 +95,7 @@ CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_categories` (
   KEY `idx_left_right` (`lft`,`rgt`),
   KEY `idx_alias` (`alias`),
   KEY `idx_language` (`language`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -113,12 +112,12 @@ INSERT IGNORE INTO `#__tz_portfolio_plus_categories` (`id`, `groupid`, `images`,
 
 CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_content` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `groupid` int(11) NOT NULL,
+  `groupid` int(11) NOT NULL DEFAULT '0',
   `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   `title` varchar(255) NOT NULL DEFAULT '',
   `alias` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '',
-  `introtext` mediumtext NOT NULL,
-  `fulltext` mediumtext NOT NULL,
+  `introtext` mediumtext NULL,
+  `fulltext` mediumtext NULL,
   `state` tinyint(3) NOT NULL DEFAULT '0',
   `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `created_by` int(10) unsigned NOT NULL DEFAULT '0',
@@ -129,24 +128,22 @@ CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_content` (
   `checked_out_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `publish_up` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `publish_down` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `images` text NOT NULL,
-  `urls` text NOT NULL,
-  `attribs` varchar(5120) NOT NULL,
+  `images` text NULL,
+  `urls` text NULL,
+  `attribs` text NULL,
   `version` int(10) unsigned NOT NULL DEFAULT '1',
   `ordering` int(11) NOT NULL DEFAULT '0',
-  `metakey` text NOT NULL,
-  `metadesc` text NOT NULL,
+  `metakey` text NULL,
+  `metadesc` text NULL,
   `access` int(10) unsigned NOT NULL DEFAULT '0',
   `hits` int(10) unsigned NOT NULL DEFAULT '0',
-  `metadata` text NOT NULL,
+  `metadata` text NULL,
   `featured` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'Set if article is featured.',
-  `language` char(7) NOT NULL COMMENT 'The language code for the article.',
-  `xreference` varchar(50) NOT NULL COMMENT 'A reference to enable linkages to external data sets.',
-  `type` varchar(25) NOT NULL,
-  `media` text NOT NULL,
-  `links` text NOT NULL,
-  `attachs` text NOT NULL,
-  `template_id` int(11) NOT NULL,
+  `language` char(7) NOT NULL DEFAULT '' COMMENT 'The language code for the article.',
+  `xreference` varchar(50) NOT NULL DEFAULT '' COMMENT 'A reference to enable linkages to external data sets.',
+  `type` varchar(25) NOT NULL DEFAULT '',
+  `media` text NULL,
+  `template_id` int(11) NOT NULL DEFAULT '0',
   `priority` INT NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `idx_access` (`access`),
@@ -156,7 +153,7 @@ CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_content` (
   KEY `idx_featured_catid` (`featured`),
   KEY `idx_language` (`language`),
   KEY `idx_xreference` (`xreference`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -166,11 +163,11 @@ CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_content` (
 
 CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_content_category_map` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `contentid` int(11) NOT NULL,
-  `catid` int(11) NOT NULL,
+  `contentid` int(11) NOT NULL DEFAULT '0',
+  `catid` int(11) NOT NULL DEFAULT '0',
   `main` tinyint(4) NOT NULL COMMENT 'Main Category',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -182,7 +179,7 @@ CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_content_featured_map` (
   `content_id` int(11) NOT NULL DEFAULT '0',
   `ordering` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`content_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 --
@@ -190,12 +187,12 @@ CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_content_featured_map` (
 --
 
 CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_content_rating` (
-  `content_id` int(11) NOT NULL,
-  `lastip` varchar(50) NOT NULL,
-  `rating_sum` int(11) NOT NULL,
-  `rating_count` int(11) NOT NULL,
+  `content_id` int(11) NOT NULL DEFAULT '0',
+  `lastip` varchar(50) NOT NULL DEFAULT '',
+  `rating_sum` int(11) NOT NULL DEFAULT '0',
+  `rating_count` int(11) NOT NULL DEFAULT '0',
   KEY `extravote_idx` (`content_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -205,21 +202,21 @@ CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_content_rating` (
 
 CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_extensions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL,
-  `type` varchar(100) NOT NULL,
-  `element` varchar(100) NOT NULL,
-  `folder` varchar(100) NOT NULL,
-  `protected` tinyint(3) NOT NULL,
-  `manifest_cache` text NOT NULL,
-  `params` text NOT NULL,
-  `checked_out` int(10) unsigned NOT NULL,
-  `checked_out_time` datetime NOT NULL,
-  `published` tinyint(4) NOT NULL,
-  `access` int(10) NOT NULL,
-  `ordering` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL DEFAULT '',
+  `type` varchar(100) NOT NULL DEFAULT '',
+  `element` varchar(100) NOT NULL DEFAULT '',
+  `folder` varchar(100) NOT NULL DEFAULT '',
+  `protected` tinyint(3) NOT NULL DEFAULT '0',
+  `manifest_cache` text NULL,
+  `params` text NULL,
+  `checked_out` int(10) unsigned NOT NULL DEFAULT '0',
+  `checked_out_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `published` tinyint(4) NOT NULL DEFAULT '1',
+  `access` int(10) NOT NULL DEFAULT '1',
+  `ordering` int(11) NOT NULL DEFAULT '0',
   `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20;
 
 -- --------------------------------------------------------
 
@@ -247,10 +244,10 @@ INSERT IGNORE INTO `#__tz_portfolio_plus_extensions` (`id`, `name`, `type`, `ele
 CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_fieldgroups` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `asset_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'FK to the #__assets table.',
-  `name` varchar(255) NOT NULL,
-  `published` tinyint(4) NOT NULL,
+  `name` varchar(255) NOT NULL DEFAULT '',
+  `published` tinyint(4) NOT NULL DEFAULT '1',
   `field_ordering_type` tinyint(4) NOT NULL DEFAULT '0',
-  `description` text NOT NULL,
+  `description` text NULL,
   `ordering` int(11) NOT NULL DEFAULT '0',
   `created_by` INT UNSIGNED NOT NULL DEFAULT '0',
   `created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -260,7 +257,7 @@ CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_fieldgroups` (
   `checked_out` int(10) unsigned NOT NULL DEFAULT '0',
   `checked_out_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -270,18 +267,18 @@ CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_fieldgroups` (
 
 CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_fields` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `type` varchar(255) NOT NULL,
-  `value` text NOT NULL,
-  `default_value` text NOT NULL,
-  `ordering` int(11) NOT NULL,
+  `name` varchar(255) NULL DEFAULT '',
+  `title` varchar(255) NOT NULL DEFAULT '',
+  `type` varchar(255) NOT NULL DEFAULT '',
+  `value` text NULL,
+  `default_value` text NULL,
+  `ordering` int(11) NOT NULL DEFAULT '0',
   `published` tinyint(4) NOT NULL DEFAULT '1',
   `advanced_search` tinyint(4) NOT NULL DEFAULT '0',
   `list_view` tinyint(4) NOT NULL DEFAULT '0',
   `detail_view` tinyint(4) NOT NULL DEFAULT '1',
-  `params` text NOT NULL,
-  `description` text NOT NULL,
+  `params` text NULL,
+  `description` text NULL,
   `access` INT(10) UNSIGNED NOT NULL DEFAULT '1',
   `asset_id` INT UNSIGNED NOT NULL DEFAULT '1',
   `created` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -291,7 +288,7 @@ CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_fields` (
   `checked_out` int(10) unsigned NOT NULL DEFAULT '0',
   `checked_out_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -301,14 +298,14 @@ CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_fields` (
 
 CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_field_content_map` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `contentid` int(11) NOT NULL,
-  `fieldsid` int(11) NOT NULL,
-  `value` text NOT NULL,
-  `images` text NOT NULL,
-  `imagetitle` varchar(255) NOT NULL,
-  `ordering` int(11) NOT NULL,
+  `contentid` int(11) NOT NULL DEFAULT '0',
+  `fieldsid` int(11) NOT NULL DEFAULT '0',
+  `value` text NULL,
+  `images` text NULL,
+  `imagetitle` varchar(255) NOT NULL DEFAULT '',
+  `ordering` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -318,11 +315,11 @@ CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_field_content_map` (
 
 CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_field_fieldgroup_map` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `fieldsid` int(11) NOT NULL,
-  `groupid` int(11) NOT NULL,
+  `fieldsid` int(11) NOT NULL DEFAULT '0',
+  `groupid` int(11) NOT NULL DEFAULT '0',
   `ordering` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -332,13 +329,13 @@ CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_field_fieldgroup_map` (
 
 CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_tags` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) NOT NULL,
-  `alias` varchar(255) NOT NULL,
-  `published` tinyint(4) NOT NULL,
-  `description` text NOT NULL,
-  `params` text NOT NULL,
+  `title` varchar(255) NOT NULL DEFAULT '',
+  `alias` varchar(255) NOT NULL DEFAULT '',
+  `published` tinyint(4) NOT NULL DEFAULT '1',
+  `description` text NULL,
+  `params` text NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -348,10 +345,10 @@ CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_tags` (
 
 CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_tag_content_map` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `tagsid` int(11) NOT NULL,
-  `contentid` int(11) NOT NULL,
+  `tagsid` int(11) NOT NULL DEFAULT '0',
+  `contentid` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -363,13 +360,13 @@ CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_templates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `template` varchar(100) NOT NULL,
   `title` varchar(255) NOT NULL,
-  `home` char(7) NOT NULL,
-  `protected` tinyint(3) NOT NULL,
-  `layout` text NOT NULL,
-  `params` text NOT NULL,
-  `preset` VARCHAR( 255 ) NOT NULL,
+  `home` char(7) NOT NULL DEFAULT '0',
+  `protected` tinyint(3) NOT NULL DEFAULT '0',
+  `layout` text NULL,
+  `params` text NULL,
+  `preset` VARCHAR( 255 ) NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 

@@ -21,6 +21,13 @@
 defined('JPATH_PLATFORM') or die;
 
 use Joomla\Registry\Registry;
+use Joomla\CMS\Application\ApplicationHelper;
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
+
+use Joomla\Event\Dispatcher;
+use Joomla\Event\Event;
+use Joomla\CMS\Event\AbstractEvent;
+use Joomla\Utilities\ArrayHelper;
 
 /**
  * Category table
@@ -40,8 +47,12 @@ class TZ_Portfolio_PlusTableCategory extends JTableNested
     {
         parent::__construct('#__tz_portfolio_plus_categories', 'id', $db);
 
-        JTableObserverTags::createObserver($this, array('typeAlias' => '{extension}.category'));
-        JTableObserverContenthistory::createObserver($this, array('typeAlias' => '{extension}.category'));
+        if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+            $this->typeAlias = '{extension}.category';
+        }else{
+            JTableObserverTags::createObserver($this, array('typeAlias' => '{extension}.category'));
+            JTableObserverContenthistory::createObserver($this, array('typeAlias' => '{extension}.category'));
+        }
 
         $this->access = (int) JFactory::getConfig()->get('access');
     }
@@ -159,7 +170,7 @@ class TZ_Portfolio_PlusTableCategory extends JTableNested
             $this->alias = $this->title;
         }
 
-        $this->alias = JApplication::stringURLSafe($this->alias);
+        $this->alias = ApplicationHelper::stringURLSafe($this->alias);
 
         if (trim(str_replace('-', '', $this->alias)) == '')
         {
@@ -202,6 +213,10 @@ class TZ_Portfolio_PlusTableCategory extends JTableNested
         {
             $rules = new JAccessRules($array['rules']);
             $this->setRules($rules);
+        }
+
+        if(isset($array['groupid']) && !$array['groupid']){
+            $array['groupid']   = 0;
         }
 
         return parent::bind($array, $ignore);
@@ -248,4 +263,5 @@ class TZ_Portfolio_PlusTableCategory extends JTableNested
 
         return parent::store($updateNulls);
     }
+
 }

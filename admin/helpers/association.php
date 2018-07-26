@@ -1,13 +1,25 @@
 <?php
-/**
- * @package     Joomla.Site
- * @subpackage  com_categories
- *
- * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
- */
+/*------------------------------------------------------------------------
+
+# TZ Portfolio Plus Extension
+
+# ------------------------------------------------------------------------
+
+# author    DuongTVTemPlaza
+
+# copyright Copyright (C) 2015 templaza.com. All Rights Reserved.
+
+# @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
+
+# Websites: http://www.templaza.com
+
+# Technical Support:  Forum - http://templaza.com/Forum
+
+-------------------------------------------------------------------------*/
 
 defined('_JEXEC') or die;
+
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 JLoader::register('TZ_Portfolio_PlusHelperCategories', JPATH_ADMINISTRATOR . '/components/com_tz_portfolio_plus/helpers/categories.php');
 
@@ -39,29 +51,24 @@ abstract class TZ_Portfolio_PlusBackEndHelperAssociation
 
 		if ($id)
 		{
-//            if(!is_array($id)){
-                // Load route helper
-                jimport('helper.route', JPATH_COMPONENT_SITE);
+            // Load route helper
+            jimport('helper.route', JPATH_COMPONENT_SITE);
 
-                $helperClassname = 'TZ_Portfolio_PlusHelperRoute';
+            $helperClassname = 'TZ_Portfolio_PlusHelperRoute';
 
-                $associations = TZ_Portfolio_PlusHelperCategories::getAssociations($id, $extension);
+            $associations = TZ_Portfolio_PlusHelperCategories::getAssociations($id, $extension);
 
-                foreach ($associations as $tag => $item)
+            foreach ($associations as $tag => $item)
+            {
+                if (class_exists($helperClassname) && is_callable(array($helperClassname, 'getCategoryRoute')))
                 {
-                    if (class_exists($helperClassname) && is_callable(array($helperClassname, 'getCategoryRoute')))
-                    {
-                        $return[$tag] = $helperClassname::getCategoryRoute($item, $tag);
-                    }
-                    else
-                    {
-                        $return[$tag] = 'index.php?option=com_tz_portfolio_plus&amp;view=category&id=' . $item;
-                    }
+                    $return[$tag] = $helperClassname::getCategoryRoute($item, $tag);
                 }
-//            }else{
-//                $associations = CategoriesHelper::getAssociations($id, $extension);
-//                var_dump($associations);
-//            }
+                else
+                {
+                    $return[$tag] = 'index.php?option=com_tz_portfolio_plus&amp;view=category&id=' . $item;
+                }
+            }
         }
 
 		return $return;
@@ -70,7 +77,7 @@ abstract class TZ_Portfolio_PlusBackEndHelperAssociation
     public static function getArticleAssociations($id, $extension = 'com_tz_portfolio_plus', $pk = 'id', $aliasField = 'alias', $catField = 'catid')
     {
         $associations = array();
-        $db = JFactory::getDbo();
+        $db = TZ_Portfolio_PlusDatabase::getDbo();
         $query = $db->getQuery(true)
             ->select($db->quoteName('c2.language'))
             ->from($db->quoteName('#__tz_portfolio_plus_content', 'c'))

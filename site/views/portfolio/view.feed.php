@@ -27,7 +27,7 @@ jimport('joomla.application.component.view');
  */
 class TZ_Portfolio_PlusViewPortfolio extends JViewLegacy
 {
-	function display()
+	function display($tpl = null)
 	{
 		$app = JFactory::getApplication();
 
@@ -40,7 +40,6 @@ class TZ_Portfolio_PlusViewPortfolio extends JViewLegacy
 		$rows		= $this->get('Items');
 
 		$doc->setLink( JURI::current());
-        $dispatcher	= JDispatcher::getInstance();
 		JPluginHelper::importPlugin('tz_portfolio_plus_mediatype');
 
 		foreach ($rows as $row)
@@ -50,7 +49,7 @@ class TZ_Portfolio_PlusViewPortfolio extends JViewLegacy
 			$row->slug 			= $row->alias ? ($row->id . ':' . $row->alias) : $row->id;
 			$row -> description	= ($params->get('feed_summary', 0) ? $row->introtext.$row->fulltext : $row->introtext);
 
-            $results    = $dispatcher -> trigger('onContentDisplayMediaType',array('com_tz_portfolio_plus.portfolio',
+            $results    = $app -> triggerEvent('onContentDisplayMediaType',array('com_tz_portfolio_plus.portfolio',
                 &$row, &$params, 0));
 
 			$media	= implode("\n",$results);

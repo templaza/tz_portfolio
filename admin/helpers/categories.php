@@ -21,6 +21,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 class TZ_Portfolio_PlusHelperCategories
 {
@@ -29,7 +30,7 @@ class TZ_Portfolio_PlusHelperCategories
     public static function getAssociations($pk, $extension = 'com_tz_portfolio_plus')
     {
         $associations = array();
-        $db = JFactory::getDbo();
+        $db = TZ_Portfolio_PlusDatabase::getDbo();
 
         $query = $db->getQuery(true)
             ->from('#__tz_portfolio_plus_categories as c')
@@ -76,7 +77,7 @@ class TZ_Portfolio_PlusHelperCategories
 			}
 
 			if(!isset(self::$cache[$storeId])){
-				$db     =  JFactory::getDbo();
+                $db = TZ_Portfolio_PlusDatabase::getDbo();
 				$query  =  $db -> getQuery(true);
 				$query  -> select('*');
 				$query  -> from('#__tz_portfolio_plus_categories');
@@ -124,12 +125,12 @@ class TZ_Portfolio_PlusHelperCategories
 			}
 
 			if(!isset(self::$cache[$storeId])){
-				$db     =  JFactory::getDbo();
+                $db = TZ_Portfolio_PlusDatabase::getDbo();
 				$query  =  $db -> getQuery(true);
 				$query  -> select('c.*');
 				$query  -> from('#__tz_portfolio_plus_categories AS c');
 				$query  -> join('INNER', '#__tz_portfolio_plus_content_category_map AS m ON m.catid = c.id');
-				$query  -> join('INNER', '#__tz_portfolio_plus_content AS cc ON cc.id = m.contentid');
+				$query  -> join('LEFT', '#__tz_portfolio_plus_content AS cc ON cc.id = m.contentid');
 
 				if(is_array($articleId)) {
 					$query -> where('cc.id IN('.implode(',', $articleId) .')');
@@ -152,7 +153,7 @@ class TZ_Portfolio_PlusHelperCategories
 					}
 				}
 
-				$query -> group('c.id');
+//				$query -> group('c.*');
 
 				$db -> setQuery($query);
 				if($categories = $db -> loadObjectList()){
@@ -178,7 +179,7 @@ class TZ_Portfolio_PlusHelperCategories
 		if($articleId){
 			if(!isset(self::$cache[$storeId])){
 				if($articleId){
-					$db		= JFactory::getDbo();
+                    $db = TZ_Portfolio_PlusDatabase::getDbo();
 					$query	= $db -> getQuery(true);
 					$query -> select('c.*');
 					$query -> from('#__tz_portfolio_plus_categories AS c');
@@ -225,7 +226,7 @@ class TZ_Portfolio_PlusHelperCategories
 		$storeId	= md5($storeId);
 
 		if(!isset(self::$cache[$storeId])) {
-			$db = JFactory::getDbo();
+            $db = TZ_Portfolio_PlusDatabase::getDbo();
 			$query = $db->getQuery(true);
 			$query -> select('c.*');
 			$query -> from('#__tz_portfolio_plus_categories AS c');

@@ -25,15 +25,8 @@ JFactory::getDocument()->addScriptDeclaration('
 	Joomla.submitbutton = function(task)
 	{
 		if (task == "addon.cancel" || document.formvalidator.isValid(document.getElementById("adminForm"))) {
-//		    task        =  "addon.manager." + task;
-//		    var input   = document.createElement("input");
-//		    input.type  = "hidden";
-//		    input.name  = "addon_task";
-
-
 		    var form = document.getElementById("adminForm");
 		    console.log(document.getElementsByName("task")[0]);
-//		    document.getElementsByName("task")[0].value = "addon.manager";
 		    document.getElementsByName("addon_task")[0].value = task;
 
 		    task    = "addon.manager";

@@ -88,7 +88,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
                                 <?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
                             </span>
                     </td>
-                    <td align="center"><?php echo $item -> id;?></td>
+                    <td align="center text-center"><?php echo $item -> id;?></td>
                 </tr>
             <?php $i++;?>
             <?php endforeach;?>

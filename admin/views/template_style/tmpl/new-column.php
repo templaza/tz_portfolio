@@ -17,39 +17,60 @@
 
 -------------------------------------------------------------------------*/
 
-define( '_JEXEC', 1 );
-
 // No direct access
 defined('_JEXEC') or die('Restricted access');
 
-define('JPATH_BASE', dirname(dirname(dirname(dirname(dirname(dirname(__FILE__)))))));
-require_once ( JPATH_BASE.'/includes/defines.php' );
-require_once ( JPATH_BASE.'/includes/framework.php' );
+$class  = '';
+$item   = $this -> columnItem;
+$columnToolId   = 'columntools-'.uniqid(rand());
+//$this -> state -> set('template.rowincolumn', false);
 
-JFactory::getLanguage() -> load('com_tz_portfolio_plus');
-
+if($item){
+    if($this -> get_value($item,"type")=='component' or $this -> get_value($item,"type")=='message'){
+        $class  .= 'type-'.$this -> get_value($item,"type");
+    }
+    if($this -> get_value($item,"col-lg")){
+        $class  .=  ' span'.$this -> get_value($item,"col-lg");
+        $class  .=  ' col-md-'.$this -> get_value($item,"col-lg");
+    }
+    if(!empty($item->{"col-lg-offset"})){
+        $class  .= ' offset'.$item ->{"col-lg-offset"};
+    }
+}
 ?>
 
-<div class="column">
-    <span class="position-name">(<?php echo JText::_('JNONE');?>)</span>
-    <div class="columntools">
-        <a href="#columnsettingbox" rel="popover" data-placement="bottom" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_COLUMN_SETTINGS');?>" class="fa fa-cog rowcolumnspop"></a>
+<div class="column <?php echo $class; ?>">
+
+    <span class="position-name"><?php echo $item?$this -> get_value($item,"type"):JText::_('JNONE'); ?></span>
+    <div id="<?php echo $columnToolId; ?>" class="columntools">
+        <a href="#columnsettingbox" rel="popover" data-placement="bottom" data-container="#<?php
+        echo $columnToolId; ?>"
+           title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_COLUMN_SETTINGS');?>" class="fa fa-cog rowcolumnspop"></a>
         <a href="" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ADD_NEW_ROW');?>" class="fa fa-bars add-rowin-column"></a>
         <a href="" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_REMOVE_COLUMN');?>" class="fa fa-times columndelete"></a>
         <a href="" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_MOVE_COLUMN');?>" class="fa fa-arrows columnmove"></a>
     </div>
 
-    <input type="hidden" class="widthinput-xs" name="" value="">
-    <input type="hidden" class="widthinput-sm" name="" value="">
-    <input type="hidden" class="widthinput-md" name="" value="">
-    <input type="hidden" class="widthinput-lg" name="" value="">
-    <input type="hidden" class="offsetinput-xs" name="" value="">
-    <input type="hidden" class="offsetinput-sm" name="" value="">
-    <input type="hidden" class="offsetinput-md" name="" value="">
-    <input type="hidden" class="offsetinput-lg" name="" value="">
-    <input type="hidden" class="typeinput" name="" value="none">
-<!--    <input type="hidden" class="positioninput" name="" value="">-->
-<!--    <input type="hidden" class="styleinput" name="" value="tzxhtml">-->
-    <input type="hidden" class="customclassinput" name="" value="">
-    <input type="hidden" class="responsiveclassinput" name="" value="">
+    <input type="hidden" class="widthinput-xs" name="" value="<?php echo $this -> get_value($item,"col-xs") ?>">
+    <input type="hidden" class="widthinput-sm" name="" value="<?php echo $this -> get_value($item,"col-sm") ?>">
+    <input type="hidden" class="widthinput-md" name="" value="<?php echo $this -> get_value($item,"col-md") ?>">
+    <input type="hidden" class="widthinput-lg" name="" value="<?php echo $this -> get_value($item,"col-lg") ?>">
+    <input type="hidden" class="offsetinput-xs" name="" value="<?php echo $this -> get_value($item,"col-xs-offset") ?>">
+    <input type="hidden" class="offsetinput-sm" name="" value="<?php echo $this -> get_value($item,"col-sm-offset") ?>">
+    <input type="hidden" class="offsetinput-md" name="" value="<?php echo $this -> get_value($item,"col-md-offset") ?>">
+    <input type="hidden" class="offsetinput-lg" name="" value="<?php echo $this -> get_value($item,"col-lg-offset") ?>">
+    <input type="hidden" class="typeinput" name="" value="<?php echo $this -> get_value($item,"type") ?>">
+    <input type="hidden" class="customclassinput" name="" value="<?php echo $this -> get_value($item,"customclass") ?>">
+    <input type="hidden" class="responsiveclassinput" name="" value="<?php echo $this -> get_value($item,"responsiveclass") ?>">
+    <?php
+    if( $item && !empty($item -> children) and is_array($item -> children) ){
+        $this -> state -> set('template.rowincolumn', true);
+
+        foreach($item -> children as $children) {
+            $this->rowItem = $children;
+            $this->setLayout('new-row');
+            echo $this->loadTemplate();
+        }
+    }
+    ?>
 </div>

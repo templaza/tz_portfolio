@@ -57,6 +57,7 @@ class TZ_Portfolio_PlusControllerPortfolio extends TZ_Portfolio_PlusControllerLe
             // Get/Create the model
             if ($model = $this->getModel($vName)) {
                 if (!$model->ajax()) {
+                    var_dump($model -> getError());
                     die();
                 }
 

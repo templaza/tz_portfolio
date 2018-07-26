@@ -20,9 +20,12 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Helper\ModuleHelper;
 
+jimport('joomla.filesytem.file');
 jimport('joomla.application.module.helper');
 
 JLoader::import('com_tz_portfolio_plus.includes.framework',JPATH_ADMINISTRATOR.'/components');
@@ -92,7 +95,7 @@ class TZ_Portfolio_PlusModuleHelper extends JModuleHelper{
             }
 
             // Add template.css file if it has have in template
-            if (JFile::exists(COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH . '/' . $tpTemplate -> template
+            if (\JFile::exists(COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH . '/' . $tpTemplate -> template
                 . '/css/template.css')) {
 
                 $docOptions = array();
@@ -223,21 +226,14 @@ class TZ_Portfolio_PlusModuleHelper extends JModuleHelper{
         // Path from module with module's layout config
         $mPath  = JPATH_SITE.'/modules/'.$module.'/tmpl/plg_'.$group.'_'.$name.'/'.$cfglayout.'.php';
 
-//        // Path from module with module's default layout
-//        $mdPath  = JPATH_SITE.'/modules/'.$module.'/tmpl/default.php';
-
         // Path from AddOn with module's layout config
         $bPath = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/' . $group . '/' . $name . '/'.$folder.'/'.$module
             .'/'. $cfglayout . '.php';
 
-//        // Path from AddOn with module's default layout
-//        $dPath = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/' . $group . '/' . $name . '/'.$folder.'/'.$module
-//            .'/default.php';
 
-        if($files = JFolder::files(COM_TZ_PORTFOLIO_PLUS_SITE_HELPERS_PATH,'.php')){
-//            var_dump($files); die();
+        if($files = Folder::files(COM_TZ_PORTFOLIO_PLUS_SITE_HELPERS_PATH,'.php')){
             foreach ($files as $file){
-                JLoader::import('com_tz_portfolio_plus.helpers.'.JFile::stripExt($file), JPATH_SITE.'/components');
+                JLoader::import('com_tz_portfolio_plus.helpers.'.File::stripExt($file), JPATH_SITE.'/components');
             }
         }
 
@@ -291,9 +287,6 @@ class TZ_Portfolio_PlusModuleHelper extends JModuleHelper{
             return $bPath;
         }
 
-//        if(file_exists($dPath)) {
-//            return $dPath;
-//        }
 
         return false;
     }

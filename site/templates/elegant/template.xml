@@ -2,7 +2,7 @@
 <!DOCTYPE install PUBLIC "-//Joomla! 2.5//DTD template 1.0//EN" "http://www.joomla.org/xml/dtd/2.5/template-install.dtd">
 <extension version="3.1" type="tz_portfolio_plus-template" method="upgrade">
     <name>elegant</name>
-    <version>1.5</version>
+    <version>1.6</version>
     <creationDate>August 17th 2017</creationDate>
     <author>Sonny</author>
     <authorEmail>sonlv@templaza.com</authorEmail>
@@ -25,13 +25,13 @@
         <fields name="params">
             <fieldset name="basic">
                 <field type="radio" name="use_single_layout_builder"
-                       default="0" class="btn-group"
+                       default="0" class="btn-group switcher"
                        label="TPL_SYSTEM_LAYOUT_BUILDER_LABEL">
                     <option value="1">JYES</option>
                     <option value="0">JNO</option>
                 </field>
                 <field type="radio" name="load_style"
-                       default="1" class="btn-group"
+                       default="1" class="btn-group switcher"
                        label="TPL_SYSTEM_LOAD_STYLE_LABEL">
                     <option value="1">JYES</option>
                     <option value="0">JNO</option>

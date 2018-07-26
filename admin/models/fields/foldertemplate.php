@@ -26,6 +26,17 @@ class JFormFieldFolderTemplate extends JFormFieldList
 {
     protected $type = 'FolderTemplate';
 
+    public function setup(\SimpleXMLElement $element, $value, $group = null)
+    {
+        $setup  = parent::setup($element, $value, $group);
+
+        if($this -> multiple) {
+            JHtml::_('formbehavior.chosen', '#' . $this->id);
+        }
+
+        return $setup;
+    }
+
     public function getOptions(){
         $options = array();
 

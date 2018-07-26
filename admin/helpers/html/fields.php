@@ -19,7 +19,11 @@
 
 defined('_JEXEC') or die;
 
-jimport('joomla.filesystem.folder');
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
+
+jimport('joomla.filesytem.file');
+jimport('joomla.filesytem.folder');
 tzportfolioplusimport('fields.extrafield');
 
 abstract class JHtmlFields
@@ -34,15 +38,15 @@ abstract class JHtmlFields
     protected static function _getFieldTypes(){
         $data       = array();
         $core_path  = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.DIRECTORY_SEPARATOR.'extrafields';
-        if(JFolder::exists($core_path)){
-            if($core_folders = JFolder::folders($core_path)){
+        if(\JFolder::exists($core_path)){
+            if($core_folders = Folder::folders($core_path)){
                 $lang   = JFactory::getLanguage();
 
                 foreach($core_folders as $i => $folder){
 
                     $core_f_xml_path    = $core_path.DIRECTORY_SEPARATOR.$folder
                         .DIRECTORY_SEPARATOR.$folder.'.xml';
-                    if(JFile::exists($core_f_xml_path)){
+                    if(\JFile::exists($core_f_xml_path)){
                         $core_class         = 'TZ_Portfolio_PlusExtraField'.ucfirst($folder);
                         if(!class_exists($core_class)){
                             JLoader::import('com_tz_portfolio_plus.addons.extrafields.'.$folder.'.'.$folder,

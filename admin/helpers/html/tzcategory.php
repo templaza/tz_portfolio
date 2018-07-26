@@ -20,6 +20,7 @@
 defined('JPATH_PLATFORM') or die;
 
 use Joomla\Utilities\ArrayHelper;
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 /**
  * Utility class for categories
@@ -54,8 +55,8 @@ abstract class JHtmlTZCategory
         if (!isset(static::$items[$hash]))
         {
             $config = (array) $config;
-            $db = JFactory::getDbo();
-            $query = $db->getQuery(true)
+            $db     = TZ_Portfolio_PlusDatabase::getDbo();
+            $query  = $db->getQuery(true)
                 ->select('a.id, a.title, a.level')
                 ->from('#__tz_portfolio_plus_categories AS a')
                 ->where('a.parent_id > 0');
@@ -140,8 +141,8 @@ abstract class JHtmlTZCategory
         if (!isset(static::$items[$hash]))
         {
             $config = (array) $config;
-            $db = JFactory::getDbo();
-            $query = $db->getQuery(true)
+            $db     = TZ_Portfolio_PlusDatabase::getDbo();
+            $query  = $db->getQuery(true)
                 ->select('a.id, a.title, a.level, a.parent_id')
                 ->from('#__tz_portfolio_plus_categories AS a')
                 ->where('a.parent_id > 0');

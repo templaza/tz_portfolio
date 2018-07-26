@@ -42,7 +42,7 @@ if (!$this->print) :
             <h4 class="reset-heading"><?php echo $title;?></h4>
         </div>
     <?php endif;?>
-    <ul class="list-striped related"><?php foreach($lists as $i => $itemR):?>
+    <ul class="list-striped list-unstyled related"><?php foreach($lists as $i => $itemR):?>
     <li class="tpItem<?php if($i == 0) echo ' first'; if($i == count($lists) - 1) echo ' last';?>">
         <?php
         if($params -> get('show_related_title',1)){

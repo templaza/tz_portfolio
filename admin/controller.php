@@ -100,8 +100,7 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
                 && !$this->checkEditId('com_tz_portfolio_plus.edit.'.$view, $id)) {
 
                 // Somehow the person just went to the form - we don't allow that.
-                $this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $id));
-                $this->setMessage($this->getError(), 'error');
+                $this->setMessage(JText::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $id), 'error');
 
                 // Check edit category
                 if($view == 'category') {
@@ -140,8 +139,7 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
                     && !$user -> authorise('core.options', 'com_tz_portfolio_plus.addon.'.$id)) {
 
                     // Somehow the person just went to the form - we don't allow that.
-                    $this->setError(JText::_('JERROR_ALERTNOAUTHOR'));
-                    $this->setMessage($this->getError(), 'error');
+                    $this->setMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
                     $this->setRedirect(JRoute::_('index.php?option=com_tz_portfolio_plus&view=addons', false));
                     return false;
 
@@ -153,6 +151,10 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
 
 
         $display    = parent::display($cachable, $urlparams);
+
+        if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+            $document->addScript(TZ_Portfolio_PlusUri::base(true, true) . '/js/joomla4.min.js');
+        }
 
         // Footer
         JLayoutHelper::render('footer');
@@ -224,8 +226,7 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
                 break;
         }
         if($error){
-	        $this -> setError(JText::_('JERROR_ALERTNOAUTHOR'));
-	        $this -> setMessage($this -> getError(), 'error');
+	        $this -> setMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
 	        return false;
         }
         return true;

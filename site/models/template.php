@@ -72,15 +72,6 @@ class TZ_Portfolio_PlusModelTemplate extends JModelLegacy
         {
             $item->params = json_decode($item -> params);
 
-            // Set default if don't have layout created in database
-//            if(!$item -> params || empty($item -> params)){
-//                $pathfile   = JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/views/template/tmpl/default.json';
-//                if(JFile::exists($pathfile)){
-//                    $string     = file_get_contents($pathfile);
-//                    $item -> params = json_decode($string);
-//                }
-//            }
-
         }
 
         return $item;

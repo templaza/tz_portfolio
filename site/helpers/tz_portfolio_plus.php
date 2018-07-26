@@ -24,6 +24,8 @@
 // no direct access
 defined('_JEXEC') or die;
 
+use Joomla\Filesystem\File;
+
 jimport('joomla.filesystem.file');
 
 class TZ_Portfolio_PlusFrontHelper{
@@ -34,7 +36,7 @@ class TZ_Portfolio_PlusFrontHelper{
         }
         $newUrl     = $url;
         if($size) {
-            $newUrlExt  = JFile::getExt($url);
+            $newUrlExt  = \JFile::getExt($url);
             $newUrl     = str_replace('.' . $newUrlExt, '_' . $size . '.' . $newUrlExt, $newUrl);
         }
 

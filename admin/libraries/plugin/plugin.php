@@ -19,8 +19,11 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
 use Joomla\Registry\Registry;
 
+jimport('joomla.filesytem.file');
 JLoader::import('framework',JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/includes');
 tzportfolioplusimport('plugin.modeladmin');
 tzportfolioplusimport('model.admin');
@@ -343,7 +346,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
             // Load addon config for module from addon
             // Get the modules if this addon support.
             if (is_dir($base)) {
-                $folders = JFolder::folders($base, '^module[s]?$', false, true);
+                $folders = Folder::folders($base, '^module[s]?$', false, true);
             }
 
             $path = '';
@@ -355,7 +358,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
 
             if (is_dir($path))
             {
-                $modules    = JFolder::folders($path);
+                $modules    = Folder::folders($path);
             }
             else
             {
@@ -402,7 +405,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
                 $this -> item   = $data;
                 $path           = TZ_Portfolio_PlusPluginHelper::getLayoutPath($this -> _type, $this -> _name, 'admin');
 
-                if(JFile::exists($path)) {
+                if(\JFile::exists($path)) {
                     ob_start();
                     require_once($path);
                     $html = ob_get_contents();
@@ -496,43 +499,40 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
         list($extension, $vName)   = explode('.', $context);
 
         $input      = JFactory::getApplication()->input;
-        $addon_id   = $input -> getInt('addon_id');
         $addon      = TZ_Portfolio_PlusPluginHelper::getPlugin($this -> _type, $this -> _name);
 
+        // Check task with format: addon_name.addon_view.addon_task (example image.default.display);
+        if($controller = TZ_Portfolio_PlusPluginHelper::getAddonController($addon -> id, array(
+            'article' => $article,
+            'trigger_params' => $params
+        ))){
 
-            // Check task with format: addon_name.addon_view.addon_task (example image.default.display);
-            if($controller = TZ_Portfolio_PlusPluginHelper::getAddonController($addon -> id)){
-
-                $controller -> set('article', $article);
-                $controller -> set('trigger_params', $params);
-
-                $task   = $input->get('addon_task');
-                $input->set('addon_view', $vName);
-                $input->set('addon_layout', 'default');
-                if($layout) {
-                    $input->set('addon_layout', $layout);
-                }
-
-                $html   = null;
-                try {
-                    ob_start();
-                    $controller->execute($task);
-                    $controller->redirect();
-                    $html = ob_get_contents();
-                    ob_end_clean();
-                }catch (Exception $e){
-                    if($e -> getMessage()) {
-//                        JFactory::getApplication() ->enqueueMessage('Addon '.$this -> _name.': '.$e -> getMessage(), 'warning');
-                    }
-                }
-
-                if($html){
-                    $html   = trim($html);
-                }
-                $input -> set('addon_task', null);
-                return $html;
+            $task   = $input->get('addon_task');
+            $input->set('addon_view', $vName);
+            $input->set('addon_layout', 'default');
+            if($layout) {
+                $input->set('addon_layout', $layout);
             }
-//        }
+
+            $html   = null;
+            try {
+                ob_start();
+                $controller->execute($task);
+                $controller->redirect();
+                $html = ob_get_contents();
+                ob_end_clean();
+            }catch (Exception $e){
+                if($e -> getMessage()) {
+//                        JFactory::getApplication() ->enqueueMessage('Addon '.$this -> _name.': '.$e -> getMessage(), 'warning');
+                }
+            }
+
+            if($html){
+                $html   = trim($html);
+            }
+            $input -> set('addon_task', null);
+            return $html;
+        }
     }
 
     protected function getModel($name = null, $prefix = null, $config = array('ignore_request' => true))
@@ -617,14 +617,9 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
 
         if($controller = TZ_Portfolio_PlusPluginHelper::getAddonController($input -> get('addon_id'))){
             $task       = $input->get('addon_task');
-//            ob_start();
             $controller -> execute($task);
             $controller -> redirect();
-//            $html   = ob_get_contents();
-//            ob_end_clean();
-//            return $html;
         }
-//        return false;
     }
 
     public function onAfterGetMenuTypeOptions(&$data, $object){
@@ -676,7 +671,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
 
                     // Get the views of this addon.
                     if (is_dir($addonPath)) {
-                        $folders = JFolder::folders($addonPath, '^view[s]?$', false, true);
+                        $folders = Folder::folders($addonPath, '^view[s]?$', false, true);
                     }
 
                     $path = '';
@@ -690,7 +685,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
                         $views[]    = $args['addon_view'];
                     }else {
                         if (is_dir($path)) {
-                            $views = JFolder::folders($path);
+                            $views = Folder::folders($path);
                         } else {
                             return false;
                         }
@@ -709,7 +704,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
 
                         if (is_dir($lPath))
                         {
-                            $layouts = array_merge($layouts, JFolder::files($lPath, '.xml$', false, true));
+                            $layouts = array_merge($layouts, Folder::files($lPath, '.xml$', false, true));
                         }
 
                         // Build list of standard layout names

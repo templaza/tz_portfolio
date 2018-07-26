@@ -26,8 +26,8 @@ $lang -> load('com_plugins');
 if($this -> pluginsMediaTypeTab && count($this -> pluginsMediaTypeTab)){
     foreach($this -> pluginsMediaTypeTab as $media){
         ?>
-        <li>
-            <a href="#tztabsaddonsplg_mediatype<?php echo $media -> type -> value;?>" data-toggle="tab">
+        <li class="nav-item">
+            <a class="nav-link" href="#tztabsaddonsplg_mediatype<?php echo $media -> type -> value;?>" data-toggle="tab">
                 <?php echo $media -> type -> text;?>
             </a>
         </li>

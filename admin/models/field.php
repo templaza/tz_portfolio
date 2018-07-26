@@ -20,11 +20,11 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\Filesystem\File;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 
-jimport('joomla.filesystem.folder');
-jimport('joomla.filesystem.file');
+jimport('joomla.filesytem.file');
 jimport('joomla.application.component.modeladmin');
 JLoader::import('extrafields',COM_TZ_PORTFOLIO_PLUS_ADMIN_HELPERS_PATH);
 JLoader::register('TZ_Portfolio_PlusFrontHelperExtraFields',COM_TZ_PORTFOLIO_PLUS_SITE_HELPERS_PATH
@@ -65,6 +65,7 @@ class TZ_Portfolio_PlusModelField extends JModelAdmin
         if (empty($form)) {
             return false;
         }
+
         return $form;
     }
 
@@ -107,6 +108,7 @@ class TZ_Portfolio_PlusModelField extends JModelAdmin
         if($data && isset($data['value'])){
             $data['value']  = '';
         }
+
 
         if(parent::save($data)){
 
@@ -176,9 +178,14 @@ class TZ_Portfolio_PlusModelField extends JModelAdmin
             $core_path  = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.DIRECTORY_SEPARATOR.'extrafields';
             $core_f_xml_path    = $core_path.DIRECTORY_SEPARATOR.$type.DIRECTORY_SEPARATOR
                 .'admin'.DIRECTORY_SEPARATOR.'models'.DIRECTORY_SEPARATOR.'forms'.DIRECTORY_SEPARATOR.'field.xml';
-            if(JFile::exists($core_f_xml_path)){
+            if(\JFile::exists($core_f_xml_path)){
                 $form -> loadFile($core_f_xml_path, false, '/form/fields[@name="params"]');
             }
+
+            // Insert parameter from extrafield
+            JLoader::import('extrafields', COM_TZ_PORTFOLIO_PLUS_ADMIN_HELPERS_PATH);
+            TZ_Portfolio_PlusHelperExtraFields::prepareForm($form, $data);
+
             parent::preprocessForm($form, $data, $group);
         }
     }

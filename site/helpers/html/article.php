@@ -34,11 +34,13 @@ class JHtmlArticle
 		{
 			$params = new JObject;
 		}
+
+		$app    = JFactory::getApplication();
 		$article = new stdClass;
 		$article->text = $text;
+
 		JPluginHelper::importPlugin('tz_portfolio_plus');
-		$dispatcher = JDispatcher::getInstance();
-		$dispatcher->trigger('onTZPluginPrepare', array($context, &$article, &$params,&$pluginParams, 0));
+        $app -> triggerEvent('onTZPluginPrepare', array($context, &$article, &$params,&$pluginParams, 0));
 
 		return $article->text;
 	}

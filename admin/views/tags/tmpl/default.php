@@ -22,7 +22,12 @@ defined('_JEXEC') or die('Restricted access');
 
 JHtml::_('dropdown.init');
 JHtml::_('behavior.tooltip');
-JHtml::_('formbehavior.chosen', 'select');
+
+if(!COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+    JHtml::_('formbehavior.chosen', 'select');
+}else{
+    JHtml::_('formbehavior.chosen', 'select[multiple]');
+}
 
 $user		= JFactory::getUser();
 $userId		= $user->get('id');
@@ -32,14 +37,15 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 ?>
 
 <form action="index.php?option=com_tz_portfolio_plus&view=tags" method="post" name="adminForm" id="adminForm">
-    <?php if(!empty($this -> sidebar)):?>
-    <div id="j-sidebar-container" class="span2">
-		<?php echo $this -> sidebar; ?>
-	</div>
-    <div id="j-main-container" class="span10">
-    <?php else:?>
-    <div id="j-main-container">
-    <?php endif;?>
+
+<?php echo JHtml::_('tzbootstrap.addrow');?>
+    <?php if(!empty($this -> sidebar)){?>
+        <div id="j-sidebar-container" class="span2 col-md-2">
+            <?php echo $this -> sidebar; ?>
+        </div>
+    <?php } ?>
+
+    <?php echo JHtml::_('tzbootstrap.startcontainer', '10', !empty($this -> sidebar));?>
         <div class="tpContainer">
 
         <?php
@@ -48,7 +54,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
         ?>
 
         <?php if (empty($this->items)){ ?>
-            <div class="alert alert-no-items">
+            <div class="alert alert-warning alert-no-items">
                 <?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
             </div>
         <?php }else{ ?>
@@ -56,10 +62,10 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
             <thead>
             <tr>
                 <th width="1%"><?php echo JText::_('#');?></th>
-                <th width="1%" class="center">
+                <th width="1%" class="center text-center">
                     <?php echo JHtml::_('grid.checkall'); ?>
                     </th>
-                <th width="1%" style="min-width:55px" class="nowrap center">
+                <th width="1%" style="min-width:55px" class="nowrap center text-center">
 						<?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'published', $listDirn, $listOrder); ?>
 					</th>
                 <th class="title">
@@ -82,10 +88,10 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
                         <?php echo $i+1;?>
                         <input type="hidden" name="order[]">
                     </td>
-                    <td class="center">
+                    <td class="center text-center">
                         <?php echo JHtml::_('grid.id', $i, $item->id); ?>
                     </td>
-                    <td class="center">
+                    <td class="center text-center">
                         <div class="btn-group">
                             <?php echo JHtml::_('jgrid.published', $item->published, $i, 'tags.', $canChange, 'cb'); ?>
                         </div>
@@ -105,7 +111,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
                         </div>
                     </td>
 
-                    <td align="center"><?php echo $item -> id;?></td>
+                    <td align="center text-center"><?php echo $item -> id;?></td>
                 </tr>
             <?php endforeach;?>
             </tbody>
@@ -126,7 +132,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
         <input type="hidden" name="boxchecked" value="0">
         <input type="hidden" name="return" value="<?php echo base64_encode(JUri::getInstance() -> toString())?>">
         <?php echo JHtml::_('form.token');?>
-
         </div>
-    </div>
+    <?php echo JHtml::_('tzbootstrap.endcontainer');?>
+<?php echo JHtml::_('tzbootstrap.endrow');?>
 </form>

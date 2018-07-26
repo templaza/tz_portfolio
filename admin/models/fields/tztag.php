@@ -27,6 +27,7 @@ use Joomla\CMS\Form\FormHelper;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Helper\TagsHelper;
 use Joomla\CMS\Layout\FileLayout;
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 FormHelper::loadFieldClass('list');
 
@@ -89,7 +90,7 @@ class JFormFieldTZTag extends JFormFieldList{
 
         $tag       = $app->getLanguage()->getTag();
 
-        $db     = Factory::getDbo();
+        $db     = TZ_Portfolio_PlusDatabase::getDbo();
         $query  = $db -> getQuery(true);
         $query -> select('DISTINCT id AS value, title AS text, published');
         $query -> from('#__tz_portfolio_plus_tags');

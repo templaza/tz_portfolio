@@ -32,7 +32,6 @@ $params		= $item->params;
 $images     = json_decode($item->images);
 $urls       = json_decode($item->urls);
 $canEdit	= $item->params->get('access-edit');
-JHtml::_('behavior.caption');
 $user		= JFactory::getUser();
 $doc        = JFactory::getDocument();
 
@@ -105,7 +104,7 @@ $doc        = JFactory::getDocument();
                 <?php endif; ?>
                 <?php
                 $plugins = array('hikashop_checkout','attachment','vote','social');
-                $dispatcher = new JEventDispatcher();
+                $dispatcher = TZ_Portfolio_PlusPluginHelper::getDispatcher();
                 $html = '';
                 foreach ($plugins as $plugin) {
 
@@ -142,7 +141,7 @@ $doc        = JFactory::getDocument();
         </div>
         <?php
         $plugins = array('music','charity','googlemap','navigation');
-        $dispatcher = new JEventDispatcher();
+        $dispatcher = TZ_Portfolio_PlusPluginHelper::getDispatcher();
         $html = '';
         foreach ($plugins as $plugin) {
 
@@ -179,7 +178,7 @@ $doc        = JFactory::getDocument();
             echo $related;
         endif;
         $plugins = array('comment');
-        $dispatcher = new JEventDispatcher();
+        $dispatcher = TZ_Portfolio_PlusPluginHelper::getDispatcher();
         $html = '';
         foreach ($plugins as $plugin) {
 

@@ -111,6 +111,27 @@ class TZ_Portfolio_PlusTableExtensions extends JTable
         if($this -> type && $this -> type != 'tz_portfolio_plus-plugin'){
             $this -> _trackAssets   = false;
         }
+
+        if(!$this -> checked_out){
+            $this -> checked_out = 0;
+        }
+
+        if(!$this -> checked_out_time){
+            $this -> checked_out_time = '0000-00-00 00:00:00';
+        }
+
+        if(!$this -> ordering){
+            $this -> ordering = 0;
+        }
+
+        if(!$this ->protected){
+            $this ->protected = 0;
+        }
+
+        if(!$this ->params){
+            $this ->params = '';
+        }
+
         return parent::store($updateNulls);
     }
 

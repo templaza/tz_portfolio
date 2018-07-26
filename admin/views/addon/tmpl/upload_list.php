@@ -25,25 +25,47 @@
 defined('_JEXEC') or die;
 
 $dataServer = $this -> state -> get('list.dataserver');
-if($dataServer) {
-    JHtml::_('formbehavior.chosen', 'select');
+
 ?>
 <div class="tpContainer">
     <button type="button" data-toggle="collapse" data-target="#tpp-addon__upload"
-            style="margin-right: 10px;"
             class="btn btn-success pull-left hasTooltip" title="<?php echo JText::_('JTOOLBAR_UPLOAD');
             ?>"><span class="icon-upload"></span> <?php echo JText::_('JTOOLBAR_UPLOAD'); ?></button>
     <?php
-    // Search tools bar
-    echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+    if($dataServer) {
+        if (!COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+            JHtml::_('formbehavior.chosen', 'select');
+        } else {
+            JHtml::_('formbehavior.chosen', 'select[multiple]');
+        }
+        // Search tools bar
+        echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+    }
     ?>
 </div>
-<?php } ?>
+
+<div class="tpp-extension__upload-form <?php echo $this -> state -> get('list.dataserver')?'collapse':''; ?>" id="tpp-addon__upload">
+    <fieldset>
+        <legend><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_UPLOAD_AND_INSTALL_ADDON');?></legend>
+        <div class="form-horizontal">
+            <div class="control-group">
+                <div class="control-label"><?php echo $this -> form -> getLabel('install_package');?></div>
+                <div class="controls"><?php echo $this -> form -> getInput('install_package');?></div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <button class="btn btn-primary btn-small" type="button" onclick="Joomla.submitbutton('addon.install')">
+                        <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_UPLOAD_AND_INSTALL');?></button>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</div>
 <?php
 if(empty($this -> itemsServer)){
     if($dataServer) {
         ?>
-<div class="alert alert-no-items">
+<div class="alert alert-warning alert-no-items">
     <?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
 </div>
         <?php
@@ -106,7 +128,7 @@ if(empty($this -> itemsServer)){
         $addon      = null;
         $version    = $item -> installedVersion;
         ?>
-    <div class="col">
+    <div class="tpp-extension__col">
         <div class="tpp-extension__item">
             <div class="top">
                 <h3 class="title">
@@ -143,7 +165,7 @@ if(empty($this -> itemsServer)){
                         ?>
                         <li>
                             <a href="<?php echo $item -> pProduce -> pProduceUrl;
-                            ?>" class="install-now btn btn-default"><span class="icon-download"></span> <?php
+                            ?>" class="install-now btn btn-outline-secondary"><span class="icon-download"></span> <?php
                                     echo JText::_('COM_TZ_PORTFOLIO_PLUS_INSTALL_NOW'); ?></a>
                         </li>
                             <?php
@@ -152,7 +174,7 @@ if(empty($this -> itemsServer)){
                             ?>
                         <li>
                             <a href="<?php echo $item -> pProduce ->  pProduceUrl;
-                            ?>" class="install-now btn btn-default"><span class="icon-loop"></span> <?php
+                            ?>" class="install-now btn btn-outline-secondary"><span class="icon-loop"></span> <?php
                                 echo JText::_('COM_TZ_PORTFOLIO_PLUS_UPDATE_NOW'); ?></a>
                         </li>
                             <?php
@@ -161,14 +183,14 @@ if(empty($this -> itemsServer)){
                             ?>
                         <li>
                             <a href="<?php echo $item -> pProduce ->  pProduceUrl?$item -> pProduce ->  pProduceUrl:$item -> link;
-                            ?>" target="_blank" class="btn btn-default"><span class="icon-cart"></span> <?php
+                            ?>" target="_blank" class="btn btn-outline-secondary"><span class="icon-cart"></span> <?php
                                 echo JText::_('COM_TZ_PORTFOLIO_PLUS_BUY_NOW'); ?></a>
                         </li>
                                 <?php
                                 break;
                             case 'installed':
                                 ?>
-                                <li><button type="button" class="btn btn-default disabled"><?php echo $installed; ?></li>
+                                <li><button type="button" class="btn btn-outline-success disabled"><?php echo $installed; ?></li>
                         <?php
                                 break;
                         }?>
@@ -205,7 +227,7 @@ if(empty($this -> itemsServer)){
                 ?>
             </div>
             <div class="bottom">
-                <ul class="unstyled pull-left">
+                <ul class="unstyled list-unstyled pull-left">
                     <li><?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_LATEST_VERSION', '') ?><span><?php
                             echo $item -> pProduce -> pVersion?$item -> pProduce ->  pVersion:JText::_('COM_TZ_PORTFOLIO_PLUS_NA');
                             ?></span>
@@ -215,7 +237,7 @@ if(empty($this -> itemsServer)){
                             ?></span>
                     </li>
                 </ul>
-                <ul class="unstyled pull-right text-right">
+                <ul class="unstyled list-unstyled pull-right text-right">
                     <li><?php
                         $updated = '<span>'.JHtml::_('date', $item -> modified, JText::_('DATE_FORMAT_LC4')).'</span>';
                         echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_LAST_UPDATED', $updated);

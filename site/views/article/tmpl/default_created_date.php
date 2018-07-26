@@ -25,7 +25,7 @@ $params = $this -> item -> params;
 if($params -> get('show_create_date',1)){
     if(isset($this -> item -> created)){
 ?>
-<span class="TzCreate" itemprop="dateCreated">
+<span class="tpp-item-created" itemprop="dateCreated">
     <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_CREATED_DATE_ON', JHtml::_('date', $this->item->created, JText::_('DATE_FORMAT_LC2'))); ?>
 </span>
 <?php }

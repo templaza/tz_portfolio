@@ -20,6 +20,8 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
+
 class TZ_Portfolio_PlusContentHelper{
     protected static $cache = array();
 
@@ -33,7 +35,7 @@ class TZ_Portfolio_PlusContentHelper{
         if (!isset(self::$cache[$storeId]) || $resetCache) {
 
             if (!is_object($articleObject)) {
-                $db     = JFactory::getDbo();
+                $db     = TZ_Portfolio_PlusDatabase::getDbo();
                 $query  = $db->getQuery(true);
                 $query  -> select('article.*, m.catid');
                 $query  -> from('#__tz_portfolio_plus_content AS article');
@@ -54,6 +56,79 @@ class TZ_Portfolio_PlusContentHelper{
         }
 
         return self::$cache[$storeId];
+    }
+
+    public static function getLetters($filters = array()){
+
+        $storeId    = __METHOD__;
+        $storeId   .= ':'.serialize($filters);
+        $storeId    = md5($storeId);
+
+        if(isset(self::$cache[$storeId])){
+            return self::$cache[$storeId];
+        }
+
+        $db     = JFactory::getDbo();
+        $query  = $db -> getQuery(true);
+        $query -> select('DISTINCT ASCII(SUBSTR(LOWER(c.title),1,1)) AS letterKey');
+        $query -> from('#__tz_portfolio_plus_content AS c');
+        $query -> join('LEFT', '#__tz_portfolio_plus_content_category_map AS m ON m.contentid = c.id');
+        $query -> join('LEFT', '#__tz_portfolio_plus_categories AS cc ON cc.id=m.catid');
+        $query -> join('LEFT', '#__tz_portfolio_plus_tag_content_map AS x ON x.contentid=c.id');
+        $query -> join('LEFT', '#__tz_portfolio_plus_tags AS t ON t.id=x.tagsid');
+        $query -> join('LEFT', '#__users AS u ON c.created_by=u.id');
+
+        $query -> where('c.state=1');
+
+        if(isset($filters['catid']) && ($catids = $filters['catid'])){
+
+            if(is_array($catids)){
+                $catids = array_filter($catids);
+                if(count($catids)) {
+                    $query->where('cc.id IN(' . implode(',', $catids) . ')');
+                }
+            }else{
+                $query -> where('cc.id ='.(int) $catids);
+            }
+        }
+
+        if(isset($filters['featured']) && ($featured = $filters['featured'])){
+            if(is_array($featured)){
+                $query -> where('c.featured IN('.implode(',',$featured).')');
+            }else{
+                $query -> where('c.featured ='.(int) $featured);
+            }
+        }
+
+        if(isset($filters['tagId']) && ($tagId = $filters['tagId'])){
+            if(is_array($tagId)){
+                $query -> where('t.id IN('.implode(',',$tagId).')');
+            }else{
+                $query -> where('t.id ='.(int) $tagId);
+            }
+        }
+
+        if(isset($filters['userId']) && ($userId = $filters['userId'])){
+            if(is_array($userId)){
+                $query -> where('c.created_by IN('.implode(',',$userId).')');
+            }else{
+                $query -> where('c.created_by ='.(int) $userId);
+            }
+        }
+        if(isset($filters['year']) && ($year = $filters['year'])){
+            $query -> where('YEAR(c.created) ='.$year);
+        }
+        if(isset($filters['month']) && ($month = $filters['month'])){
+            $query -> where('MONTH(c.created) ='.$month);
+        }
+
+        $db -> setQuery($query);
+
+        if($result = $db -> loadColumn()){
+            self::$cache[$storeId]   = $result;
+            return $result;
+        }
+        return false;
     }
 
     public static function getBootstrapColumns($numOfColumns)

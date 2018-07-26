@@ -59,10 +59,9 @@ class TZ_Portfolio_PlusViewSearch extends JViewLegacy
 
     function display($tpl=null){
 
-        JHtml::_('behavior.framework');
-
         $error  = null;
         $params = null;
+        $app    = JFactory::getApplication();
         $doc    = JFactory::getDocument();
 
         $doc -> addStyleSheet('components/com_tz_portfolio_plus/css/tzportfolioplus.min.css');
@@ -128,14 +127,12 @@ class TZ_Portfolio_PlusViewSearch extends JViewLegacy
                     );
                 }
 
-                $dispatcher	= JDispatcher::getInstance();
-
                 JPluginHelper::importPlugin('content');
                 TZ_Portfolio_PlusPluginHelper::importPlugin('mediatype');
                 TZ_Portfolio_PlusPluginHelper::importPlugin('content');
 
-                $dispatcher -> trigger('onAlwaysLoadDocument', array('com_tz_portfolio_plus.portfolio'));
-                $dispatcher -> trigger('onLoadData', array('com_tz_portfolio_plus.portfolio', $items, $params));
+                $app -> triggerEvent('onAlwaysLoadDocument', array('com_tz_portfolio_plus.portfolio'));
+                $app -> triggerEvent('onLoadData', array('com_tz_portfolio_plus.portfolio', $items, $params));
 
                 foreach($items as $i => &$item){
 
@@ -260,43 +257,43 @@ class TZ_Portfolio_PlusViewSearch extends JViewLegacy
                         // Process the content plugins.
                         //
 
-                        $dispatcher->trigger('onContentPrepare', array ('com_tz_portfolio_plus.portfolio', &$item, &$item -> params, $state -> get('list.start')));
+                        $app -> triggerEvent('onContentPrepare', array ('com_tz_portfolio_plus.portfolio', &$item, &$item -> params, $state -> get('list.start')));
                         $item->introtext = $item->text;
 
                         $item->event = new stdClass();
-                        $results = $dispatcher->trigger('onContentAfterTitle', array('com_tz_portfolio_plus.portfolio', &$item, &$item -> params, $state -> get('list.start')));
+                        $results = $app -> triggerEvent('onContentAfterTitle', array('com_tz_portfolio_plus.portfolio', &$item, &$item -> params, $state -> get('list.start')));
                         $item->event->afterDisplayTitle = trim(implode("\n", $results));
 
-                        $results = $dispatcher->trigger('onContentBeforeDisplay', array('com_tz_portfolio_plus.portfolio', &$item, &$item -> params, $state -> get('list.start')));
+                        $results = $app -> triggerEvent('onContentBeforeDisplay', array('com_tz_portfolio_plus.portfolio', &$item, &$item -> params, $state -> get('list.start')));
                         $item->event->beforeDisplayContent = trim(implode("\n", $results));
 
-                        $results = $dispatcher->trigger('onContentAfterDisplay', array('com_tz_portfolio_plus.portfolio', &$item, &$item -> params, $state -> get('list.start')));
+                        $results = $app -> triggerEvent('onContentAfterDisplay', array('com_tz_portfolio_plus.portfolio', &$item, &$item -> params, $state -> get('list.start')));
                         $item->event->afterDisplayContent = trim(implode("\n", $results));
 
                         // Process the tz portfolio's content plugins.
-                        $results    = $dispatcher -> trigger('onContentDisplayVote',array('com_tz_portfolio_plus.portfolio',
+                        $results    = $app -> triggerEvent('onContentDisplayVote',array('com_tz_portfolio_plus.portfolio',
                             &$item, &$item -> params, $state -> get('list.start')));
                         $item -> event -> contentDisplayVote   = trim(implode("\n", $results));
 
-                        $results    = $dispatcher -> trigger('onBeforeDisplayAdditionInfo',array('com_tz_portfolio_plus.portfolio',
+                        $results    = $app -> triggerEvent('onBeforeDisplayAdditionInfo',array('com_tz_portfolio_plus.portfolio',
                             &$item, &$item -> params, $state -> get('list.start')));
                         $item -> event -> beforeDisplayAdditionInfo   = trim(implode("\n", $results));
 
-                        $results    = $dispatcher -> trigger('onAfterDisplayAdditionInfo',array('com_tz_portfolio_plus.portfolio',
+                        $results    = $app -> triggerEvent('onAfterDisplayAdditionInfo',array('com_tz_portfolio_plus.portfolio',
                             &$item, &$item -> params, $state -> get('list.start')));
                         $item -> event -> afterDisplayAdditionInfo   = trim(implode("\n", $results));
 
-                        $results = $dispatcher->trigger('onContentDisplayListView', array('com_tz_portfolio_plus.portfolio',
+                        $results = $app -> triggerEvent('onContentDisplayListView', array('com_tz_portfolio_plus.portfolio',
                             &$item, &$item -> params, $state -> get('list.start')));
                         $item->event->contentDisplayListView = trim(implode("\n", $results));
 
                         // Process the tz portfolio's mediatype plugins.
-                        $results    = $dispatcher -> trigger('onContentDisplayMediaType',array('com_tz_portfolio_plus.portfolio',
+                        $results    = $app -> triggerEvent('onContentDisplayMediaType',array('com_tz_portfolio_plus.portfolio',
                             &$item, &$item -> params, $state -> get('list.start')));
                         if($item){
                             $item -> event -> onContentDisplayMediaType    = trim(implode("\n", $results));
 
-                            if($results    = $dispatcher -> trigger('onAddMediaType')){
+                            if($results    = $app -> triggerEvent('onAddMediaType')){
                                 $mediatypes = array();
                                 foreach($results as $result){
                                     if(isset($result -> special) && $result -> special) {

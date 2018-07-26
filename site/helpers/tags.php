@@ -21,9 +21,35 @@
 defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 class TZ_Portfolio_PlusFrontHelperTags{
     protected static $cache = array();
+
+    public static function getTagById($tagId){
+        if(!$tagId){
+            return false;
+        }
+
+        $storeId = md5(__METHOD__ . '::'.$tagId);
+
+        if(isset(self::$cache[$storeId])){
+            return self::$cache[$storeId];
+        }
+
+        $db     = TZ_Portfolio_PlusDatabase::getDbo();
+        $query  = $db -> getQuery(true);
+
+        $query -> select('*');
+        $query -> from('#__tz_portfolio_plus_tags');
+        $query -> where('id = '.(int) $tagId);
+        $db -> setQuery($query);
+        if($data = $db -> loadObject()){
+            self::$cache[$storeId] = $data;
+            return $data;
+        }
+        return false;
+    }
 
     public static function getTagsFilterByArticleId($contentId, $filterAlias = null){
         if($contentId) {
@@ -34,7 +60,7 @@ class TZ_Portfolio_PlusFrontHelperTags{
             }
 
             if(!isset(self::$cache[$storeId])){
-                $db     = JFactory::getDbo();
+                $db     = TZ_Portfolio_PlusDatabase::getDbo();
                 $query  = $db -> getQuery(true);
                 $query -> select('t.*, c.id AS contentid');
                 $query -> from('#__tz_portfolio_plus_tags AS t');
@@ -106,7 +132,7 @@ class TZ_Portfolio_PlusFrontHelperTags{
             $storeId    = md5(__METHOD__);
         }
         if (!isset(self::$cache[$storeId])) {
-            $db     = JFactory::getDbo();
+            $db     = TZ_Portfolio_PlusDatabase::getDbo();
             $query  = $db -> getQuery(true);
             $query -> select('t.*');
             $query -> from('#__tz_portfolio_plus_tags AS t');
@@ -153,7 +179,7 @@ class TZ_Portfolio_PlusFrontHelperTags{
             }
 
             if(!isset(self::$cache[$storeId])){
-                $db     = JFactory::getDbo();
+                $db     = TZ_Portfolio_PlusDatabase::getDbo();
                 $query  = $db -> getQuery(true);
                 $query -> select('t.*, c.id AS contentid');
                 $query -> select('CASE WHEN CHAR_LENGTH(t.alias) THEN CONCAT_WS(":", t.id, t.alias) ELSE t.id END as slug');

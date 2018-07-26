@@ -129,4 +129,15 @@ class TZ_Portfolio_PlusExtraFieldRadio extends TZ_Portfolio_PlusExtraField{
 
         return $html;
     }
+
+
+    public function prepareForm(&$form, $data){
+        parent::prepareForm($form, $data);
+        $name   = $form -> getName();
+        if($name == 'com_tz_portfolio_plus.addon' || $name == 'com_tz_portfolio_plus.field'){
+            if(!COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE){
+                $form -> removeField('switcher', 'params');
+            }
+        }
+    }
 }

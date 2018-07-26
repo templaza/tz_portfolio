@@ -27,25 +27,22 @@ class JFormFieldFieldGroups extends JFormFieldList
 {
     protected $type = 'FieldGroups';
 
+    public function setup(\SimpleXMLElement $element, $value, $group = null)
+    {
+        $setup  = parent::setup($element, $value, $group);
+
+        if($this -> multiple) {
+            JHtml::_('formbehavior.chosen', '#' . $this->id, null, array('width' => '220px'));
+        }
+
+        return $setup;
+    }
+
     protected function getOptions(){
         $options    = array();
 
         if($items = TZ_Portfolio_PlusHelperGroups::getGroups()) {
-
-            $user   = JFactory::getUser();
-            $jinput = JFactory::getApplication()->input;
-
             foreach ($items as $i => $item) {
-//                if($jinput -> get('id')){
-//                    if(!$user->authorise('core.edit', 'com_tz_portfolio_plus.group.' . $item->id)
-//                        && (!$user -> authorise('core.edit.own', 'com_tz_portfolio_plus.group.'.$item -> id))){
-//                        continue;
-//                    }
-//                }else{
-//                    if(!$user->authorise('core.create', 'com_tz_portfolio_plus.group.' . $item->id) ){
-//                        continue;
-//                    }
-//                }
                 $options[$i] = new stdClass();
                 $options[$i]->value = $item->id;
                 if($item -> published ) {

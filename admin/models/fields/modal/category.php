@@ -1,13 +1,27 @@
 <?php
-/**
- * @package     Joomla.Administrator
- * @subpackage  com_categories
- *
- * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
- */
+/*------------------------------------------------------------------------
+
+# TZ Portfolio Plus Extension
+
+# ------------------------------------------------------------------------
+
+# Author:    DuongTVTemPlaza
+
+# Copyright: Copyright (C) 2011-2017 tzportfolio.com. All Rights Reserved.
+
+# @License - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
+
+# Website: http://www.tzportfolio.com
+
+# Technical Support:  Forum - http://tzportfolio.com/forum
+
+# Family website: http://www.templaza.com
+
+-------------------------------------------------------------------------*/
 
 defined('JPATH_BASE') or die;
+
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 /**
  * Supports a modal article picker.
@@ -103,7 +117,7 @@ class JFormFieldModal_Category extends JFormField
 
         if ($value)
         {
-            $db    = JFactory::getDbo();
+            $db    = TZ_Portfolio_PlusDatabase::getDbo();
             $query = $db->getQuery(true)
                 ->select($db->quoteName('title'))
                 ->from($db->quoteName('#__tz_portfolio_plus_categories'))

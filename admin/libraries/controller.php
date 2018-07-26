@@ -20,8 +20,11 @@
 // No direct access
 defined('_JEXEC') or die;
 
-jimport('joomla.filesystem.folder');
-jimport('joomla.filesystem.file');
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
+
+jimport('joomla.filesytem.file');
+jimport('joomla.filesytem.folder');
 jimport('joomla.application.component.controller');
 
 class TZ_Portfolio_PlusControllerLegacy  extends JControllerLegacy{
@@ -54,7 +57,7 @@ class TZ_Portfolio_PlusControllerLegacy  extends JControllerLegacy{
                     $path       = $view -> get('_path');
 
                     $bool_tpl   = false;
-                    if(JFolder::exists(COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH.DIRECTORY_SEPARATOR.$template -> template)) {
+                    if(\JFolder::exists(COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH.DIRECTORY_SEPARATOR.$template -> template)) {
                         $bool_tpl   = true;
                     }
                     if($bool_tpl) {
@@ -89,14 +92,14 @@ class TZ_Portfolio_PlusControllerLegacy  extends JControllerLegacy{
         if($view){
             if(isset($view -> document)){
                 if($template   = TZ_Portfolio_PlusTemplate::getTemplate(true)) {
-                    if(JFolder::exists(COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH.DIRECTORY_SEPARATOR.$template -> template)) {
+                    if(\JFolder::exists(COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH.DIRECTORY_SEPARATOR.$template -> template)) {
                         $docOptions['template']     = $template->template;
                         $docOptions['file']         = 'template.php';
                         $docOptions['params']       = $template->params;
                         $docOptions['directory']    = COM_TZ_PORTFOLIO_PLUS_PATH_SITE . DIRECTORY_SEPARATOR . 'templates';
 
                         // Add template.css file if it has have in template
-                        if (JFile::exists(COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH . DIRECTORY_SEPARATOR . $template -> template
+                        if (\JFile::exists(COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH . DIRECTORY_SEPARATOR . $template -> template
                             . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'template.css')
                         ) {
                             $view->document->addStyleSheet(TZ_Portfolio_PlusUri::base(true) . '/templates/'

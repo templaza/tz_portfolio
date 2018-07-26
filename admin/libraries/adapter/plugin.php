@@ -17,29 +17,38 @@
 
 -------------------------------------------------------------------------*/
 
+namespace TZ_Portfolio_Plus\Installer\Adapter;
+
 // No direct access
 defined('_JEXEC') or die;
 
-JLoader::import('com_tz_portfolio_plus.includes.framework',JPATH_ADMINISTRATOR.'/components');
+use Joomla\Filesystem\Folder;
+use Joomla\CMS\Installer\Adapter\PluginAdapter;
 
-class TZ_Portfolio_PlusInstallerAdapterPlugin extends JInstallerAdapterPlugin{
+\JLoader::import('com_tz_portfolio_plus.includes.framework',JPATH_ADMINISTRATOR.'/components');
 
-    public function __construct(JInstaller $parent, JDatabaseDriver $db, array $options = array())
+class TZ_Portfolio_PlusInstallerPluginAdapter extends PluginAdapter{
+
+    public function __construct(\JInstaller $parent, \JDatabaseDriver $db, array $options = array())
     {
 
         parent::__construct($parent, $db, $options);
 
         // Get a generic TZ_Portfolio_PlusTableExtension instance for use if not already loaded
         if (!($this->extension instanceof TZ_Portfolio_PlusTableExtensions)) {
-            JTable::addIncludePath(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH . DIRECTORY_SEPARATOR . 'tables');
-            $this->extension = JTable::getInstance('Extensions', 'TZ_Portfolio_PlusTable');
+            \JTable::addIncludePath(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH . DIRECTORY_SEPARATOR . 'tables');
+            $this->extension = \JTable::getInstance('Extensions', 'TZ_Portfolio_PlusTable');
         }
 
         if (is_object($this->extension) && isset($this->extension->id)) {
             $this->extension->extension_id = $this->extension->id;
         }
 
-        $this->type = 'tz_portfolio_plus-'.strtolower(str_replace('TZ_Portfolio_PlusInstallerAdapter', '', get_called_class()));
+        $type   = strtolower($this -> type);
+        $type   = preg_replace('/^TZ_Portfolio_PlusInstaller/i', '', $type);
+        $type   = preg_replace('/^TZ_Portfolio_PlusInstallerAdapter/i', '', $type);
+
+        $this->type = 'tz_portfolio_plus-'.strtolower($type);
     }
 
     protected function setupInstallPaths()
@@ -64,9 +73,9 @@ class TZ_Portfolio_PlusInstallerAdapterPlugin extends JInstallerAdapterPlugin{
         {
             // Install failed, roll back changes
             throw new RuntimeException(
-                JText::sprintf(
+                \JText::sprintf(
                     'JLIB_INSTALLER_ABORT_ROLLBACK',
-                    JText::_('JLIB_INSTALLER_' . $this->route),
+                    \JText::_('JLIB_INSTALLER_' . $this->route),
                     $e->getMessage()
                 ),
                 $e->getCode(),
@@ -139,9 +148,9 @@ class TZ_Portfolio_PlusInstallerAdapterPlugin extends JInstallerAdapterPlugin{
             if (!$this->doDatabaseTransactions())
             {
                 throw new RuntimeException(
-                    JText::sprintf(
+                    \JText::sprintf(
                         'JLIB_INSTALLER_ABORT_SQL_ERROR',
-                        JText::_('JLIB_INSTALLER_' . strtoupper($this->route)),
+                        \JText::_('JLIB_INSTALLER_' . strtoupper($this->route)),
                         $this->db->stderr(true)
                     )
                 );
@@ -190,7 +199,7 @@ class TZ_Portfolio_PlusInstallerAdapterPlugin extends JInstallerAdapterPlugin{
 
                     // Remove the extension record itself
                     /** @var JTableExtension $extensionTable */
-                    $extensionTable = JTable::getInstance('Extensions','TZ_Portfolio_PlusTable');
+                    $extensionTable = \JTable::getInstance('Extensions','TZ_Portfolio_PlusTable');
                     $extensionTable->delete($eid);
                 }
             }
@@ -234,7 +243,7 @@ class TZ_Portfolio_PlusInstallerAdapterPlugin extends JInstallerAdapterPlugin{
             {
                 // Install failed, roll back changes
                 throw new RuntimeException(
-                    JText::sprintf(
+                    \JText::sprintf(
                         'JLIB_INSTALLER_ABORT_COMP_INSTALL_ROLLBACK',
                         $this->extension->getError()
                     )
@@ -263,11 +272,11 @@ class TZ_Portfolio_PlusInstallerAdapterPlugin extends JInstallerAdapterPlugin{
 
         // First order of business will be to load the plugin object table from the database.
         // This should give us the necessary information to proceed.
-        $row = JTable::getInstance('Extensions','TZ_Portfolio_PlusTable');
+        $row = \JTable::getInstance('Extensions','TZ_Portfolio_PlusTable');
 
         if (!$row->load((int) $id))
         {
-            JLog::add(JText::_('JLIB_INSTALLER_ERROR_PLG_UNINSTALL_ERRORUNKOWNEXTENSION'), JLog::WARNING, 'jerror');
+            \JLog::add(\JText::_('JLIB_INSTALLER_ERROR_PLG_UNINSTALL_ERRORUNKOWNEXTENSION'), \JLog::WARNING, 'jerror');
 
             return false;
         }
@@ -276,7 +285,7 @@ class TZ_Portfolio_PlusInstallerAdapterPlugin extends JInstallerAdapterPlugin{
         // Because that is not a good idea...
         if ($row->protected)
         {
-            JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_PLG_UNINSTALL_WARNCOREPLUGIN', $row->name), JLog::WARNING, 'jerror');
+            \JLog::add(\JText::sprintf('JLIB_INSTALLER_ERROR_PLG_UNINSTALL_WARNCOREPLUGIN', $row->name), \JLog::WARNING, 'jerror');
 
             return false;
         }
@@ -284,7 +293,7 @@ class TZ_Portfolio_PlusInstallerAdapterPlugin extends JInstallerAdapterPlugin{
         // Get the plugin folder so we can properly build the plugin path
         if (trim($row->folder) == '')
         {
-            JLog::add(JText::_('JLIB_INSTALLER_ERROR_PLG_UNINSTALL_FOLDER_FIELD_EMPTY'), JLog::WARNING, 'jerror');
+            \JLog::add(\JText::_('JLIB_INSTALLER_ERROR_PLG_UNINSTALL_FOLDER_FIELD_EMPTY'), \JLog::WARNING, 'jerror');
 
             return false;
         }
@@ -344,7 +353,7 @@ class TZ_Portfolio_PlusInstallerAdapterPlugin extends JInstallerAdapterPlugin{
             if ($this->parent->manifestClass->preflight($this->route, $this) === false)
             {
                 // Preflight failed, rollback changes
-                $this->parent->abort(JText::_('JLIB_INSTALLER_ABORT_PLG_INSTALL_CUSTOM_INSTALL_FAILURE'));
+                $this->parent->abort(\JText::_('JLIB_INSTALLER_ABORT_PLG_INSTALL_CUSTOM_INSTALL_FAILURE'));
 
                 return false;
             }
@@ -360,7 +369,7 @@ class TZ_Portfolio_PlusInstallerAdapterPlugin extends JInstallerAdapterPlugin{
         if ($utfresult === false)
         {
             // Install failed, rollback changes
-            $this->parent->abort(JText::sprintf('JLIB_INSTALLER_ABORT_PLG_UNINSTALL_SQL_ERROR', $db->stderr(true)));
+            $this->parent->abort(\JText::sprintf('JLIB_INSTALLER_ABORT_PLG_UNINSTALL_SQL_ERROR', $db->stderr(true)));
 
             return false;
         }
@@ -390,7 +399,7 @@ class TZ_Portfolio_PlusInstallerAdapterPlugin extends JInstallerAdapterPlugin{
         unset($row);
 
         // Remove the plugin's folder
-        JFolder::delete($this->parent->getPath('extension_root'));
+        Folder::delete($this->parent->getPath('extension_root'));
 
         if ($msg != '')
         {

@@ -20,6 +20,8 @@
 //no direct access
 defined('_JEXEC') or die('Restricted access');
 
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
+
 jimport('joomla.application.component.modellist');
 
 class TZ_Portfolio_PlusModelTags extends JModelList
@@ -34,6 +36,16 @@ class TZ_Portfolio_PlusModelTags extends JModelList
             );
         }
         parent::__construct($config);
+
+        // Set the model dbo
+        if (array_key_exists('dbo', $config))
+        {
+            $this->_db = $config['dbo'];
+        }
+        else
+        {
+            $this->_db = TZ_Portfolio_PlusDatabase::getDbo();
+        }
     }
 
     function populateState($ordering = 'id', $direction = 'desc'){
@@ -50,7 +62,11 @@ class TZ_Portfolio_PlusModelTags extends JModelList
     protected function getListQuery(){
         $db = $this -> getDbo();
         $query  = $db -> getQuery(true);
-        $query -> select('*');
+        $query -> select($this->getState(
+            'list.select',
+            '*'
+            )
+        );
         $query -> from('#__tz_portfolio_plus_tags');
 
         // Filter by search in name.

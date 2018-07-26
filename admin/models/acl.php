@@ -21,10 +21,27 @@
 defined('_JEXEC') or die;
 
 use Joomla\Utilities\ArrayHelper;
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
+
 jimport('joomla.application.component.modeladmin');
 
 class TZ_Portfolio_PlusModelAcl extends JModelAdmin
 {
+    public function __construct($config = array(), MVCFactoryInterface $factory = null)
+    {
+        parent::__construct($config, $factory);
+
+        // Set the model dbo
+        if (array_key_exists('dbo', $config))
+        {
+            $this->_db = $config['dbo'];
+        }
+        else
+        {
+            $this->_db = TZ_Portfolio_PlusDatabase::getDbo();
+        }
+    }
+
     protected function populateState()
     {
         $app    = JFactory::getApplication();
@@ -56,6 +73,7 @@ class TZ_Portfolio_PlusModelAcl extends JModelAdmin
         $asset          = $this -> getTable();
         if($data && isset($data['section'])){
             if($section      = $data['section']){
+                $_data['tags']   = null;
                 if($parentAsset -> loadByName('com_tz_portfolio_plus')){
                     $_data['parent_id']  = $parentAsset -> id;
                 }
@@ -142,9 +160,8 @@ class TZ_Portfolio_PlusModelAcl extends JModelAdmin
     }
 
     // Store each permissions
-    protected function _storePermission($query, $groupSection, $section = null, $titleFieldName = 'title'){
+    protected function _storePermission($query, $groupSection, $section = null, $titleFieldName = 'title', &$start = 0){
 
-        $start  = 0;
         $limit  = 10;
         $db     = $this -> getDbo();
         $asset  = $this -> getTable();
@@ -165,53 +182,55 @@ class TZ_Portfolio_PlusModelAcl extends JModelAdmin
             $section    = $groupSection;
         }
 
-        do{
-            if($items = $db -> loadObjectList()){
-                if(count($items)){
-                    foreach($items as $item){
-                        $asset -> reset();
+        if ($items = $db->loadObjectList()) {
+            if (count($items)) {
+                foreach ($items as $item) {
+                    $asset->reset();
 
-                        // Check the item's asset and set data if it is null
-                        if(!$asset -> loadByName('com_tz_portfolio_plus.'.$section.'.'.$item -> id)){
-                            $asset -> id    = 0;
-                            $asset -> name  = 'com_tz_portfolio_plus.'.$section.'.'.$item -> id;
-                            if($section == 'addon'){
-                                $asset->title = $item->folder.'-'.$item -> element;
-                            }else {
-                                $asset->title = $item->{$titleFieldName};
-                            }
+                    // Check the item's asset and set data if it is null
+                    if (!$asset->loadByName('com_tz_portfolio_plus.' . $section . '.' . $item->id)) {
+                        $asset->id = 0;
+                        $asset->name = 'com_tz_portfolio_plus.' . $section . '.' . $item->id;
+                        if ($section == 'addon') {
+                            $asset->title = $item->folder . '-' . $item->element;
+                        } else {
+                            $asset->title = $item->{$titleFieldName};
                         }
+                    }
 
-                        // Update asset_id for table from $query
-                        if($asset -> id && isset($item -> asset_id) && $item -> asset_id != $asset -> id){
-                            $this -> _updateAssetId($query, $item -> id, $asset -> id);
+                    // Update asset_id for table from $query
+                    if ($asset->id && isset($item->asset_id) && $item->asset_id != $asset->id) {
+                        $this->_updateAssetId($query, $item->id, $asset->id);
+                    }
+
+                    // Check & set parent_id for item's asset
+                    if (isset($parentAssetId) && $parentAssetId) {
+                        if (((int)$asset->parent_id) == $parentAssetId) {
+                            continue;
                         }
+                        $asset->parent_id = 0;
+                        $asset->setLocation($parentAssetId, 'last-child');
+                    }
 
-                        // Check & set parent_id for item's asset
-                        if(isset($parentAssetId) && $parentAssetId) {
-                            if(((int) $asset -> parent_id) == $parentAssetId){
-                                continue;
-                            }
-                            $asset -> parent_id = 0;
-                            $asset -> setLocation($parentAssetId, 'last-child');
-                        }
-
-                        // Check and store asset
-                        if($asset->check()) {
-                            if($asset -> store()){
-                                // Update asset_id for table from $query
-                                $this -> _updateAssetId($query, $item -> id, $asset -> id);
-                            }
+                    // Check and store asset
+                    if ($asset->check()) {
+                        if ($asset->store()) {
+                            // Update asset_id for table from $query
+                            $this->_updateAssetId($query, $item->id, $asset->id);
                         }
                     }
                 }
             }
+        }
 
-            // Check next items with limit
-            $start  += $limit;
-            $db -> setQuery($query, $start, $limit);
-            $count  = count($db -> loadResult());
-        }while($count > 0);
+        // Check next items with limit
+        $start += $limit;
+        $db->setQuery($query, $start, $limit);
+        $count = count($db->loadResult());
+
+        if($count > 0){
+            $this -> _storePermission($query, $groupSection, $section, $titleFieldName, $start);
+        }
     }
 
     // Update asset_id for each item

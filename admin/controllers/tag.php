@@ -95,8 +95,7 @@ class TZ_Portfolio_PlusControllerTag extends JControllerForm
         // Attempt to save the data.
         if(!$model -> save($data)){
             // Redirect back to the edit screen.
-            $this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $model->getError()));
-            $this->setMessage($this->getError(), 'error');
+            $this->setMessage(JText::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $model->getError()), 'error');
             $this->setRedirect(
                 JRoute::_(
                     'index.php?option=' . $this->option . '&view=' . $this->view_item

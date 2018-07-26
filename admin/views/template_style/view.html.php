@@ -23,12 +23,16 @@ defined('_JEXEC') or die('Restricted access');
 
 class TZ_Portfolio_PlusViewTemplate_Style extends JViewLegacy
 {
+    protected $state        = null;
     protected $item         = null;
-    protected $tzlayout     = null;
     protected $form         = null;
-    protected $childrens    = null;
-    protected $includeTypes = null;
     protected $presets      = null;
+    protected $rowItem      = null;
+    protected $rowOuter     = null;
+    protected $tzlayout     = null;
+    protected $childrens    = null;
+    protected $columnItem   = null;
+    protected $includeTypes = null;
 
     public function display($tpl=null)
     {
@@ -37,6 +41,7 @@ class TZ_Portfolio_PlusViewTemplate_Style extends JViewLegacy
         $this -> document -> addCustomTag('<link rel="stylesheet" href="'.JUri::base(true).'/components/com_tz_portfolio_plus/css/admin-layout.min.css" type="text/css"/>');
         $this -> document -> addCustomTag('<link rel="stylesheet" href="'.JUri::base(true).'/components/com_tz_portfolio_plus/css/spectrum.min.css" type="text/css"/>');
 
+        $this -> state      = $this -> get('State');
         $this -> item       = $this -> get('Item');
         $this -> tzlayout   = $this -> get('TZLayout');
         $this -> form       = $this -> get('Form');
@@ -57,12 +62,16 @@ class TZ_Portfolio_PlusViewTemplate_Style extends JViewLegacy
         $this -> document -> addScriptDeclaration('
         jQuery(document).ready(function(){
             jQuery.tzLayoutAdmin({
+                basePath    : "'.JUri::base().'",
                 pluginPath  : "'.JURI::root(true).'/administrator/components/com_tz_portfolio_plus/views/template_style/tmpl",
-                fieldName   : "jform[attrib]"
+                fieldName   : "jform[attrib]",
+                j4Compare   : '.(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE?'true':'false').',
+                token       : "'.JSession::getFormToken().'"
+                
             });
         })
         Joomla.submitbutton = function(task) {
-            if (task == \'template.cancel\' || document.formvalidator.isValid(document.id(\'template-form\'))) {
+            if (task == \'template.cancel\' || document.formvalidator.isValid(document.getElementById(\'template-form\'))) {
                 jQuery.tzLayoutAdmin.tzTemplateSubmit();
                 Joomla.submitform(task, document.getElementById(\'template-form\'));
             }else {

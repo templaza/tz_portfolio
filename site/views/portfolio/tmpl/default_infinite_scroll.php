@@ -39,10 +39,9 @@ jQuery(document).ready(function(){
 ?>
 <div id="tz_append" class="text-center">
     <?php if($params -> get('tz_portfolio_plus_layout', 'ajaxButton') == 'ajaxButton'):?>
-    <a href="javascript:" class="btn btn-default btn-lg btn-block"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ADD_ITEM_MORE');?></a>
+    <a href="javascript:" class="btn btn-default btn-secondary btn-lg btn-block"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ADD_ITEM_MORE');?></a>
     <?php endif;?>
 </div>
-
 
 <div id="loadaj" style="display: none;">
     <a href="<?php echo $this -> ajaxLink; ?>"></a>

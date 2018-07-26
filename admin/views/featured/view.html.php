@@ -28,9 +28,11 @@ jimport('joomla.application.component.view');
  */
 class TZ_Portfolio_PlusViewFeatured extends JViewLegacy
 {
+    protected $state;
 	protected $items;
+	protected $f_levels;
+	protected $listGroup;
 	protected $pagination;
-	protected $state;
 
 	/**
 	 * Display the view
@@ -46,7 +48,7 @@ class TZ_Portfolio_PlusViewFeatured extends JViewLegacy
 
         $model  = JModelLegacy::getInstance('Categories','TZ_Portfolio_PlusModel');
         $model -> setState('filter.group',$this -> state -> get('filter.group'));
-        $this -> assign('listGroup',$model -> getGroups());
+        $this -> listGroup  = $model -> getGroups();
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
@@ -67,7 +69,7 @@ class TZ_Portfolio_PlusViewFeatured extends JViewLegacy
 		$options[]	= JHtml::_('select.option', '9', JText::_('J9'));
 		$options[]	= JHtml::_('select.option', '10', JText::_('J10'));
 
-        $this->assign('f_levels', $options);
+        $this -> f_levels    = $options;
 
         // We don't need toolbar in the modal window.
 		if ($this->getLayout() !== 'modal') {

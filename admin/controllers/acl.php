@@ -59,8 +59,7 @@ class TZ_Portfolio_PlusControllerAcl extends JControllerForm
         // Access check.
         if (!$this->allowEdit(array($key => $recordSection), $key))
         {
-            $this->setError(\JText::_('JLIB_APPLICATION_ERROR_EDIT_NOT_PERMITTED'));
-            $this->setMessage($this->getError(), 'error');
+            $this->setMessage(\JText::_('JLIB_APPLICATION_ERROR_EDIT_NOT_PERMITTED'), 'error');
 
             $this->setRedirect(
                 \JRoute::_(

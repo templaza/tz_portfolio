@@ -19,6 +19,8 @@
 
 defined('JPATH_BASE') or die;
 
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
+
 /**
  * Supports a modal article picker.
  */
@@ -59,7 +61,7 @@ class JFormFieldModal_Tags extends JFormField
 		$html	= array();
 		$link	= 'index.php?option=com_tz_portfolio_plus&amp;view=tags&amp;layout=modal&amp;tmpl=component&amp;function=jSelectTag_'.$this->id;
 
-		$db	= JFactory::getDBO();
+		$db	= TZ_Portfolio_PlusDatabase::getDbo();
 		$db->setQuery(
 			'SELECT title' .
 			' FROM #__tz_portfolio_plus_tags' .

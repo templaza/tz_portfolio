@@ -41,3 +41,6 @@ tzportfolioplusimport('plugin.helper');
 // Register class TZ_Portfolio_PlusExtraField from folder libraries of TZ Portfolio Plus
 tzportfolioplusimport('fields.extrafield');
 
+// Register class TZ_Portfolio_PlusDatabase from folder libraries of TZ Portfolio Plus
+tzportfolioplusimport('database.database');
+

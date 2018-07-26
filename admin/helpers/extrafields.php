@@ -21,12 +21,13 @@
 defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 class TZ_Portfolio_PlusHelperExtraFields{
 
     public static function getExtraFields($groupid=null,$catid=null){
         if($groupid || $catid) {
-            $db     = JFactory::getDbo();
+            $db = TZ_Portfolio_PlusDatabase::getDbo();
             $query  = $db->getQuery(true);
 
             $query -> select('f.*');
@@ -53,7 +54,7 @@ class TZ_Portfolio_PlusHelperExtraFields{
             }
             $query -> order('f.ordering ASC');
 
-            $db = JFactory::getDbo();
+            $db = TZ_Portfolio_PlusDatabase::getDbo();
             $db -> setQuery($query);
 
             if($rows   = $db -> loadObjectList()){
@@ -64,13 +65,15 @@ class TZ_Portfolio_PlusHelperExtraFields{
     }
 
     public static function getAllExtraFields(){
-        $db     = JFactory::getDbo();
+        $db = TZ_Portfolio_PlusDatabase::getDbo();
         $query  = $db->getQuery(true);
 
-        $query -> select('f.*, g.id AS groupid, g.name AS group_title');
+        $query -> select('f.*');
         $query -> from($db -> quoteName('#__tz_portfolio_plus_fields').' AS f');
         $query -> join('LEFT', $db -> quoteName('#__tz_portfolio_plus_field_fieldgroup_map')
             .' AS m ON m.fieldsid = f.id');
+
+        $query -> select('g.id AS groupid, g.name AS group_title');
         $query -> join('INNER', $db -> quoteName('#__tz_portfolio_plus_fieldgroups').' AS g ON g.id = m.groupid');
 
         $query -> join('INNER', '#__tz_portfolio_plus_extensions AS e ON e.element = f.type')
@@ -83,7 +86,37 @@ class TZ_Portfolio_PlusHelperExtraFields{
 
         $query -> order('g.id ASC');
 
-        $db = JFactory::getDbo();
+//        $query -> select('f.*');
+//
+//        $subQuery   = $db -> getQuery(true);
+//        $subQuery -> select('groupid');
+//        $subQuery -> from('#__tz_portfolio_plus_field_fieldgroup_map');
+//        $subQuery -> where('fieldsid = f.id');
+//        $subQuery -> order('groupid ASC');
+//
+//        $query -> select('('.(string) $subQuery. ' LIMIT 1) AS groupid');
+//
+//        $subQuery -> clear();
+//        $subQuery -> select('name');
+//        $subQuery -> from('#__tz_portfolio_plus_fieldgroups');
+//        $subQuery -> where('id = groupid');
+//        $subQuery -> order('id ASC');
+//
+//        $query -> select('('.(string) $subQuery. ') AS group_title');
+//
+//        $query -> select('('.(string) $subQuery. ' LIMIT 1)');
+//
+//        $query -> from($db -> quoteName('#__tz_portfolio_plus_fields').' AS f');
+//
+//        $query -> join('INNER', '#__tz_portfolio_plus_extensions AS e ON e.element = f.type')
+//            -> where('e.type = '.$db -> quote('tz_portfolio_plus-plugin'))
+//            -> where('e.folder = '.$db -> quote('extrafields'))
+//            -> where('e.published = 1');
+//
+//        $query -> where('f.published = 1');
+//
+//        $query -> order('groupid ASC');
+
         $db -> setQuery($query);
 
         if($rows   = $db -> loadObjectList()){
@@ -94,7 +127,7 @@ class TZ_Portfolio_PlusHelperExtraFields{
 
     public static function getFieldGroups($fieldid){
         if($fieldid){
-            $db     = JFactory::getDbo();
+            $db = TZ_Portfolio_PlusDatabase::getDbo();
             $query  = $db -> getQuery(true);
             $query -> select('groupid');
             $query -> from($db -> quoteName('#__tz_portfolio_plus_field_fieldgroup_map'));
@@ -109,7 +142,7 @@ class TZ_Portfolio_PlusHelperExtraFields{
 
     public static function removeFieldGroups($fieldid, $groupid = null){
         if($fieldid){
-            $db     = JFactory::getDbo();
+            $db = TZ_Portfolio_PlusDatabase::getDbo();
             $query  = $db -> getQuery(true);
             $query -> delete($db -> quoteName('#__tz_portfolio_plus_field_fieldgroup_map'));
             if(is_array($fieldid)) {
@@ -134,7 +167,7 @@ class TZ_Portfolio_PlusHelperExtraFields{
 
     public static function insertFieldGroups($fieldid, $groupid){
         if($fieldid && $groupid){
-            $db         = JFactory::getDbo();
+            $db = TZ_Portfolio_PlusDatabase::getDbo();
             $_groupid   = $groupid;
             $_dbGroupid = null;
             if($dbGroupid = self::getFieldGroups($fieldid)){

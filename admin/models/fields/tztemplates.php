@@ -20,6 +20,7 @@
 defined('JPATH_BASE') or die;
 
 use Joomla\Registry\Registry;
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 JFormHelper::loadFieldClass('list');
 JLoader::import('com_tz_portfolio_plus.includes.defines', JPATH_ADMINISTRATOR);
@@ -59,7 +60,7 @@ class JFormFieldTZTemplates extends JFormFieldList
     {
         $options = array();
 
-        $db     = JFactory::getDbo();
+        $db     = TZ_Portfolio_PlusDatabase::getDbo();
         $query  = $db -> getQuery(true);
         $query -> select('*');
         $query -> from('#__tz_portfolio_plus_templates');

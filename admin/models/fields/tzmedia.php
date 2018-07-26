@@ -19,10 +19,12 @@
 
 defined('JPATH_PLATFORM') or die;
 
+use Joomla\Filesystem\File;
+
+jimport('joomla.filesystem.file');
+
 class JFormFieldTZMedia extends JFormFieldMedia{
     protected $type = 'TZMedia';
-
-    protected $layout = 'joomla.form.field.media';
 
     protected function getName($fieldName)
     {
@@ -37,6 +39,7 @@ class JFormFieldTZMedia extends JFormFieldMedia{
 
     protected function getInput()
     {
+
         $attr       = '';
         $field_name = $this -> fieldname;
 
@@ -96,19 +99,63 @@ class JFormFieldTZMedia extends JFormFieldMedia{
         $value  = $this -> value;
         $this -> value  = '';
         $html[] = '<div style="padding-top: 5px;">'.parent::getInput();
-
         if($value && !empty($value) && is_string($value)){
-            JHtml::_('behavior.modal','.tp-image-preview__modal');
             $html[] = '<a href="'.JUri::root().str_replace('.'
-                    .JFile::getExt($value),($this -> element['img_prefix']?'_'.$this -> element['img_prefix']:'')
-                    .'.'.JFile::getExt($value),$value).'?time='.time().'"'
+                    .\JFile::getExt($value),($this -> element['img_prefix']?'_'.$this -> element['img_prefix']:'')
+                    .'.'.\JFile::getExt($value),$value).'?time='.time().'"'
                 .' class="tp-image-preview tp-image-preview__modal" rel="{handler: \'image\'}" style="display: table; padding-top: 5px;">';
 
-            $html[] = '<img src="' . JUri::root() . str_replace('.' . JFile::getExt($value),
+            $urlImg = JUri::root() . str_replace('.' . \JFile::getExt($value),
                     ($this->element['img_prefix'] ? '_' . $this->element['img_prefix'] : '')
-                    . '.' . JFile::getExt($value), $value) . '?time=' . time()
-                . '" style="' . ($this->element['img_max-width'] ? 'max-width: 200px; ' : '') . 'cursor: pointer;" title="">';
+                    . '.' . \JFile::getExt($value), $value) . '?time=' . time();
+            $img = '<img src="' . $urlImg. '" style="'
+                . ($this->element['img_max-width'] ? 'max-width: 200px; ' : '') . 'cursor: pointer;" title="">';
+            $html[] = $img;
             $html[] = '</a>';
+
+            if(version_compare(JVERSION, '4.0', 'ge')) {
+                $image = new JImage();
+                $image->loadFile(JPATH_SITE . '/' . str_replace('.' . \JFile::getExt($value),
+                        ($this->element['img_prefix'] ? '_' . $this->element['img_prefix'] : '')
+                        . '.' . \JFile::getExt($value), $value));
+
+                $imgHtml    = JHtml::_('image', $urlImg, JText::_('JLIB_FORM_MEDIA_PREVIEW_ALT'));
+
+                $unix   = null;
+                if($this -> multiple){
+                    $unix   = uniqid();
+                }
+
+                $html[] = JHtml::_('bootstrap.renderModal',
+                    'tp-image-preview__modal-'.$field_name.$unix,
+                    array(
+                        'title' => JText::_('JGLOBAL_PREVIEW'),
+                        'height' => '100%',
+                        'width' => '100%',
+                        'modalWidth' => '100',
+                        'bodyHeight' => '100',
+                    ),
+                    $imgHtml);
+
+                $doc = JFactory::getDocument();
+                $doc->addScriptDeclaration('     
+                (function($, window){
+                    $(document).ready(function(){
+                        $("#tp-image-preview__modal-'.$field_name.$unix.'").parent()
+                            .find(".tp-image-preview__modal").on("click", function(e){
+                            e.preventDefault();
+                            $("#tp-image-preview__modal-'.$field_name.$unix.'")
+                                .on("show.bs.modal", function(){
+                                    $(this).find(".modal-dialog").width(' . ($image->getWidth() + 2) . ');
+                                })
+                                .modal("show");
+                        });
+                    });
+                })(jQuery, window);');
+            }
+            else{
+                JHtml::_('behavior.modal','.tp-image-preview__modal');
+            }
         }
         $html[] = '</div>';
 

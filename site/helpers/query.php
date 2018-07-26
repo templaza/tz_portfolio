@@ -116,13 +116,12 @@ class TZ_Portfolio_PlusHelperQuery
 				$orderby = 'fp.ordering';
 				break;
 
-            case 'priority' :
-                $orderby = $tblprefix.'.priority';
-                break;
-
-            case 'rpriority' :
-                $orderby = $tblprefix.'.priority DESC';
-                break;
+			case 'priority' :
+				$orderby = $tblprefix.'.priority';
+				break;
+			case 'rpriority' :
+				$orderby = $tblprefix.'.priority DESC';
+				break;
 
 			default :
 				$orderby = $tblprefix.'.ordering';

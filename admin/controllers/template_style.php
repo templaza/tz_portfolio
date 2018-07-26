@@ -24,6 +24,25 @@ jimport('joomla.application.component.controllerform');
 class TZ_Portfolio_PlusControllerTemplate_Style extends JControllerForm
 {
 
+    public function addGrid(){
+
+//        // Check for request forgeries.
+//        JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
+//        $document = \JFactory::getDocument();
+//        $viewType = $document->getType();
+//        $viewName = $this->input->get('view', $this->view_item);
+//        $viewLayout = $this->input->get('layout', 'default', 'string');
+//
+//        $view = $this->getView($viewName, $viewType, '', array('base_path' => $this->basePath,
+//            'layout' => $viewLayout));
+
+
+
+//        var_dump($view); die();
+
+    }
+
     public function loadPreset($key = null, $urlVar = null){
 
         // Check for request forgeries.

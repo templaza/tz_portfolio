@@ -20,9 +20,14 @@
 //no direct access
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\Filesystem\File;
+
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Layout\FileLayout;
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
+jimport('joomla.filesytem.file');
 JLoader::import('article',COM_TZ_PORTFOLIO_PLUS_SITE_HELPERS_PATH);
 
 class TZ_Portfolio_PlusExtraField{
@@ -123,7 +128,7 @@ class TZ_Portfolio_PlusExtraField{
             $fieldXmlPath = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.DIRECTORY_SEPARATOR.'extrafields'
                 .DIRECTORY_SEPARATOR . $fieldFolder . DIRECTORY_SEPARATOR . $fieldFolder . '.xml';
 
-            if (JFile::exists($fieldXmlPath))
+            if (\JFile::exists($fieldXmlPath))
             {
                 $lang           = JFactory::getLanguage();
 
@@ -159,171 +164,23 @@ class TZ_Portfolio_PlusExtraField{
 
         $input_def_path = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.DIRECTORY_SEPARATOR.'extrafields'
             .DIRECTORY_SEPARATOR.$this -> fieldname.DIRECTORY_SEPARATOR.'tmpl'.DIRECTORY_SEPARATOR.'input_default.php';
-        if(JFile::exists($input_def_path)){
+        if(\JFile::exists($input_def_path)){
             ob_start();
             require_once $input_def_path;
             $html   = ob_get_contents();
             ob_end_clean();
         }else{
-            if($this -> multiple_option){
-                $default_type   = 'radio';
-                if($this -> multiple) {
-                    $default_type   = 'checkbox';
-                }
-
-                if(!$this -> head) {
-                    $id_head_text   = $this -> formcontrol.'_'
-                        .($group?$group:$this -> group).'_$i_text';
-
-                    $html       = '<tr>';
-                    $html           .= '<td class="center"><i class="icon-menu" style="cursor: move;"></i></td>';
-                    $html           .= '<td><input type="text" name="'.$this -> formcontrol.'['
-                                        .($group?$group:$this -> group).'][$i][text]" id="'.$id_head_text
-                                        .'" class="input-medium required"'
-                                        .' required="" size="35"/>'.'<label id="'.$id_head_text
-                                        .'-lbl" class="required" for="'.$id_head_text.'" style="display: none;">'
-                                        .JText::_('COM_TZ_PORTFOLIO_PLUS_OPTION_FIELD_VALUE_LABEL').'</label></td>';
-                    $html           .= '<td><input type="text" name="'.$this -> formcontrol.'['
-                                        .($group?$group:$this -> group).'][$i][value]" class="input-mini" size="15"/></td>';
-                    $html           .= '<td class="center">';
-                    if($this -> multiple) {
-                        $html .= '<input type="checkbox" name="' . $this->formcontrol . '['
-                            . ($group ? $group : $this->group) . '][$i][default]" value="1"/>';
-                    }else{
-                        $html .= '<input type="radio" name="' . $this->formcontrol . '['
-                            . ($group ? $group : $this->group) . '][default]" value="$i"/>';
-                    }
-                    $html           .= '</td>';
-                    $html           .= '<td><button type="button" class="btn btn-danger btn-mini tz_remove-option"><i class="icon-minus"></i>';
-                    $html           .= JText::_('COM_TZ_PORTFOLIO_PLUS_REMOVE').'</button></td>';
-                    $html       .= '</tr>';
-
-                    $doc = JFactory::getDocument();
-                    $doc->addScript(TZ_Portfolio_PlusUri::base(true, true) . '/js/jquery-ui.min.js');
-                    $doc -> addStyleDeclaration('#jform_'.$group.' .table{
-                        margin-top: 5px;
-                    }');
-                    $doc -> addScriptDeclaration('
-                    (function($){
-                        $(document).ready(function(){
-                            function tz_extrafields(){
-                                var $i  = '.(($fieldValues && count($fieldValues))?count($fieldValues):0).';
-                                function tzFieldRemove(){
-                                    $("#jform_'.$group.' .tz_remove-option").unbind("click").bind("click",function(e){
-                                        $(this).parents("tr").first().remove();
-                                    });
-                                }
-                                tzFieldRemove();
-                                $("#jform_'.$group.' .tz_add-option").on("click",function(e){
-                                    var html    = "'.jsPlusAddSlashes($html).'";
-                                    $("#jform_'.$group.' .table tbody").first().append(html.replace(/\$i/mg, $i));
-                                    tzFieldRemove();
-                                    $i ++;
-                                });
-                                $("#jform_'.$group.' .table tbody").sortable({
-                                    handle: ".icon-menu",
-                                    cursor: "move",
-                                    items: "tr",
-                                    axis: "y",
-                                    placeholder: "ui-state-highlight",
-                                    forcePlaceholderSize: true,
-                                    forceHelperSize: true,
-                                    distance: 2
-                                    ,start: function(event,ui){
-                                        $.each(ui.helper.find("td"),function(){
-                                            $(this).width($(this).innerWidth());
-                                        });
-                                        $.each(ui.item.find("td"),function(){
-                                            $(this).width($(this).innerWidth());
-                                        });
-                                    },
-                                    stop: function(event,ui){
-                                        ui.item.children().width("");
-                                    }
-                                });
-                            }
-                            tz_extrafields();
-
-                        });
-                    })(jQuery);
-                    ');
-                }
-
-                $html   = '<button type="button" class="btn btn-mini tz_add-option"><i class="icon-plus"></i>';
-                $html   .= JText::_('COM_TZ_PORTFOLIO_PLUS_ADD_AN_OPTION').'</button>';
-                $html   .= '<div class="max-height-300">';
-                $html   .= '<table class="table table-striped table-bordered">';
-                $html   .= '<thead>';
-                $html       .= '<tr>';
-                $html           .= '<th>';
-                $html               .= JText::_('COM_TZ_PORTFOLIO_PLUS_SORT');
-                $html           .= '</th>';
-                $html           .= '<th>';
-                $html               .= JText::_('COM_TZ_PORTFOLIO_PLUS_FIELD_TEXT');
-                $html               .= '<span class="star">&nbsp;*</span>';
-                $html           .= '</th>';
-                $html           .= '<th>';
-                $html               .= JText::_('COM_TZ_PORTFOLIO_PLUS_VALUE');
-                $html           .= '</th>';
-                $html           .= '<th>';
-                $html               .= JText::_('JDEFAULT');
-                $html           .= '</th>';
-                $html           .= '<th>';
-                $html               .= JText::_('JSTATUS');
-                $html           .= '</th>';
-                $html       .= '</tr>';
-                $html   .= '</thead>';
-                $html   .= '<tbody>';
-
-                if($fieldValues && !is_string($fieldValues)){
-                    foreach($fieldValues as $key => $value){
-                        $name_text  = $this -> formcontrol.'['
-                            .($group?$group:$this -> group).']['.$key.'][text]';
-                        $id_text    = JApplicationHelper::stringURLSafe($name_text);
-                        $id_text    = preg_replace('#\W#', '_', $id_text);
-
-                        $name_value = $this -> formcontrol.'['
-                            .($group?$group:$this -> group).']['.$key.'][value]';
-                        $id_value   = JApplicationHelper::stringURLSafe($name_value);
-                        $id_value   = preg_replace('#\W#', '_', $id_value);
-
-                        $html       .= '<tr>';
-                        $html           .= '<td class="center"><i class="icon-menu" style="cursor: move;"></i></td>';
-                        $html           .= '<td><input type="text" id="'.$id_text.'" name="'.$this -> formcontrol.'['
-                                            .($group?$group:$this -> group).']['.$key.'][text]" required=""'
-                                            .' class="input-medium required" size="35" value="'.htmlspecialchars($value -> text).'"/>'
-                                            .'<label id="'.$id_text.'-lbl" class="required" for="'.$id_text.'" style="display: none;">'
-                                            .JText::_('COM_TZ_PORTFOLIO_PLUS_OPTION_FIELD_VALUE_LABEL').'</label></td>';
-                        $html           .= '<td><input type="text" id="'.$id_value.'" name="'.$name_value.'"'
-                                            .' class="input-mini" size="15" value="'.htmlspecialchars($value -> value).'"/></td>';
-
-                        $html           .= '<td class="center">';
-                        if($this -> multiple) {
-                            $html .= '<input type="' . $default_type . '" name="' . $this->formcontrol . '['
-                                . ($group ? $group : $this->group) . '][' . $key . '][default]"'
-                                . ' value="1"' . ((isset($value->default) && $value->default == 1)
-                                    ? 'checked="checked"' : '') . '/>';
-                        }else{
-                            $html .= '<input type="radio" name="' . $this->formcontrol . '['
-                                . ($group ? $group : $this->group) . '][default]"'
-                                . ' value="'.$key.'"' . ((isset($value->default) && $value->default == 1)
-                                    ? 'checked="checked"' : '') . '/>';
-                        }
-                        $html           .= '</td>';
-
-                        $html           .= '<td><button type="button" class="btn btn-danger btn-mini tz_remove-option"><i class="icon-minus"></i>';
-                        $html           .= JText::_('COM_TZ_PORTFOLIO_PLUS_REMOVE').'</button></td>';
-                        $html       .= '</tr>';
-                    }
-                }
-
-                $html   .= '</tbody>';
-                $html   .= '</table>';
-                $html   .= '</div>';
-            }else{
-                $html   = '<input type="text" name="'.$this -> formcontrol.'['.($group?$group:$this -> group).']"'
-                    .' value="'. htmlspecialchars($this -> getDefaultValues()).'"/>';
-            }
+            $html   = JLayoutHelper::render('libraries.fields.extrafield.input_default',
+                array(
+                    'head'              => $this -> head,
+                    'group'             => $group,
+                    'multiple'          => $this -> multiple,
+                    'fieldValues'       => $fieldValues,
+                    'formcontrol'       => $this -> formcontrol,
+                    'defaultValues'     => $this -> getDefaultValues(),
+                    'multiple_option'   => $this -> multiple_option,
+                )
+            );
         }
 
         return $html;
@@ -389,7 +246,8 @@ class TZ_Portfolio_PlusExtraField{
                 {
                     foreach ($options AS &$option)
                     {
-                        if (!isset($option->disabled))
+                        $option -> disabled = '';
+                        if (isset($option->disabled) && $option -> disabled)
                         {
                             $option -> disabled   = 'disabled';
                         }
@@ -757,7 +615,7 @@ class TZ_Portfolio_PlusExtraField{
     {
         $value = null;
 
-        $db     = JFactory::getDbo();
+        $db     = TZ_Portfolio_PlusDatabase::getDbo();
         $query  = $db -> getQuery(true);
         $query -> select('value');
         $query -> from('#__tz_portfolio_plus_field_content_map');
@@ -807,7 +665,7 @@ class TZ_Portfolio_PlusExtraField{
             if(isset($template -> home_path) && $template -> home_path){
                 $_tmpPath    = $template -> home_path. DIRECTORY_SEPARATOR
                     . 'plg_'.$this -> group.'_'. $this -> type. DIRECTORY_SEPARATOR . $file;
-                if(JFile::exists($_tmpPath)){
+                if(\JFile::exists($_tmpPath)){
                     $tmpPath    = $_tmpPath;
                 }
             }
@@ -815,7 +673,7 @@ class TZ_Portfolio_PlusExtraField{
                 $_tmpPath    = $template -> base_path. DIRECTORY_SEPARATOR
                     .'plg_'.$this -> group.'_'.$this -> type. DIRECTORY_SEPARATOR . $file;
 
-                if(JFile::exists($_tmpPath)){
+                if(\JFile::exists($_tmpPath)){
                     $tmpPath    = $_tmpPath;
                 }
             }
@@ -825,12 +683,12 @@ class TZ_Portfolio_PlusExtraField{
                 $_template = JFactory::getApplication()->getTemplate();
                 $_tmpPath    = JPATH_SITE . '/templates/' . $_template . '/html/com_tz_portfolio_plus/plg_'
                     .$this -> group.'_' . $this -> type. DIRECTORY_SEPARATOR.$file;
-                if(JFile::exists($_tmpPath)){
+                if(\JFile::exists($_tmpPath)){
                     $tmpPath    = $_tmpPath;
                 }
             }
 
-            if (JFile::exists($tmpPath))
+            if (\JFile::exists($tmpPath))
             {
                 return $tmpPath;
             }
@@ -840,7 +698,7 @@ class TZ_Portfolio_PlusExtraField{
     protected function loadTmplFile($file = 'output', $class = null){
         $html   = null;
 
-        if(!JFile::exists($file)){
+        if(!\JFile::exists($file)){
             $file   = $this -> getTmplFile($file, $class);
         }
         unset($class);
@@ -852,7 +710,7 @@ class TZ_Portfolio_PlusExtraField{
 
         ob_start();
 
-        if (JFile::exists($file))
+        if (\JFile::exists($file))
         {
             include($file);
         }
@@ -1108,7 +966,7 @@ class TZ_Portfolio_PlusExtraField{
         $_value = $this -> prepareFieldValue($_value);
 
         // Store field value with the article
-        $db         = JFactory::getDbo();
+        $db         = TZ_Portfolio_PlusDatabase::getDbo();
         $query      = $db -> getQuery(true);
         $result     = true;
         $table_name = '#__tz_portfolio_plus_field_content_map';
@@ -1251,7 +1109,7 @@ class TZ_Portfolio_PlusExtraField{
             self::$cache[$storeId] = true;
         }
 
-        $db     = JFactory::getDbo();
+        $db     = TZ_Portfolio_PlusDatabase::getDbo();
 
         if (is_string($search))
         {

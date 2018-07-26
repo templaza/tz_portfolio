@@ -49,9 +49,9 @@ echo JHtml::_(
     )
 );
 ?>
-<div class="btn-group">
+<div class="btn-group control-group">
     <a class="btn btn-primary hasTooltip" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_CHANGE_ARTICLES');
-        ?>" data-toggle="modal" href="#tppModalArticle_<?php echo $id;?>"><i class="icon-copy"></i><?php
+        ?>" data-toggle="modal" href="#tppModalArticle_<?php echo $id;?>"><i class="icon-copy"></i> <?php
         echo JText::_('JSELECT');?></a>
     <a href="javascript:" id="<?php echo $id; ?>_clear" class="btn btn-danger<?php echo $value ? '' : ' disabled';?>" onclick="return tppClearArticles('<?php
     echo $id; ?>')"><span class="icon-remove"></span> <?php echo JText::_('JCLEAR'); ?></a>
@@ -77,11 +77,11 @@ echo JHtml::_(
                     <td class="center">
                         <?php if ($allowEdit) { ?>
                         <div class="btn-group">
-                            <a class="btn btn-small hasTooltip" target="_blank" title="<?php echo JText::_('JACTION_EDIT'); ?>"
+                            <a class="btn btn-secondary btn-small btn-sm hasTooltip" target="_blank" title="<?php echo JText::_('JACTION_EDIT'); ?>"
                                href="index.php?option=com_tz_portfolio_plus&task=article.edit&id=<?php
                                echo $item->id; ?>"><span class="icon-edit"></span></a>
                         <?php } ?>
-                        <a href="javascript:" class="btn btn-small hasTooltip" title="<?php echo JText::_('JTOOLBAR_REMOVE'); ?>"
+                        <a href="javascript:" class="btn btn-danger btn-small btn-sm hasTooltip" title="<?php echo JText::_('JTOOLBAR_REMOVE'); ?>"
                            onclick="tppClearArticle(this);"><i class="icon-remove"></i></a>
                         <?php if ($allowEdit) { ?>
                         </div>
@@ -127,13 +127,13 @@ $doc -> addScriptDeclaration('
                         + "<td>"
                         '.($allowEdit?'
                         + "<div class=\"btn-group\">"
-                        + "<a class=\"btn btn-small hasTooltip\" target=\"_blank\" title=\"'
+                        + "<a class=\"btn btn-secondary btn-small btn-sm hasTooltip\" target=\"_blank\" title=\"'
                             .JText::_('JACTION_EDIT').'\""
                          +"  href=\"index.php?option=com_tz_portfolio_plus'
                             .'&task=article.edit&id="+ ids[i] +"\"><span"
                          +" class=\"icon-edit\"></span></a>"
                         ':'').'
-                        + "<a href=\"javascript:\" class=\"btn btn-small hasTooltip\" title=\"'.JText::_('JTOOLBAR_REMOVE').'\""
+                        + "<a href=\"javascript:\" class=\"btn btn-danger btn-small btn-sm hasTooltip\" title=\"'.JText::_('JTOOLBAR_REMOVE').'\""
                         + "  onclick=\"tppClearArticle(this);\"><i class=\"icon-remove\"></i></a>"
                        '.($allowEdit?'+ "</div>"':'').'
                         +"</td>"

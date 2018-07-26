@@ -23,8 +23,8 @@ defined('_JEXEC') or die;
 use Joomla\Utilities\ArrayHelper;
 
 $doc = JFactory::getDocument();
-$doc->addScript(JUri::root() . '/components/com_tz_portfolio_plus/js/tz_portfolio_plus.min.js');
 $doc->addScript(JUri::root() . '/components/com_tz_portfolio_plus/js/jquery.isotope.min.js');
+$doc->addScript(JUri::root() . '/components/com_tz_portfolio_plus/js/tz_portfolio_plus.min.js');
 $doc->addStyleSheet(JUri::base(true) . '/components/com_tz_portfolio_plus/css/isotope.min.css');
 $doc->addStyleSheet(JUri::base(true) . '/modules/'.$module -> module.'/css/style.css');
 

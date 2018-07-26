@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="3.0" type="tz_portfolio_plus-plugin" group="extrafields" method="upgrade">
+<extension version="3.1" type="tz_portfolio_plus-plugin" group="extrafields" method="upgrade">
     <name>plg_extrafields_dropdownlist</name>
     <author>DuongTVTemPlaza</author>
     <creationDate>October 20th 2015</creationDate>
@@ -7,7 +7,7 @@
     <license>GNU/GPL v2 or later http://www.gnu.org/licenses/gpl-2.0.html</license>
     <authorEmail>support@templaza.com</authorEmail>
     <authorUrl>www.templaza.com/</authorUrl>
-    <version>1.3.0</version>
+    <version>1.2.6</version>
     <description>PLG_EXTRAFIELDS_DROPDOWNLIST_XML_DESCRIPTION</description>
 
     <files>

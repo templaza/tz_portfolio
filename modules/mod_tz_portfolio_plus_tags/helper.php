@@ -75,6 +75,7 @@ class modTzPortfolioTagsHelper
                 $size = ceil($size);
                 $tag->size = $size;
                 $tag->link = TZ_Portfolio_PlusHelperRoute::getTagRoute($tag->tagslug, 0, 'auto');
+                $tag -> link    = JRoute::_($tag -> link);
             }
             return $items;
         }

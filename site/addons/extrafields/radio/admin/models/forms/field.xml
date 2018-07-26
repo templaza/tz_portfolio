@@ -9,6 +9,13 @@
                 <option value="0">JNO</option>
                 <option value="1">JYES</option>
             </field>
+            <field type="list" name="switcher"
+                   label="PLG_EXTRAFIELDS_RADIO_SWITCHER_LABEL"
+                   description="PLG_EXTRAFIELDS_RADIO_SWITCHER_DESC">
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
             <field type="list" name="number_columns"
                    label="PLG_EXTRAFIELDS_RADIO_NUMBER_COLUMNS_LABEL">
                 <option value="">JGLOBAL_USE_GLOBAL</option>

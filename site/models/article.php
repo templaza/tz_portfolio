@@ -72,99 +72,74 @@ class TZ_Portfolio_PlusModelArticle extends JModelItem
         $this->setState('filter.language', JLanguageMultilang::isEnabled());
 	}
 
-    public function download(){
-        $query  = 'SELECT * FROM #__tz_portfolio_plus_xref_content'
-                  .' WHERE contentid='.JFactory::getApplication() -> input -> getInt('id');
-
-        $db     = JFactory::getDbo();
-        $db -> setQuery($query);
-        if(!$db -> query()){
-            $this -> setError($db -> getErrorMsg());
-            return false;
-        }
-        if(!$rows = $db -> loadObject()){
-            $this -> setError($db -> getErrorMsg());
-            return false;
-        }
-
-        $file   = '';
-        $arr    = explode('///',$rows -> attachfiles);
-        if(count($arr)>0){
-            foreach($arr as $item){
-                if(md5($item) == JFactory::getApplication() -> input -> getCmd('attach')){
-                    $file   = $item;
-                }
-            }
-        }
-
-        return $file;
-    }
-
     function getItemRelated($pk=null){
-        // Initialise variables.
-		$pk = (!empty($pk)) ? $pk : (int) $this->getState('article.id');
+        try{
+            // Initialise variables.
+            $pk = (!empty($pk)) ? $pk : (int) $this->getState('article.id');
 
-        if($pk){
-            $_params     = $this -> getState('params');
-            $article    = $this -> getItem($pk);
-            $params     = $article -> params;
+            if($pk){
+                $_params     = $this -> getState('params');
+                $article    = $this -> getItem($pk);
+                $params     = $article -> params;
 
-            $limit      = $article -> params -> get('related_limit',5);
+                $limit      = $article -> params -> get('related_limit',5);
 
-            $orderBy    = null;
+                $orderBy    = null;
 
-            switch($params -> get('related_orderby','rdate')){
-                default:
-                case 'rdate':
-                    $orderBy    = 'c.created DESC';
-                    break;
-                case 'date':
-                    $orderBy    = 'c.created ASC';
-                    break;
-                case 'hits':
-                    $orderBy    = 'c.hits DESC';
-                    break;
-                case 'rhits':
-                    $orderBy    = 'c.hits ASC';
-                    break;
+                switch($params -> get('related_orderby','rdate')){
+                    default:
+                    case 'rdate':
+                        $orderBy    = 'c.created DESC';
+                        break;
+                    case 'date':
+                        $orderBy    = 'c.created ASC';
+                        break;
+                    case 'hits':
+                        $orderBy    = 'c.hits DESC';
+                        break;
+                    case 'rhits':
+                        $orderBy    = 'c.hits ASC';
+                        break;
+                }
+
+                $db     = JFactory::getDbo();
+                $query  = $db -> getQuery(true);
+                $query -> select('c.*, cc.id AS catid,CASE WHEN CHAR_LENGTH(c.alias) THEN CONCAT_WS(":", c.id, c.alias) ELSE c.id END as slug');
+                $query -> select('CASE WHEN CHAR_LENGTH(cc.alias) THEN CONCAT_WS(":", cc.id, cc.alias) ELSE cc.id END as catslug');
+                $query -> from($db -> quoteName('#__tz_portfolio_plus_content').' AS c');
+                $query -> join('INNER', '#__tz_portfolio_plus_content_category_map AS m ON m.contentid = c.id AND m.main = 1');
+                $query -> join('LEFT',$db -> quoteName('#__tz_portfolio_plus_categories').' AS cc ON cc.id = m.catid');
+
+                $query -> where('c.state = 1');
+                $query -> where('NOT c.id='.$pk);
+                $query -> where('cc.id='.$article -> catid);
+
+                if(!$article -> params -> get('show_related_featured', 1)){
+                    $query -> where('c.featured <> 1');
+                }elseif($article -> params -> get('show_related_featured', 1) == 2){
+                    $query -> where('c.featured = 1');
+                }
+
+                // Filter by language
+                if ($this->getState('filter.language'))
+                {
+                    $query->where('c.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
+                }
+
+                if($orderBy) {
+                    $query->order($orderBy);
+                }
+
+                $db -> setQuery($query,0,$limit);
+
+                return $db -> loadObjectList();
             }
-
-            $db     = JFactory::getDbo();
-            $query  = $db -> getQuery(true);
-            $query -> select('c.*, cc.id AS catid,CASE WHEN CHAR_LENGTH(c.alias) THEN CONCAT_WS(":", c.id, c.alias) ELSE c.id END as slug');
-            $query -> select('CASE WHEN CHAR_LENGTH(cc.alias) THEN CONCAT_WS(":", cc.id, cc.alias) ELSE cc.id END as catslug');
-            $query -> from($db -> quoteName('#__tz_portfolio_plus_content').' AS c');
-            $query -> join('INNER', '#__tz_portfolio_plus_content_category_map AS m ON m.contentid = c.id AND m.main = 1');
-            $query -> join('LEFT',$db -> quoteName('#__tz_portfolio_plus_categories').' AS cc ON cc.id = m.catid');
-
-            $query -> where('c.state = 1');
-            $query -> where('NOT c.id='.$pk);
-            $query -> where('cc.id='.$article -> catid);
-
-            if(!$article -> params -> get('show_related_featured', 1)){
-                $query -> where('c.featured <> 1');
-            }elseif($article -> params -> get('show_related_featured', 1) == 2){
-                $query -> where('c.featured = 1');
-            }
-
-            // Filter by language
-            if ($this->getState('filter.language'))
-            {
-                $query->where('c.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
-            }
-
-            if($orderBy) {
-                $query->order($orderBy);
-            }
-
-            $db -> setQuery($query,0,$limit);
-            if(!$db -> query()){
-                $this -> setError($db -> getErrorMsg());
-                return false;
-            }
-
-            return $db -> loadObjectList();
+        }catch (Exception $e){
+            $this -> setError($e -> getMessage());
+            return false;
         }
+
+        return false;
     }
 
 	/**
@@ -178,6 +153,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelItem
 	{
 		// Initialise variables.
 		$pk = (!empty($pk)) ? $pk : (int) $this->getState('article.id');
+
 
 		if ($this->_item === null) {
 			$this->_item = array();
@@ -211,7 +187,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelItem
 				$query->join('LEFT', '#__tz_portfolio_plus_categories AS c on c.id = m.catid');
 
 				// Join on user table.
-				$query->select('u.name AS author, u.params AS author_params, u.email AS author_email');
+				$query->select('u.id AS author_id, u.name AS author, u.params AS author_params, u.email AS author_email');
 				$query->join('LEFT', '#__users AS u on u.id = a.created_by');
 
                 // Filter by language
@@ -268,10 +244,6 @@ class TZ_Portfolio_PlusModelArticle extends JModelItem
 
 				$data = $db->loadObject();
 
-				if ($error = $db->getErrorMsg()) {
-					throw new Exception($error);
-				}
-
 				if (empty($data)) {
 					return JError::raiseError(404, JText::_('COM_TZ_PORTFOLIO_PLUS_ERROR_ARTICLE_NOT_FOUND'));
 				}
@@ -283,8 +255,6 @@ class TZ_Portfolio_PlusModelArticle extends JModelItem
 
                 $params = $this->getState('params');
 
-                include_once JPATH_SITE . '/components/com_tz_portfolio_plus/helpers/category.php';
-
 				// Convert parameter fields to objects.
 				$registry = new JRegistry;
 				$registry->loadString($data->attribs);
@@ -292,7 +262,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelItem
 				$data->params = clone $params;
 
                 /*** Merge category params to menu params ***/
-                $categories = new TZ_Portfolio_PlusCategories();
+                $categories = JCategories::getInstance('TZ_Portfolio_Plus');
                 if($category   = $categories->get($data -> catid)) {
                     $catParams = new JRegistry($category->params);
                     if($inheritCatid = $catParams -> get('inheritFrom')){
@@ -375,7 +345,9 @@ class TZ_Portfolio_PlusModelArticle extends JModelItem
 
         $item   = $this -> _item[$pk];
         $author_registry    = new Registry();
-        $author_registry -> loadString($item -> author_params);
+        if(isset($item -> author_params) && !empty($item -> author_params)) {
+            $author_registry->loadString($item->author_params);
+        }
         $author_info    = new stdClass();
 
         $author_info -> url                                 = $author_registry -> get('tz_portfolio_plus_user_url');
@@ -417,64 +389,14 @@ class TZ_Portfolio_PlusModelArticle extends JModelItem
                         ' WHERE id = '.(int) $pk
                 );
 
-                if (!$db->query()) {
-                        $this->setError($db->getErrorMsg());
-                        return false;
+                try{
+                    return $db -> execute();
+                }catch (Exception $exception){
+                    $this -> setError($exception -> getMessage());
+                    return false;
                 }
             }
 
             return true;
-	}
-
-    function getFindItemId($_cid=null)
-	{
-        $cid    = $this -> getState('article.catid');
-		$app		= JFactory::getApplication();
-		$menus		= $app->getMenu('site');
-        $active     = $menus->getActive();
-        $cid        =   intval($cid);
-        if($_cid){
-            $cid    = intval($_cid);
-        }
-
-        $component	= JComponentHelper::getComponent('com_tz_portfolio_plus');
-		$items		= $menus->getItems('component_id', $component->id);
-
-
-        foreach ($items as $item)
-        {
-
-            if (isset($item->query) && isset($item->query['view'])) {
-                $view = $item->query['view'];
-
-
-                if (isset($item->query['id'])) {
-                    if ($item->query['id'] == $cid) {
-                        return $item -> id;
-                    }
-                } else {
-
-                    $catids = $item->params->get('tz_catid');
-                    if ($view == 'portfolio' && $catids) {
-                        if (is_array($catids)) {
-                            for ($i = 0; $i < count($catids); $i++) {
-                                if ($catids[$i] == 0 || $catids[$i] == $cid) {
-                                    return $item -> id;
-                                }
-                            }
-                        } else {
-                            if ($catids == $cid) {
-                                return $item -> id;
-                            }
-                        }
-                    }
-                    elseif($view == 'category' && $catids){
-                        return $item -> id;
-                    }
-                }
-            }
-        }
-
-		return $active -> id;
 	}
 }

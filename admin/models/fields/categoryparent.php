@@ -19,6 +19,8 @@
 
 defined('JPATH_BASE') or die;
 
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
+
 JFormHelper::loadFieldClass('list');
 
 class JFormFieldCategoryParent extends JFormFieldList
@@ -30,6 +32,17 @@ class JFormFieldCategoryParent extends JFormFieldList
 	 * @since	1.6
 	 */
 	protected $type = 'CategoryParent';
+
+    public function setup(\SimpleXMLElement $element, $value, $group = null)
+    {
+        $setup  = parent::setup($element, $value, $group);
+
+        if($this -> multiple) {
+            JHtml::_('formbehavior.chosen', '#' . $this->id);
+        }
+
+        return $setup;
+    }
 
 	/**
 	 * Method to get the field options.
@@ -58,7 +71,7 @@ class JFormFieldCategoryParent extends JFormFieldList
 			$oldCat = $this->form->getValue($name);
 		}
 
-		$db		= JFactory::getDbo();
+		$db		= TZ_Portfolio_PlusDatabase::getDbo();
 		$query	= $db->getQuery(true);
 
 		$query->select('a.id AS value, a.title AS text, a.level');

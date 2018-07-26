@@ -35,8 +35,10 @@ JLoader::import('com_tz_portfolio_plus.includes.framework',JPATH_ADMINISTRATOR.'
 // Register helper class
 JLoader::register('TZ_Portfolio_PlusHelper', dirname(__FILE__) . '/helpers/tz_portfolio_plus.php');
 
+// Includes my html object
+JHtml::addIncludePath(COM_TZ_PORTFOLIO_PLUS_ADMIN_HELPERS_PATH.'/html');
 
 $controller	= JControllerLegacy::getInstance('TZ_Portfolio_Plus');
 
-$controller->execute(JFactory::getApplication()->input->get('task'));
+$controller->execute($input->get('task'));
 $controller->redirect();

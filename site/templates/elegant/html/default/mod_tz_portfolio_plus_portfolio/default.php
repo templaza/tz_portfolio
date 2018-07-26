@@ -94,11 +94,11 @@ if ($list):
             <div id="tz_options<?php echo $module -> id;?>" class="clearfix">
                 <div class="option-combo">
                     <div id="filter<?php echo $module->id;?>" class="option-set clearfix" data-option-key="filter">
-                        <a href="#show-all" data-option-value="*" class="btn btn-default btn-small selected"><?php echo JText::_('MOD_TZ_PORTFOLIO_PLUS_PORTFOLIO_SHOW_ALL');?></a>
+                        <a href="#show-all" data-option-value="*" class="btn btn-default btn-secondary btn-small selected"><?php echo JText::_('MOD_TZ_PORTFOLIO_PLUS_PORTFOLIO_SHOW_ALL');?></a>
                         <?php if($params->get('tz_filter_type','categories') == 'tags' && $filter_tag):?>
                             <?php foreach($filter_tag as $i => $itag):?>
                                 <a href="#<?php echo $itag -> alias; ?>"
-                                   class="btn btn-default btn-small"
+                                   class="btn btn-default btn-secondary btn-small"
                                    data-option-value=".<?php echo $itag -> alias; ?>">
                                     <?php echo $itag -> title;?>
                                 </a>
@@ -107,7 +107,7 @@ if ($list):
                         <?php if($params->get('tz_filter_type','categories') == 'categories' && $filter_cat): ?>
                             <?php foreach($filter_cat as $i => $icat):?>
                                 <a href="#<?php echo $icat -> alias; ?>"
-                                   class="btn btn-default btn-small"
+                                   class="btn btn-default btn-secondary btn-small"
                                    data-option-value=".<?php echo $icat -> alias; ?>">
                                     <?php  echo $icat -> title;?>
                                 </a>

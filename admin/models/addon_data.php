@@ -111,23 +111,6 @@ class TZ_Portfolio_PlusModelAddon_Data extends JModelAdmin{
     protected function prepareTable($table){
         $table -> set('_trackAssets', false);
 
-//        if(property_exists($table, 'checked_out')) {
-//            $table -> checked_out   = 0;
-//            unset($table->checked_out);
-//        }
-//        if(property_exists($table, 'checked_out_time')) {
-//            $table -> checked_out_time   = '0000-00-00 00:00:00';
-//            unset($table->checked_out_time);
-//        }
-//        if(property_exists($table, 'publish_up')) {
-//            $table -> publish_up   = '0000-00-00 00:00:00';
-//            unset($table -> publish_up);
-//        }
-//        if(property_exists($table, 'publish_down')) {
-//            $table -> publish_down   = '0000-00-00 00:00:00';
-//            unset($table -> publish_down);
-//        }
-
         if(!isset($table -> extension_id)
             || (isset($table -> extension_id) && !$table -> extension_id)){
             $input  = JFactory::getApplication() -> input;
@@ -186,5 +169,11 @@ class TZ_Portfolio_PlusModelAddon_Data extends JModelAdmin{
         }
 
         return parent::canEditState($record);
+    }
+
+    public function save($data)
+    {
+        $data['tags']   = null;
+        return parent::save($data);
     }
 }

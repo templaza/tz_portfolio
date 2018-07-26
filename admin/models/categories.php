@@ -20,6 +20,8 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die;
 
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
+
 jimport('joomla.application.component.modellist');
 
 /**
@@ -57,6 +59,16 @@ class TZ_Portfolio_PlusModelCategories extends JModelList
 		}
 
 		parent::__construct($config);
+
+        // Set the model dbo
+        if (array_key_exists('dbo', $config))
+        {
+            $this->_db = $config['dbo'];
+        }
+        else
+        {
+            $this->_db = TZ_Portfolio_PlusDatabase::getDbo();
+        }
 	}
 
 	/**
@@ -151,13 +163,13 @@ class TZ_Portfolio_PlusModelCategories extends JModelList
         $catid          = $this -> getState('filter.group');
         $groups    = array();
 
-        $dbo            = JFactory::getDbo();
+        $dbo            = $this -> getDbo();
 
         $query          = 'SELECT * FROM #__tz_portfolio_plus_fieldgroups';
         $dbo -> setQuery($query);
 
-        if(!$dbo -> query()){
-            var_dump($dbo -> getErrorMsg());
+        if(!$dbo -> execute()){
+            $this -> setError($dbo -> getError());
             return false;
         }
 
@@ -284,9 +296,30 @@ class TZ_Portfolio_PlusModelCategories extends JModelList
 		}
 
         // Group by
-        $query -> group('a.id');
-
-		//echo nl2br(str_replace('#__','jos_',$query));
+        $query->group('a.id,
+				a.title,
+				a.alias,
+				a.note,
+				a.published,
+				a.access,
+				a.checked_out,
+				a.checked_out_time,
+				a.created_user_id,
+				a.path,
+				a.parent_id,
+				a.level,
+				a.lft,
+				a.rgt,
+				a.params,
+				a.language,
+				l.title,
+				l.image,
+				uc.name,
+				ag.title,
+				ua.name,
+				fg.id,
+				fg.name'
+        );
 		return $query;
 	}
 
@@ -313,59 +346,33 @@ class TZ_Portfolio_PlusModelCategories extends JModelList
 	 */
 	public function getItems()
 	{
-		// Get a storage key.
-		$store = $this->getStoreId();
+        $items = parent::getItems();
 
-		// Try to load the data from internal storage.
-		if (isset($this->cache[$store]))
-		{
-			return $this->cache[$store];
-		}
+        if($items){
+            // Check categories with fields group
+            foreach($items as &$item){
+                $item -> inheritFrom	= null;
 
-		// Load the list items.
-		$query = $this->_getListQuery();
-		$items = $this->_getList($query, $this->getStart(), $this->getState('list.limit'));
+                $registry	= new JRegistry();
 
-		// Check for a database error.
-		if ($this->_db->getErrorNum())
-		{
-			$this->setError($this->_db->getErrorMsg());
-			return false;
-		}
+                if($item -> params && is_string($item -> params)) {
+                    $registry->loadString($item->params);
+                }
 
-        // Check categories with fields group
-        foreach($items as &$item){
-			$item -> inheritFrom	= null;
-
-			$registry	= new JRegistry();
-			$registry -> loadString($item -> params);
-			if($catid = (int) $registry -> get('inheritFrom')){
-				$db	= $this -> getDbo();
-				$query	= $db -> getQuery(true)
-					-> select('title')
-					-> from($db -> quoteName('#__tz_portfolio_plus_categories'))
-					-> where('extension='.$db -> quote('com_tz_portfolio_plus'))
-					-> where('id = '.$catid);
-				$db -> setQuery($query);
-				if($catTitle = $db -> loadResult()){
-					$item -> inheritFrom	= $catTitle;
-				}
-			}
-
-//            $groupName  = array();
-//
-//            if($groups = $this -> getGroupQuery($item -> id)){
-//                foreach($groups as $group){
-//                    $groupName[]    = $group -> name;
-//                }
-//            }
-//            $groupName  = implode(', ',$groupName);
-//            $item -> groupname = $groupName;
+                if($catid = (int) $registry -> get('inheritFrom')){
+                    $db	= $this -> getDbo();
+                    $query	= $db -> getQuery(true)
+                        -> select('title')
+                        -> from($db -> quoteName('#__tz_portfolio_plus_categories'))
+                        -> where('extension='.$db -> quote('com_tz_portfolio_plus'))
+                        -> where('id = '.$catid);
+                    $db -> setQuery($query);
+                    if($catTitle = $db -> loadResult()){
+                        $item -> inheritFrom	= $catTitle;
+                    }
+                }
+            }
         }
-
-		// Add the items to the internal cache.
-        $this->cache[$store] = $items;
-
-		return $this->cache[$store];
+        return $items;
 	}
 }

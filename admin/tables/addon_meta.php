@@ -32,7 +32,6 @@ class TZ_Portfolio_PlusTableAddon_Meta extends JTable
     }
     public function check()
     {
-        var_dump('32gdfgfd'); die();
         if(empty($this -> meta_key)){
             $this -> setError(JText::_('Invaild Meta Key data. Please provide data for it'));
                 return false;

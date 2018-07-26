@@ -17,17 +17,17 @@
     position: relative;
     width: auto;
     text-decoration: none;
-    padding-right: 4px;
-    margin-right: 0;
+    /*padding-right: 4px;*/
+    margin-right: 4px;
 }
 .rating > .voted span{
     display: inline-block;
     margin: 0;
     overflow: hidden;
     position: absolute;
-    right: 2px;
+    right: 0;
     top: 0;
-    padding-right: 2px;
+    /*padding-right: 2px;*/
 }
 
 .rating > .rating-item:hover span:before,
@@ -39,4 +39,7 @@
     color: #c66969;
     top: 0;
     left: 0;
+}
+.content_rating .loading{
+    display: inline-block;
 }

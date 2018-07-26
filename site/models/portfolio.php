@@ -91,12 +91,15 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
         $this -> setState('list.limit',$limit);
         $this -> setState('catid',$params -> get('catid'));
         $this -> setState('filter.char',$app -> input -> getString('char',null));
-        $this -> setState('filter.tagId',null);
-        $this -> setState('filter.userId',null);
+        $this -> setState('filter.tagId', $app -> input -> getInt('tid'));
+        $this -> setState('filter.userId', $app -> input -> getInt('uid'));
         $this -> setState('filter.featured',null);
         $this -> setState('filter.year',null);
         $this -> setState('filter.month',null);
         $this -> setState('filter.category_id',$app -> input -> getInt('id'));
+
+        $this -> setState('filter.searchword', $app->input->getString('searchword'));
+        $this -> setState('filter.fields', $app -> input -> get('fields', array(), 'array'));
 
         $orderby    = '';
         $secondary  = TZ_Portfolio_PlusHelperQuery::orderbySecondary($params -> get('orderby_sec', 'rdate'));
@@ -110,20 +113,19 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
 
     protected function getListQuery(){
         $params = $this -> getState('params');
-
-        $user		= JFactory::getUser();
-
+        $user	= JFactory::getUser();
         $db     = JFactory::getDbo();
         $query  = $db -> getQuery(true);
 
         $query -> select(
             $this->getState(
                 'list.select',
-                'c.*,t.title AS tagName, m.catid AS catid ,cc.title AS category_title, u.name AS author'.
+                'c.*, m.catid AS catid ,cc.title AS category_title'.
                 ',CASE WHEN CHAR_LENGTH(c.alias) THEN CONCAT_WS(":", c.id, c.alias) ELSE c.id END as slug'.
                 ',CASE WHEN CHAR_LENGTH(cc.alias) THEN CONCAT_WS(":", cc.id, cc.alias) ELSE cc.id END as catslug'.
-                ',CASE WHEN CHAR_LENGTH(c.fulltext) THEN c.fulltext ELSE null END as readmore'.
-                ',parent.title as parent_title, parent.id as parent_id, parent.path as parent_route, parent.alias as parent_alias'
+                ',CASE WHEN CHAR_LENGTH(c.fulltext) THEN c.fulltext ELSE null END as readmore'
+//                .
+//                ',parent.title as parent_title, parent.id as parent_id, parent.path as parent_route, parent.alias as parent_alias'
             )
         );
 
@@ -132,10 +134,25 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
         $query -> join('INNER',$db -> quoteName('#__tz_portfolio_plus_content_category_map').' AS m ON m.contentid=c.id');
         $query -> join('LEFT',$db -> quoteName('#__tz_portfolio_plus_categories').' AS cc ON cc.id=m.catid');
         $query -> join('LEFT',$db -> quoteName('#__tz_portfolio_plus_tag_content_map').' AS x ON x.contentid=c.id');
+
+        $query -> select('t.title AS tagName');
         $query -> join('LEFT',$db -> quoteName('#__tz_portfolio_plus_tags').' AS t ON t.id=x.tagsid');
+
+        // Filter by tag
+        if($tagId = $this -> getState('filter.tagId')) {
+            $query->where('t.id =' .$tagId);
+        }
+
+        $query -> select(' u.name AS author');
         $query -> join('LEFT',$db -> quoteName('#__users').' AS u ON u.id=c.created_by');
 
+        // Filter by user id
+        if($userId = $this -> getState('filter.userId')) {
+            $query->where('u.id =' .$userId);
+        }
+
         // Join over the categories to get parent category titles
+        $query -> select('parent.title as parent_title, parent.id as parent_id, parent.path as parent_route, parent.alias as parent_alias');
         $query->join('LEFT', '#__tz_portfolio_plus_categories as parent ON parent.id = cc.parent_id');
 
         // Filter by published state
@@ -197,10 +214,39 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
             }
         }
 
-        if($char   = $this -> getState('filter.char')){
+        if($char = $this -> getState('filter.char')){
             $query -> where('c.title LIKE '.$db -> quote(urldecode(mb_strtolower($char)).'%'));
             $query -> where('ASCII(SUBSTR(LOWER(c.title),1,1)) = ASCII('.$db -> quote(mb_strtolower($char)).')');
         }
+
+        // Filter by word from filter module
+        if ($searchWord = $this->getState('filter.searchword')) {
+            $searchWord = $db->quote('%' . $db->escape($searchWord, true) . '%', true);
+            $query->where('(c.title LIKE ' . $searchWord . ' OR c.introtext LIKE ' . $searchWord.')');
+        }
+
+        // Filter by extrafields from filter module
+        if ($fields = $this->getState('filter.fields')) {
+            if (count($fields)) {
+                $fields = array_filter($fields);
+                $fieldIds = array_keys($fields);
+                $fieldIds = array_unique($fieldIds);
+
+                JLoader::import('extrafields', JPATH_SITE . '/components/com_tz_portfolio_plus/helpers');
+                if ($extraFields = TZ_Portfolio_PlusFrontHelperExtraFields::getExtraFieldObjectById($fieldIds)) {
+                    $where = array();
+                    if (count($extraFields)) {
+                        foreach ($extraFields as $field) {
+                            $field->onSearch($query, $where, $fields[$field->id]);
+                        }
+                    }
+                    if (count($where)) {
+                        $query->where('(' . implode(' AND ', $where) . ')');
+                    }
+                }
+            }
+        }
+
 
         $query->order($this->getState('list.ordering', 'c.created') . ' ' . $this->getState('list.direction', null));
 
@@ -217,6 +263,7 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
     public function getItems(){
         if($items = parent::getItems()){
 
+            $app            = JFactory::getApplication();
             $user	        = TZ_Portfolio_PlusUser::getUser();
             $userId	        = $user->get('id');
             $guest	        = $user->get('guest');
@@ -247,14 +294,12 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
                     );
                 }
 
-                $dispatcher	= JDispatcher::getInstance();
-
                 JPluginHelper::importPlugin('content');
                 TZ_Portfolio_PlusPluginHelper::importPlugin('mediatype');
                 TZ_Portfolio_PlusPluginHelper::importPlugin('content');
 
-                $dispatcher -> trigger('onAlwaysLoadDocument', array('com_tz_portfolio_plus.portfolio'));
-                $dispatcher -> trigger('onLoadData', array('com_tz_portfolio_plus.portfolio', $items, $params));
+                $app -> triggerEvent('onAlwaysLoadDocument', array('com_tz_portfolio_plus.portfolio'));
+                $app -> triggerEvent('onLoadData', array('com_tz_portfolio_plus.portfolio', $items, $params));
 
                 // Get the global params
                 $globalParams = JComponentHelper::getParams('com_tz_portfolio_plus', true);
@@ -322,9 +367,6 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
 
                     /*** Start New Source ***/
                     $tmpl   = null;
-                    if($item->params -> get('tz_use_lightbox',0)){
-                        $tmpl   = '&tmpl=component';
-                    }
 
                     $config = JFactory::getConfig();
                     $ssl    = 2;
@@ -337,8 +379,8 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
                     }
 
                     // Create Article Link
-                    $item ->link        = JRoute::_(TZ_Portfolio_PlusHelperRoute::getArticleRoute($item -> slug, $item -> catid).$tmpl);
-                    $item -> fullLink   = JRoute::_(TZ_Portfolio_PlusHelperRoute::getArticleRoute($item -> slug, $item -> catid), true, $ssl);
+                    $item ->link        = JRoute::_(TZ_Portfolio_PlusHelperRoute::getArticleRoute($item -> slug, $item -> catid, $item->language).$tmpl);
+                    $item -> fullLink   = JRoute::_(TZ_Portfolio_PlusHelperRoute::getArticleRoute($item -> slug, $item -> catid, $item->language), true, $ssl);
 
                     // Create author Link
                     $item -> author_link    = JRoute::_(TZ_Portfolio_PlusHelperRoute::getUserRoute($item -> created_by,
@@ -372,7 +414,7 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
                     $item -> mediatypes = array();
 
                     // Add feed links
-                    if (JFactory::getApplication() -> input -> getCmd('format',null) != 'feed') {
+                    if ($app -> input -> getCmd('format',null) != 'feed') {
 
                         // Old plugins: Ensure that text property is available
                         if (!isset($item->text))
@@ -384,43 +426,74 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
                         // Process the content plugins.
                         //
 
-                        $dispatcher->trigger('onContentPrepare', array ('com_tz_portfolio_plus.portfolio', &$item, &$item -> params, $this -> getState('list.start')));
+                        $app -> triggerEvent('onContentPrepare', array (
+                            'com_tz_portfolio_plus.portfolio',
+                            &$item,
+                            &$item -> params,
+                            $this -> getState('list.start')));
                         $item->introtext = $item->text;
 
                         $item->event = new stdClass();
-                        $results = $dispatcher->trigger('onContentAfterTitle', array('com_tz_portfolio_plus.portfolio', &$item, &$item -> params, $this -> getState('list.start')));
+                        $results = $app -> triggerEvent('onContentAfterTitle', array(
+                            'com_tz_portfolio_plus.portfolio',
+                            &$item,
+                            &$item -> params,
+                            $this -> getState('list.start')));
                         $item->event->afterDisplayTitle = trim(implode("\n", $results));
 
-                        $results = $dispatcher->trigger('onContentBeforeDisplay', array('com_tz_portfolio_plus.portfolio', &$item, &$item -> params, $this -> getState('list.start')));
+                        $results = $app -> triggerEvent('onContentBeforeDisplay', array(
+                            'com_tz_portfolio_plus.portfolio',
+                            &$item,
+                            &$item -> params,
+                            $this -> getState('list.start')));
                         $item->event->beforeDisplayContent = trim(implode("\n", $results));
 
-                        $results = $dispatcher->trigger('onContentAfterDisplay', array('com_tz_portfolio_plus.portfolio', &$item, &$item -> params, $this -> getState('list.start')));
+                        $results = $app -> triggerEvent('onContentAfterDisplay', array(
+                            'com_tz_portfolio_plus.portfolio',
+                            &$item,
+                            &$item -> params,
+                            $this -> getState('list.start')));
                         $item->event->afterDisplayContent = trim(implode("\n", $results));
 
                         // Process the tz portfolio's content plugins.
-                        $results    = $dispatcher -> trigger('onContentDisplayVote',array('com_tz_portfolio_plus.portfolio',
-                            &$item, &$item -> params, $this -> getState('list.start')));
+                        $results    = $app -> triggerEvent('onContentDisplayVote',array(
+                            'com_tz_portfolio_plus.portfolio',
+                            &$item,
+                            &$item -> params,
+                            $this -> getState('list.start')));
                         $item -> event -> contentDisplayVote   = trim(implode("\n", $results));
 
-                        $results    = $dispatcher -> trigger('onBeforeDisplayAdditionInfo',array('com_tz_portfolio_plus.portfolio',
-                            &$item, &$item -> params, $this -> getState('list.start')));
+                        $results    = $app -> triggerEvent('onBeforeDisplayAdditionInfo',array(
+                            'com_tz_portfolio_plus.portfolio',
+                            &$item,
+                            &$item -> params,
+                            $this -> getState('list.start')));
                         $item -> event -> beforeDisplayAdditionInfo   = trim(implode("\n", $results));
 
-                        $results    = $dispatcher -> trigger('onAfterDisplayAdditionInfo',array('com_tz_portfolio_plus.portfolio',
-                            &$item, &$item -> params, $this -> getState('list.start')));
+                        $results    = $app -> triggerEvent('onAfterDisplayAdditionInfo',array(
+                            'com_tz_portfolio_plus.portfolio',
+                            &$item,
+                            &$item -> params,
+                            $this -> getState('list.start')));
                         $item -> event -> afterDisplayAdditionInfo   = trim(implode("\n", $results));
 
-                        $results = $dispatcher->trigger('onContentDisplayListView', array('com_tz_portfolio_plus.portfolio',
-                            &$item, &$item -> params, $this->getState('list.start')));
+                        $results = $app -> triggerEvent('onContentDisplayListView', array(
+                            'com_tz_portfolio_plus.portfolio',
+                            &$item,
+                            &$item -> params,
+                            $this->getState('list.start')));
                             $item->event->contentDisplayListView = trim(implode("\n", $results));
 
                         // Process the tz portfolio's mediatype plugins.
-                        $results    = $dispatcher -> trigger('onContentDisplayMediaType',array('com_tz_portfolio_plus.portfolio',
-                            &$item, &$item -> params, $this -> getState('list.start')));
+                        $results    = $app -> triggerEvent('onContentDisplayMediaType',array(
+                            'com_tz_portfolio_plus.portfolio',
+                            &$item,
+                            &$item -> params,
+                            $this -> getState('list.start')));
                         if($item){
                             $item -> event -> onContentDisplayMediaType    = trim(implode("\n", $results));
 
-                            if($results    = $dispatcher -> trigger('onAddMediaType')){
+                            if($results    = $app -> triggerEvent('onAddMediaType')){
                                 $mediatypes = array();
                                 foreach($results as $result){
                                     if(isset($result -> special) && $result -> special) {
@@ -444,7 +517,6 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
                     $item -> extrafields    = $extraFields;
 
                 }
-
                 return $items;
             }
         }
@@ -464,6 +536,8 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
         $layout     = $input -> getString('layout');
         $char       = $input -> getString('char');
         $catid      = $input -> getInt('id');
+        $uid        = $input -> getInt('uid');
+        $tagid      = $input -> getInt('tid');
 
         $tags       = stripslashes($input -> getString('tags'));
         $tags       = json_decode($tags);
@@ -495,6 +569,8 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
         $this -> setState('params',$params);
         $this -> setState('filter.char',$char);
         $this -> setState('filter.category_id',$catid);
+        $this -> setState('filter.userId',$uid);
+        $this -> setState('filter.tagId',$tagid);
 
         $orderby    = '';
         $secondary  = TZ_Portfolio_PlusHelperQuery::orderbySecondary($params -> get('orderby_sec', 'rdate'));
@@ -504,6 +580,11 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
 
         $this -> setState('list.ordering', $orderby);
         $this -> setState('list.direction', null);
+
+//        if($page == 2) {
+//            var_dump($this->getTotal());
+//            die();
+//        }
 
         if($offset >= $this -> getTotal()){
             return false;
@@ -522,7 +603,7 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
     }
 
     public function getCategoriesByArticle(){
-        if($articles   = $this -> getItems()){
+        if($articles   = $this -> cache[$this->getStoreId()]){
             $contentId  = $this -> __getArticleByKey($articles, 'id');
 
             $params     = $this -> getState('params');
@@ -591,7 +672,7 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
     }
 
     public function getTagsByArticle($filterAlias = null){
-        if($articles   = $this -> getItems()){
+        if($articles   = $this -> cache[$this->getStoreId()]){
             $contentId  = $this -> __getArticleByKey($articles, 'id');
             $tags   = TZ_Portfolio_PlusFrontHelperTags::getTagsFilterByArticleId($contentId, $filterAlias);
             return $tags;
@@ -604,75 +685,47 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
         return TZ_Portfolio_PlusFrontHelperTags::getTagsByCategoryId($params -> get('catid'));
     }
 
-    function getAvailableLetter(){
+    public function getAvailableLetter(){
         $params = $this -> getState('params');
-        if($params -> get('use_filter_first_letter',1)){
+        if($params -> get('use_filter_first_letter',0)){
             if($letters = $params -> get('tz_letters','a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z')){
-                $db = JFactory::getDbo();
                 $letters = explode(',',$letters);
                 $arr    = null;
-                if($catids = $params -> get('catid')){
-                    if(count($catids) > 1){
-                        if(empty($catids[0])){
-                            array_shift($catids);
-                        }
-                        $catids = implode(',',$catids);
-                    }
-                    else{
-                        if(!empty($catids[0])){
-                            $catids = $catids[0];
-                        }
-                        else
-                            $catids = null;
-                    }
-                }
 
-                $where  = null;
-                if($catids){
-                    $where  = ' AND cc.id IN('.$catids.')';
+                $filters    = array();
+                if($catids = $params -> get('catid')){
+                    $filters['catid']   = $catids;
                 }
 
                 if($featured = $this -> getState('filter.featured')){
-                    if(is_array($featured)){
-                        $featured   = implode(',',$featured);
-                    }
-                    $where  .= ' AND c.featured IN('.$featured.')';
+                    $filters['featured']   = $featured;
                 }
 
                 if($tagId = $this -> getState('filter.tagId')){
-                    $where  .= ' AND t.id='.$tagId;
+                    $filters['tagId']   = $tagId;
                 }
 
                 if($userId = $this -> getState('filter.userId')){
-                    $where  .= ' AND c.created_by='.$userId;
+                    $filters['userId']   = $userId;
                 }
 
                 if($year = $this -> getState('filter.year')){
-                    $where  .= ' AND YEAR(c.created) = '.$year;
+                    $filters['year']   = $year;
                 }
 
                 if($month = $this -> getState('filter.month')){
-                    $where  .= ' AND MONTH(c.created) = '.$month;
+                    $filters['month']   = $month;
                 }
+
+                $lettersArt = TZ_Portfolio_PlusContentHelper::getLetters($filters);
 
                 foreach($letters as $i => &$letter){
                     $letter = trim($letter);
-                    $query  = 'SELECT c.*'
-                          .' FROM #__tz_portfolio_plus_content AS c'
-                          .' LEFT JOIN #__tz_portfolio_plus_content_category_map AS m ON m.contentid = c.id'
-                          .' LEFT JOIN #__tz_portfolio_plus_categories AS cc ON cc.id=m.catid'
-                          .' LEFT JOIN #__tz_portfolio_plus_tag_content_map AS x ON x.contentid=c.id'
-                          .' LEFT JOIN #__tz_portfolio_plus_tags AS t ON t.id=x.tagsid'
-                          .' LEFT JOIN #__users AS u ON c.created_by=u.id'
-                          .' WHERE c.state=1'
-                              .$where
-                              .' AND ASCII(SUBSTR(LOWER(c.title),1,1)) = ASCII("'.mb_strtolower($letter).'")'
-                          .' GROUP BY c.id';
-                    $db -> setQuery($query);
-                    $count  = $db -> loadResult();
+                    $letterKey  = ord($letter);
+
                     $arr[$i]    = false;
-                    if($count){
-                        $arr[$i]  = true;
+                    if(in_array($letterKey, $lettersArt)){
+                        $arr[$i]    = true;
                     }
                 }
 

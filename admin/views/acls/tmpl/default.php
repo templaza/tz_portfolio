@@ -25,14 +25,15 @@ defined('_JEXEC') or die;
 $user		= JFactory::getUser();
 ?>
 <form name="adminForm" id="adminForm" method="post" action="index.php?option=com_tz_portfolio_plus&view=acls">
+
+<?php echo JHtml::_('tzbootstrap.addrow');?>
     <?php if(!empty($this -> sidebar)){?>
-    <div id="j-sidebar-container" class="span2">
-        <?php echo $this -> sidebar; ?>
-    </div>
-    <div id="j-main-container" class="span10">
-    <?php }else{?>
-    <div id="j-main-container">
-    <?php }?>
+        <div id="j-sidebar-container" class="span2 col-md-2">
+            <?php echo $this -> sidebar; ?>
+        </div>
+    <?php } ?>
+
+    <?php echo JHtml::_('tzbootstrap.startcontainer', '10', !empty($this -> sidebar));?>
 
         <div class="tpContainer">
             <table class="table table-striped" id="groups">
@@ -67,7 +68,8 @@ $user		= JFactory::getUser();
 
             </table>
         </div>
-    </div>
+    <?php echo JHtml::_('tzbootstrap.endcontainer');?>
+<?php echo JHtml::_('tzbootstrap.endrow');?>
 
     <input type="hidden" value="" name="task">
     <input type="hidden" value="0" name="boxchecked">

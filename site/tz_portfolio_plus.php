@@ -40,6 +40,7 @@ JLoader::import('categories', COM_TZ_PORTFOLIO_PLUS_SITE_HELPERS_PATH);
 JLoader::import('tags', COM_TZ_PORTFOLIO_PLUS_SITE_HELPERS_PATH);
 
 JHtml::addIncludePath(COM_TZ_PORTFOLIO_PLUS_SITE_HELPERS_PATH.'/html');
+JLoader::register('ContentHelperRoute', JPATH_SITE.'/components/com_content/helpers/route.php');
 
 $controller = JControllerLegacy::getInstance('TZ_Portfolio_Plus');
 $controller->execute(JFactory::getApplication()->input->get('task'));

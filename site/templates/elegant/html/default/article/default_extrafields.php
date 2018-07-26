@@ -24,7 +24,7 @@ if($item = $this -> item):
     if(isset($item -> extrafields) && !empty($item -> extrafields)):
 ?>
 <div class="tpArticleExtraField">
-    <ul class="list-striped tpExtraFields">
+    <ul class="list-striped list-unstyled tpExtraFields">
     <?php foreach($item -> extrafields as $field):?>
         <li class="tp_extrafield-item">
             <?php if($field -> hasTitle()):?>

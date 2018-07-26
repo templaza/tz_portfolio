@@ -46,38 +46,21 @@ JHtmlBootstrap::startTabSet();
       action="index.php?option=com_tz_portfolio_plus&view=template_style&layout=edit&id=<?php echo $this -> item -> id?>">
     <div class="container-fluid" id="plazart_layout_builder">
         <div class="form-horizontal">
-            <div class="row-fluid">
-                <div class="span8 form-horizontal">
+            <?php echo JHtml::_('tzbootstrap.addrow');?>
+                <div class="span8 col-md-8 form-horizontal">
                     <fieldset class="adminForm">
                         <legend><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_DETAILS');?></legend>
-                        <div class="control-group">
-                            <div class="control-label"><?php echo $this -> form -> getLabel('title');?></div>
-                            <div class="controls"><?php echo $this -> form -> getInput('title');?></div>
+
+                        <?php echo JHtml::_('tzbootstrap.addrow');?>
+                        <div class="span6 col-md-6">
+                            <?php echo $this -> form -> renderField('title'); ?>
+                            <?php echo $this -> form -> renderField('home'); ?>
                         </div>
-                        <div class="control-group">
-                            <div class="control-label">
-                                <?php echo $this->form->getLabel('id'); ?>
-                            </div>
-                            <div class="controls">
-                                <?php echo $this->form->getInput('id'); ?>
-                            </div>
+                        <div class="span6 col-md-6">
+                            <?php echo $this -> form -> renderField('template'); ?>
+                            <?php echo $this -> form -> renderField('id'); ?>
                         </div>
-                        <div class="control-group">
-                            <div class="control-label">
-                                <?php echo $this->form->getLabel('home'); ?>
-                            </div>
-                            <div class="controls">
-                                <?php echo $this->form->getInput('home'); ?>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <div class="control-label">
-                                <?php echo $this->form->getLabel('template'); ?>
-                            </div>
-                            <div class="controls">
-                                <?php echo $this->form->getInput('template'); ?>
-                            </div>
-                        </div>
+                        <?php echo JHtml::_('tzbootstrap.endrow');?>
 
                         <?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'layout')); ?>
 
@@ -132,7 +115,7 @@ JHtmlBootstrap::startTabSet();
 
                     </fieldset>
                 </div>
-                <div class="span4">
+                <div class="span4 col-md-4">
                     <?php echo JHtml::_('bootstrap.startAccordion', 'menuOptions', array('active' => 'collapse0'));?>
                     <?php  $fieldSets = $this->form->getFieldsets('params'); ?>
                     <?php $i = 0;?>
@@ -156,7 +139,7 @@ JHtmlBootstrap::startTabSet();
                     <?php endforeach; ?>
                     <?php echo JHtml::_('bootstrap.endAccordion');?>
                 </div>
-            </div>
+            <?php echo JHtml::_('tzbootstrap.endrow');?>
 
         </div>
     </div>

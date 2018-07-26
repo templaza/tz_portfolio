@@ -20,6 +20,8 @@
 //no direct access
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Editor\Editor;
+
 class TZ_Portfolio_PlusExtraFieldTextArea extends TZ_Portfolio_PlusExtraField
 {
     public function getInput($fieldValue = null, $group = null)
@@ -64,6 +66,7 @@ class TZ_Portfolio_PlusExtraFieldTextArea extends TZ_Portfolio_PlusExtraField
     protected function getEditor()
     {
         $app    = JFactory::getApplication();
+        $config = \JFactory::getConfig();
         $editor = '';
         if ($app->isAdmin())
         {
@@ -72,7 +75,8 @@ class TZ_Portfolio_PlusExtraFieldTextArea extends TZ_Portfolio_PlusExtraField
                 $editor = $this->params->get('backend_editor', '');
                 if($editor == '')
                 {
-                    $editor = $app->get('editor', 'tinymce');
+//                    $editor = $app->get('editor', 'tinymce');
+                    $editor = $config -> get('editor');
                 }
             }
         }
@@ -83,7 +87,8 @@ class TZ_Portfolio_PlusExtraFieldTextArea extends TZ_Portfolio_PlusExtraField
                 $editor = $this->params->get('frontend_editor', '');
                 if($editor == '')
                 {
-                    $editor = $app->get('editor', 'tinymce');
+//                    $editor = $app->get('editor', 'tinymce');
+                    $editor = $config -> get('editor');
                 }
 
                 if ($editor && $editor != 'none')
@@ -114,9 +119,13 @@ class TZ_Portfolio_PlusExtraFieldTextArea extends TZ_Portfolio_PlusExtraField
             $selectedEditor = 'none';
         }
 
-        $editor = JFactory::getEditor($selectedEditor);
-        $html .= $editor->display($this->getName(), htmlspecialchars($value, ENT_COMPAT, 'UTF-8'), $this->params->get('width', '90%'),
-            $this->params->get('height', 200), $this->params->get('cols', 50), $this->params->get('rows', 5), $buttons, $this->getId());
+        $editor = Editor::getInstance($selectedEditor);
+
+        $html = $editor->display($this->getName(), htmlspecialchars($value, ENT_COMPAT, 'UTF-8')
+            , $this->params->get('width', '90%'), $this->params->get('height', 200)
+            , $this->params->get('cols', 50), $this->params->get('rows', 5)
+            , $buttons, $this->getId());
+
         return $html;
     }
 

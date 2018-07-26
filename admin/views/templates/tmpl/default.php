@@ -41,14 +41,14 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 <form action="index.php?option=com_tz_portfolio_plus&view=templates" method="post" name="adminForm"
       class="tz_portfolio_plus-templates"
       id="adminForm">
-    <?php if(!empty($this -> sidebar) AND COM_TZ_PORTFOLIO_PLUS_JVERSION_COMPARE):?>
-    <div id="j-sidebar-container" class="span2">
-        <?php echo $this -> sidebar; ?>
-    </div>
-    <div id="j-main-container" class="span10">
-    <?php else:?>
-        <div id="j-main-container">
-    <?php endif;?>
+<?php echo JHtml::_('tzbootstrap.addrow');?>
+    <?php if(!empty($this -> sidebar)){?>
+        <div id="j-sidebar-container" class="span2 col-md-2">
+            <?php echo $this -> sidebar; ?>
+        </div>
+    <?php } ?>
+
+    <?php echo JHtml::_('tzbootstrap.startcontainer', '10', !empty($this -> sidebar));?>
 
         <div class="tpContainer">
             <?php
@@ -65,24 +65,23 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
             <table class="table table-striped" id="templatesList">
                 <thead>
                 <tr>
-                    <th width="1%">
-                    </th>
-                    <th class="col1template hidden-phone">
+                    <th width="1%" class="nowrap"></th>
+                    <th width="7%" class="nowrap col1template hidden-phone">
                         <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_THUMBNAIL');?>
                     </th>
                     <th class="title">
                         <?php echo JHtml::_('searchtools.sort','COM_TZ_PORTFOLIO_PLUS_TEMPLATE_LABEL','name', $listDirn, $listOrder);?>
                     </th>
-                    <th width="10%" class="nowrap center">
+                    <th width="5%" class="nowrap center text-center">
                         <?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'published', $listDirn, $listOrder); ?>
                     </th>
-                    <th class="nowrap center" width="10%">
+                    <th class="nowrap center text-center" width="7%">
                         <?php echo JText::_('JVERSION'); ?>
                     </th>
-                    <th class="nowrap center" width="15%">
+                    <th class="nowrap center text-center" width="12%">
                         <?php echo JText::_('JDATE'); ?>
                     </th>
-                    <th class="nowrap" width="25%">
+                    <th class="nowrap" width="18%">
                         <?php echo JText::_('JAUTHOR'); ?>
                     </th>
                     <th class="nowrap" width="1%">
@@ -102,11 +101,13 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 
                     ?>
                         <tr class="<?php echo ($i%2==0)?'row0':'row1';?>">
-                            <td class="center">
+                            <td class="center text-center">
                                 <?php echo JHtml::_('grid.id', $i, $item->id); ?>
                             </td>
-                            <td class="center hidden-phone">
-                                <?php echo JHtml::_('templates.thumb', $item->name); ?>
+                            <td class="center text-center hidden-phone">
+                                <?php
+                                echo JHtml::_('tztemplates.thumb', $item->name);
+                                ?>
                             </td>
                             <td class="nowrap has-context">
                                 <div class="pull-left">
@@ -114,7 +115,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
                                 </div>
                             </td>
 
-                            <td class="center">
+                            <td class="center text-center">
                                 <div class="btn-group">
                                 <?php
                                 $states	= array(
@@ -154,10 +155,10 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
                                 ?>
                                 </div>
                             </td>
-                            <td class="center hidden-phone">
+                            <td class="center text-center hidden-phone">
                                 <?php echo @$item -> version != '' ? $item -> version : '&#160;';?>
                             </td>
-                            <td class="center hidden-phone">
+                            <td class="center text-center hidden-phone">
 
                                 <?php echo @$item-> creationDate != '' ? $item-> creationDate : '&#160;'; ?>
                             </td>
@@ -176,7 +177,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
                                 <?php endif; ?>
                             </td>
 
-                            <td align="center hidden-phone"><?php echo $item -> id;?></td>
+                            <td align="center text-center hidden-phone"><?php echo $item -> id;?></td>
                         </tr>
                     <?php endforeach;?>
                     </tbody>
@@ -198,5 +199,6 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
             <?php echo JHtml::_('form.token');?>
 
         </div>
-    </div>
+    <?php echo JHtml::_('tzbootstrap.endcontainer');?>
+<?php echo JHtml::_('tzbootstrap.endrow');?>
 </form>

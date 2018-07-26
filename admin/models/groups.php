@@ -21,6 +21,7 @@
 defined('_JEXEC') or die('Restricted access');
 
 use Joomla\Utilities\ArrayHelper;
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 jimport('joomla.application.component.modellist');
 
@@ -38,6 +39,16 @@ class TZ_Portfolio_PlusModelGroups extends JModelList{
             );
         }
         parent::__construct($config);
+
+        // Set the model dbo
+        if (array_key_exists('dbo', $config))
+        {
+            $this->_db = $config['dbo'];
+        }
+        else
+        {
+            $this->_db = TZ_Portfolio_PlusDatabase::getDbo();
+        }
     }
 
     protected function getStoreId($id = '')
@@ -72,14 +83,25 @@ class TZ_Portfolio_PlusModelGroups extends JModelList{
         $query      = $db -> getQuery(true);
         $user       = JFactory::getUser();
 
-        $query -> select('g.*, COUNT(f.id) AS total');
-        $query -> from($db -> quoteName('#__tz_portfolio_plus_fieldgroups').' AS g');
-        $query -> join('LEFT', '#__tz_portfolio_plus_field_fieldgroup_map AS m ON m.groupid = g.id');
-        $query -> join('LEFT', '#__tz_portfolio_plus_fields AS f ON f.id = m.fieldsid');
-        $query -> group('g.id');
+        $subQuery   = $db -> getQuery(true);
+        $subQuery -> select('COUNT(DISTINCT f.id)');
+        $subQuery -> from('#__tz_portfolio_plus_fields AS f');
+        $subQuery -> join('INNER', '#__tz_portfolio_plus_field_fieldgroup_map AS m ON m.fieldsid = f.id');
+        $subQuery -> where('g.id = m.groupid');
+        $query->select(
+            $this->getState(
+                'list.select',
+        'g.*'
+            )
+        );
+
+        $query -> select('('.(string) $subQuery.') AS total');
+
+        $query -> from('#__tz_portfolio_plus_fieldgroups AS g');
 
         // Join over the users for the checked out user.
-        $query->select('uc.name AS editor')->join('LEFT', '#__users AS uc ON uc.id=g.checked_out');
+        $query-> select('uc.name AS editor')
+            ->join('LEFT', '#__users AS uc ON uc.id=g.checked_out');
 
         // Join over the asset groups.
         $query -> select('v.title AS access_level')

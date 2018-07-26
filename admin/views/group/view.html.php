@@ -35,8 +35,6 @@ class TZ_Portfolio_PlusViewGroup extends JViewLegacy
             , $this -> item -> id);
         $this -> canDo	= $canDo;
 
-        $editor = JFactory::getEditor();
-        $this -> assign('editor',$editor);
         $this -> addToolbar();
         parent::display($tpl);
     }

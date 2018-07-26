@@ -5,8 +5,12 @@
 }
 
 .category-menu .item {
-    padding: 0 0 5px;
     margin: 0;
+    width: auto;
+    padding: 0 0 5px;
+}
+.category-menu .sub-menu-category > .item {
+    margin-left: 15px;
 }
 
 .sub-menu-category.in {

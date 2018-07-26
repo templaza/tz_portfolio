@@ -23,7 +23,7 @@ defined('_JEXEC') or die;
 $params = $this -> item -> params;
 if($params -> get('show_title',1)) {
     ?>
-    <h2 class="TzArticleTitle" itemprop="name">
+    <h2 class="tpp-item-title" itemprop="name">
         <?php echo $this->escape($this->item->title); ?>
     </h2>
     <?php

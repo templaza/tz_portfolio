@@ -28,7 +28,7 @@ $params		= $this->item->params;
 ?>
 <?php if ($urls AND $urls -> urla AND $urls -> urlb AND $urls -> urlc) :?>
 
-<div class="TZArticleLinks">
+<div class="tpp-item-link">
 	<ul>
 		<?php
 
@@ -53,7 +53,7 @@ $params		= $this->item->params;
 				// If no target is present, use the default
 				$target = $target ? $target : $params->get('target'.$id);
 				?>
-			<li class="TZLinks-<?php echo $id; ?>">
+			<li class="tpp-item-link__item-<?php echo $id; ?>">
 				<?php
 					// Compute the correct link
 

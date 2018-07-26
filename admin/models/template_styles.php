@@ -20,6 +20,8 @@
 //no direct access
 defined('_JEXEC') or die('Restricted access');
 
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
+
 jimport('joomla.application.component.modellist');
 
 class TZ_Portfolio_PlusModelTemplate_Styles extends JModelList
@@ -38,6 +40,16 @@ class TZ_Portfolio_PlusModelTemplate_Styles extends JModelList
         }
 
         parent::__construct($config);
+
+        // Set the model dbo
+        if (array_key_exists('dbo', $config))
+        {
+            $this->_db = $config['dbo'];
+        }
+        else
+        {
+            $this->_db = TZ_Portfolio_PlusDatabase::getDbo();
+        }
     }
 
     function populateState($ordering = 't.template', $direction = 'asc'){
@@ -54,7 +66,12 @@ class TZ_Portfolio_PlusModelTemplate_Styles extends JModelList
     function getListQuery(){
         $db     = $this -> getDbo();
         $query  = $db -> getQuery(true);
-        $query -> select('t.*');
+        $query -> select($this->getState(
+            'list.select',
+            't.*'
+            )
+        );
+
         $query -> select('(SELECT COUNT(xc2.template_id) FROM #__tz_portfolio_plus_templates AS t2'
             .' INNER JOIN #__tz_portfolio_plus_content AS xc2 ON t2.id = xc2.template_id WHERE t.id = t2.id)'
             .' AS content_assigned');
@@ -100,7 +117,7 @@ class TZ_Portfolio_PlusModelTemplate_Styles extends JModelList
             $query->order($db->escape($orderCol . ' ' . $orderDirn));
         }
 
-        $query -> group('t.id');
+//        $query -> group('t.id');
 
         return $query;
     }

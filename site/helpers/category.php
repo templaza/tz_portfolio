@@ -22,6 +22,8 @@ defined('_JEXEC') or die;
 
 jimport('joomla.application.categories');
 
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
+
 /**
  * Content Component Category Tree.
  */
@@ -36,7 +38,7 @@ class TZ_Portfolio_PlusCategories extends JCategories
 
 	protected function _load($id)
 	{
-		$db = JFactory::getDbo();
+		$db = TZ_Portfolio_PlusDatabase::getDbo();
 		$user = JFactory::getUser();
 		$extension = $this->_extension;
 

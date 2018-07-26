@@ -21,11 +21,28 @@
 defined('_JEXEC') or die;
 
 use Joomla\Utilities\ArrayHelper;
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 jimport('joomla.application.component.modeladmin');
 
 class TZ_Portfolio_PlusModelGroup extends JModelAdmin
 {
+
+    public function __construct($config = array(), MVCFactoryInterface $factory = null)
+    {
+        parent::__construct($config, $factory);
+
+        // Set the model dbo
+        if (array_key_exists('dbo', $config))
+        {
+            $this->_db = $config['dbo'];
+        }
+        else
+        {
+            $this->_db = TZ_Portfolio_PlusDatabase::getDbo();
+        }
+    }
+
     public function getTable($type = 'Groups', $prefix = 'TZ_Portfolio_PlusTable', $config = array())
     {
         return JTable::getInstance($type, $prefix, $config);

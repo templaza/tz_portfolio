@@ -43,11 +43,9 @@ class TZ_Portfolio_PlusControllerGroup extends JControllerForm
 
                     if (!$table->delete($pk))
                     {
-                        $this->setError($table->getError());
+                        $this->setMessage($table->getError(), 'error');
                         return false;
                     }
-
-
 
                 }
                 else
@@ -71,7 +69,7 @@ class TZ_Portfolio_PlusControllerGroup extends JControllerForm
             }
             else
             {
-                $this->setError($table->getError());
+                $this->setMessage($table->getError(), 'error');
                 return false;
             }
         }

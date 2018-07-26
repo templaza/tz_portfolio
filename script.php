@@ -20,6 +20,12 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
+use TZ_Portfolio_Plus\Installer\TZ_Portfolio_PlusInstaller;
+
+jimport('joomla.filesytem.file');
+jimport('joomla.filesytem.folder');
 jimport('joomla.installer.installer');
 
 class com_tz_portfolio_plusInstallerScript{
@@ -28,13 +34,15 @@ class com_tz_portfolio_plusInstallerScript{
 
     function postflight($type, $parent){
 
-        $db         = JFactory::getDbo();
-        $asset      = null;
-        $query      = $db -> getQuery(true);
+        $asset  = null;
+        $db     = JFactory::getDbo();
+        $query  = $db -> getQuery(true);
+
         $query->select('*');
         $query->from('#__assets');
         $query->where('name = ' . $db->quote('com_tz_portfolio_plus.category'));
         $db->setQuery($query);
+
         if(!$asset = $db->loadObject()){
             $query -> clear();
             $query->select('*');
@@ -53,10 +61,9 @@ class com_tz_portfolio_plusInstallerScript{
             $query = $db->getQuery(true);
             $query->update('#__tz_portfolio_plus_categories');
             $query->set('created_user_id = ' . $user->id);
+            $query->set('params = ' .$db -> quote(''));
             $db->setQuery($query);
             $db->execute();
-
-            $new_asset_id   = null;
 
             if($asset && !$assetTblLoaded) {
                 $query->clear();
@@ -108,29 +115,29 @@ class com_tz_portfolio_plusInstallerScript{
             $src        = 'src';
             $html   = htmlspecialchars_decode('<!DOCTYPE html><title></title>');
 
-            if(!JFolder::exists($mediaFolderPath)){
-                JFolder::create($mediaFolderPath);
+            if(!\JFolder::exists($mediaFolderPath)){
+                Folder::create($mediaFolderPath);
             }
-            if(!JFile::exists($mediaFolderPath.'/index.html')){
-                JFile::write($mediaFolderPath.'/index.html',$html);
+            if(!\JFile::exists($mediaFolderPath.'/index.html')){
+                File::write($mediaFolderPath.'/index.html',$html);
             }
-            if(!JFolder::exists($mediaFolderPath.'/'.$article)){
-                JFolder::create($mediaFolderPath.'/'.$article);
+            if(!\JFolder::exists($mediaFolderPath.'/'.$article)){
+                Folder::create($mediaFolderPath.'/'.$article);
             }
-            if(!JFile::exists($mediaFolderPath.'/'.$article.'/'.'index.html')){
-                JFile::write($mediaFolderPath.'/'.$article.'/'.'index.html',$html);
+            if(!\JFile::exists($mediaFolderPath.'/'.$article.'/'.'index.html')){
+                File::write($mediaFolderPath.'/'.$article.'/'.'index.html',$html);
             }
-            if(!JFolder::exists($mediaFolderPath.'/'.$article.'/'.$cache)){
-                JFolder::create($mediaFolderPath.'/'.$article.'/'.$cache);
+            if(!\JFolder::exists($mediaFolderPath.'/'.$article.'/'.$cache)){
+                Folder::create($mediaFolderPath.'/'.$article.'/'.$cache);
             }
-            if(!JFile::exists($mediaFolderPath.'/'.$article.'/'.$cache.'/'.'index.html')){
-                JFile::write($mediaFolderPath.'/'.$article.'/'.$cache.'/'.'index.html',$html);
+            if(!\JFile::exists($mediaFolderPath.'/'.$article.'/'.$cache.'/'.'index.html')){
+                File::write($mediaFolderPath.'/'.$article.'/'.$cache.'/'.'index.html',$html);
             }
-            if(!JFolder::exists($mediaFolderPath.'/'.$article.'/'.$src)){
-                JFolder::create($mediaFolderPath.'/'.$article.'/'.$src);
+            if(!\JFolder::exists($mediaFolderPath.'/'.$article.'/'.$src)){
+                Folder::create($mediaFolderPath.'/'.$article.'/'.$src);
             }
-            if(!JFile::exists($mediaFolderPath.'/'.$article.'/'.$src.'/'.'index.html')){
-                JFile::write($mediaFolderPath.'/'.$article.'/'.$src.'/'.'index.html',$html);
+            if(!\JFile::exists($mediaFolderPath.'/'.$article.'/'.$src.'/'.'index.html')){
+                File::write($mediaFolderPath.'/'.$article.'/'.$src.'/'.'index.html',$html);
             }
         }
 
@@ -179,7 +186,7 @@ class com_tz_portfolio_plusInstallerScript{
                 $path       = $src.'/'.'plugins'.'/'.$group.'/'.$folder;
                 $result     = $installer -> install($path);
 
-                $query = 'UPDATE #__extensions SET `enabled`=1 WHERE `type`="plugin" AND `element`="'
+                $query = 'UPDATE #__extensions SET `enabled`=1, `params` = "" WHERE `type`="plugin" AND `element`="'
                     . $pname . '" AND `folder`="' . $group . '"';
                 $db->setQuery($query);
                 $db->execute();
@@ -194,8 +201,8 @@ class com_tz_portfolio_plusInstallerScript{
                 $db -> setQuery($template_sql);
                 if(!$db -> loadResult()){
                     $def_file   = JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/views/template_style/tmpl/default.json';
-                    if(JFile::exists($def_file)){
-                        $def_value      = JFile::read($def_file);
+                    if(\JFile::exists($def_file)){
+                        $def_value      = file_get_contents($def_file);
                         $template_sql2  = 'INSERT INTO `#__tz_portfolio_plus_templates`(`id`, `title`, `home`, `params`) VALUES(1, \'system - Default\', \'1\',\''.$def_value.'\')';
                         $db -> setQuery($template_sql2);
                         $db -> query();
@@ -316,12 +323,12 @@ class com_tz_portfolio_plusInstallerScript{
     function uninstall($parent){
         $mediaFolder    = 'tz_portfolio_plus';
         $mediaFolderPath    = JPATH_SITE.'/'.'media'.'/'.$mediaFolder;
-        if(JFolder::exists($mediaFolderPath)){
-            JFolder::delete($mediaFolderPath);
+        if(\JFolder::exists($mediaFolderPath)){
+            Folder::delete($mediaFolderPath);
         }
         $imageFolderPath    = JPATH_SITE.'/'.'images'.'/'.$mediaFolder;
-        if(JFolder::exists($imageFolderPath)){
-            JFolder::delete($imageFolderPath);
+        if(\JFolder::exists($imageFolderPath)){
+            Folder::delete($imageFolderPath);
         }
 
         $status = new stdClass();
@@ -409,14 +416,14 @@ class com_tz_portfolio_plusInstallerScript{
         }
 
         // Alter collection of all tables
-        $db -> alterTableCharacterSet('#__tz_portfolio_plus_addon_data');
-        $db -> alterTableCharacterSet('#__tz_portfolio_plus_content');
+        //$db -> alterTableCharacterSet('#__tz_portfolio_plus_addon_data');
+        //$db -> alterTableCharacterSet('#__tz_portfolio_plus_content');
 
         // Add fields for table tz_portfolio_plus_content;
         $fields = $db -> getTableColumns('#__tz_portfolio_plus_content');
         $arr    = array();
         if(!array_key_exists('priority',$fields)){
-            $arr[]  = 'ADD `priority` INT NOT NULL DEFAULT \'0\' ';
+            $arr[]  = 'ADD `priority` INT NOT NULL DEFAULT \'0\'';
         }
 
         if($arr && count($arr)>0){
@@ -635,6 +642,16 @@ class com_tz_portfolio_plusInstallerScript{
         }
 
 
+        // Remove view tag and user
+        $viewPath   = JPATH_SITE.'/components/com_tz_portfolio_plus/views';
+        $tagsPath   = JPath::clean($viewPath.'/tags');
+        $usersPath  = JPath::clean($viewPath.'/users');
+        if(\JFolder::exists($tagsPath)){
+            Folder::delete($tagsPath);
+        }
+        if(\JFolder::exists($usersPath)){
+            Folder::delete($usersPath);
+        }
     }
 
     public function installationResult($status){
@@ -642,7 +659,7 @@ class com_tz_portfolio_plusInstallerScript{
         $lang -> load('com_tz_portfolio_plus');
         $rows   = 0;
         ?>
-        <h2><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS'); ?></h2>
+        <h2 style="margin-top: 20px;"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS'); ?></h2>
         <span style="font-weight: normal"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_DESCRIPTION');?></span>
         <h3 style="margin-top: 20px;"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_INSTALL_STATUS'); ?></h3>
         <table class="table table-striped">
@@ -777,7 +794,7 @@ class com_tz_portfolio_plusInstallerScript{
         $lang -> load('com_tz_portfolio_plus');
         $rows   = 0;
         ?>
-        <h2><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS'); ?></h2>
+        <h2 style="margin-top: 20px;"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS'); ?></h2>
         <span style="font-weight: normal"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_DESCRIPTION');?></span>
         <h3 style="margin-top: 20px;"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_REMOVE_STATUS'); ?></h3>
         <table class="table table-striped table-condensed">

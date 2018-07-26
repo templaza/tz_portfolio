@@ -20,6 +20,10 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\Filesystem\File;
+
+jimport('joomla.filesytem.file');
+
 class TZ_Portfolio_PlusHelperAddon_Datas{
     public static function getRootURL($addon_id,$root_view = 'addon_datas'){
         if($addon_id){
@@ -36,14 +40,12 @@ class TZ_Portfolio_PlusHelperAddon_Datas{
 
         $path       = JPATH_ADMINISTRATOR . '/components/com_tz_portfolio_plus/access.xml';
 
-//        if($id){
         if($addon  = TZ_Portfolio_PlusPluginHelper::getPluginById($id)){
             $_path   = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.'/'.$addon -> type.'/'. $addon -> name.'/access.xml';
-            if(JFile::exists($_path)){
+            if(\JFile::exists($_path)){
                 $path   = $_path;
             }
         }
-//        }
 
         $assetName = $component;
 

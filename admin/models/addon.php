@@ -20,11 +20,12 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die;
 
+use Joomla\Filesystem\File;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
-jimport('joomla.filesystem.folder');
-jimport('joomla.filesystem.file');
+jimport('joomla.filesytem.file');
 jimport('joomla.application.component.modeladmin');
 JLoader::import('com_tz_portfolio_plus.helpers.addons', JPATH_ADMINISTRATOR.'/components');
 
@@ -42,7 +43,18 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
     public function __construct($config = array())
     {
         parent::__construct($config);
+
         $this -> accept_types   = array('tz_portfolio_plus-plugin', 'tz_portfolio_plus-template');
+
+        // Set the model dbo
+        if (array_key_exists('dbo', $config))
+        {
+            $this->_db = $config['dbo'];
+        }
+        else
+        {
+            $this->_db = TZ_Portfolio_PlusDatabase::getDbo();
+        }
     }
 
     protected function populateState()
@@ -64,6 +76,14 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
         $type  = $app -> getUserStateFromRequest($this->option . '.'.$this -> getName().'.filter_type', 'filter_type',
             (isset($filters['type'])?$filters['type']:null), 'string');
         $this -> setState('filter.type',$type);
+
+        // Support old ordering field
+        $oldOrdering = $app->input->get('filter_order', 'rdate');
+
+        if (!empty($oldOrdering) && in_array($oldOrdering, $this->filter_fields))
+        {
+            $this->setState('list.ordering', $oldOrdering);
+        }
 
         $this -> setState('cache.filename', 'addon_list');
 
@@ -137,8 +157,8 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
             $lang		= JFactory::getLanguage();
 
             // Load the core and/or local language sys file(s) for the ordering field.
-            $db = JFactory::getDbo();
-            $query = $db->getQuery(true)
+            $db     = $this -> getDbo();
+            $query  = $db->getQuery(true)
                 ->select($db->quoteName('element'))
                 ->from($db->quoteName('#__tz_portfolio_plus_extensions'))
                 ->where($db->quoteName('type') . ' = ' . $db->quote($this -> type))
@@ -215,6 +235,10 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
             }
         }
 
+        // Insert parameter from extrafield
+        JLoader::import('extrafields', COM_TZ_PORTFOLIO_PLUS_ADMIN_HELPERS_PATH);
+        TZ_Portfolio_PlusHelperExtraFields::prepareForm($form, $data);
+
         // Trigger the default form events.
         parent::preprocessForm($form, $data, $group);
     }
@@ -235,61 +259,54 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
 
     public function install()
     {
-        $app        = JFactory::getApplication();
-        $input      = $app -> input;
+        $app = \JFactory::getApplication();
+        $input = $app->input;
 
         // Load installer plugins for assistance if required:
         JPluginHelper::importPlugin('installer');
-        $dispatcher = JEventDispatcher::getInstance();
 
         $package = null;
 
         // This event allows an input pre-treatment, a custom pre-packing or custom installation.
         // (e.g. from a JSON description).
-        $results = $dispatcher->trigger('onInstallerBeforeInstallation', array($this, &$package));
+        $results = $app->triggerEvent('onInstallerBeforeInstallation', array($this, &$package));
 
         /* phan code working */
-        if (in_array(true, $results, true))
-        {
+        if (in_array(true, $results, true)) {
             return true;
         }
 
-        if (in_array(false, $results, true))
-        {
+        if (in_array(false, $results, true)) {
             return false;
         }
         /* end phan code working */
 
-        if($input -> get('task') == 'ajax_install'){
-            $url        = $input -> post -> get('pProduceUrl', null, 'string');
+        if ($input->get('task') == 'ajax_install') {
+            $url = $input->post->get('pProduceUrl', null, 'string');
             $package = $this->_getPackageFromUrl($url);
-        }else {
+        } else {
             $package = $this->_getPackageFromUpload();
         }
 
-        $extension_path = COM_TZ_PORTFOLIO_PLUS_PATH_SITE;
-        $result         = true;
-        $msg            = JText::sprintf('COM_TZ_PORTFOLIO_PLUS_INSTALL_SUCCESS', JText::_('COM_TZ_PORTFOLIO_PLUS_'.$input -> getCmd('view')));
+        $result = true;
+        $msg = JText::sprintf('COM_TZ_PORTFOLIO_PLUS_INSTALL_SUCCESS', JText::_('COM_TZ_PORTFOLIO_PLUS_' . $input->getCmd('view')));
 
         // This event allows a custom installation of the package or a customization of the package:
-        $results = $dispatcher->trigger('onInstallerBeforeInstaller', array($this, &$package));
+        $results = $app->triggerEvent('onInstallerBeforeInstaller', array($this, &$package));
 
-        if (in_array(true, $results, true))
-        {
+        if (in_array(true, $results, true)) {
             return true;
         }
 
-        if (in_array(false, $results, true))
-        {
+        if (in_array(false, $results, true)) {
             return false;
         }
 
         // Was the package unpacked?
-        if (!$package || !$package['type'])
-        {
+        if (!$package || !$package['type']) {
             JInstallerHelper::cleanupInstall($package['packagefile'], $package['extractdir']);
 
-            $app->enqueueMessage(JText::_('COM_TZ_PORTFOLIO_PLUS_UNABLE_TO_FIND_INSTALL_PACKAGE'), 'error');
+            $this->setError(JText::_('COM_TZ_PORTFOLIO_PLUS_UNABLE_TO_FIND_INSTALL_PACKAGE'));
 
             return false;
         }
@@ -304,42 +321,42 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
 
             $name   = (string) $manifest -> name;
             $type   = (string) $attrib -> type;
-            $group  = '';
 
 
             if(!in_array($type, $this -> accept_types) || (in_array($type, $this -> accept_types)
                     && $type != $this -> type)){
-                $app->enqueueMessage(JText::_('COM_TZ_PORTFOLIO_PLUS_UNABLE_TO_FIND_INSTALL_PACKAGE'), 'error');
+                $this -> setError(JText::_('COM_TZ_PORTFOLIO_PLUS_UNABLE_TO_FIND_INSTALL_PACKAGE'));
                 return false;
             }
 
 
             $_type  = str_replace('tz_portfolio_plus-','',$type);
-            tzportfolioplusimport('adapter.'.$_type);
-            $class  = 'TZ_Portfolio_PlusInstallerAdapter'.$_type;
+
+            // Install for add-ons to update version
+            JLoader::import('com_tz_portfolio_plus.libraries.adapter.plugin',JPATH_ADMINISTRATOR
+                .DIRECTORY_SEPARATOR.'components');
+
+            $class  = 'TZ_Portfolio_Plus\Installer\Adapter\TZ_Portfolio_PlusInstaller'.ucfirst($_type).'Adapter';
+
+            if(!class_exists($class)){
+                JLoader::register($class, JPath::clean(COM_TZ_PORTFOLIO_PLUS_LIBRARIES.'/adapter/'.$_type.'.php'));
+            }
 
             $tzinstaller    = new $class($installer,$installer -> getDbo());
             $tzinstaller -> setRoute('install');
             $tzinstaller -> setManifest($installer -> getManifest());
-            $tzinstaller -> setProperties(array('type' => $type));
+            if(!COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+                $tzinstaller -> setProperties(array('type' => $type));
+            }
             if(!$tzinstaller -> install()){
                 // There was an error installing the package.
                 $msg = JText::sprintf('COM_TZ_PORTFOLIO_PLUS_INSTALL_ERROR', $input -> getCmd('view'));
                 $result = false;
-                $msgType = 'error';
-            }
-            else
-            {
-                // Package installed sucessfully.
-                $msg = JText::sprintf('COM_TZ_PORTFOLIO_PLUS_INSTALL_SUCCESS', JText::_('COM_TZ_PORTFOLIO_PLUS_'.$input -> getCmd('view')));
-                $result = true;
-                $msgType = 'message';
+                $this -> setError($msg);
             }
 
             // This event allows a custom a post-flight:
-            $dispatcher->trigger('onInstallerAfterInstaller', array($this, &$package, $installer, &$result, &$msg));
-
-            $app->enqueueMessage($msg, $msgType);
+            $app->triggerEvent('onInstallerAfterInstaller', array($this, &$package, $installer, &$result, &$msg));
         }
 
         JInstallerHelper::cleanupInstall($package['packagefile'], $package['extractdir']);
@@ -406,7 +423,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
 
                 $_type  = str_replace('tz_portfolio_plus-','',$table->type);
                 tzportfolioplusimport('adapter.'.$_type);
-                $class  = 'TZ_Portfolio_PlusInstallerAdapter'.$_type;
+                $class  = 'TZ_Portfolio_Plus\Installer\Adapter\TZ_Portfolio_PlusInstaller'.$_type.'Adapter';
 
                 $tzinstaller    = new $class($installer,$installer -> getDbo());
 
@@ -494,14 +511,14 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
         $tmp_dest	= JPATH_ROOT . '/tmp/tz_portfolio_plus_install/' . $userfile['name'];
         $tmp_src	= $userfile['tmp_name'];
 
-        if(!JFile::exists(JPATH_ROOT . '/tmp/tz_portfolio_plus_install/index.html')){
-            JFile::write(JPATH_ROOT . '/tmp/tz_portfolio_plus_install/index.html',
+        if(!\JFile::exists(JPATH_ROOT . '/tmp/tz_portfolio_plus_install/index.html')){
+            File::write(JPATH_ROOT . '/tmp/tz_portfolio_plus_install/index.html',
                 htmlspecialchars_decode('<!DOCTYPE html><title></title>'));
         }
 
         // Move uploaded file.
         jimport('joomla.filesystem.file');
-        JFile::upload($tmp_src, $tmp_dest, false, true);
+        File::upload($tmp_src, $tmp_dest, false, true);
 
         // Unpack the downloaded package file.
         $package = JInstallerHelper::unpack($tmp_dest, true);
@@ -537,7 +554,9 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
 
             // Convert the params field to an array.
             $registry = new Registry;
-            $registry->loadString($table->params);
+            if($table -> params) {
+                $registry->loadString($table->params);
+            }
             $this->_cache[$pk]->params = $registry->toArray();
 
             $plugin = TZ_Portfolio_PlusPluginHelper::getInstance($this->_cache[$pk] -> folder, $this->_cache[$pk] -> element);
@@ -596,7 +615,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
             $registry->loadString($table->params);
             $this->_cache[$storeId]->params = $registry->toArray();
 
-            $dispatcher     = JEventDispatcher::getInstance();
+            $dispatcher     = TZ_Portfolio_PlusPluginHelper::getDispatcher();
             $plugin         = TZ_Portfolio_PlusPluginHelper::getInstance($table -> folder,
                 $table -> element, false, $dispatcher);
             if(method_exists($plugin, 'onAddOnDisplayManager')) {
@@ -724,6 +743,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
         $params         = $this -> getState('params');
         $filters        = $this -> getState('filters');
         $cacheFileName  = $this -> getState('cache.filename');
+        $ordering       = $this -> getState('list.ordering');
 
         // Cache time is 1 day
         $cacheTime      = 24 * 60 * 60;
@@ -734,8 +754,8 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
 
 
         // Get data from cache
-        if(JFile::exists($cacheFile) && (filemtime($cacheFile) > (time() - $cacheTime ))){
-            $items  = JFile::read($cacheFile);
+        if(\JFile::exists($cacheFile) && (filemtime($cacheFile) > (time() - $cacheTime ))){
+            $items  = file_get_contents($cacheFile);
             $items  = trim($items);
             if(!empty($items)){
                 $data   = json_decode($items);
@@ -768,7 +788,6 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
         if(!$hasCache) {
 
             $url    = $this -> getUrlFromServer();
-//            var_dump($url); die();
 
             if(!$url){
                 return false;
@@ -782,6 +801,10 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
 
             $url .= ($limitstart ? '&start=' . $limitstart : '') . ($type ? '&type=' . urlencode($type) : '')
                 . ($search ? '&search=' . urlencode($search) : '') . $edition;
+
+            if($ordering){
+                $url    .= '&order='.$ordering;
+            }
 
             $response = TZ_Portfolio_PlusHelper::getDataFromServer($url);
 
@@ -802,7 +825,9 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
             $data -> filters    = $filters;
             $data -> items      = $items;
 
-            JFile::write($cacheFile, json_encode($data));
+            $_data   = json_encode($data);
+
+            File::write($cacheFile, $_data);
         }
 
         if(!$data || ($data && !isset($data -> items) )){
@@ -974,8 +999,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
         // Load installer plugins, and allow URL and headers modification
         $headers = array();
         \JPluginHelper::importPlugin('installer');
-        $dispatcher = \JEventDispatcher::getInstance();
-        $dispatcher->trigger('onInstallerBeforePackageDownload', array(&$url, &$headers));
+        \JFactory::getApplication() -> triggerEvent('onInstallerBeforePackageDownload', array(&$url, &$headers));
 
         $response   = TZ_Portfolio_PlusHelper::getDataFromServer($url);
 
@@ -990,22 +1014,28 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
         $target     = null;
 
         // Parse the Content-Disposition header to get the file name
-        if (isset($response->headers['Content-Disposition'])
-            && preg_match("/\s*filename\s?=\s?(.*)/", $response->headers['Content-Disposition'], $parts))
-        {
-            $flds = explode(';', $parts[1]);
-            $target = trim($flds[0], '"');
+        if (isset($response->headers['Content-Disposition']) && $content = $response -> headers['Content-Disposition']){
+            if(is_array($content)){
+                $content    = array_shift($content);
+            }
+             if(preg_match("/\s*filename\s?=\s?(.*)/", $content, $parts))
+            {
+                $flds = explode(';', $parts[1]);
+                $target = trim($flds[0], '"');
+            }
         }
 
         $tmp_dest	= JPATH_ROOT . '/tmp/tz_portfolio_plus_install/' . $target;
 
-        if(!JFile::exists(JPATH_ROOT . '/tmp/tz_portfolio_plus_install/index.html')){
-            JFile::write(JPATH_ROOT . '/tmp/tz_portfolio_plus_install/index.html',
-                htmlspecialchars_decode('<!DOCTYPE html><title></title>'));
+        if(!\JFile::exists(JPATH_ROOT . '/tmp/tz_portfolio_plus_install/index.html')){
+            $html   = htmlspecialchars_decode('<!DOCTYPE html><title></title>');
+            File::write(JPATH_ROOT . '/tmp/tz_portfolio_plus_install/index.html', $html);
         }
 
+        $resbody   = $response -> body;
+
         // Write buffer to file
-        \JFile::write($tmp_dest, $response->body);
+        File::write($tmp_dest, $resbody);
 
         // Restore error tracking to what it was before
         ini_set('track_errors', $track_errors);

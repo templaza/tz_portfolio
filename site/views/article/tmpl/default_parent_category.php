@@ -24,7 +24,7 @@ $params = $this -> item -> params;
 if($params -> get('show_parent_category',1)) {
     ?>
     <?php if ($this->item->parent_slug != '1:root'){ ?>
-        <span class="TzArticleParentCategory">
+        <span class="tpp-item-parent-category">
     <?php
     $title = $this->escape($this->item->parent_title);
     $url = $title;

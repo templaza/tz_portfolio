@@ -132,7 +132,7 @@ $isMultiple = $app -> input -> get('ismultiple', false, 'boolean');
         <?php foreach ($this->items as $i => $item) :?>
             <tr class="row<?php echo $i % 2; ?>">
                 <?php if($isMultiple){?>
-                <td class="center">
+                <td class="center text-center">
                     <?php echo JHtml::_('grid.id', $i, $item->id); ?>
                 </td>
                 <?php } ?>
@@ -145,7 +145,7 @@ $isMultiple = $app -> input -> get('ismultiple', false, 'boolean');
                 <td class="small hidden-phone">
                     <?php echo $item -> type;?>
                 </td>
-                <td class="center small">
+                <td class="center text-center small">
                     <?php echo $this->escape($item->access_level); ?>
                 </td>
                 <td class="small">
@@ -165,17 +165,17 @@ $isMultiple = $app -> input -> get('ismultiple', false, 'boolean');
                     <?php endif;?>
                     <input type="hidden" name="tzcategories[]" value="<?php echo $this->escape(addslashes($item->category_title));?>">
                 </td>
-                <td class="center small">
+                <td class="center text-center small">
                     <?php if ($item->language=='*'):?>
                         <?php echo JText::alt('JALL', 'language'); ?>
                     <?php else:?>
                         <?php echo $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
                     <?php endif;?>
                 </td>
-                <td class="center small nowrap">
+                <td class="center text-center small nowrap">
                     <?php echo JHtml::_('date', $item->created, JText::_('DATE_FORMAT_LC4')); ?>
                 </td>
-                <td class="center small">
+                <td class="center text-center small">
                     <?php echo (int) $item->id; ?>
                 </td>
             </tr>

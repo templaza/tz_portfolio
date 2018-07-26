@@ -20,6 +20,8 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Layout\FileLayout;
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
+
 JFormHelper::loadFieldClass('checkboxes');
 
 class JFormFieldModal_Article extends JFormFieldCheckboxes
@@ -109,7 +111,7 @@ class JFormFieldModal_Article extends JFormFieldCheckboxes
 
     protected function _getItems($ids){
         if($ids){
-            $db     = JFactory::getDbo();
+            $db     = TZ_Portfolio_PlusDatabase::getDbo();
             $query  = $db -> getQuery(true);
             $query -> select('a.id,a.title,c.title AS category_title');
             $query -> from('#__tz_portfolio_plus_content AS a');

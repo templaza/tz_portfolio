@@ -24,30 +24,35 @@ defined('_JEXEC') or die('Restricted access');
 $form   = $this -> form;
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.tooltip');
-JHtml::_('formbehavior.chosen', 'select');
+if(!COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+    JHtml::_('formbehavior.chosen', 'select');
+}else{
+    JHtml::_('formbehavior.chosen', 'select[multiple]');
+}
 
 ?>
 
 <script type="text/javascript ">
 Joomla.submitbutton = function(task) {
-    if (task == 'field.cancel' || document.formvalidator.isValid(document.id('field-form'))) {
+    if (task == 'field.cancel' || document.formvalidator.isValid(document.getElementById('field-form'))) {
         <?php echo $this->form->getField('description')->save(); ?>
         Joomla.submitform(task, document.getElementById('field-form'));
     }
-}
+};
 </script>
 <form name="adminForm" method="post" id="field-form" class="tpArticle"
       action="index.php?option=com_tz_portfolio_plus&view=field&layout=edit&id=<?php echo $this -> item -> id?>">
 
-    <div class="row-fluid">
-        <!-- Begin Content -->
-        <div class="span8 form-horizontal">
+    <?php echo JHtml::_('tzbootstrap.addrow');?>
+        <?php // Begin Content ?>
+        <div class="span8 col-md-8 form-horizontal">
             <fieldset class="adminform">
             <?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'details')); ?>
 
                 <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'details', JText::_('JDETAILS', true)); ?>
-                <div class="row-fluid">
-                    <div class="span6">
+
+                <?php echo JHtml::_('tzbootstrap.addrow');?>
+                    <div class="span6 col-md-6">
                         <?php echo $this -> form -> renderField('title');?>
                         <?php echo $this -> form -> renderField('groupid');?>
                         <?php echo $this -> form -> renderField('published');?>
@@ -55,7 +60,7 @@ Joomla.submitbutton = function(task) {
                         <div class="control-group">
                             <div class="control-label"><?php echo $form -> getLabel('value');?></div>
                             <div class="controls">
-                                <div id="<?php echo $form -> getField('value') -> id;?>" class="pull-left">
+                                <div id="<?php echo $form -> getField('value') -> id;?>">
                                     <?php
                                     if($fieldValue = $form->getInput('value')) {
                                         echo $fieldValue;
@@ -67,14 +72,16 @@ Joomla.submitbutton = function(task) {
                             </div>
                         </div>
                     </div>
-                    <div class="span6">
+                    <div class="span6 col-md-6">
                         <?php echo $this -> form -> renderField('list_view');?>
                         <?php echo $this -> form -> renderField('detail_view');?>
                         <?php echo $this -> form -> renderField('advanced_search');?>
                         <?php echo $this -> form -> renderField('access');?>
                     </div>
-                </div>
+                <?php echo JHtml::_('tzbootstrap.endrow');?>
+
                 <?php echo $this -> form -> renderField('description');?>
+
                 <?php echo JHtml::_('bootstrap.endTab'); ?>
 
                 <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'publishing', JText::_('JGLOBAL_FIELDSET_PUBLISHING', true)); ?>
@@ -99,9 +106,9 @@ Joomla.submitbutton = function(task) {
             <?php echo JHtml::_('bootstrap.endTabSet'); ?>
             </fieldset>
         </div>
-        <!-- End Content -->
-        <!-- Begin Sidebar -->
-        <div class="span4">
+        <?php // End Content ?>
+        <?php // Begin Sidebar ?>
+        <div class="span4 col-md-4">
             <div class="form-vertical">
             <?php echo JHtml::_('bootstrap.startAccordion', 'fieldOptions', array('active' => 'collapse0'
             , 'parent' => true));?>
@@ -151,8 +158,8 @@ Joomla.submitbutton = function(task) {
                 <?php echo JHtml::_('bootstrap.endAccordion');?>
             </div>
         </div>
-        <!-- End Sidebar -->
-    </div>
+        <?php // End Sidebar ?>
+    <?php echo JHtml::_('tzbootstrap.endrow');?>
     <input type="hidden" value="com_tz_portfolio_plus" name="option">
     <input type="hidden" value="" name="task">
     <?php echo JHTML::_('form.token');?>

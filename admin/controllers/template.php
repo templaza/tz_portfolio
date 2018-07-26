@@ -35,8 +35,7 @@ class TZ_Portfolio_PlusControllerTemplate extends JControllerForm
         if (!$this->allowAdd())
         {
             // Set the internal error and also the redirect error.
-            $this->setError(\JText::_('JLIB_APPLICATION_ERROR_CREATE_RECORD_NOT_PERMITTED'));
-            $this->setMessage($this->getError(), 'error');
+            $this->setMessage(\JText::_('JLIB_APPLICATION_ERROR_CREATE_RECORD_NOT_PERMITTED'), 'error');
 
             $this->setRedirect(
                 \JRoute::_(
@@ -66,8 +65,7 @@ class TZ_Portfolio_PlusControllerTemplate extends JControllerForm
         if (!$this->allowAdd())
         {
             // Set the internal error and also the redirect error.
-            $this->setError(\JText::_('JLIB_APPLICATION_ERROR_CREATE_RECORD_NOT_PERMITTED'));
-            $this->setMessage($this->getError(), 'error');
+            $this->setMessage(\JText::_('JLIB_APPLICATION_ERROR_CREATE_RECORD_NOT_PERMITTED'), 'error');
 
             $this->setRedirect(
                 \JRoute::_(
@@ -80,7 +78,12 @@ class TZ_Portfolio_PlusControllerTemplate extends JControllerForm
         }
 
         $model  = $this -> getModel();
-        $model -> install();
+        if(!$model -> install()){
+            $this -> setMessage($model -> getError(), 'error');
+        }else{
+            $this -> setMessage(JText::sprintf('COM_TZ_PORTFOLIO_PLUS_INSTALL_SUCCESS',
+                JText::_('COM_TZ_PORTFOLIO_PLUS_TEMPLATE')));
+        }
 
         $this -> setRedirect('index.php?option=com_tz_portfolio_plus&view=template&layout=upload');
     }
@@ -141,8 +144,7 @@ class TZ_Portfolio_PlusControllerTemplate extends JControllerForm
         if (!$this->allowAdd())
         {
             // Set the internal error and also the redirect error.
-            $this->setError(\JText::_('JLIB_APPLICATION_ERROR_CREATE_RECORD_NOT_PERMITTED'));
-            $app->enqueueMessage($this->getError(), 'error');
+            $app->enqueueMessage(\JText::_('JLIB_APPLICATION_ERROR_CREATE_RECORD_NOT_PERMITTED'), 'error');
         }else{
             $model  = $this -> getModel();
             if($result = $model -> install()){
@@ -151,7 +153,7 @@ class TZ_Portfolio_PlusControllerTemplate extends JControllerForm
             }
         }
 
-        $message    = $this -> getError();
+        $message = $this->message;
 
         $this->setRedirect(
             \JRoute::_(

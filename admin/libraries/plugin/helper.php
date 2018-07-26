@@ -21,11 +21,14 @@ defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 tzportfolioplusimport('template');
+tzportfolioplusimport('plugin.helpers.legacy');
 
-class TZ_Portfolio_PlusPluginHelper extends JPluginHelper{
+class TZ_Portfolio_PlusPluginHelper extends TZ_Portfolio_PlusPluginHelperLegacy {
 
+    protected static $cache         = array();
     protected static $plugins       = null;
     protected static $layout        = 'default';
     protected static $plugin_types  = null;
@@ -38,7 +41,7 @@ class TZ_Portfolio_PlusPluginHelper extends JPluginHelper{
                     tzportfolioplusimport('fields.extrafield');
                 }
                 if(!$dispatcher){
-                    $dispatcher = JEventDispatcher::getInstance();
+                    $dispatcher = self::getDispatcher();
                 }
                 $className = 'PlgTZ_Portfolio_Plus' . ucfirst($type) . ucfirst($plugin);
                 if (!class_exists($className)) {
@@ -52,6 +55,25 @@ class TZ_Portfolio_PlusPluginHelper extends JPluginHelper{
                     return self::$instances[$type.$plugin];
                 }
             }
+        }
+        return false;
+    }
+
+    public static function getDispatcher(){
+        $storeId    = md5(__METHOD__);
+
+        if(isset(self::$cache[$storeId])){
+            return self::$cache[$storeId];
+        }
+
+        if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE){
+            $dispatcher = \JFactory::getApplication()->getDispatcher();
+        }else{
+            $dispatcher = \JEventDispatcher::getInstance();
+        }
+        if(isset($dispatcher) && $dispatcher){
+            self::$cache[$storeId]  = $dispatcher;
+            return $dispatcher;
         }
         return false;
     }
@@ -178,67 +200,27 @@ class TZ_Portfolio_PlusPluginHelper extends JPluginHelper{
         return $result;
     }
 
-    public static function importPlugin($type, $plugin = null, $autocreate = true, JEventDispatcher $dispatcher = null)
-    {
-        static $loaded = array();
-
-        // Check for the default args, if so we can optimise cheaply
-        $defaults = false;
-
-        if (is_null($plugin) && $autocreate == true && is_null($dispatcher))
-        {
-            $defaults = true;
-        }
-
-        if (!isset($loaded[$type]) || !$defaults)
-        {
-            $results = null;
-
-            // Load the plugins from the database.
-            $plugins = static::load();
-
-            // Get the specified plugin(s).
-            for ($i = 0, $t = count($plugins); $i < $t; $i++)
-            {
-                if (is_object($plugins[$i]) && $plugins[$i]->type == $type
-                    && ($plugin === null || $plugins[$i]->name == $plugin))
-                {
-                    static::import($plugins[$i], $autocreate, $dispatcher);
-                    $results = true;
-                }
-            }
-
-            // Bail out early if we're not using default args
-            if (!$defaults)
-            {
-                return $results;
-            }
-
-            $loaded[$type] = $results;
-        }
-
-        return $loaded[$type];
-    }
-
     public static function getCoreContentTypes(){
         $content_types	= array();
-        $array			= array('none' => JText::_('JNONE'), 'hits' => JText::_('JGLOBAL_HITS')
-        , 'title' => JText::_('JGLOBAL_TITLE')
-        , 'author' => JText::_('JAUTHOR')
-        , 'author_about' => JText::_('COM_TZ_PORTFOLIO_PLUS_ABOUT_AUTHOR')
-        , 'tags' => JText::_('COM_TZ_PORTFOLIO_PLUS_TAGS')
-        , 'icons' => JText::_('COM_TZ_PORTFOLIO_PLUS_ICONS')
-        , 'media' => JText::_('COM_TZ_PORTFOLIO_PLUS_TAB_MEDIA')
-        , 'extrafields' => JText::_('COM_TZ_PORTFOLIO_PLUS_TAB_FIELDS')
-        , 'introtext' => JText::_('COM_TZ_PORTFOLIO_PLUS_FIELD_INTROTEXT')
-        , 'fulltext' => JText::_('COM_TZ_PORTFOLIO_PLUS_FIELD_FULLTEXT')
-        , 'category' => JText::_('JCATEGORY')
-        , 'created_date' => JText::_('JGLOBAL_FIELD_CREATED_LABEL')
-        , 'modified_date' => JText::_('COM_TZ_PORTFOLIO_PLUS_MODIFIED_DATE')
-        , 'related' => JText::_('COM_TZ_PORTFOLIO_PLUS_FIELD_RELATED_ARTICLE')
-        , 'published_date' => JText::_('COM_TZ_PORTFOLIO_PLUS_PUBLISHED_DATE')
-        , 'parent_category' => JText::_('COM_TZ_PORTFOLIO_PLUS_PARENT_CATEGORY')
-        , 'project_link' => JText::_('COM_TZ_PORTFOLIO_PLUS_PROJECT_LINK_LABEL')
+        $array			= array(
+            'none' => JText::_('JNONE'),
+            'hits' => JText::_('JGLOBAL_HITS'),
+            'title' => JText::_('JGLOBAL_TITLE'),
+            'author' => JText::_('JAUTHOR'),
+            'author_about' => JText::_('COM_TZ_PORTFOLIO_PLUS_ABOUT_AUTHOR'),
+            'tags' => JText::_('COM_TZ_PORTFOLIO_PLUS_TAGS'),
+            'icons' => JText::_('COM_TZ_PORTFOLIO_PLUS_ICONS'),
+            'media' => JText::_('COM_TZ_PORTFOLIO_PLUS_TAB_MEDIA'),
+            'extrafields' => JText::_('COM_TZ_PORTFOLIO_PLUS_TAB_FIELDS'),
+            'introtext' => JText::_('COM_TZ_PORTFOLIO_PLUS_FIELD_INTROTEXT'),
+            'fulltext' => JText::_('COM_TZ_PORTFOLIO_PLUS_FIELD_FULLTEXT'),
+            'category' => JText::_('JCATEGORY'),
+            'created_date' => JText::_('JGLOBAL_FIELD_CREATED_LABEL'),
+            'modified_date' => JText::_('COM_TZ_PORTFOLIO_PLUS_MODIFIED_DATE'),
+            'related' => JText::_('COM_TZ_PORTFOLIO_PLUS_FIELD_RELATED_ARTICLE'),
+            'published_date' => JText::_('COM_TZ_PORTFOLIO_PLUS_PUBLISHED_DATE'),
+            'parent_category' => JText::_('COM_TZ_PORTFOLIO_PLUS_PARENT_CATEGORY'),
+            'project_link' => JText::_('COM_TZ_PORTFOLIO_PLUS_PROJECT_LINK_LABEL')
         );
 
         $std				= new stdClass();
@@ -252,13 +234,16 @@ class TZ_Portfolio_PlusPluginHelper extends JPluginHelper{
     }
 
     public static function getContentTypes(){
-        if($core_types             = self::getCoreContentTypes()) {
-            $types = ArrayHelper::getColumn($core_types, 'value');
-            $includeTypes = $core_types;
-            $dispatcher = JEventDispatcher::getInstance();
+        if($core_types = self::getCoreContentTypes()) {
+
+            $includeTypes   = $core_types;
+            $types          = ArrayHelper::getColumn($core_types, 'value');
 
             if ($contentPlugins = self::importPlugin('content')) {
-                if ($pluginTypes = $dispatcher->trigger('onAddContentType')) {
+                if ($pluginTypes = \JFactory::getApplication()->triggerEvent('onAddContentType')) {
+                    if(count($pluginTypes)){
+                        $pluginTypes    = array_filter($pluginTypes);
+                    }
                     foreach ($pluginTypes as $i => $plgType) {
                         if (is_array($plgType) && count($plgType)) {
                             foreach ($plgType as $j => $type) {
@@ -295,7 +280,7 @@ class TZ_Portfolio_PlusPluginHelper extends JPluginHelper{
 
         if (!(static::$plugins = $cache->get($levels)))
         {
-            $db     = JFactory::getDbo();
+            $db     = TZ_Portfolio_PlusDatabase::getDbo();
             $query  = $db->getQuery(true)
                 ->select('id, folder AS type, element AS name, params, manifest_cache, asset_id')
                 ->from('#__tz_portfolio_plus_extensions')
@@ -323,58 +308,7 @@ class TZ_Portfolio_PlusPluginHelper extends JPluginHelper{
         return static::$plugins;
     }
 
-    protected static function import($plugin, $autocreate = true, JEventDispatcher $dispatcher = null)
-    {
-        static $paths = array();
-
-        $plugin->type = preg_replace('/[^A-Z0-9_\.-]/i', '', $plugin->type);
-        $plugin->name = preg_replace('/[^A-Z0-9_\.-]/i', '', $plugin->name);
-
-        $path = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/' . $plugin->type . '/' . $plugin->name . '/' . $plugin->name . '.php';
-
-        if (!isset($paths[$path]))
-        {
-            if (file_exists($path))
-            {
-                if (!isset($paths[$path]))
-                {
-                    require_once $path;
-                }
-
-                $paths[$path] = true;
-
-                if ($autocreate)
-                {
-                    // Makes sure we have an event dispatcher
-                    if (!is_object($dispatcher))
-                    {
-                        $dispatcher = JEventDispatcher::getInstance();
-                    }
-
-                    $className = 'PlgTZ_Portfolio_Plus' . $plugin->type . $plugin->name;
-
-                    if (class_exists($className))
-                    {
-                        // Load the plugin from the database.
-                        if (!isset($plugin->params))
-                        {
-                            // Seems like this could just go bye bye completely
-                            $plugin = static::getPlugin($plugin->type, $plugin->name);
-                        }
-
-                        // Instantiate and register the plugin.
-                        new $className($dispatcher, (array) ($plugin));
-                    }
-                }
-            }
-            else
-            {
-                $paths[$path] = false;
-            }
-        }
-    }
-
-    public static function getAddonController($addon_id){
+    public static function getAddonController($addon_id, $config = array()){
         if($addon_id){
 
             if($addon  = self::getPluginById($addon_id)){
@@ -393,14 +327,20 @@ class TZ_Portfolio_PlusPluginHelper extends JPluginHelper{
                         $input -> set('addon_task',$adtask);
                     }
                 }
+                $basePath   = JPath::clean(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.'/'.$addon -> type
+                    .'/'.$addon -> name);
+
+
+                $_config['base_path']    = $basePath;
+                $_config['addon']    = $addon;
+
+                $config = array_merge($_config, $config);
+
                 if($controller = TZ_Portfolio_Plus_AddOnControllerLegacy::getInstance('PlgTZ_Portfolio_Plus'
                         .ucfirst($addon -> type).ucfirst($addon -> name)
-                        , array('base_path' => COM_TZ_PORTFOLIO_PLUS_ADDON_PATH
-                            .DIRECTORY_SEPARATOR.$addon -> type
-                            .DIRECTORY_SEPARATOR.$addon -> name))) {
+                        , $config)) {
                     tzportfolioplusimport('plugin.modelitem');
 
-                    $controller -> set('addon', $addon);
                     return $controller;
                 }
             }

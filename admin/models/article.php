@@ -21,6 +21,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\Registry\Registry;
+use Joomla\String\StringHelper;
 use Joomla\Utilities\ArrayHelper;
 
 JLoader::register('TZ_Portfolio_PlusHelper', COM_TZ_PORTFOLIO_PLUS_ADMIN_HELPERS_PATH
@@ -33,8 +34,6 @@ JLoader::import('com_tz_portfolio_plus.helpers.association',JPATH_ADMINISTRATOR.
 
 /**
  * Item Model for an Article.
- *
- * @since  1.6
  */
 class TZ_Portfolio_PlusModelArticle extends JModelAdmin
 {
@@ -42,6 +41,12 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
     public $typeAlias = 'com_tz_portfolio_plus.article';
     protected $associationsContext = 'com_tz_portfolio_plus.article.item';
 
+    /**
+     * The event to trigger after call trigger after save.
+     *
+     * @var    string
+     * @since  1.2.7
+     */
     protected $event_addon_after_save = 'onAddOnAfterSave';
 
     protected function batchCopy($value, $pks, $contexts)
@@ -151,8 +156,8 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
 
         while ($table->load(array('alias' => $alias, 'catid' => $category_id)))
         {
-            $title = JString::increment($title);
-            $alias = JString::increment($alias, 'dash');
+            $title = StringHelper::increment($title);
+            $alias = StringHelper::increment($alias, 'dash');
         }
 
         return array($title, $alias);
@@ -321,24 +326,32 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
         if ($item = parent::getItem($pk))
         {
             // Convert the params field to an array.
-            $registry = new Registry;
-            $registry->loadString($item->attribs);
-            $item->attribs = $registry->toArray();
+            if($item -> attribs && is_string($item -> attribs)) {
+                $registry = new Registry;
+                $registry->loadString($item->attribs);
+                $item->attribs = $registry->toArray();
+            }
 
             // Convert the metadata field to an array.
-            $registry = new Registry;
-            $registry->loadString($item->metadata);
-            $item->metadata = $registry->toArray();
+            if($item -> metadata && is_string($item -> metadata)) {
+                $registry = new Registry;
+                $registry->loadString($item->metadata);
+                $item->metadata = $registry->toArray();
+            }
 
             // Convert the images field to an array.
-            $registry = new Registry;
-            $registry->loadString($item->images);
-            $item->images = $registry->toArray();
+            if($item -> images && is_string($item -> images)) {
+                $registry = new Registry;
+                $registry->loadString($item->images);
+                $item->images = $registry->toArray();
+            }
 
             // Convert the urls field to an array.
-            $registry = new Registry;
-            $registry->loadString($item->urls);
-            $item->urls = $registry->toArray();
+            if($item -> urls && is_string($item -> urls)) {
+                $registry = new Registry;
+                $registry->loadString($item->urls);
+                $item->urls = $registry->toArray();
+            }
 
             $item->articletext = trim($item->fulltext) != '' ? $item->introtext
                 . "<hr id=\"system-readmore\" />" . $item->fulltext : $item->introtext;
@@ -632,7 +645,6 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
         $tags   = null;
         if(isset($data['tags'])){
             $tags   = $data['tags'];
-            unset($data['tags']);
         }
 
         $mCatid     = (isset($data['catid']) && $data['catid'])?(int) $data['catid']:null;
@@ -644,104 +656,105 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
             $isNew      = $this->getState($this->getName() . '.new');
             $artId      = $this->getState($this->getName() . '.id');
 
-            // Save categories
-            if($this -> saveArticleCategories($artId, $mCatid, $sCatIds)){
-                unset($data['catid']);
-                unset($data['second_catid']);
-            }
-
-            $table  = $this -> getTable();
-            $table -> load($this->getState($this->getName() . '.id'));
-
-            // Save extrafields
-            if(isset($data['extrafields'])) {
-                $this->saveArticleFields($data['extrafields'], $table);
-            }else{
-                $this->saveArticleFields(array(), $table);
-            }
-
-            if (isset($data['featured']))
-            {
-                $this->featured($this->getState($this->getName() . '.id'), $data['featured']);
-            }
-
-            $assoc = JLanguageAssociations::isEnabled();
-            if ($assoc)
-            {
-                $id = (int) $this->getState($this->getName() . '.id');
-                $item = $this->getItem($id);
-
-                // Adding self to the association
-                $associations = $data['associations'];
-
-                foreach ($associations as $tag => $id)
-                {
-                    if (empty($id))
-                    {
-                        unset($associations[$tag]);
-                    }
+            try {
+                // Save categories
+                if ($this->saveArticleCategories($artId, $mCatid, $sCatIds)) {
+                    unset($data['catid']);
+                    unset($data['second_catid']);
                 }
 
-                // Detecting all item menus
-                $all_language = $item->language == '*';
+                $table = $this->getTable();
+                $table->load($this->getState($this->getName() . '.id'));
 
-                if ($all_language && !empty($associations))
-                {
-                    JError::raiseNotice(403, JText::_('COM_CONTENT_ERROR_ALL_LANGUAGE_ASSOCIATED'));
+                // Save extrafields
+                if (isset($data['extrafields'])) {
+                    $this->saveArticleFields($data['extrafields'], $table);
+                } else {
+                    $this->saveArticleFields(array(), $table);
                 }
 
-                $associations[$item->language] = $item->id;
-
-                // Deleting old association for these items
-                $db     = JFactory::getDbo();
-                $query  = $db->getQuery(true)
-                    ->delete('#__associations')
-                    ->where('context=' . $db->quote('com_tz_portfolio_plus.item'))
-                    ->where('id IN (' . implode(',', $associations) . ')');
-                $db->setQuery($query);
-                $db->execute();
-
-                if ($error = $db->getErrorMsg())
-                {
-                    $this->setError($error);
-
-                    return false;
+                if (isset($data['featured'])) {
+                    $this->featured($this->getState($this->getName() . '.id'), $data['featured']);
                 }
 
-                if (!$all_language && count($associations))
-                {
-                    // Adding new association for these items
-                    $key = md5(json_encode($associations));
-                    $query->clear()
-                        ->insert('#__associations');
+                $assoc = JLanguageAssociations::isEnabled();
+                if ($assoc) {
+                    $id = (int)$this->getState($this->getName() . '.id');
+                    $item = $this->getItem($id);
 
-                    foreach ($associations as $id)
-                    {
-                        $query->values($id . ',' . $db->quote('com_tz_portfolio_plus.item') . ',' . $db->quote($key));
+                    // Adding self to the association
+                    $associations = $data['associations'];
+
+                    foreach ($associations as $tag => $id) {
+                        if (empty($id)) {
+                            unset($associations[$tag]);
+                        }
                     }
 
+                    // Detecting all item menus
+                    $all_language = $item->language == '*';
+
+                    if ($all_language && !empty($associations)) {
+                        JError::raiseNotice(403, JText::_('COM_CONTENT_ERROR_ALL_LANGUAGE_ASSOCIATED'));
+                    }
+
+                    $associations[$item->language] = $item->id;
+
+                    // Deleting old association for these items
+                    $db = JFactory::getDbo();
+                    $query = $db->getQuery(true)
+                        ->delete('#__associations')
+                        ->where('context=' . $db->quote('com_tz_portfolio_plus.item'))
+                        ->where('id IN (' . implode(',', $associations) . ')');
                     $db->setQuery($query);
                     $db->execute();
 
-                    if ($error = $db->getErrorMsg())
-                    {
+                    if ($error = $db->getErrorMsg()) {
                         $this->setError($error);
+
+                        return false;
+                    }
+
+                    if (!$all_language && count($associations)) {
+                        // Adding new association for these items
+                        $key = md5(json_encode($associations));
+                        $query->clear()
+                            ->insert('#__associations');
+
+                        foreach ($associations as $id) {
+                            $query->values($id . ',' . $db->quote('com_tz_portfolio_plus.item') . ',' . $db->quote($key));
+                        }
+
+                        $db->setQuery($query);
+                        $db->execute();
+
+                        if ($error = $db->getErrorMsg()) {
+                            $this->setError($error);
+                            return false;
+                        }
+                    }
+                }
+
+                // Tags
+                $articleId = $this->getState($this->getName() . '.id');
+                if (isset($articleId) && $articleId) {
+                    if (!TZ_Portfolio_PlusHelperTags::insertTagsByArticleId($articleId, $tags)) {
+                        $this->setError(TZ_Portfolio_PlusHelperTags::getError());
                         return false;
                     }
                 }
-            }
 
-            // Tags
-            $articleId  = $this->getState($this->getName() . '.id');
-            if (isset($articleId) && $articleId) {
-                if(!TZ_Portfolio_PlusHelperTags::insertTagsByArticleId($articleId, $tags)){
-                    $this -> setError(TZ_Portfolio_PlusHelperTags::getError());
-                    return false;
-                }
-            }
 
-            // Trigger the addon after save event.
-            \JFactory::getApplication()->triggerEvent($this->event_addon_after_save, array($context, $table, $isNew, $data));
+                // Trigger the addon after save event.
+                \JFactory::getApplication()->triggerEvent($this->event_addon_after_save, array($context, $table, $isNew, $data));
+
+            }
+            catch (\Exception $e)
+            {
+                $this->setError($e->getMessage());
+
+                return false;
+            }
 
             return true;
         }
@@ -1064,10 +1077,8 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
         }
 
         // Insert Mediatype from plugins
-        $dispatcher	= JDispatcher::getInstance();
-
         TZ_Portfolio_PlusPluginHelper::importPlugin('mediatype');
-        if($mediaType  = $dispatcher ->trigger('onAddMediaType')){
+        if($mediaType  = \JFactory::getApplication()->triggerEvent('onAddMediaType')){
             if(count($mediaType)){
                 $xml        = $form -> getXml();
                 $field_type = $xml -> xpath('//field[@name="type"]');

@@ -85,7 +85,7 @@ abstract class TZ_Portfolio_PlusHelperRoute
         else
         {
             $id       = (int) $catid;
-            $category = new TZ_Portfolio_PlusCategories();
+            $category = JCategories::getInstance('TZ_Portfolio_Plus');
             $category = $category->get($id);
         }
 
@@ -98,7 +98,6 @@ abstract class TZ_Portfolio_PlusHelperRoute
 
             $needles    = array();
             $link       = 'index.php?option=com_tz_portfolio_plus';
-//            $_catids    = array_reverse($category->getPath());
             $_catids[]  = $category -> id.':'.$category -> alias;
 
             // Remove parent categories
@@ -147,6 +146,7 @@ abstract class TZ_Portfolio_PlusHelperRoute
         return $link;
     }
 
+
     public static function getFormRoute($id)
     {
         //Create the link
@@ -182,13 +182,73 @@ abstract class TZ_Portfolio_PlusHelperRoute
         return $link;
     }
 
-    public static function getTagRoute($id, $language = 0, $menuActive = null){
+    public static function getTagRoute($tagid, $language = 0, $menuActive = null){
+        $id = (int) $tagid;
+
+        if ($id < 1)
+        {
+            $link = '';
+        }
+        else
+        {
+            $link = 'index.php?option=com_tz_portfolio_plus&view=portfolio&tid=' . $id;
+
+            if ($language && $language !== '*' && JLanguageMultilang::isEnabled())
+            {
+                $link .= '&lang=' . $language;
+            }
+        }
+        $itemId = null;
+        if($_itemId = self::_findItem(array('portfolio' => array(0)))){
+            $itemId    = $_itemId;
+        }
+        if($menuActive && $menuActive != 'auto'){
+            $itemId    = $menuActive;
+        }
+        if($itemId) {
+            $link .= '&Itemid=' . $itemId;
+        }
+        return $link;
+    }
+
+    public static function getUserRoute($userid, $language = 0, $menuActive = null){
+        $id = (int) $userid;
+
+        if ($id < 1)
+        {
+            $link = '';
+        }
+        else
+        {
+            $link = 'index.php?option=com_tz_portfolio_plus&view=portfolio&uid=' . $id;
+
+            if ($language && $language !== '*' && JLanguageMultilang::isEnabled())
+            {
+                $link .= '&lang=' . $language;
+            }
+        }
+        $itemId = null;
+        if($_itemId = self::_findItem(array('portfolio' => array(0)))){
+            $itemId    = $_itemId;
+        }
+        if($menuActive && $menuActive != 'auto'){
+            $itemId    = $menuActive;
+        }
+        if($itemId) {
+            $link .= '&Itemid=' . $itemId;
+        }
+        return $link;
+    }
+
+
+    public static function getTagLegacyRoute($id, $language = 0, $menuActive = null){
+
         $itemId = self::_findTagItemId($id, $menuActive);
         $link   = 'index.php?option=com_tz_portfolio_plus&amp;view=tags&amp;id='.$id.'&amp;Itemid='.$itemId;
         return $link;
     }
 
-    public static function getUserRoute($id, $menuActive = null){
+    public static function getUserLegacyRoute($id, $menuActive = null){
         $itemId = self::_findUserItemId($id, $menuActive);
         $link   = 'index.php?option=com_tz_portfolio_plus&amp;view=users&amp;id='.$id.'&amp;Itemid='.$itemId;
         return $link;
@@ -469,6 +529,12 @@ abstract class TZ_Portfolio_PlusHelperRoute
                                 $catids = array_filter($catids);
                                 if(!count($catids)){
                                     if($needles){
+
+                                        if($view == 'portfolio' && isset($needles['portfolio'])
+                                            && isset($needles['portfolio'][0]) && empty($needles['portfolio'][0])){
+                                            self::$lookup[$language][$view][0]  = $item -> id;
+                                        }
+
                                         // Find menus choose all category
                                         if($_catids = self::getCatIds()){
                                             if($tzCatids){

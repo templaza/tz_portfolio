@@ -9,7 +9,7 @@
         <field name="home" type="radio"
                 label="COM_TEMPLATES_FIELD_HOME_LABEL"
                 description="COM_TEMPLATES_FIELD_HOME_ADMINISTRATOR_DESC"
-                class="btn-group btn-group-yesno"
+                class="btn-group btn-group-yesno switcher"
                 default="0">
             <option value="1">JYES</option>
             <option value="0">JNO</option>
@@ -20,7 +20,7 @@
 
         <field type="hidden" name="menus_assignment"/>
 
-        <field type="categoriesassignment" name="categories_assignment" class="checkbox"/>
+        <field type="categoriesassignment" name="categories_assignment" class="menu-assignment checkbox"/>
 
         <field type="modal_article" name="articles_assignment"
                edit="true" multiple="true"
@@ -37,7 +37,7 @@
                    label="COM_TZ_PORTFOLIO_PLUS_LAYOUT_LABEL"
                     description="COM_TZ_PORTFOLIO_PLUS_LAYOUT_DESC"/>
             <field type="radio" name="use_single_layout_builder"
-                   class="btn-group" default="1"
+                   class="btn-group switcher" default="1"
                    label="COM_TZ_PORTFOLIO_PLUS_USE_SINGLE_LAYOUT_BUILDER_LABEL"
                     description="COM_TZ_PORTFOLIO_PLUS_USE_SINGLE_LAYOUT_BUILDER_DESC">
                 <option value="1">JYES</option>

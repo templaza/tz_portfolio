@@ -21,8 +21,6 @@
 defined('_JEXEC') or die;
 
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers');
-
-JHtml::_('behavior.caption');
 ?>
     
 <div class="tzpp_bootstrap3 TzCategories categories-list<?php echo $this->pageclass_sfx;?>">

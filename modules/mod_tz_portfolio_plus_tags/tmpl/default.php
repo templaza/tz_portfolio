@@ -22,6 +22,7 @@ defined('_JEXEC') or die('Restricted access');
 
 $document = JFactory::getDocument();
 $document->addStyleSheet(JUri::base(true).'/modules/mod_tz_portfolio_plus_tags/css/style.css');
+if($list){
 ?>
 <ul class="mod_tz_tag">
 <?php foreach ($list as $tag) { ?>
@@ -35,3 +36,4 @@ $document->addStyleSheet(JUri::base(true).'/modules/mod_tz_portfolio_plus_tags/c
 } ?>
 
 </ul>
+<?php } ?>

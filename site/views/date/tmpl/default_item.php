@@ -66,7 +66,7 @@ if(!isset($item -> mediatypes) || (isset($item -> mediatypes) && !in_array($item
 
 <?php if ($params->get('show_date_title',1)) : ?>
 <h3 class="TzBlogTitle" itemprop="name">
-    <?php if ($params->get('cat_link_titles',1) && $params->get('access-view')) : ?>
+    <?php if ($params->get('date_link_titles',1) && $params->get('access-view')) : ?>
         <a href="<?php echo $blogLink; ?>" itemprop="url">
         <?php echo $this->escape($this->item->title); ?></a>
     <?php else : ?>

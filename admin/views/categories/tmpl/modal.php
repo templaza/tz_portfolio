@@ -46,7 +46,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 	<table class="table table-striped" id="categoryList">
 		<thead>
 			<tr>
-                <th width="1%" class="nowrap center">
+                <th width="1%" class="nowrap center text-center">
                     <?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'a.published', $listDirn, $listOrder); ?>
                 </th>
 				<th>
@@ -110,7 +110,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 				}
 				?>
 				<tr class="row<?php echo $i % 2; ?>">
-                    <td class="center">
+                    <td class="center text-center">
                         <span class="<?php echo $iconStates[$this->escape($item->published)]; ?>" aria-hidden="true"></span>
                     </td>
 					<td>
@@ -126,14 +126,14 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 					<td class="small hidden-phone">
 						<?php echo $this->escape($item->access_level); ?>
 					</td>
-					<td class="center nowrap">
+					<td class="center text-center nowrap">
 						<?php if ($item->language == '*'): ?>
 							<?php echo JText::alt('JALL', 'language'); ?>
 						<?php else: ?>
 							<?php echo $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
 						<?php endif; ?>
 					</td>
-					<td class="center hidden-phone">
+					<td class="center text-center hidden-phone">
 						<?php echo (int) $item->id; ?></span>
 					</td>
 				</tr>
