@@ -10,6 +10,10 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+27/07/2018 - 2.0.1
+
+	- Fix error Class 'TZ_Portfolio_PlusHelperCategories' not found of version 2.0.0
+
 26/07/2018 - 2.0.0
 
 	​- Remove Tag Articles and User Articles views (Replace by filter of Portfolio view).

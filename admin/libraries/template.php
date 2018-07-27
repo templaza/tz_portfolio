@@ -23,6 +23,8 @@ defined('_JEXEC') or die;
 use Joomla\Registry\Registry;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
+JLoader::register('TZ_Portfolio_PlusHelperCategories', JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/helpers/categories.php');
+
 class TZ_Portfolio_PlusTemplate {
 
     protected static $cache    = array();
