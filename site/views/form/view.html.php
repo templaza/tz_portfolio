@@ -68,6 +68,19 @@ class TZ_Portfolio_PlusViewForm extends JViewLegacy
             return false;
         }
 
+        // Check limit articles
+        JLoader::register('TZ_Portfolio_PlusModelArticles', JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/models/articles.php');
+        $model          = JModelLegacy::getInstance('Articles', 'TZ_Portfolio_PlusModel',
+            array('ignore_request' => true));
+        $maxArticles    = 50;
+        $total          = $model->getTotal();
+
+        if($total >= $maxArticles){
+            $app->enqueueMessage(JText::sprintf('COM_TZ_PORTFOLIO_PLUS_ARTICLE_LIMIT_ERROR', $maxArticles), 'error');
+            $app->setHeader('status', 403, true);
+            return false;
+        }
+
         $this -> extraFields	= $this -> get('ExtraFields');
 
         // Create a shortcut to the parameters.
@@ -79,10 +92,13 @@ class TZ_Portfolio_PlusViewForm extends JViewLegacy
         $this->params = $params;
 
         // Load Tabs's title from plugin group tz_portfolio_plus_mediatype
-        $dispatcher	= JDispatcher::getInstance();
         TZ_Portfolio_PlusPluginHelper::importPlugin('mediatype');
-        if($mediaType  = $dispatcher -> trigger('onAddMediaType')){
-            $mediaForm	= $dispatcher -> trigger('onMediaTypeDisplayArticleForm',array($this -> item));
+        if($mediaType  = $app -> triggerEvent('onAddMediaType')){
+            $mediaType  = array_filter($mediaType);
+
+            $mediaForm	= $app -> triggerEvent('onMediaTypeDisplayArticleForm',array($this -> item));
+            $mediaForm  = array_filter($mediaForm);
+
             if(count($mediaType)){
                 $plugin	= array();
                 foreach($mediaType as $i => $type){

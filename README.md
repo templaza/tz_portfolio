@@ -10,6 +10,12 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+09/08/2018 - 2.0.3
+
+	- Fix error with Joomla 4 Alpha.
+    - Set limit create article of free version on front-end.
+    - Remove notice release 2 versions in dashboard of pro version.
+
 09/08/2018 - 2.0.2
 
 	- Fix error conflict with Acy SMS component (can't login, logout in back-end) 
