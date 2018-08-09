@@ -31,6 +31,9 @@ tzportfolioplusimport('plugin.helpers.base');
 if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE){
     // Declare class with Joomla 4
     class TZ_Portfolio_PlusPluginHelperLegacy extends JPluginHelper{
+
+        protected static $loaded    = array();
+
         protected static function import($plugin, $autocreate = true, DispatcherInterface $dispatcher = null)
         {
             if(TZ_Portfolio_PlusPluginHelperBase::import($plugin, $dispatcher)){
@@ -79,6 +82,14 @@ if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE){
                     }
                 }
             }
+        }
+
+        public static function importPlugin($type, $plugin = null, $autocreate = true, \JEventDispatcher $dispatcher = null)
+        {
+            // Ensure we have a dispatcher now so we can correctly track the loaded paths
+            $dispatcher = $dispatcher ?: TZ_Portfolio_PlusPluginHelperBase::getDispatcher();
+
+            return parent::importPlugin($type, $plugin, $autocreate, $dispatcher);
         }
     }
 }

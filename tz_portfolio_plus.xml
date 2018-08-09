@@ -10,11 +10,12 @@
 	<familyUrl>http://www.templaza.com</familyUrl>
     <guideUrl>https://www.tzportfolio.com/document.html</guideUrl>
     <forumUrl>https://www.tzportfolio.com/help/forum.html</forumUrl>
+    <pricingUrl>https://www.tzportfolio.com/pricing.html</pricingUrl>
     <transifexUrl>https://www.transifex.com/templaza-com/tz-portfolio-plus</transifexUrl>
     <jedUrl>https://extensions.joomla.org/extension/tz-portfolio</jedUrl>
     <facebookUrl>https://www.facebook.com/tzportfolio</facebookUrl>
     <facebookGroupUrl>https://www.facebook.com/groups/tzportfolio</facebookGroupUrl>
-	<version>2.0.1</version>
+	<version>2.0.2</version>
     
     <scriptfile>script.php</scriptfile>
 
@@ -125,7 +126,7 @@
     </templates>
 
     <updateservers>
-        <server type="extension" pirority="1" name="TZ Portfolio Plus Component">
+        <server type="extension" pirority="1" name="TZ Portfolio Plus Free Component">
             <![CDATA[http://tzportfolio.com/tzupdates/tz_portfolio_plus_update.xml]]>
         </server>
     </updateservers>

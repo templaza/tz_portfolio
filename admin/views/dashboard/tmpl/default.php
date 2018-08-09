@@ -6,7 +6,7 @@
 
 // No direct access.
 defined('_JEXEC') or die;
-$xml	= simplexml_load_file(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/tz_portfolio_plus.xml');
+$xml	= TZ_Portfolio_PlusHelper::getXMLData(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/tz_portfolio_plus.xml');
 ?>
 <script type="text/javascript">
     "use strict";
@@ -92,12 +92,6 @@ $xml	= simplexml_load_file(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/tz_portfolio_plus.
                     </div>
                 </div>
                 <div class="span5 col-md-5">
-                    <div class="version-notice alert alert-primary">
-                        <p>In the next version. TZ Portfolio+ will have 2 versions are free and pro.</p>
-
-                        <p><b>Free Version</b>: That you can still use the full features included (Addons, Templates, Extension, etc). It will only limited you in 50 articles. It suitable for developer who want to test product and present to customer. To unlock limited you have to upgrade to Pro version.
-                        <br/><b>Pro Version</b>: You will get TZ Portfolio+ full features without limited</p>
-                    </div>
                     <div class="tpInfo">
                         <div class="tpDesc">
                             <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_DESCRIPTION_2'); ?>

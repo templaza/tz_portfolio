@@ -43,3 +43,7 @@ $containerclass = isset($displayData['containerclass'])?$displayData['containerc
         !COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
         echo $gridColumn?' span'.$gridColumn:'';
     } ?>">
+
+    <?php
+    // Display message update to pro (it only use for free version)
+    echo JLayoutHelper::render('message'); ?>

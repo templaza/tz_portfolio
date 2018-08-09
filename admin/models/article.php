@@ -24,6 +24,7 @@ use Joomla\Registry\Registry;
 use Joomla\String\StringHelper;
 use Joomla\Utilities\ArrayHelper;
 
+tzportfolioplusimport('plugin.modelitem');
 JLoader::register('TZ_Portfolio_PlusHelper', COM_TZ_PORTFOLIO_PLUS_ADMIN_HELPERS_PATH
     .DIRECTORY_SEPARATOR.'tz_portfolio_plus.php');
 JLoader::register('TZ_Portfolio_PlusFrontHelperExtraFields', COM_TZ_PORTFOLIO_PLUS_SITE_HELPERS_PATH
@@ -828,42 +829,6 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
         return true;
     }
 
-//    public function saveArticleCategories($data, $table = null, $isNew = true){
-//        // Insert categories
-//        $db     = $this -> getDbo();
-//        $query  = $db -> getQuery(true);
-//
-//        //// Before insert new categories must delete old categories
-//        $query -> delete('#__tz_portfolio_plus_content_category_map');
-//        $query -> where('contentid = '.$this->getState($this->getName() . '.id'));
-//        $db -> setQuery($query);
-//        $db -> execute();
-//
-//        $query -> clear();
-//
-//        $query -> insert('#__tz_portfolio_plus_content_category_map');
-//        $query -> columns('contentid, catid, main');
-//
-//        if(isset($data['catid'])){
-//            $query -> values($this->getState($this->getName() . '.id').', '.$data['catid'].', 1');
-//            unset($data['catid']);
-//        }
-//
-//        if(isset($data['second_catid']) && count($data['second_catid'])){
-//            foreach($data['second_catid'] as $catid){
-//                $query -> values($this->getState($this->getName() . '.id').', '.$catid.', 0');
-//            }
-//            unset($data['second_catid']);
-//        }
-//
-//        $db -> setQuery($query);
-//        if(!$db -> execute()){
-//            $this -> setError($db -> getErrorMsg());
-//            return false;
-//        }
-//        // End insert categories
-//    }
-
     public function saveArticleFields($fieldsData, $table, $isNew = true){
 //        if($fieldsData){
             if($fields = TZ_Portfolio_PlusFrontHelperExtraFields::getExtraFields($table, null, true)){
@@ -886,9 +851,6 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
                 $fieldObj -> onSaveArticleFieldValue($fieldValue);
             }
         }
-
-//            return true;
-//        }
         return false;
     }
 

@@ -69,7 +69,9 @@ class TZ_Portfolio_PlusControllerArticle extends JControllerForm
 		// Initialise variables.
 		$user = JFactory::getUser();
 		$categoryId = ArrayHelper::getValue($data, 'catid', $this -> input -> getInt('filter_category_id'), 'int');
-		$allow = null;
+
+        // If the category has been passed in the data or URL check it.
+        $allow = $user->authorise('core.create', 'com_tz_portfolio_plus.category');
 
 		if ($categoryId)
 		{
@@ -77,16 +79,28 @@ class TZ_Portfolio_PlusControllerArticle extends JControllerForm
 			$allow = $user->authorise('core.create', 'com_tz_portfolio_plus.category.' . $categoryId);
 		}
 
-		if ($allow === null)
-		{
-			// In the absense of better information, revert to the component permissions.
-			return parent::allowAdd();
-		}
-		else
-		{
+        // Check total articles is less 50 (only use for free version)
+        $model = $this -> getModel('articles');
+        if(!$model){
+            $allow  = false;
+        }
 
-			return $allow;
-		}
+        $maxArticles    = 50;
+        $total          = $model->getTotal();
+
+        if($total >= $maxArticles){
+            JFactory::getApplication() -> enqueueMessage(JText::sprintf('COM_TZ_PORTFOLIO_PLUS_ARTICLE_LIMIT_ERROR',
+                $maxArticles), 'error');
+            $allow  = false;
+        }
+
+        if ($allow === null)
+        {
+            // In the absense of better information, revert to the component permissions.
+            $allow = parent::allowAdd($data);
+        }
+
+        return $allow;
 	}
 
 	/**
@@ -133,6 +147,26 @@ class TZ_Portfolio_PlusControllerArticle extends JControllerForm
 
         return false;
     }
+
+//    protected function allowSave($data, $key = 'id')
+//    {
+//        $result = parent::allowSave($data, $key);
+//
+//        // Check total articles is less 50 (only use for free version)
+//        $model = $this -> getModel('articles');
+//        if(!$model){
+//            return false;
+//        }
+//
+//        $total = $model->getTotal();
+//
+//        if($total >= 5){
+//            JFactory::getApplication() -> enqueueMessage('Maximum number of articles for Free version is 50 articles. Please upgrade to TZ Portfolio Plus Pro to use full features.', 'error');
+//            $result = false;
+//        }
+//
+//        return $result;
+//    }
 
 	/**
 	 * Method to run batch operations.

@@ -25,6 +25,9 @@
 defined('_JEXEC') or die;
 
 abstract class TZ_Portfolio_PlusPluginHelperBase{
+
+    protected static $cache         = array();
+
     public static function import($plugin, $dispatcher)
     {
         static $paths = array();
@@ -59,5 +62,24 @@ abstract class TZ_Portfolio_PlusPluginHelperBase{
             }
         }
         return $paths[$dispatcherHash][$path];
+    }
+
+    public static function getDispatcher(){
+        $storeId    = md5(__METHOD__);
+
+        if(isset(self::$cache[$storeId])){
+            return self::$cache[$storeId];
+        }
+
+        if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE){
+            $dispatcher = \JFactory::getApplication()->getDispatcher();
+        }else{
+            $dispatcher = \JEventDispatcher::getInstance();
+        }
+        if(isset($dispatcher) && $dispatcher){
+            self::$cache[$storeId]  = $dispatcher;
+            return $dispatcher;
+        }
+        return false;
     }
 }

@@ -269,6 +269,18 @@ class TZ_Portfolio_PlusTableContent extends JTable
             }
         }
 
+        // Set publish_up to null date if not set
+        if (!$this->publish_up)
+        {
+            $this->publish_up = $this->_db->getNullDate();
+        }
+
+        // Set publish_down to null date if not set
+        if (!$this->publish_down)
+        {
+            $this->publish_down = $this->_db->getNullDate();
+        }
+
         // Check the publish down date is not earlier than publish up.
         if ($this->publish_down > $this->_db->getNullDate() && $this->publish_down < $this->publish_up)
         {
@@ -305,6 +317,12 @@ class TZ_Portfolio_PlusTableContent extends JTable
             }
             // Put array back together delimited by ", "
             $this->metakey = implode(", ", $clean_keys);
+        }
+
+        // Set modified to null date if not set
+        if (!$this->modified)
+        {
+            $this->modified = $this->_db->getNullDate();
         }
 
         return true;
@@ -524,10 +542,27 @@ class TZ_Portfolio_PlusTableContent extends JTable
         $date = JFactory::getDate();
         $user = JFactory::getUser();
 
-        $this->modified = $date->toSql();
+        // Set publish_up to null date if not set
+        if (!$this->publish_up)
+        {
+            $this->publish_up = $this->_db->getNullDate();
+        }
+
+        // Set publish_down to null date if not set
+        if (!$this->publish_down)
+        {
+            $this->publish_down = $this->_db->getNullDate();
+        }
+
+        // Set modified to null date if not set
+        if (!$this->modified)
+        {
+            $this->modified = $this->_db->getNullDate();
+        }
 
         if ($this->id)
         {
+            $this->modified = $date->toSql();
             // Existing item
             $this->modified_by = $user->get('id');
         }

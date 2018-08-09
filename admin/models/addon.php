@@ -795,8 +795,8 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
 
             // Get data from server
             $edition = '';
-            if (COM_TZ_PORTFOLIO_PLUS_EDITION == 'commercial' && $apiKey = $params->get('apikey')) {
-                $edition = '&apikey=' . $apiKey;
+            if (COM_TZ_PORTFOLIO_PLUS_EDITION == 'commercial' && $apiKey = $params->get('token_key')) {
+                $edition = '&token_key=' . $apiKey;
             }
 
             $url .= ($limitstart ? '&start=' . $limitstart : '') . ($type ? '&type=' . urlencode($type) : '')

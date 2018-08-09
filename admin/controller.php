@@ -69,6 +69,8 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
 		$document -> addStyleSheet(JURI::base(true).'/components/com_tz_portfolio_plus/fonts/font-awesome-4.5.0/css/font-awesome.min.css');
 		$document -> addStyleSheet(JURI::base(true).'/components/com_tz_portfolio_plus/css/style.min.css');
 
+        JHtml::_('jquery.framework');
+
         // Set the default view name and format from the Request.
         $view		= $this -> input -> get('view', 'dashboard');
 
@@ -149,11 +151,15 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
 
         require_once JPATH_COMPONENT.'/helpers/categories.php';
 
+        // Display message box for free version.
+//        if(COM_TZ_PORTFOLIO_PLUS_EDITION == 'free') {
+//            $app -> enqueueMessage(JLayoutHelper::render('messagebox'));
+//        }
 
         $display    = parent::display($cachable, $urlparams);
 
         if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
-            $document->addScript(TZ_Portfolio_PlusUri::base(true, true) . '/js/joomla4.min.js');
+            $document->addScript(TZ_Portfolio_PlusUri::base(true, true) . '/js/joomla4.min.js', array('version' => 'auto', 'relative' => true));
         }
 
         // Footer

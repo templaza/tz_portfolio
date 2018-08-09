@@ -90,4 +90,18 @@ class PlgTZ_Portfolio_PlusContentVoteModelVote extends TZ_Portfolio_PlusPluginMo
         }
         return true;
     }
+
+    public function delete($table){
+
+        if(!$table || (isset($table -> id) && !$table -> id)){
+            return false;
+        }
+
+        $db     = $this -> getDbo();
+        $query  = $db -> getQuery(true);
+        $query -> delete('#__tz_portfolio_plus_content_rating');
+        $query -> where('content_id='.$table -> id);
+        $db -> setQuery($query);
+        return $db -> execute();
+    }
 }

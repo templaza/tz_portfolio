@@ -20,7 +20,10 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\Filesystem\File;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
+
+jimport('joomla.filesystem.file');
 
 class TZ_Portfolio_PlusHelper
 {
@@ -547,17 +550,43 @@ class TZ_Portfolio_PlusHelper
         return self::$cache[$storeId];
     }
 
-    public static function prepareUpdate(&$update, &$table){
-        $params = JComponentHelper::getParams('com_tz_portfolio_plus');
+    public static function getXMLData($file, $class_name = "SimpleXMLElement", $options = 0, $ns = "", $is_prefix = false){
 
-        if($apikey = $params -> get('apikey')){
-            $downloadUrl    = $update -> get('downloadurl');
-            $url    = $downloadUrl -> _data;
-            if(strpos($url, 'apikey=')){
-                $url    = str_replace('apikey=', 'apikey='.$apikey, $url);
+	    $storeId    = __METHOD__;
+	    $storeId   .= ':'.$file;
+	    $storeId   .= ':'.$class_name;
+	    $storeId   .= ':'.$options;
+	    $storeId   .= ':'.$ns;
+	    $storeId   .= ':'.$is_prefix;
+
+	    $storeId    = md5($storeId);
+
+	    if(isset(self::$cache[$storeId])){
+	        return self::$cache[$storeId];
+        }
+
+	    if(!$file || ($file && !\JFile::exists($file))){
+	        return false;
+        }
+        $xml	= simplexml_load_file($file, $class_name, $options, $ns, $is_prefix);
+
+	    self::$cache[$storeId]  = $xml;
+
+	    return $xml;
+    }
+
+    public static function prepareUpdate(&$update, &$table){
+        $params         = JComponentHelper::getParams('com_tz_portfolio_plus');
+        $downloadUrl    = $update -> get('downloadurl');
+        $url            = $downloadUrl -> _data;
+        if(strpos($url, 'level='.COM_TZ_PORTFOLIO_PLUS_EDITION)){
+            if($tokenKey = $params -> get('token_key')){
+                if(strpos($url, 'token_key=')){
+                    $url    = str_replace('token_key=', 'token_key='.$tokenKey, $url);
+                }
+                $downloadUrl -> _data   = $url;
+                $update -> set('downloadurl', $downloadUrl);
             }
-            $downloadUrl -> _data   = $url;
-            $update -> set('downloadurl', $downloadUrl);
         }
     }
 }

@@ -28,7 +28,6 @@ tzportfolioplusimport('plugin.helpers.legacy');
 
 class TZ_Portfolio_PlusPluginHelper extends TZ_Portfolio_PlusPluginHelperLegacy {
 
-    protected static $cache         = array();
     protected static $plugins       = null;
     protected static $layout        = 'default';
     protected static $plugin_types  = null;
@@ -41,7 +40,7 @@ class TZ_Portfolio_PlusPluginHelper extends TZ_Portfolio_PlusPluginHelperLegacy 
                     tzportfolioplusimport('fields.extrafield');
                 }
                 if(!$dispatcher){
-                    $dispatcher = self::getDispatcher();
+                    $dispatcher = TZ_Portfolio_PlusPluginHelperBase::getDispatcher();
                 }
                 $className = 'PlgTZ_Portfolio_Plus' . ucfirst($type) . ucfirst($plugin);
                 if (!class_exists($className)) {
@@ -60,22 +59,7 @@ class TZ_Portfolio_PlusPluginHelper extends TZ_Portfolio_PlusPluginHelperLegacy 
     }
 
     public static function getDispatcher(){
-        $storeId    = md5(__METHOD__);
-
-        if(isset(self::$cache[$storeId])){
-            return self::$cache[$storeId];
-        }
-
-        if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE){
-            $dispatcher = \JFactory::getApplication()->getDispatcher();
-        }else{
-            $dispatcher = \JEventDispatcher::getInstance();
-        }
-        if(isset($dispatcher) && $dispatcher){
-            self::$cache[$storeId]  = $dispatcher;
-            return $dispatcher;
-        }
-        return false;
+        return TZ_Portfolio_PlusPluginHelperBase::getDispatcher();
     }
 
     public static function getLayoutPath($type, $name, $client = 'site', $layout = 'default',$viewName = null)
@@ -100,12 +84,12 @@ class TZ_Portfolio_PlusPluginHelper extends TZ_Portfolio_PlusPluginHelperLegacy 
             // Build the template and base path for the layout
             $tPath = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH . '/' . $template . '/html/'.$params -> get('layout','default')
                 .'/'.$viewName.'/plg_' . $type . '_' . $name . '/' . $layout . '.php';
-                $bPath = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/' . $type . '/' . $name
-                    .'/views'.'/'.$viewName.'/tmpl'
-                    .'/' . $defaultLayout . '.php';
-                $dPath = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/' . $type . '/' . $name
-                    .'/views'.'/'.$viewName.'/tmpl'
-                    .'/default.php';
+            $bPath = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/' . $type . '/' . $name
+                .'/views'.'/'.$viewName.'/tmpl'
+                .'/' . $defaultLayout . '.php';
+            $dPath = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/' . $type . '/' . $name
+                .'/views'.'/'.$viewName.'/tmpl'
+                .'/default.php';
         }elseif($client == 'admin'){
             $template = JFactory::getApplication()->getTemplate();
 
@@ -337,8 +321,8 @@ class TZ_Portfolio_PlusPluginHelper extends TZ_Portfolio_PlusPluginHelperLegacy 
                 $config = array_merge($_config, $config);
 
                 if($controller = TZ_Portfolio_Plus_AddOnControllerLegacy::getInstance('PlgTZ_Portfolio_Plus'
-                        .ucfirst($addon -> type).ucfirst($addon -> name)
-                        , $config)) {
+                    .ucfirst($addon -> type).ucfirst($addon -> name)
+                    , $config)) {
                     tzportfolioplusimport('plugin.modelitem');
 
                     return $controller;

@@ -13,7 +13,7 @@ TZ_Portfolio_PlusAddOnContentVote = window.TZ_Portfolio_PlusAddOnContentVote || 
 };
 
 
-(function($, document, window, Joomla, TZPortfolioPlus, addOnContentVote){
+(function($, document, window, Joomla, TZ_Portfolio_Plus, addOnContentVote){
 	"use strict";
 
 	$.tzPortfolioPlusAddOnVote	= function(el, options){

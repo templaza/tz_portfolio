@@ -23,8 +23,9 @@
 defined('_JEXEC') or die;
 
 $doc    = JFactory::getDocument();
-$doc -> addScript(TZ_Portfolio_PlusUri::base(true, true).'/js/script.min.js');
 
+$doc -> addScript(TZ_Portfolio_PlusUri::base(true, true).'/js/script.min.js',
+    array('version' => 'auto', 'relative' => true));
 $xml	= simplexml_load_file(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/tz_portfolio_plus.xml');
 ob_start();
 ?>

@@ -99,9 +99,6 @@ class PlgTZ_Portfolio_PlusUserProfile extends TZ_Portfolio_PlusPlugin
                     $html = ob_get_contents();
                     ob_end_clean();
                 }catch (Exception $e){
-//                    if($e -> getMessage()) {
-//                        $this ->
-//                    }
                     return false;
                 }
 

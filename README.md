@@ -10,6 +10,15 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+09/08/2018 - 2.0.2
+
+	- Fix error conflict with Acy SMS component (can't login, logout in back-end) 
+    - Fix error of addon vote when delete article.
+    - Fix error vote of module TZ Portfolio Plus Portfolio.
+    - Added code  remove voted of articles in vote add-on when delete article.
+    - Enable Save & Close button in add and edit article
+    - Release 2 version: free & pro
+
 27/07/2018 - 2.0.1
 
 	- Fix error Class 'TZ_Portfolio_PlusHelperCategories' not found of version 2.0.0

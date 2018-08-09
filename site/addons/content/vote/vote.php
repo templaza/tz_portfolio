@@ -20,6 +20,8 @@
 // No direct access
 defined('_JEXEC') or die;
 
+tzportfolioplusimport('plugin.modelitem');
+
 class PlgTZ_Portfolio_PlusContentVote extends TZ_Portfolio_PlusPlugin
 {
     protected $addon;
@@ -85,8 +87,16 @@ class PlgTZ_Portfolio_PlusContentVote extends TZ_Portfolio_PlusPlugin
         if($extension == 'module' || $extension == 'modules'){
             if($path = $this -> getModuleLayout($this -> _type, $this -> _name, $extension, $vName, $layout)){
                 if(!$this -> head[$vName]){
+
+                    // Add core.js file of Joomla to use Joomla object.
+                    JHtml::_('behavior.core');
+
                     $document   = JFactory::getDocument();
-                    $document->addScript(TZ_Portfolio_PlusUri::root(true)
+
+                    // Add core.min.js file of TZ_Portfolio_Plus to use TZ_Portfolio_Plus object.
+                    $document -> addScript(TZ_Portfolio_PlusUri::base(true).'/js/core.min.js');
+
+                    $document -> addScript(TZ_Portfolio_PlusUri::root(true)
                         .'/addons/content/vote/js/vote.min.js');
 
                     $document -> addStyleSheet(TZ_Portfolio_PlusUri::root(true) . '/css/ns-default.min.css',
@@ -156,6 +166,7 @@ class PlgTZ_Portfolio_PlusContentVote extends TZ_Portfolio_PlusPlugin
         , 'com_tz_portfolio_plus.featured', 'com_tz_portfolio_plus.tags', 'com_tz_portfolio_plus.users'))){
             if($html = $this -> _getViewHtml($context,$item, $params, $layout)){
                 if(!$this -> head[$vName]){
+
                     $document   = JFactory::getDocument();
                     $document -> addScriptDeclaration('
                         if(typeof TZ_Portfolio_PlusAddOnContentVote !== undefined){
@@ -206,6 +217,16 @@ class PlgTZ_Portfolio_PlusContentVote extends TZ_Portfolio_PlusPlugin
         $this -> head[$vName]   = true;
 
         return $html;
+    }
+
+    public function onContentAfterDelete($context, $table){
+        if($context == 'com_tz_portfolio_plus.article') {
+            if($model  = $this -> getModel('Vote','PlgTZ_Portfolio_PlusContentVoteModel')) {
+                if(method_exists($model,'delete')) {
+                    $model->delete($table);
+                }
+            }
+        }
     }
 
     public function onAfterDisplayAdditionInfo($context, &$article, $params, $page = 0, $layout = 'default', $module = null){}
