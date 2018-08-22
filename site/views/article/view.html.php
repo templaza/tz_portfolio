@@ -43,10 +43,6 @@ class TZ_Portfolio_PlusViewArticle extends TZ_Portfolio_PlusViewLegacy
         // Initialise variables.
 		$app		= JFactory::getApplication();
 
-        $doc    = JFactory::getDocument();
-
-        $doc -> addStyleSheet('components/com_tz_portfolio_plus/css/tzportfolioplus.min.css');
-
         $tmpl   = $app -> input -> getString('tmpl');
         if($tmpl){
             JHtml::_('bootstrap.framework');
@@ -341,6 +337,14 @@ class TZ_Portfolio_PlusViewArticle extends TZ_Portfolio_PlusViewLegacy
 		$this->_prepareDocument();
 
         $this -> generateLayout($item,$params,$dispatcher);
+
+        if($this -> generateLayout){
+            $this -> document -> addStyleSheet(TZ_Portfolio_PlusUri::base(true)
+                . '/bootstrap/css/bootstrap.min.css', array('version' => 'auto'));
+        }
+
+        $this -> document -> addStyleSheet('components/com_tz_portfolio_plus/css/tzportfolioplus.min.css'
+            , array('version' => 'auto'));
 
 		parent::display($tpl);
 

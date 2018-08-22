@@ -10,6 +10,14 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+22/08/2018 - 2.0.4
+
+	- Fix error style of layout builder when disable bootstrap library.
+    - Fix error lost value of extrafield when change access in backend.
+    - Fix error Cannot declare class JHtmlIcon.
+    - Update Elegant template v1.7 - update style support layout builder.
+    - Update feature the alias of category must be different from Prefix Users (Author) URLs, Prefix Tags URLs and Prefix Date URLs when create or edit category.
+
 09/08/2018 - 2.0.3
 
 	- Fix error with Joomla 4 Alpha.

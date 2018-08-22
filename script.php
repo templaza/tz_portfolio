@@ -652,6 +652,12 @@ class com_tz_portfolio_plusInstallerScript{
         if(\JFolder::exists($usersPath)){
             Folder::delete($usersPath);
         }
+
+        // Remove helpers/icon.php file (it used to old version)
+        $iconFile = JPATH_SITE.'/components/com_tz_portfolio_plus/helpers/icon.php';
+        if(\JFile::exists($iconFile)){
+            File::delete($iconFile);
+        }
     }
 
     public function installationResult($status){

@@ -105,7 +105,7 @@ class TZ_Portfolio_PlusModelField extends JModelAdmin
         $table = $this->getTable();
         $_data = $data;
 
-        if($data && isset($data['value'])){
+        if($data && isset($data['value']) && !$data['value']){
             $data['value']  = '';
         }
 

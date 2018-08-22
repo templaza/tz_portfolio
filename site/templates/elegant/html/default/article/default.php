@@ -35,9 +35,11 @@ $canEdit	= $item->params->get('access-edit');
 $user		= JFactory::getUser();
 $doc        = JFactory::getDocument();
 
+$layoutbuidler  =   $this -> generateLayout && !empty($this -> generateLayout) ? true : false;
+
 ?>
 
-<div class="tpItemPage item-page<?php echo $this->pageclass_sfx?>"  itemscope itemtype="http://schema.org/Article">
+<div class="<?php echo $layoutbuidler ? 'tzpp_bootstrap3' : ''; ?> tpItemPage item-page<?php echo $this->pageclass_sfx?>"  itemscope itemtype="http://schema.org/Article">
     <meta itemprop="inLanguage" content="<?php echo ($item->language === '*') ? JFactory::getConfig()->get('language') : $item->language; ?>" />
     <?php if ($this->params->get('show_page_heading', 1)) : ?>
         <h2 class="tpHeadingTitle">

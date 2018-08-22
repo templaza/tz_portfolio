@@ -100,7 +100,6 @@ class TZ_Portfolio_PlusController extends TZ_Portfolio_PlusControllerLegacy
             $doc -> addScript(TZ_Portfolio_PlusUri::base(true).'/js/jquery-migrate-1.2.1.js');
         }
         if($params -> get('enable_bootstrap',1)) {
-            $doc->addStyleSheet(TZ_Portfolio_PlusUri::base(true) . '/bootstrap/css/bootstrap.min.css');
             $doc -> addScript(TZ_Portfolio_PlusUri::base(true).'/bootstrap/js/bootstrap.min.js');
             $doc -> addScriptDeclaration('
             (function($){

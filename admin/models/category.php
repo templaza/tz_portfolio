@@ -548,6 +548,17 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 			return false;
 		}
 
+        // Check alias with prefix tag, prefix users and prefix date url
+        $params = JComponentHelper::getParams('com_tz_portfolio_plus');
+        if(isset($table -> alias) && $table -> alias){
+            if($table -> alias == $params -> get('sef_users_prefix', 'users')
+                || $table -> alias == $params -> get('sef_tags_prefix', 'tags')
+                || $table -> alias == $params -> get('sef_date_prefix', 'date')){
+                $this -> setError(JText::_('COM_TZ_PORTFOLIO_PLUS_CATEGORY_ALIAS_EXISTS'));
+                return false;
+            }
+        }
+
 		// Trigger the onContentBeforeSave event.
 		$result = $app -> triggerEvent($this->event_before_save, array($this->option . '.' . $this->name, &$table, $isNew));
 		if (in_array(false, $result, true))
