@@ -25,9 +25,12 @@ $upper_limit    = $lang->getUpperLimitSearchWord();
 
 $params = $this -> params;
 JHtml::_('formbehavior.chosen', 'select');
+
+$menu       = JFactory::getApplication() -> getMenu();
+$mnuActive  = $menu -> getActive()
 ?>
 
-<form id="searchForm" action="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus');?>" method="post">
+<form id="searchForm" action="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&Itemid='.$mnuActive -> id);?>" method="post">
 
     <div class="form-inline form-group">
         <input type="text" name="searchword" placeholder="<?php echo JText::_('COM_TZ_PORTFOLIO_SEARCH_KEYWORD'); ?>"

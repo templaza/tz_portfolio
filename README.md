@@ -10,6 +10,14 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+25/08/2018 - 2.0.5
+
+	- Fix error style of extrafield on front-end.
+    - Fix error sef url with author when use "User ID And Alias Separator" is "Use a dash (-)" and disable option "Use User Alias".
+    - Fix error sef url with tag when use "Tag ID And Alias Separator" is "Use a dash (-)" and disable option "Use Tag Alias".
+    - Update feature remove category ID from url (Added option "Remove Category ID" at Advanced Options in global config).
+    - Optimize some sef urls.
+
 22/08/2018 - 2.0.4
 
 	- Fix error style of layout builder when disable bootstrap library.

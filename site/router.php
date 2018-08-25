@@ -25,6 +25,7 @@ use Joomla\CMS\Component\Router\RouterBase;
 class TZ_Portfolio_PlusRouter extends RouterBase
 {
     protected $addonRouters     = array();
+    protected $cache            = array();
 
     public function getAddonRouter($addon, $group = 'content'){
         if (!isset($this->addonRouters[$addon]))
@@ -262,33 +263,39 @@ class TZ_Portfolio_PlusRouter extends RouterBase
                 $path = array_reverse($category->getPath());
 
                 foreach ($path as $id) {
-                    if (isset($mCatid) && is_array($mCatid)) {
-                        $chkCatidk = false;
-                        for ($i = 0; $i < count($mCatid); $i++) {
-                            if ((int)$id == (int)$mCatid[$i]) {
-                                $chkCatidk = true;
-                                break;
-                            }
-                        }
-                        if ($chkCatidk) break;
-                    } elseif ((int)$id == (int)$mCatid) {
-                        break;
-                    }
+//                    if (isset($mCatid) && is_array($mCatid)) {
+//                        $chkCatidk = false;
+//                        for ($i = 0; $i < count($mCatid); $i++) {
+//                            if ((int)$id == (int)$mCatid[$i]) {
+//                                $chkCatidk = true;
+//                                break;
+//                            }
+//                        }
+//                        if ($chkCatidk) break;
+//                    }
+//                    elseif ((int)$id == (int)$mCatid) {
+//                        break;
+//                    }
 
                     list($tmp, $id) = explode(':', $id, 2);
 
-                    $array[] = $id;
+
+                    if($params -> get('sef_remove_category_id', 0)) {
+                        $array[] = $id;
+                    }else{
+                        $array[] = (int) $tmp.':'.$id;
+                    }
                 }
 
                 $array = array_reverse($array);
             }else{
-                $array[]  = $category -> alias;
+                if($params -> get('sef_remove_category_id', 0)){
+                    $array[] = $category->alias;
+                }else {
+                    $array[]  = $category -> id.':'.$category -> alias;
+                }
             }
 
-            if (!$advanced && count($array)) {
-
-                $array[0] = (int)$catid . ':' . $array[0];
-            }
             $segments = array_merge($segments, $array);
 
             if ($view == 'article') {
@@ -449,8 +456,6 @@ class TZ_Portfolio_PlusRouter extends RouterBase
 
             unset($query['view']);
             unset($query['id']);
-
-//            return $segments;
         }
 
         if ($view == 'date') {
@@ -855,7 +860,7 @@ class TZ_Portfolio_PlusRouter extends RouterBase
 
             $aquery -> select('alias');
             $aquery -> from('#__tz_portfolio_plus_tags');
-            $aquery -> where('id='.$query['tid']);
+            $aquery -> where('id='.(int) $query['tid']);
             $db -> setQuery($aquery);
 
             $alias  = '';
@@ -866,7 +871,7 @@ class TZ_Portfolio_PlusRouter extends RouterBase
             switch ($params -> get('sef_tag_separator', 'slash_revert_id')){
                 default:
                 case 'dash':
-                    $segments[] = $query['tid'].':'.$alias;
+                    $segments[] = $query['tid'].($alias?':'.$alias:'');
                     break;
                 case 'slash':
                     $segments[] = $query['tid'];
@@ -898,7 +903,7 @@ class TZ_Portfolio_PlusRouter extends RouterBase
             switch ($params -> get('sef_user_separator', 'slash_revert_id')){
                 default:
                 case 'dash':
-                    $segments[] = $uid.':'.$alias;
+                    $segments[] = $uid.($alias?':'.$alias:'');
                     break;
                 case 'slash':
                     $segments[] = $uid;
@@ -912,6 +917,32 @@ class TZ_Portfolio_PlusRouter extends RouterBase
 
             unset($query['uid']);
         }
+    }
+
+    protected function getCategoryByAlias($alias){
+        $storeId    = md5(__METHOD__.':'.$alias);
+
+        if(isset($this -> cache[$storeId])){
+            return $this -> cache[$storeId];
+        }
+
+        if(!$alias){
+            return false;
+        }
+
+        $db     = JFactory::getDbo();
+        $query  = $db -> getQuery(true);
+        $query -> select('*');
+        $query -> from('#__tz_portfolio_plus_categories');
+        $query -> where('alias='.$db -> quote($alias));
+        $query -> where('extension='.$db -> quote('com_tz_portfolio_plus'));
+
+        $db -> setQuery($query);
+        if($data = $db -> loadObject()){
+            $this -> cache[$storeId]    = $data;
+            return $data;
+        }
+        return false;
     }
 
     protected function sefParse(&$segments, $addOnVars = false){
@@ -1005,49 +1036,7 @@ class TZ_Portfolio_PlusRouter extends RouterBase
             }
 
             // we check to see if an alias is given.  If not, we assume it is an article
-            //Old
-            if (strpos($segments[0], ':') === false) {
-                $vars['view'] = 'article';
-                $vars['id'] = (int)$segments[0];
-                if($params -> get('sef_use_article_alias',1)
-                    || (!$params -> get('sef_use_article_id',1) && !$params -> get('sef_use_article_alias',1))) {
-                    $alias  = $segments[0];
-                    $query = 'SELECT id FROM #__tz_portfolio_plus_content WHERE alias=' .$db -> quote($alias).'';
-                    $db -> setQuery($query);
-                    if($id = $db -> loadResult()) {
-                        $vars['id'] = $id;
-                    }
-                }
-                return $vars;
-            }
-
-            list($id, $alias) = explode(':', $segments[0], 2);
-
-            // first we check if it is a category
-            $category = JCategories::getInstance('TZ_Portfolio_Plus')->get($id);
-
-            if ($category && $category->alias == $alias) {
-                $vars['view'] = 'portfolio';
-                $vars['id'] = $id;
-
-                return $vars;
-            } else {
-                $query = 'SELECT c.alias, m.catid FROM #__tz_portfolio_plus_content AS c'
-                    .' LEFT JOIN #__tz_portfolio_plus_content_category_map AS m ON m.contentid = c.id'
-                    .' WHERE c.id = ' . (int)$id.' AND m.main = 1';
-                $db->setQuery($query);
-                $article = $db->loadObject();
-
-                if ($article) {
-                    if ($article->alias == $alias) {
-                        $vars['view'] = 'article';
-                        $vars['catid'] = (int)$article->catid;
-                        $vars['id'] = (int)$id;
-
-                        return $vars;
-                    }
-                }
-            }
+            // Code here remove from v2.0.5
         }
 
         // if there was more than one segment, then we can determine where the URL points to
@@ -1113,11 +1102,78 @@ class TZ_Portfolio_PlusRouter extends RouterBase
             $sefArticleSep  = $params -> get('sef_article_separator','slash_revert_id');
 
             if($sefArticleSep == 'dash' || $sefArticleSep == 'slash_revert_id') {
-                $article_id = (int)$segments[$count - 1];
+                if(isset($segments[$count - 1])) {
+                    $article_id = (int)$segments[$count - 1];
+                }
             }else{
-                $article_id = (int)$segments[$count - 2];
+                if(isset($segments[$count - 2])) {
+                    $article_id = (int)$segments[$count - 2];
+                }
             }
 
+            $lastSegment    = end($segments);
+
+            if(!is_numeric($lastSegment)){
+                $lastId     = null;
+                $catAlias   = null;
+
+                if($params -> get('sef_use_article_id', 1)
+                    || !$params -> get('sef_remove_category_id', 0)){
+                    $lastId = (int) $lastSegment;
+                }
+
+                if(!$lastId) {
+                    $lastAlias  = preg_replace('/:/', '-', $lastSegment, 1);
+                    if(isset($segments[$count - 2])) {
+                        if($params -> get('sef_remove_category_id', 0)) {
+                            $catAlias  = preg_replace('/:/', '-', $segments[$count - 2], 1);
+                        }else{
+                            list($catId, $catAlias) = explode(':', $segments[$count - 2]);
+                        }
+                    }
+                }else{
+                    $lastAlias  = preg_replace('/'.$lastId.':/', '', $lastSegment, 1);
+                    if(isset($segments[$count - 1])) {
+                        if($params -> get('sef_remove_category_id', 0)) {
+                            $catAlias  = preg_replace('/:/', '-', $segments[$count - 1], 1);
+                        }else {
+                            list($catId, $catAlias) = explode(':', $segments[$count - 1]);
+                        }
+                    }
+                }
+
+                // Get category by last segment
+                if($lastCategory = $this -> getCategoryByAlias($lastAlias)){
+                    $vars['view']   = 'portfolio';
+                    $vars['id']     = $lastCategory -> id.':'.$lastCategory -> alias;
+
+                    return $vars;
+                }
+
+                $db     = JFactory::getDbo();
+                $query  = $db -> getQuery(true);
+                $query -> select('c.*');
+                $query -> from('#__tz_portfolio_plus_content AS c');
+                $query -> join('INNER', '#__tz_portfolio_plus_content_category_map AS m ON m.contentid = c.id');
+                $query -> join('INNER', '#__tz_portfolio_plus_categories AS cc ON cc.id = m.catid AND m.main = 1');
+                $query -> where('c.alias='.$db -> quote($lastAlias));
+
+                $db -> setQuery($query);
+                if($_article = $db -> loadObject()){
+                    $vars['view']   = 'article';
+                    $vars['id']     = $_article -> id.':'.$_article -> alias;
+
+                    // Get category by alias
+                    if($_category = $this -> getCategoryByAlias($catAlias)){
+                        $vars['catid']  = $_category -> id;
+                    }
+
+                    return $vars;
+                }
+            }
+            else{
+                $article_id = (int) $lastSegment;
+            }
 
             if((!$params -> get('sef_use_article_id',1) && $params -> get('sef_use_article_alias',1))
                 || (!$params -> get('sef_use_article_id',1) && !$params -> get('sef_use_article_alias',1))) {
