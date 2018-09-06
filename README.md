@@ -10,6 +10,12 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+06/09/2018 - 2.0.6
+
+	- Fix error style of permission of add or edit form.
+    - Fix error duplicate template styles when the style assign to multiple articles in back-end.
+    - Remove option token key of free version.
+
 25/08/2018 - 2.0.5
 
 	- Fix error style of extrafield on front-end.

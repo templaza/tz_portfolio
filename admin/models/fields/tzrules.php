@@ -167,27 +167,46 @@ class JFormFieldTZRules extends JFormFieldRules
         // Description
         $html[] = '<p class="rule-desc">' . \JText::_('JLIB_RULES_SETTINGS_DESC') . '</p>';
 
-        // Begin tabs
-        $html[] = '<div class="row mb-2" data-ajaxuri="' . $ajaxUri . '" id="permissions-sliders">';
+        if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+            // Begin tabs
+            $html[] = '<div class="row mb-2" data-ajaxuri="' . $ajaxUri . '" id="permissions-sliders">';
 
-        // Building tab nav
-        $html[] = '<div class="col-md-3">';
-        $html[] = '<ul class="nav nav-pills flex-column">';
+            // Building tab nav
+            $html[] = '<div class="col-md-3">';
+            $html[] = '<ul class="nav nav-pills flex-column">';
+        }else{
+            // Begin tabs
+            $html[] = '<div class="tabbable tabs-left" data-ajaxuri="' . $ajaxUri . '" id="permissions-sliders">';
+
+            // Building tab nav
+            $html[] = '<ul class="nav nav-tabs">';
+        }
 
         foreach ($groups as $group)
         {
-            // Initial Active Tab
-            $active = (int) $group->value === 1 ? ' active' : '';
+            if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE){
+                // Initial Active Tab
+                $active = (int) $group->value === 1 ? ' active' : '';
 
-            $html[] = '<li class="nav-item">';
-            $html[] = '<a class="nav-link' . $active . '" href="#permission-' . $group->value . '" data-toggle="tab">';
+                $html[] = '<li class="nav-item">';
+                $html[] = '<a class="nav-link' . $active . '" href="#permission-' . $group->value . '" data-toggle="tab">';
+            }else{
+                // Initial Active Tab
+                $active = (int) $group->value === 1 ? ' class="active"' : '';
+
+                $html[] = '<li' . $active . '>';
+                $html[] = '<a href="#permission-' . $group->value . '" data-toggle="tab">';
+            }
             $html[] = \JLayoutHelper::render('joomla.html.treeprefix', array('level' => $group->level + 1)) . $group->text;
             $html[] = '</a>';
             $html[] = '</li>';
         }
 
         $html[] = '</ul>';
-        $html[] = '</div>';
+
+        if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+            $html[] = '</div>';
+        }
 
         $html[] = '<div class="tab-content col-md-9">';
 
@@ -233,10 +252,17 @@ class JFormFieldTZRules extends JFormFieldRules
 
                 $html[] = '<td headers="settings-th' . $group->value . '">';
 
-                $html[] = '<select onchange="sendPermissions.call(this, event)" data-chosen="true" class="custom-select novalidate"'
-                    . ' name="' . $this->name . '[' . $action->name . '][' . $group->value . ']"'
-                    . ' id="' . $this->id . '_' . $action->name	. '_' . $group->value . '"'
-                    . ' title="' . strip_tags(\JText::sprintf('JLIB_RULES_SELECT_ALLOW_DENY_GROUP', \JText::_($action->title), trim($group->text))) . '">';
+                if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+                    $html[] = '<select onchange="sendPermissions.call(this, event)" data-chosen="true" class="custom-select novalidate"'
+                        . ' name="' . $this->name . '[' . $action->name . '][' . $group->value . ']"'
+                        . ' id="' . $this->id . '_' . $action->name . '_' . $group->value . '"'
+                        . ' title="' . strip_tags(\JText::sprintf('JLIB_RULES_SELECT_ALLOW_DENY_GROUP', \JText::_($action->title), trim($group->text))) . '">';
+                }else{
+                    $html[] = '<select onchange="sendPermissions.call(this, event)" data-chosen="true" class="input-small novalidate"'
+                        . ' name="' . $this->name . '[' . $action->name . '][' . $group->value . ']"'
+                        . ' id="' . $this->id . '_' . $action->name	. '_' . $group->value . '"'
+                        . ' title="' . strip_tags(JText::sprintf('JLIB_RULES_SELECT_ALLOW_DENY_GROUP', JText::_($action->title), trim($group->text))) . '">';
+                }
 
                 /**
                  * Possible values:
@@ -276,7 +302,11 @@ class JFormFieldTZRules extends JFormFieldRules
                 // Current group is a Super User group, so calculated setting is "Allowed (Super User)".
                 if ($isSuperUserGroup)
                 {
-                    $result['class'] = 'badge badge-success';
+                    if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+                        $result['class'] = 'badge badge-success';
+                    }else{
+                        $result['class'] = 'label label-success';
+                    }
                     $result['text'] = '<span class="icon-lock icon-white"></span>' . \JText::_('JLIB_RULES_ALLOWED_ADMIN');
                 }
                 // Not super user.
@@ -287,13 +317,22 @@ class JFormFieldTZRules extends JFormFieldRules
                     // If recursive calculated setting is "Denied" or null. Calculated permission is "Not Allowed (Inherited)".
                     if ($inheritedGroupRule === null || $inheritedGroupRule === false)
                     {
-                        $result['class'] = 'badge badge-danger';
+                        if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+                            $result['class'] = 'badge badge-danger';
+                        }else{
+                            $result['class'] = 'label label-important';
+                        }
+
                         $result['text']  = \JText::_('JLIB_RULES_NOT_ALLOWED_INHERITED');
                     }
                     // If recursive calculated setting is "Allowed". Calculated permission is "Allowed (Inherited)".
                     else
                     {
-                        $result['class'] = 'badge badge-success';
+                        if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+                            $result['class'] = 'badge badge-success';
+                        }else{
+                            $result['class'] = 'label label-success';
+                        }
                         $result['text']  = \JText::_('JLIB_RULES_ALLOWED_INHERITED');
                     }
 
@@ -308,13 +347,21 @@ class JFormFieldTZRules extends JFormFieldRules
                     // If there is an explicit permission "Not Allowed". Calculated permission is "Not Allowed".
                     if ($assetRule === false)
                     {
-                        $result['class'] = 'badge badge-danger';
+                        if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+                            $result['class'] = 'badge badge-danger';
+                        }else{
+                            $result['class'] = 'label label-important';
+                        }
                         $result['text']  = \JText::_('JLIB_RULES_NOT_ALLOWED');
                     }
                     // If there is an explicit permission is "Allowed". Calculated permission is "Allowed".
                     elseif ($assetRule === true)
                     {
-                        $result['class'] = 'badge badge-success';
+                        if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+                            $result['class'] = 'badge badge-success';
+                        }else{
+                            $result['class'] = 'label label-success';
+                        }
                         $result['text']  = \JText::_('JLIB_RULES_ALLOWED');
                     }
 
@@ -323,7 +370,11 @@ class JFormFieldTZRules extends JFormFieldRules
                     // Global configuration with "Not Set" permission. Calculated permission is "Not Allowed (Default)".
                     if (empty($group->parent_id) && $isGlobalConfig === true && $assetRule === null)
                     {
-                        $result['class'] = 'badge badge-danger';
+                        if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+                            $result['class'] = 'badge badge-danger';
+                        }else{
+                            $result['class'] = 'label label-important';
+                        }
                         $result['text']  = \JText::_('JLIB_RULES_NOT_ALLOWED_DEFAULT');
                     }
 
@@ -334,7 +385,11 @@ class JFormFieldTZRules extends JFormFieldRules
                      */
                     elseif ($inheritedGroupParentAssetRule === false || $inheritedParentGroupRule === false)
                     {
-                        $result['class'] = 'badge badge-danger';
+                        if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+                            $result['class'] = 'badge badge-danger';
+                        }else{
+                            $result['class'] = 'label label-important';
+                        }
                         $result['text']  = '<span class="icon-lock icon-white"></span>' . \JText::_('JLIB_RULES_NOT_ALLOWED_LOCKED');
                     }
                 }

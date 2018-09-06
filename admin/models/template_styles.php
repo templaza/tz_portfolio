@@ -84,9 +84,6 @@ class TZ_Portfolio_PlusModelTemplate_Styles extends JModelList
             -> where('e.published = 1')
             ->where('e.type=' . $db->quote('tz_portfolio_plus-template'));
 
-        $query -> join('LEFT','#__tz_portfolio_plus_content AS xc ON t.id = xc.template_id');
-        $query -> join('LEFT','#__tz_portfolio_plus_categories AS c ON t.id = c.template_id');
-
         // Filter by search in name.
         $search = $this->getState('filter.search');
 
