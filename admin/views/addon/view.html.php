@@ -49,10 +49,6 @@ class TZ_Portfolio_PlusViewAddon extends JViewLegacy
 
         $this -> form       = $this -> get('form');
 
-        $this -> itemsServer       = $this -> get('ItemsFromServer');
-        $this -> paginationServer   = $this -> get('PaginationFromServer');
-        $this -> filterForm   = $this -> get('FilterForm');
-
         // Check for errors.
         if (count($errors = $this->get('Errors')))
         {
@@ -61,6 +57,10 @@ class TZ_Portfolio_PlusViewAddon extends JViewLegacy
         }
 
         if($this -> getLayout() == 'upload') {
+            $this -> itemsServer       = $this -> get('ItemsFromServer');
+            $this -> paginationServer   = $this -> get('PaginationFromServer');
+            $this -> filterForm   = $this -> get('FilterForm');
+			
             TZ_Portfolio_PlusHelper::addSubmenu('addons');
             $this->sidebar = JHtmlSidebar::render();
         }

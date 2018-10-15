@@ -10,6 +10,13 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+15/10/2018 - 2.0.7
+
+	- Fix error save information of add-on (image, video's thumbnail...) on front-end.
+    - Fix error connect to external server when edit options of add-on.
+    - Fix error warning lost catid of module TZ Portfolio Plus Portfolio.
+    - Fix error chose image from extra field's value when create new field in back-end (error from addon extrafield TZ Vehicle of Autoshowroom Template).
+
 06/09/2018 - 2.0.6
 
 	- Fix error style of permission of add or edit form.

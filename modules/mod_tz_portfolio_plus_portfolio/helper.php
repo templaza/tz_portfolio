@@ -47,7 +47,7 @@ class modTZ_Portfolio_PlusPortfolioHelper
         $db     = JFactory::getDbo();
         $query  = $db->getQuery(true);
 
-        $query->select('c.*, c.id as content_id, u.name as user_name, u.id as user_id');
+        $query->select('c.*, c.id as content_id, m.catid AS catid, u.name as user_name, u.id as user_id');
         $query->select('CASE WHEN CHAR_LENGTH(c.alias) THEN CONCAT_WS(":", c.id, c.alias) ELSE c.id END as slug');
         $query->select('CASE WHEN CHAR_LENGTH(cc.alias) THEN CONCAT_WS(":", cc.id, cc.alias) ELSE cc.id END as catslug');
         $query->select('CASE WHEN CHAR_LENGTH(c.fulltext) THEN c.fulltext ELSE null END as readmore');

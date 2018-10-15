@@ -576,7 +576,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
 
     // Upload image and store data (from image form) in add or edit of portfolio's article view
     public function onContentAfterSave($context, $data, $isnew){
-        if($context == 'com_tz_portfolio_plus.article') {
+        if($context == 'com_tz_portfolio_plus.article' || $context == 'com_tz_portfolio_plus.form') {
             if($model  = $this -> getModel()) {
                 if(method_exists($model,'save')) {
                     $model->save($data);
@@ -587,7 +587,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
     }
 
     public function onContentAfterDelete($context, $table){
-        if($context == 'com_tz_portfolio_plus.article') {
+        if($context == 'com_tz_portfolio_plus.article' || $context == 'com_tz_portfolio_plus.form') {
             if($model  = $this -> getModel()) {
                 if(method_exists($model,'delete')) {
                     $model->delete($table);
