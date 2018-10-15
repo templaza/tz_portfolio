@@ -127,7 +127,7 @@
 
     <updateservers>
         <server type="extension" pirority="1" name="TZ Portfolio Plus Free Component">
-            <![CDATA[http://tzportfolio.com/tzupdates/tz_portfolio_plus_update.xml]]>
+            <![CDATA[http://www.tzportfolio.com/tzupdates/tz_portfolio_plus_update.xml]]>
         </server>
     </updateservers>
 
