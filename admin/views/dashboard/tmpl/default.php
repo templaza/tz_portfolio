@@ -6,7 +6,7 @@
 
 // No direct access.
 defined('_JEXEC') or die;
-$xml	= TZ_Portfolio_PlusHelper::getXMLData(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/tz_portfolio_plus.xml');
+$xml	= simplexml_load_file(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/tz_portfolio_plus.xml');
 ?>
 <script type="text/javascript">
     "use strict";

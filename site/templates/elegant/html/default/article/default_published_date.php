@@ -24,7 +24,8 @@ $params = $this -> item -> params;
 
 if($params -> get('show_publish_date',1)){
 ?>
-<div class="tpDate">
+<div class="tpDate hasTooltip" title="<?php
+echo JText::_('TPL_ELEGANT_PUBLISH_DATE');?>">
     <i class="tp tp-calendar"></i>
     <time itemprop="datePublished" datetime="<?php echo JHtml::_('date', $this->item->publish_up, JText::_('DATE_FORMAT_FILTER_DATE')); ?>">
         <?php echo JHtml::_('date', $this->item->publish_up, JText::_('DATE_FORMAT_LC')); ?>

@@ -113,6 +113,7 @@ $doc -> addScriptDeclaration('
                         <?php echo $this->form->renderField('featured'); ?>
                         <?php echo $this->form->renderField('language'); ?>
                         <?php echo $this->form->renderField('template_id'); ?>
+                        <?php echo $this -> form -> renderField('priority');?>
                     </div>
                 </div>
 
@@ -179,12 +180,36 @@ $doc -> addScriptDeclaration('
 
         <?php echo JHtml::_('bootstrap.endTabSet'); ?>
 
+        <?php
+        $user       = JFactory::getUser();
+        $canApprove = $user -> authorise('core.approve', 'com_tz_portfolio_plus');
+        $saveText   = JText::_('JSAVE');
+        if(!$canApprove){
+            $saveText   = JText::_('COM_TZ_PORTFOLIO_PLUS_SUBMIT_APPROVE');
+        }
+        if($canApprove && ($this -> item -> state == 3 || $this -> item -> state == 4)){
+            $saveText   = JText::_('COM_TZ_PORTFOLIO_PLUS_APPROVE_AND_PUBLISH');
+        } ?>
         <div class="btn-toolbar">
             <div class="btn-group">
                 <button type="button" class="btn btn-primary" onclick="Joomla.submitbutton('article.save')">
-                    <span class="icon-ok"></span><?php echo JText::_('JSAVE') ?>
+                    <span class="icon-ok"></span><?php echo $saveText; ?>
                 </button>
             </div>
+            <?php if(!$canApprove){ ?>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary" onclick="Joomla.submitbutton('article.draft')">
+                        <span class="icon-ok"></span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SAVE_DRAFT') ?>
+                    </button>
+                </div>
+            <?php } ?>
+            <?php if($canApprove && ($this -> item -> state == 3 || $this -> item -> state == 4)){ ?>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary" onclick="Joomla.submitbutton('article.reject')">
+                        <span class="icon-ok"></span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_REJECT') ?>
+                    </button>
+                </div>
+            <?php } ?>
             <div class="btn-group">
                 <button type="button" class="btn" onclick="Joomla.submitbutton('article.cancel')">
                     <span class="icon-cancel"></span><?php echo JText::_('JCANCEL') ?>

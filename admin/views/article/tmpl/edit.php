@@ -42,7 +42,9 @@ $doc -> addStyleSheet(TZ_Portfolio_PlusUri::base(true, true).'/css/tz_portfolio_
 
 // Create shortcut to parameters.
 $params = $this->state->get('params');
-$params = $params->toArray();
+if($params) {
+    $params = $params->toArray();
+}
 
 // This checks if the config options have ever been saved. If they haven't they will fall back to the original settings.
 $editoroptions = isset($params['show_publishing_options']);

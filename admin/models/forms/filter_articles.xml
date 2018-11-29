@@ -6,8 +6,8 @@
 			   label="COM_TZ_PORTFOLIO_PLUS_FILTER_SEARCH_LABEL"
 			   description="COM_TZ_PORTFOLIO_PLUS_FILTER_SEARCH_DESC"/>
 
-		<field type="status" name="published"
-			   filter="0,1,-2,*"
+		<field type="tzstatus" name="published"
+			   filter="3,-3,0,1,-2,4,*"
 			   onchange="this.form.submit();"
 			   label="COM_CONTENT_FILTER_PUBLISHED"
 			   description="COM_CONTENT_FILTER_PUBLISHED_DESC">

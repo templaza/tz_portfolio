@@ -640,9 +640,9 @@
             <option value="1">JYES</option>
         </field>
 
-        <!--<field type="text" name="token_key"-->
-               <!--label="COM_TZ_PORTFOLIO_PLUS_TOKEN_KEY"-->
-               <!--description="COM_TZ_PORTFOLIO_PLUS_TOKEN_KEY_DESC"/>-->
+        <field type="text" name="token_key"
+               label="COM_TZ_PORTFOLIO_PLUS_TOKEN_KEY"
+               description="COM_TZ_PORTFOLIO_PLUS_TOKEN_KEY_DESC"/>
 
         <field name="tz_portfolio_plus_router" type="spacer"
                class="alert alert-warning btn-block"

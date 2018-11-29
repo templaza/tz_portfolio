@@ -273,9 +273,21 @@ abstract class TZ_Portfolio_PlusHelperRoute
         if(count($menuItems)){
             $link   .= '&Itemid='.$menuItems[0] -> id;
         }
-//        elseif ($item = self::_findItem()) {
-//            $link .= '&Itemid='.$item;
-//        }
+
+        return $link;
+    }
+
+    public static function getMyArticlesRoute(){
+        $menu   = JFactory::getApplication() -> getMenu();
+
+        //Create the link
+        $link = 'index.php?option=com_tz_portfolio_plus&view=myarticles';
+
+        $menuItems  = $menu -> getItems('link', $link);
+
+        if(count($menuItems)){
+            $link   .= '&Itemid='.$menuItems[0] -> id;
+        }
 
         return $link;
     }

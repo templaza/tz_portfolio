@@ -151,11 +151,6 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
 
         require_once JPATH_COMPONENT.'/helpers/categories.php';
 
-        // Display message box for free version.
-//        if(COM_TZ_PORTFOLIO_PLUS_EDITION == 'free') {
-//            $app -> enqueueMessage(JLayoutHelper::render('messagebox'));
-//        }
-
         $display    = parent::display($cachable, $urlparams);
 
         if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {

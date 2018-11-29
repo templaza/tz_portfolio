@@ -194,7 +194,7 @@ $assoc		= JLanguageAssociations::isEnabled();
                             <td class="center text-center">
                                 <div class="btn-group">
                                     <?php echo JHtml::_('jgrid.published', $item->state, $i, 'articles.', $canChange, 'cb', $item->publish_up, $item->publish_down); ?>
-                                    <?php echo JHtml::_('contentadministrator.featured', $item->featured, $i, $canChange); ?>
+                                    <?php echo JHtml::_('tzcontentadmin.featured', $item->featured, $i, $canChange); ?>
                                     <?php // Create dropdown items and render the dropdown list.
                                     if (!$j4Compare && $canChange)
                                     {
@@ -257,7 +257,7 @@ $assoc		= JLanguageAssociations::isEnabled();
                             <?php if ($assoc) : ?>
                                 <td class="hidden-phone">
                                     <?php if ($item->association) : ?>
-                                        <?php echo JHtml::_('contentadministrator.association', $item->id); ?>
+                                        <?php echo JHtml::_('tzcontentadmin.association', $item->id); ?>
                                     <?php endif; ?>
                                 </td>
                             <?php endif;?>

@@ -23,6 +23,8 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Layout\FileLayout;
+use Joomla\CMS\Toolbar\Toolbar;
+
 JLoader::import('toolbar', JPATH_ADMINISTRATOR.'/includes');
 
 class TZ_Portfolio_PlusToolbarHelper extends JToolbarHelper {
@@ -37,6 +39,30 @@ class TZ_Portfolio_PlusToolbarHelper extends JToolbarHelper {
         $layout = new JLayoutFile('toolbar.customhelp');
         $html   = $layout->render(array('doTask' => $doTask, 'text' => $text, 'icon' => $icon));
         $bar -> appendButton('Custom', $html, $id);
+    }
+
+    public static function draft($task = 'draft', $alt = 'COM_TZ_PORTFOLIO_PLUS_SAVE_DRAFT', $check = false)
+    {
+        $bar = Toolbar::getInstance('toolbar');
+
+        // Add a publish button.
+        $bar->appendButton('Standard', 'pencil-2 text-success', $alt, $task, $check);
+    }
+
+    public static function approve($task = 'approve', $alt = 'COM_TZ_PORTFOLIO_PLUS_APPROVE', $check = false)
+    {
+        $bar = Toolbar::getInstance('toolbar');
+
+        // Add a publish button.
+        $bar->appendButton('Standard', 'checkmark-2 text-success', $alt, $task, $check);
+    }
+
+    public static function reject($task = 'reject', $alt = 'COM_TZ_PORTFOLIO_PLUS_REJECT', $check = false)
+    {
+        $bar = Toolbar::getInstance('toolbar');
+
+        // Add a publish button.
+        $bar->appendButton('Standard', 'minus text-error text-danger', $alt, $task, $check);
     }
 
     public static function preferencesAddon($addonId, $height = '550', $width = '875', $alt = 'JToolbar_Options')

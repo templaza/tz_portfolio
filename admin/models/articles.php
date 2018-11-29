@@ -164,7 +164,7 @@ class TZ_Portfolio_PlusModelArticles extends JModelList
 		// Compile the store id.
 		$id	.= ':'.$this->getState('filter.search');
         $id .= ':' . serialize($this->getState('filter.access'));
-		$id	.= ':'.$this->getState('filter.published');
+		$id	.= ':'.serialize($this->getState('filter.published'));
         $id .= ':' . serialize($this->getState('filter.category_id'));
         $id .= ':' . serialize($this->getState('filter.author_id'));
         $id .= ':' . serialize($this->getState('filter.type'));
@@ -192,7 +192,7 @@ class TZ_Portfolio_PlusModelArticles extends JModelList
 			$this->getState(
 				'list.select',
 				'a.id, a.title, a.alias, a.checked_out, a.checked_out_time' .
-				', a.state, a.access, a.created, a.created_by, a.ordering, a.featured, a.language, a.hits' .
+				', a.state, a.status, a.access, a.created, a.created_by, a.ordering, a.featured, a.language, a.hits' .
 				', a.publish_up, a.publish_down, a.priority'
 			)
 		);
@@ -229,6 +229,10 @@ class TZ_Portfolio_PlusModelArticles extends JModelList
 		// Join over the users for the author.
 		$query->select('ua.name AS author_name');
 		$query->join('LEFT', '#__users AS ua ON ua.id = a.created_by');
+
+		// Join over the content rejected.
+        $query -> select('cj.id AS rejected_id, cj.message AS rejected_message');
+        $query -> join('LEFT', '#__tz_portfolio_plus_content_rejected AS cj ON a.id = cj.content_id');
 
 		// Join over the associations.
 		if (JLanguageAssociations::isEnabled())
@@ -280,7 +284,9 @@ class TZ_Portfolio_PlusModelArticles extends JModelList
 
 		// Filter by published state
 		$published = $this->getState('filter.published');
-		if (is_numeric($published)) {
+		if(is_array($published)){
+            $query->where('a.state IN('.implode(',', $published).')');
+        }elseif (is_numeric($published)) {
 			$query->where('a.state = ' . (int) $published);
 		}
 		elseif ($published === '') {
@@ -410,7 +416,24 @@ class TZ_Portfolio_PlusModelArticles extends JModelList
         return $this -> _getList($query);
     }
 
-	/**
+//    public function getFilterForm($data = array(), $loadData = true)
+//    {
+//        $user   = JFactory::getUser();
+//        $form   = parent::getFilterForm($data, $loadData);
+//        if(!$user -> authorise('core.approve', 'com_tz_portfolio_plus')){
+//            $filterDefault  = $form -> getFieldAttribute('published', 'filter','','filter');
+//            $filterDefault  = explode(',', $filterDefault);
+//
+//            if($key = array_search(3, $filterDefault)){
+//                unset($filterDefault[$key]);
+//            }
+//            $form -> setFieldAttribute('published', 'filter',
+//                implode(',', $filterDefault), 'filter');
+//        }
+//        return $form;
+//    }
+
+    /**
 	 * Method to get a list of articles.
 	 * Overridden to add a check for access levels.
 	 *
@@ -419,8 +442,6 @@ class TZ_Portfolio_PlusModelArticles extends JModelList
 	 */
 	public function getItems()
 	{
-
-
 		$items	= parent::getItems();
 		$app	= JFactory::getApplication();
         // Get fields group

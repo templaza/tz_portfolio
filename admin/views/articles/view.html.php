@@ -23,6 +23,8 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.view');
 //JHtml::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/helpers');
 JHtml::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/helpers/html');
+//JLoader::register('TZ_Portfolio_PlusContentHelper',
+//    JPATH_SITE.'/components/com_tz_portfolio_plus/helpers/article.php');
 
 /**
  * View class for a list of articles.
@@ -105,8 +107,11 @@ class TZ_Portfolio_PlusViewArticles extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		$canDo	= TZ_Portfolio_PlusHelper::getActions(COM_TZ_PORTFOLIO_PLUS, 'category', $this->state->get('filter.category_id'));
-		$user   = TZ_Portfolio_PlusUser::getUser();
+        $user           = TZ_Portfolio_PlusUser::getUser();
+        $filterPublish  = $this -> state -> get('filter.published');
+        $canDo	        = TZ_Portfolio_PlusHelper::getActions(COM_TZ_PORTFOLIO_PLUS, 'category', $this->state->get('filter.category_id'));
+
+        $canEdit        = $canDo->get('core.edit');
 
 		JToolBarHelper::title(JText::_('COM_TZ_PORTFOLIO_PLUS_ARTICLES_TITLE'), 'stack article');
 
@@ -114,24 +119,50 @@ class TZ_Portfolio_PlusViewArticles extends JViewLegacy
 			JToolBarHelper::addNew('article.add');
 		}
 
-		if (($canDo->get('core.edit')) || ($canDo->get('core.edit.own'))) {
-			JToolBarHelper::editList('article.edit');
-		}
+//		if (($canDo->get('core.edit') || $canDo->get('core.edit.own'))
+//            && ($filterPublish != 4 || $filterPublish == 4 && $user -> authorise('core.approve', 'com_tz_portfolio_plus'))) {
 
-		if ($canDo->get('core.edit.state') || $canDo->get('core.edit.state.own')) {
-			JToolBarHelper::publish('articles.publish', 'JTOOLBAR_PUBLISH', true);
-			JToolBarHelper::unpublish('articles.unpublish', 'JTOOLBAR_UNPUBLISH', true);
-			JToolBarHelper::custom('articles.featured', 'featured.png', 'featured_f2.png', 'JFEATURED', true);
-			JToolBarHelper::checkin('articles.checkin');
-		}
+        $canEdit    = $user->authorise('core.edit','com_tz_portfolio_plus');
+        $canApprove = $user->authorise('core.approve','com_tz_portfolio_plus');
+        $canEditOwn = $user->authorise('core.edit.own','com_tz_portfolio_plus');
 
-		if ($this->state->get('filter.published') == -2 && ($canDo->get('core.delete')
-                || $canDo -> get('core.delete.own'))) {
-			JToolBarHelper::deleteList('', 'articles.delete', 'JTOOLBAR_EMPTY_TRASH');
-		}
-		elseif ($canDo->get('core.edit.state') || $canDo->get('core.edit.state.own')) {
-			JToolBarHelper::trash('articles.trash');
-		}
+//        var_dump($canApprove); die();
+        if(($canApprove && ($canEdit || $canEditOwn || $filterPublish == 3 || $filterPublish == 4)) ||
+            (!$canApprove && ($filterPublish == 3 || $filterPublish == -3)
+                && TZ_Portfolio_PlusContentHelper::getArticleCountsByAuthorId($user -> id,
+                    array('filter.published' => $filterPublish)) > 0)){
+            JToolBarHelper::editList('article.edit');
+        }
+
+//		}
+
+		if($filterPublish == 3 || $filterPublish == 4){
+		    if($user -> authorise('core.approve', 'com_tz_portfolio_plus')) {
+                TZ_Portfolio_PlusToolbarHelper::approve('articles.approve', 'COM_TZ_PORTFOLIO_PLUS_APPROVE', true);
+                TZ_Portfolio_PlusToolbarHelper::reject('articles.reject', 'COM_TZ_PORTFOLIO_PLUS_REJECT', true);
+            }
+            if (($canDo->get('core.edit.state') || $canDo->get('core.edit.state.own'))
+                &&  $filterPublish != 4) {
+                JToolBarHelper::trash('articles.trash');
+            }
+        }else{
+            if ($canDo->get('core.edit.state') || $canDo->get('core.edit.state.own')) {
+                if($filterPublish != -3) {
+                    JToolBarHelper::publish('articles.publish', 'JTOOLBAR_PUBLISH', true);
+                    JToolBarHelper::unpublish('articles.unpublish', 'JTOOLBAR_UNPUBLISH', true);
+                    JToolBarHelper::custom('articles.featured', 'featured.png', 'featured_f2.png', 'JFEATURED', true);
+                }
+                JToolBarHelper::checkin('articles.checkin');
+            }
+
+            if ($filterPublish == -2 && ($canDo->get('core.delete')
+                    || $canDo -> get('core.delete.own'))) {
+                JToolBarHelper::deleteList('', 'articles.delete', 'JTOOLBAR_EMPTY_TRASH');
+            }
+            elseif ($canDo->get('core.edit.state') || $canDo->get('core.edit.state.own')) {
+                JToolBarHelper::trash('articles.trash');
+            }
+        }
         
 //         //Add a batch button
 //		if ($user->authorise('core.edit'))

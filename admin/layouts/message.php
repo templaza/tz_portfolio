@@ -25,7 +25,6 @@
 defined('_JEXEC') or die;
 
 if(COM_TZ_PORTFOLIO_PLUS_EDITION == 'free'){
-    $xml	= TZ_Portfolio_PlusHelper::getXMLData(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/tz_portfolio_plus.xml');
 ?>
 <div class="alert tpp-upgrade-pro">
     <button data-dismiss="alert" class="close" type="button">×</button>
@@ -33,7 +32,7 @@ if(COM_TZ_PORTFOLIO_PLUS_EDITION == 'free'){
         <span class="fa fa-flag-checkered tpp-upgrade-pro__icon"></span>
         <div class="content__inner">
             <h4>Get TZ Portfolio Plus Pro to unlock the best experience ever</h4>
-            <p>You can use the full features included (Addons, Templates, Extension, etc), premium support, and more. <a href="<?php echo $xml -> pricingUrl; ?>" target="_blank"><strong>Get TZ Portfolio Plus Pro now!</strong></a></p>
+            <p>That you can use the full features included (Addons, Templates, Extension, etc), premium support, and more. <a href="https://www.tzportfolio.com" target="_blank"><strong>Get TZ Portfolio Plus Pro now!</strong></a></p>
         </div>
     </div>
 </div>

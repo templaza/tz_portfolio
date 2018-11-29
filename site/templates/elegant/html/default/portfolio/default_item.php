@@ -159,21 +159,24 @@ if($this -> items):
                         ?>
 
                         <?php if ($params->get('show_cat_create_date',0)) : ?>
-                            <div class="TzPortfolioDate" itemprop="dateCreated">
+                            <div class="TzPortfolioDate hasTooltip" itemprop="dateCreated" title="<?php
+                            echo JText::_('TPL_ELEGANT_CREATED_DATE');?>">
                                 <i class="tp tp-clock-o"></i>
                                 <?php echo JHtml::_('date', $item->created, JText::_('DATE_FORMAT_LC')); ?>
                             </div>
                         <?php endif; ?>
 
                         <?php if ($params->get('show_cat_modify_date', 0)) : ?>
-                            <div class="TzPortfolioModified" itemprop="dateModified">
+                            <div class="TzPortfolioModified hasTooltip" itemprop="dateModified" title="<?php
+                            echo JText::_('TPL_ELEGANT_MODIFIED_DATE');?>">
                                 <i class="tp tp-pencil-square-o"></i>
                                 <?php echo JHtml::_('date', $item->modified, JText::_('DATE_FORMAT_LC')); ?>
                             </div>
                         <?php endif; ?>
 
                         <?php if ($params->get('show_cat_publish_date',0)) : ?>
-                            <div class="published" itemprop="datePublished">
+                            <div class="published hasTooltip" itemprop="datePublished" title="<?php
+                            echo JText::_('TPL_ELEGANT_PUBLISH_DATE');?>">
                                 <i class="tp tp-clock-o"></i>
                                 <?php echo JHtml::_('date', $item->publish_up, JText::_('DATE_FORMAT_LC')); ?>
                             </div>

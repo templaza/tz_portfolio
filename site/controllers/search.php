@@ -68,7 +68,8 @@ class TZ_Portfolio_PlusControllerSearch extends JControllerLegacy
         }
 
 		// The requested Item is not a search page so we need to find one
-		if ($item->component != 'com_tz_portfolio_plus' || $item->query['view'] != 'search')
+        if ($item->component != 'com_tz_portfolio_plus' || ($item -> component == 'com_tz_portfolio_plus'
+                && $item->query['view'] != 'search' && $item->query['view'] != 'portfolio'))
 		{
 			// Get item based on component, not link. link is not reliable.
 			$item = $menu->getItems('component', 'com_tz_portfolio_plus', true);

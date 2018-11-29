@@ -131,6 +131,48 @@ class TZ_Portfolio_PlusContentHelper{
         return false;
     }
 
+
+    public static function getArticleCountsByAuthorId($authorId, $options = array())
+    {
+        if (!$authorId) {
+            return null;
+        }
+
+        $storeId = __METHOD__ . ':' . $authorId;
+        $storeId .= ':'.serialize($options);
+        $storeId = md5($storeId);
+
+        if(isset(self::$cache[$storeId])){
+            return self::$cache[$storeId];
+        }
+
+        $db     = TZ_Portfolio_PlusDatabase::getDbo();
+        $query  = $db->getQuery(true);
+        $query  -> select('COUNT(article.id)');
+        $query  -> from('#__tz_portfolio_plus_content AS article');
+        $query  -> join('INNER', '#__tz_portfolio_plus_content_category_map AS m ON m.contentid = article.id');
+        $query  -> join('LEFT', '#__tz_portfolio_plus_categories AS c ON c.id = m.catid');
+        $query  -> join('INNER', '#__users AS ua ON ua.id = article.created_by');
+
+        $query -> where('article.created_by ='.$authorId);
+
+        if(isset($options['filter.published'])) {
+            if(is_array($options['filter.published'])){
+                $query->where('article.state IN('.implode(',', $options['filter.published']).')');
+            }else{
+                $query->where('article.state = ' . (int) $options['filter.published']);
+            }
+        }
+        $db     -> setQuery($query);
+
+        if($count = $db->loadResult()){
+            self::$cache[$storeId]  = (int) $count;
+            return (int) $count;
+        }
+
+        return false;
+    }
+
     public static function getBootstrapColumns($numOfColumns)
     {
         switch ($numOfColumns)

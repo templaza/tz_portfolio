@@ -57,7 +57,16 @@ class TZ_Portfolio_PlusControllerArticles extends JControllerAdmin
 
         $this->registerTask('priorityup', 'repriority');
         $this->registerTask('prioritydown', 'repriority');
+
+        $this->registerTask('approve', 'publish');
 	}
+
+    protected function allowApprove($data = array())
+    {
+        $user = \JFactory::getUser();
+
+        return $user->authorise('core.approve', $this->option);
+    }
 
     /**
 	 * Method to publish a list of items
@@ -74,7 +83,7 @@ class TZ_Portfolio_PlusControllerArticles extends JControllerAdmin
 		$app	= JFactory::getApplication();
 		// Get items to publish from the request.
 		$cid 	= $this -> input -> get('cid', array(), 'array');
-		$data 	= array('publish' => 1, 'unpublish' => 0, 'archive' => 2, 'trash' => -2, 'report' => -3);
+		$data 	= array('publish' => 1, 'approve' => 1, 'unpublish' => 0, 'archive' => 2, 'trash' => -2, 'report' => -3);
 		$task 	= $this->getTask();
 		$value 	= ArrayHelper::getValue($data, $task, 0, 'int');
 
@@ -84,6 +93,28 @@ class TZ_Portfolio_PlusControllerArticles extends JControllerAdmin
 		}
 		else
 		{
+//
+//            if($task == 'approve' && !$this -> allowApprove()){
+//
+//                $url = 'index.php?option=' . $this->option . '&view='.$this -> view_list;
+//
+//                // Check if there is a return value
+//                $return = $this->input->get('return', null, 'base64');
+//
+//                if (!is_null($return) && \JUri::isInternal(base64_decode($return)))
+//                {
+//                    $url = base64_decode($return);
+//                }
+//
+//                $this->setError(\JText::_('COM_TZ_PORTFOLIO_PLUS_ERROR_NOT_APPROVE_ARTICLE'));
+//                $this->setMessage($this->getError(), 'error');
+//
+//                $this->setRedirect(
+//                    \JRoute::_($url, false)
+//                );
+//                $this->redirect();
+//            }
+
 			// Get the model.
 			$model = $this->getModel();
 
@@ -100,6 +131,9 @@ class TZ_Portfolio_PlusControllerArticles extends JControllerAdmin
 				if ($value == 1)
 				{
 					$ntext = $this->text_prefix . '_N_ITEMS_PUBLISHED';
+					if($task == 'approve'){
+                        $ntext = $this->text_prefix . '_N_ITEMS_APPROVED';
+                    }
 				}
 				elseif ($value == 0)
 				{
@@ -127,7 +161,7 @@ class TZ_Portfolio_PlusControllerArticles extends JControllerAdmin
 	 * @return	void
 	 * @since	1.6
 	 */
-	function featured()
+	public function featured()
 	{
 		// Check for request forgeries
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));

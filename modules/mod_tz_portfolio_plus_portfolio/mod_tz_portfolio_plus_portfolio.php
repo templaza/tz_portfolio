@@ -25,6 +25,8 @@ require_once dirname(__FILE__) . '/helper.php';
 
 JLoader::import('com_tz_portfolio_plus.libraries.helper.modulehelper', JPATH_ADMINISTRATOR.'/components');
 
+JHtml::_('jquery.framework');
+
 $doc    = JFactory::getDocument();
 $doc -> addScript(TZ_Portfolio_PlusUri::root(true).'/js/core.min.js');
 

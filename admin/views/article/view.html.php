@@ -124,31 +124,54 @@ class TZ_Portfolio_PlusViewArticle extends JViewLegacy
 		// Built the actions for new and existing records.
 
 		// For new records, check the create permission.
+        $approvePer     = TZ_Portfolio_PlusHelperACL::allowApprove($this -> item);
+        $applyText      = $approvePer?'JTOOLBAR_APPLY':'COM_TZ_PORTFOLIO_PLUS_SUBMIT_APPROVE';
+        $saveText       = $approvePer?'JTOOLBAR_SAVE':'COM_TZ_PORTFOLIO_PLUS_SUBMIT_APPROVE_AND_CLOSE';
+        $save2newText   = $approvePer?'JTOOLBAR_SAVE_AND_NEW':'COM_TZ_PORTFOLIO_PLUS_SUBMIT_APPROVE_AND_NEW';
+
 		if ($isNew && (count($user->getAuthorisedCategories('com_tz_portfolio_plus', 'core.create')) > 0)) {
-			JToolBarHelper::apply('article.apply');
-			JToolBarHelper::save('article.save');
-			JToolBarHelper::save2new('article.save2new');
+			JToolBarHelper::apply('article.apply', $applyText);
+            JToolBarHelper::save('article.save', $saveText);
+			JToolBarHelper::save2new('article.save2new', $save2newText);
+			if(!$approvePer){
+			    TZ_Portfolio_PlusToolbarHelper::draft('article.draft');
+            }
 			JToolBarHelper::cancel('article.cancel');
 		}
 		else {
 			// Can't save the record if it's checked out.
 			if (!$checkedOut) {
 				// Since it's an existing record, check the edit permission, or fall back to edit own if the owner.
-				if ($canDo->get('core.edit') || ($canDo->get('core.edit.own') && $this->item->created_by == $userId)) {
-					JToolBarHelper::apply('article.apply');
-					JToolBarHelper::save('article.save');
+				if ($approvePer || ($canDo->get('core.edit') || ($canDo->get('core.edit.own') && $this->item->created_by == $userId))) {
+
+				    if($approvePer && ($this -> item -> state == 3 || $this -> item -> state == 4)){
+				        $applyText  = JText::_('COM_TZ_PORTFOLIO_PLUS_APPROVE_AND_PUBLISH');
+                        $saveText  = JText::_('COM_TZ_PORTFOLIO_PLUS_APPROVE_AND_PUBLISH_AND_CLOSE');
+                        $save2newText  = JText::_('COM_TZ_PORTFOLIO_PLUS_APPROVE_AND_PUBLISH_AND_NEW');
+                    }
+
+					JToolBarHelper::apply('article.apply', $applyText);
+                    JToolBarHelper::save('article.save', $saveText);
 
 					// We can save this record, but check the create permission to see if we can return to make a new one.
 					if ($canDo->get('core.create')) {
-						JToolBarHelper::save2new('article.save2new');
+						JToolBarHelper::save2new('article.save2new', $save2newText);
 					}
+                    if(!$approvePer){
+                        TZ_Portfolio_PlusToolbarHelper::draft('article.draft');
+                    }
 				}
 			}
 
 			// If checked out, we can still save
-			if ($canDo->get('core.create')) {
+			if ($canDo->get('core.create') && $approvePer && $this -> item -> state != 3 && $this -> item -> state != 4) {
 				JToolBarHelper::save2copy('article.save2copy');
 			}
+
+            if($approvePer && ($this -> item -> state == 3 || $this -> item -> state == 4)){
+                JToolbarHelper::custom('article.reject', 'minus text-danger text-error',
+                    '',  JText::_('COM_TZ_PORTFOLIO_PLUS_REJECT'), false);
+            }
 
 			JToolBarHelper::cancel('article.cancel', 'JTOOLBAR_CLOSE');
 		}

@@ -119,6 +119,7 @@ CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_content` (
   `introtext` mediumtext NULL,
   `fulltext` mediumtext NULL,
   `state` tinyint(3) NOT NULL DEFAULT '0',
+  `status` TINYINT(4) NOT NULL DEFAULT '0' COMMENT 'Store old state to restore state',
   `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `created_by` int(10) unsigned NOT NULL DEFAULT '0',
   `created_by_alias` varchar(255) NOT NULL DEFAULT '',
@@ -195,6 +196,19 @@ CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_content_rating` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
+
+--
+-- Table structure for table `#__tz_portfolio_plus_content_rejected`
+--
+
+CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_content_rejected` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `content_id` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'FK to the #__tz_portfolio_plus_content table.',
+  `created` datetime NOT NULL,
+  `created_by` int(11) UNSIGNED NOT NULL COMMENT 'FK to the #__users table.',
+  `message` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `#__tz_portfolio_plus_extensions`

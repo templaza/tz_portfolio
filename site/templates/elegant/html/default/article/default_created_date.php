@@ -25,7 +25,8 @@ $params = $this -> item -> params;
 if($params -> get('show_create_date',1)) {
     if (isset($this->item->created)) {
         ?>
-        <div class="tpDate">
+        <div class="tpDate hasTooltip" title="<?php
+        echo JText::_('TPL_ELEGANT_CREATED_DATE');?>">
             <i class="tp tp-clock-o"></i>
             <time class="tpCreated" itemprop="datePublished">
                 <?php echo JHtml::_('date', $this->item->created, JText::_('DATE_FORMAT_LC')); ?>

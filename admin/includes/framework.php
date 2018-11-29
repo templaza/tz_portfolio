@@ -31,7 +31,10 @@ if(!class_exists('TZ_Portfolio_PlusUri')){
     JLoader::import('com_tz_portfolio_plus.libraries.uri',JPATH_ADMINISTRATOR.DIRECTORY_SEPARATOR.'components');
 }
 
+JHtml::addIncludePath(COM_TZ_PORTFOLIO_PLUS_LIBRARIES.'/html');
+
 tzportfolioplusimport('helper.toolbar');
+tzportfolioplusimport('helper.acl');
 
 tzportfolioplusimport('user.user');
 
@@ -43,4 +46,16 @@ tzportfolioplusimport('fields.extrafield');
 
 // Register class TZ_Portfolio_PlusDatabase from folder libraries of TZ Portfolio Plus
 tzportfolioplusimport('database.database');
+
+// Register class TZ_Portfolio_PlusModelDialogBase from libraries folder.
+tzportfolioplusimport('model.dialog');
+
+// Register class TZ_Portfolio_PlusModelRejectBase from libraries folder.
+tzportfolioplusimport('model.reject');
+
+// Register class TZ_Portfolio_PlusControllerRejectBase from libraries folder.
+tzportfolioplusimport('controller.reject');
+
+// Register class TZ_Portfolio_PlusControllerArticleBase from libraries folder.
+tzportfolioplusimport('controller.article');
 

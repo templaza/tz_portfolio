@@ -24,14 +24,6 @@ JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.multiselect');
 
-$j4Compare  = COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE;
-if(!$j4Compare) {
-    JHtml::_('dropdown.init');
-    JHtml::_('formbehavior.chosen', 'select');
-}else{
-    JHtml::_('formbehavior.chosen', 'select[multiple]');
-}
-
 JHtml::_('formbehavior.chosen', '.multipleMediaType', null,
     array('placeholder_text_multiple' => JText::_('COM_TZ_PORTFOLIO_PLUS_OPTION_SELECT_MEDIA_TYPE')));
 JHtml::_('formbehavior.chosen', '.multipleAuthors', null,
@@ -40,6 +32,14 @@ JHtml::_('formbehavior.chosen', '.multipleAccessLevels', null,
     array('placeholder_text_multiple' => JText::_('JOPTION_SELECT_ACCESS')));
 JHtml::_('formbehavior.chosen', '.multipleCategories', null,
     array('placeholder_text_multiple' => JText::_('JOPTION_SELECT_CATEGORY')));
+
+$j4Compare  = COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE;
+if(!$j4Compare) {
+    JHtml::_('dropdown.init');
+    JHtml::_('formbehavior.chosen', 'select');
+}else{
+    JHtml::_('formbehavior.chosen', 'select[multiple]');
+}
 
 $user		    = JFactory::getUser();
 $userId		    = $user->get('id');
@@ -62,6 +62,12 @@ if ($saveOrder)
 }
 
 $assoc		= JLanguageAssociations::isEnabled();
+
+$this -> document -> addScript(TZ_Portfolio_PlusUri::root(true).'/js/core.min.js');
+$this -> document -> addScriptDeclaration('(function($, TZ_Portfolio_Plus){
+        "use strict";
+        TZ_Portfolio_Plus.dialogAjax(["'.$this -> getName().'.approve", "'.$this -> getName().'.reject"]);
+    })(jQuery, window.TZ_Portfolio_Plus);');
 ?>
 
 <form action="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&view=articles');?>" method="post" name="adminForm" id="adminForm">
@@ -164,6 +170,7 @@ $assoc		= JLanguageAssociations::isEnabled();
                                             ||($user->authorise('core.edit.state.own', 'com_tz_portfolio_plus.article.'
                                             .$item->id)
                                             && $item->created_by == $userId)) && $canCheckin;
+                        $canApprove     = TZ_Portfolio_PlusHelperACL::allowApprove($item);
                         ?>
                         <tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item -> catid;
                         ?>" data-dragable-group="<?php echo $item->catid; ?>">
@@ -189,23 +196,49 @@ $assoc		= JLanguageAssociations::isEnabled();
                                 <?php echo JHtml::_('grid.id', $i, $item->id); ?>
                             </td>
                             <td class="center text-center">
+                                <?php
+                                $filterPublished    = $this -> state -> get('filter.published');
+                                ?>
                                 <div class="btn-group">
-                                    <?php echo JHtml::_('jgrid.published', $item->state, $i, 'articles.', $canChange, 'cb', $item->publish_up, $item->publish_down); ?>
-                                    <?php echo JHtml::_('contentadministrator.featured', $item->featured, $i, $canChange); ?>
-                                    <?php // Create dropdown items and render the dropdown list.
-                                    if (!$j4Compare && $canChange)
+                                    <?php
+                                    if($canApprove && ($item -> state == 3 || $item -> state == 4) ){
+                                        echo JHtml::_('tppgrid.approve', $i, $this->getName() . '.', $canChange, 'cb');
+                                        echo JHtml::_('tppgrid.reject', $i, $this->getName() . '.', $canChange, 'cb');
+                                    }elseif($item -> state != 4){
+                                        if($item -> state == -3 || $item -> state == 3){
+                                            echo JHtml::_('jgrid.action', $i, 'trash',
+                                                $this -> getName().'.', 'JTOOLBAR_TRASH', 'JTOOLBAR_TRASH', '', true, 'trash', $canChange);
+                                        }else{
+                                            echo JHtml::_('tppgrid.status', $item->state, $item -> status, $i,
+                                                $this -> getName().'.', $canChange, 'cb', $item->publish_up, $item->publish_down);
+                                            echo JHtml::_('tzcontentadmin.featured', $item->featured, $i, $canChange);
+                                        }
+                                    }
+                                    // Create dropdown items and render the dropdown list.
+                                    if (!$j4Compare && $canChange &&
+                                        ($canApprove || (!$canApprove && $item -> state != 3 && $item -> state != 4)))
                                     {
-                                        JHtml::_('actionsdropdown.' . ((int) $item->state === -2 ? 'un' : '') . 'trash', 'cb' . $i, 'articles');
-                                        echo JHtml::_('actionsdropdown.render', $this->escape($item->title));
+                                        if($item -> state == 3) {
+                                            JHtml::_('actionsdropdown.trash', 'cb' . $i,  $this -> getName());
+                                        }else {
+                                            JHtml::_('actionsdropdown.' . ((int)$item->state === -2 ? 'un' : '')
+                                                . 'trash', 'cb' . $i,  $this -> getName());
+                                        }
+                                        if($item -> state != -3) {
+                                            echo JHtml::_('actionsdropdown.render', $this->escape($item->title));
+                                        }
                                     }
                                     ?>
                                 </div>
                             </td>
-                            <td class="nowrap has-context">
+                            <td class="has-context">
                                 <?php if ($item->checked_out) : ?>
                                     <?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'articles.', $canCheckin); ?>
                                 <?php endif; ?>
-                                <?php if ($canEdit || $canEditOwn) : ?>
+                                <?php
+                                if(($canApprove && ($canEdit || $canEditOwn || $item -> state == 3 || $item -> state == 4)) ||
+                                    (!$canApprove && ($canEditOwn || $item -> state == 3 || $item -> state == -3) && $item -> state != 4)){
+                                    ?>
                                     <?php
                                     $editIcon   = '';
                                     if($j4Compare){
@@ -214,9 +247,24 @@ $assoc		= JLanguageAssociations::isEnabled();
                                     ?>
                                     <a href="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&task=article.edit&id='.$item->id);?>">
                                         <?php echo $editIcon.$this->escape($item->title); ?></a>
-                                <?php else : ?>
+                                <?php }else{ ?>
                                     <?php echo $this->escape($item->title); ?>
-                                <?php endif; ?>
+                                <?php } ?>
+                                <?php if(isset($item -> rejected_id) && $item -> rejected_id && in_array($item -> state, array(-3,3,4))){ ?>
+                                    <span class="label label-danger label-important"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_REJECTED'); ?></span>
+                                <?php } ?>
+                                <?php
+                                if($filterPublished === '*'){?>
+                                    <?php if($item -> state == -3){ ?>
+                                        <span class="label"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_DRAFT'); ?></span>
+                                    <?php } ?>
+                                    <?php if($item -> state == 3){ ?>
+                                        <span class="label label-warning"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_PENDING'); ?>...</span>
+                                    <?php } ?>
+                                    <?php if($item -> state == 4){ ?>
+                                        <span class="label label-info"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_UNDER_REVIEW'); ?></span>
+                                    <?php } ?>
+                                <?php } ?>
                                 <div class="small">
                                     <div class="clearfix">
                                         <?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
@@ -239,6 +287,11 @@ $assoc		= JLanguageAssociations::isEnabled();
                                     </div>
                                     <?php endif;?>
                                 </div>
+                                <?php if(isset($item -> rejected_id) && $item -> rejected_id){ ?>
+                                    <div class="tpp-reject__message">
+                                        <strong><u><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_REASON'); ?></u></strong>: <?php echo $item -> rejected_message; ?>
+                                    </div>
+                                <?php } ?>
                             </td>
                             <td class="small hidden-phone">
                                 <?php echo $item -> type;?>
@@ -254,7 +307,7 @@ $assoc		= JLanguageAssociations::isEnabled();
                             <?php if ($assoc) : ?>
                             <td class="hidden-phone">
                                 <?php if ($item->association) : ?>
-                                    <?php echo JHtml::_('contentadministrator.association', $item->id); ?>
+                                    <?php echo JHtml::_('tzcontentadmin.association', $item->id); ?>
                                 <?php endif; ?>
                             </td>
                             <?php endif;?>

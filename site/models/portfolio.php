@@ -72,12 +72,6 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
         if ((!$user->authorise('core.edit.state', 'com_tz_portfolio_plus')) &&  (!$user->authorise('core.edit', 'com_tz_portfolio_plus'))){
             // limit to published for people who can't edit or edit.state.
             $this->setState('filter.published', 1);
-            // Filter by start and end dates.
-            $nullDate = $db->Quote($db->getNullDate());
-            $nowDate = $db->Quote(JFactory::getDate()->toSQL());
-
-            $query->where('(a.publish_up = ' . $nullDate . ' OR a.publish_up <= ' . $nowDate . ')');
-            $query->where('(a.publish_down = ' . $nullDate . ' OR a.publish_down >= ' . $nowDate . ')');
         }
         else {
             $this->setState('filter.published', array(0, 1, 2));

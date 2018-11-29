@@ -20,10 +20,7 @@
 // No direct access
 defined('_JEXEC') or die;
 
-use Joomla\Filesystem\File;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
-
-jimport('joomla.filesystem.file');
 
 class TZ_Portfolio_PlusHelper
 {
@@ -552,27 +549,27 @@ class TZ_Portfolio_PlusHelper
 
     public static function getXMLData($file, $class_name = "SimpleXMLElement", $options = 0, $ns = "", $is_prefix = false){
 
-	    $storeId    = __METHOD__;
-	    $storeId   .= ':'.$file;
-	    $storeId   .= ':'.$class_name;
-	    $storeId   .= ':'.$options;
-	    $storeId   .= ':'.$ns;
-	    $storeId   .= ':'.$is_prefix;
+        $storeId    = __METHOD__;
+        $storeId   .= ':'.$file;
+        $storeId   .= ':'.$class_name;
+        $storeId   .= ':'.$options;
+        $storeId   .= ':'.$ns;
+        $storeId   .= ':'.$is_prefix;
 
-	    $storeId    = md5($storeId);
+        $storeId    = md5($storeId);
 
-	    if(isset(self::$cache[$storeId])){
-	        return self::$cache[$storeId];
+        if(isset(self::$cache[$storeId])){
+            return self::$cache[$storeId];
         }
 
-	    if(!$file || ($file && !\JFile::exists($file))){
-	        return false;
+        if(!$file || ($file && !\JFile::exists($file))){
+            return false;
         }
         $xml	= simplexml_load_file($file, $class_name, $options, $ns, $is_prefix);
 
-	    self::$cache[$storeId]  = $xml;
+        self::$cache[$storeId]  = $xml;
 
-	    return $xml;
+        return $xml;
     }
 
     public static function prepareUpdate(&$update, &$table){

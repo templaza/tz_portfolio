@@ -36,6 +36,8 @@ class TZ_Portfolio_PlusTableContent extends JTable
 {
     public $catid  = null;
     protected $m_catid  = null;
+//    protected $_state = null;
+
     /**
      * Constructor
      *
@@ -516,16 +518,17 @@ class TZ_Portfolio_PlusTableContent extends JTable
      */
     protected function getDefaultAssetValues($component)
     {
-        // Need to find the asset id by the name of the component.
-        $db = TZ_Portfolio_PlusDatabase::getDbo();
-        $query = $db->getQuery(true)
-            ->select($db->quoteName('id'))
-            ->from($db->quoteName('#__assets'))
-            ->where($db->quoteName('name') . ' = ' . $db->quote($component));
-        $db->setQuery($query);
-        $assetId = (int) $db->loadResult();
-
-        return JAccess::getAssetRules($assetId);
+//        // Need to find the asset id by the name of the component.
+//        $db = TZ_Portfolio_PlusDatabase::getDbo();
+//        $query = $db->getQuery(true)
+//            ->select($db->quoteName('id'))
+//            ->from($db->quoteName('#__assets'))
+//            ->where($db->quoteName('name') . ' = ' . $db->quote($component));
+//        $db->setQuery($query);
+//        $assetId = (int) $db->loadResult();
+//
+//        return JAccess::getAssetRules($assetId);
+        return '{}';
     }
 
     /**
@@ -737,5 +740,25 @@ class TZ_Portfolio_PlusTableContent extends JTable
         }
 
         return true;
+    }
+
+    public function publish($pks = null, $state = 1, $userId = 0)
+    {
+        $this -> set('state.value', $state);
+        return parent::publish($pks, $state, $userId);
+    }
+
+    public function appendPrimaryKeys($query, $pk = null)
+    {
+        parent::appendPrimaryKeys($query, $pk);
+
+        $state  = $this -> get('state.value');
+        if($state == -2){
+            $query -> set('status='.$this -> state);
+        }else{
+            if(isset($this -> status) && $this -> state == -2) {
+                $query->set('state =' . $this->status);
+            }
+        }
     }
 }

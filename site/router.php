@@ -496,6 +496,16 @@ class TZ_Portfolio_PlusRouter extends RouterBase
             return $segments;
         }
 
+        if($view == 'myarticles'){
+            if($menuItemGiven && isset($menuItem->query['view']) && $menuItem->query['view'] != $view){
+                $segments[] = $query['view'];
+            }elseif(!$menuItemGiven){
+                $segments[] = $view;
+            }
+            unset($query['view']);
+            return $segments;
+        }
+
         if($view == 'addon'){
             if($menuItemGiven){
                 $segments[] = $query['view'];

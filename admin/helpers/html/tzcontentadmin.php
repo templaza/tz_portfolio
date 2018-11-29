@@ -20,7 +20,7 @@ JLoader::import('com_tz_portfolio_plus.helpers.association',JPATH_ADMINISTRATOR 
  *
  * @since  3.0
  */
-abstract class JHtmlContentAdministrator
+abstract class JHtmlTZContentAdmin
 {
     /**
      * Render the list of associated items
@@ -106,8 +106,8 @@ abstract class JHtmlContentAdministrator
 
         // Array of image, task, title, action
         $states	= array(
-            0	=> array('unfeatured',	'articles.featured',	'COM_CONTENT_UNFEATURED',	'JGLOBAL_TOGGLE_FEATURED'),
-            1	=> array('featured',	'articles.unfeatured',	'COM_CONTENT_FEATURED',		'JGLOBAL_TOGGLE_FEATURED'),
+            0	=> array('unfeatured',	'articles.featured',	'COM_TZ_PORTFOLIO_PLUS_UNFEATURED_ARTICLE',	'JGLOBAL_TOGGLE_FEATURED'),
+            1	=> array('featured',	'articles.unfeatured',	'COM_TZ_PORTFOLIO_PLUS_FEATURED_ARTICLE',		'JGLOBAL_TOGGLE_FEATURED'),
         );
         $state	= ArrayHelper::getValue($states, (int) $value, $states[1]);
         $icon	= $state[0];

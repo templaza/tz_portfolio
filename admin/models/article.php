@@ -223,9 +223,24 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
 
                 $db -> setQuery($query);
                 $db -> execute();
+
+                // Remove content rejected from tz_portfolio_plus_content_rejected
+                $query -> clear();
+                $query -> delete('#__tz_portfolio_plus_content_rejected');
+                $query -> where('content_id IN(' . implode(',', $_pks) . ')');
+
+                $db -> setQuery($query);
+                $db -> execute();
             }
         }
         return $result;
+    }
+
+
+
+    protected function canApprove($record)
+    {
+        return TZ_Portfolio_PlusHelperACL::allowApprove($record);
     }
 
     /**
@@ -244,9 +259,15 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
         // Check for existing article.
         if (!empty($record->id))
         {
-            $state  = $user->authorise('core.edit.state', 'com_tz_portfolio_plus.article.' . (int) $record->id)
-            || ($user->authorise('core.edit.state.own', 'com_tz_portfolio_plus.article.' . (int) $record->catid)
-            && $record -> created_by == $user -> id);
+            $state = $user->authorise('core.edit.state', 'com_tz_portfolio_plus.article.' . (int)$record->id)
+                || ($user->authorise('core.edit.state.own', 'com_tz_portfolio_plus.article.' . (int)$record->id)
+                    && $record->created_by == $user->id);
+
+
+            if($this -> canApprove($record)){
+                return true;
+            }
+
             return $state;
         }
         // New article, so check against the category.
@@ -472,6 +493,11 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
             $form->setFieldAttribute('state', 'filter', 'unset');
         }
 
+        if(!TZ_Portfolio_PlusHelperACL::allowApprove()){
+            $form -> setFieldAttribute('state', 'type', 'hidden');
+            $form -> setFieldAttribute('state', 'default', '3');
+        }
+
         // Prevent messing with article language and category when editing existing article with associations
         $app = JFactory::getApplication();
         $assoc = JLanguageAssociations::isEnabled();
@@ -556,6 +582,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
      */
     public function save($data)
     {
+        $user       = JFactory::getUser();
         $input      = JFactory::getApplication()->input;
         $filter     = JFilterInput::getInstance();
 
@@ -651,6 +678,16 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
         $mCatid     = (isset($data['catid']) && $data['catid'])?(int) $data['catid']:null;
         $sCatIds    = isset($data['second_catid'])?$data['second_catid']:array();
 
+        // Permission can publish
+        $canApprove = $user -> authorise('core.approve', 'com_tz_portfolio_plus');
+        if(!$canApprove){
+            $data['state']  = 3;
+        }
+
+        if($input -> get('task') == 'draft' || $input -> get('task') == 'reject'){
+            $data['state']  = -3;
+        }
+
         if (parent::save($data))
         {
             $context    = $this->option . '.' . $this->name;
@@ -736,13 +773,26 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
                     }
                 }
 
-                // Tags
                 $articleId = $this->getState($this->getName() . '.id');
                 if (isset($articleId) && $articleId) {
+                    // Tags
                     if (!TZ_Portfolio_PlusHelperTags::insertTagsByArticleId($articleId, $tags)) {
                         $this->setError(TZ_Portfolio_PlusHelperTags::getError());
                         return false;
                     }
+                    // Reject article
+                    if($input -> get('task') == 'reject'){
+                        $tblReject  = $this -> getTable('Content_Rejected');
+                        $_data['id']    = 0;
+                        $_data['content_id'] = $articleId;
+                        if($tblReject -> load(array('content_id' => $articleId))) {
+                            $_data['id'] = $tblReject->id;
+                        }
+                        if($tblReject -> bind($_data)){
+                            $tblReject -> store();
+                        }
+                    }
+
                 }
 
 
@@ -980,8 +1030,13 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
      */
     protected function getReorderConditions($table)
     {
+        $tblContentCatMap   = $this -> getTable('Content_Category_Map');
+
         $condition = array();
-        $condition[] = 'catid = ' . (int) $table->catid;
+
+        if($tblContentCatMap -> load(array('contentid' => ($table -> id), 'main' => 1))) {
+            $condition[] = 'catid = ' . (int)$tblContentCatMap->catid;
+        }
 
         return $condition;
     }
@@ -1059,6 +1114,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
         // Insert parameter from extrafield
         JLoader::import('extrafields', COM_TZ_PORTFOLIO_PLUS_ADMIN_HELPERS_PATH);
         TZ_Portfolio_PlusHelperExtraFields::prepareForm($form, $data);
+
 
         parent::preprocessForm($form, $data, $group);
     }
@@ -1152,6 +1208,12 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
         foreach ($pks as $i => $pk)
         {
             $this->table->load((int) $pk);
+
+            $tblContentCatMap   = $this -> getTable('Content_Category_Map');
+
+            if($tblContentCatMap -> load(array('contentid' => $pk, 'main' => 1))){
+                $this -> table -> set('catid', $tblContentCatMap -> catid);
+            }
 
             // Access checks.
             if (!$this->canEditState($this->table))

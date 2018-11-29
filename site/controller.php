@@ -88,6 +88,15 @@ class TZ_Portfolio_PlusController extends TZ_Portfolio_PlusControllerLegacy
 			return JError::raiseError(403, JText::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $id));
 		}
 
+		// Check for edit form.
+		if ($vName == 'myarticles') {
+            if(!$user || ($user && !$user -> get('id'))){
+                $link   = JRoute::_('index.php?option=com_users&view=login');
+                $this -> setRedirect(str_replace('&amp;', '&', $link), JText::_('JERROR_ALERTNOAUTHOR'), 'error');
+                return false;
+            }
+		}
+
         //Add Script to the header
         JHtml::_('bootstrap.framework');
 

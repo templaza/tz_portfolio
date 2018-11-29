@@ -17,6 +17,8 @@
 				description="JACTION_EDITVALUE_COMPONENT_DESC" />
 		<action name="core.edit.value.own" title="COM_TZ_PORTFOLIO_PLUS_ACTION_EDIT_VALUE_OWN"
 				description="COM_TZ_PORTFOLIO_PLUS_ACTION_EDIT_VALUE_OWN_DESC" />
+		<action name="core.approve" title="COM_TZ_PORTFOLIO_PLUS_ACTION_APPROVE_ARTICLE"
+				description="COM_TZ_PORTFOLIO_PLUS_ACTION_APPROVE_ARTICLE_DESC" />
 		<action name="core.manage.category" title="COM_TZ_PORTFOLIO_PLUS_ACTION_MANAGE_CATEGORY"
 				description="COM_TZ_PORTFOLIO_PLUS_ACTION_MANAGE_CATEGORY_DESC" />
 		<action name="core.manage.article" title="COM_TZ_PORTFOLIO_PLUS_ACTION_MANAGE_ARTICLE"

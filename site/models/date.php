@@ -281,7 +281,7 @@ class TZ_Portfolio_PlusModelDate extends JModelList{
         }
 
         if(count($catIds)){
-            $query -> where('a.catid IN('.implode(',',$catIds).')');
+            $query -> where('m.catid IN('.implode(',',$catIds).')');
         }
 
         // Filter by author

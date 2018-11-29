@@ -93,17 +93,32 @@ class TZ_Portfolio_PlusModelForm extends TZ_Portfolio_PlusModelArticle
         $asset  = 'com_tz_portfolio_plus.article.' . $value->id;
 
         // Check general edit permission first.
-        if ($user->authorise('core.edit', $asset))
-        {
-            $value->params->set('access-edit', true);
-        }
+        $canApprove = TZ_Portfolio_PlusHelperACL::allowApprove($value);
+        $canEdit    = $user->authorise('core.edit', $asset );
+        $canEditOwn = $user->authorise('core.edit.own', $asset);
 
-        // Now check if edit.own is available.
-        elseif (!empty($userId) && $user->authorise('core.edit.own', $asset))
-        {
-            // Check for a valid user and that they are the owner.
-            if ($userId == $value->created_by)
-            {
+        if(!$canApprove){
+            if($value -> state == 4){
+                $value->params->set('access-edit', false);
+            }
+            if(!$canEdit && !$canEditOwn){
+                $value->params->set('access-edit', false);
+            }
+            if($canEdit || $canEditOwn){
+                // Grant if current user is owner of the record
+                $value->params->set('access-edit', $userId == $value->created_by);
+            }
+        }else{
+            if($canEdit){
+                $value->params->set('access-edit', true);
+            }
+            if($canEditOwn){
+                if($userId == $value -> created_by
+                    || ($userId != $value -> created_by && ($value -> state == 3 || $value -> state == 4))){
+                    $value->params->set('access-edit', true);
+                }
+            }
+            if($value -> state == 3 || $value -> state == 4){
                 $value->params->set('access-edit', true);
             }
         }
@@ -209,6 +224,20 @@ class TZ_Portfolio_PlusModelForm extends TZ_Portfolio_PlusModelArticle
         }
 
         return parent::preprocessForm($form, $data, $group);
+    }
+
+    public function getReturnPage(){
+        $input  = JFactory::getApplication() -> input;
+        $return = $input->get('return', null, 'base64');
+
+        return $return;
+
+//        if (empty($return) || !JUri::isInternal(base64_decode($return))) {
+//            return JURI::base();
+//        }
+//        else {
+//            return base64_decode($return);
+//        }
     }
 
 }

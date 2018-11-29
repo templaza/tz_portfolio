@@ -25,10 +25,14 @@ use Joomla\Utilities\ArrayHelper;
 $tzTemplate = TZ_Portfolio_PlusTemplate::getTemplateById($params -> get('template_id'));
 
 $doc = JFactory::getDocument();
-$doc->addScript(JUri::root() . '/components/com_tz_portfolio_plus/js/tz_portfolio_plus.min.js');
-$doc->addScript(JUri::root() . '/components/com_tz_portfolio_plus/js/jquery.isotope.min.js');
-$doc->addStyleSheet(JUri::base(true) . '/components/com_tz_portfolio_plus/css/isotope.min.css');
-$doc->addStyleSheet(JUri::base(true) . '/components/com_tz_portfolio_plus/css/tzportfolioplus.min.css');
+$doc->addScript(JUri::root() . '/components/com_tz_portfolio_plus/js/tz_portfolio_plus.min.js',
+    array('version' => 'auto', 'relative' => true));
+$doc->addScript(JUri::root() . '/components/com_tz_portfolio_plus/js/jquery.isotope.min.js',
+    array('version' => 'auto', 'relative' => true));
+$doc->addStyleSheet(JUri::base(true) . '/components/com_tz_portfolio_plus/css/isotope.min.css',
+    array('version' => 'auto', 'relative' => true));
+$doc->addStyleSheet(JUri::base(true) . '/components/com_tz_portfolio_plus/css/tzportfolioplus.min.css',
+    array('version' => 'auto', 'relative' => true));
 
 $tplParams = $tzTemplate->params;
 

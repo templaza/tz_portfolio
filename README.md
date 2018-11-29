@@ -10,6 +10,16 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+29/11/2018 - 2.0.8
+
+	- Fix error ItemId of module TZ Portfolio Plus Filter.
+    - Fix error of image when upload image and tick to "Check this box to delete...."
+    - Fix error javascript of module TZ Portfolio Plus Portfolio when use load module of joomla in description.
+    - Update feature approve or reject articles.
+		+ Added new views myarticles to manage articles in front-end.
+        + Added "Approve Article" permission in global permission.
+		+ Added new status for articles: Draft, Pending, Under Review.
+
 15/10/2018 - 2.0.7
 
 	- Fix error save information of add-on (image, video's thumbnail...) on front-end.
