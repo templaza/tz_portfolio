@@ -10,6 +10,10 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+03/12/2018 - 2.0.9
+
+	- Fix error style of extrafield on front-end of version 2.0.8
+
 29/11/2018 - 2.0.8
 
 	- Fix error ItemId of module TZ Portfolio Plus Filter.
