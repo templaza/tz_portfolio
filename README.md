@@ -10,6 +10,13 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+24/12/2018 - 2.1.0
+
+	- Fix error sort filter with tag.
+	- Add feature display/hidden "No more pages display" when all items was loaded.
+	- Allow admin modify text "No more pages display" in admin
+	- Add feature move to latest item position after go back from detail page.
+
 03/12/2018 - 2.0.9
 
 	- Fix error style of extrafield on front-end of version 2.0.8

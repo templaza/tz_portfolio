@@ -316,6 +316,7 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
                             $item -> category_title = $mainCategory -> title;
                             $item -> catslug        = $mainCategory -> id.':'.$mainCategory -> alias;
                             $item -> category_link  = $mainCategory -> link;
+                            $item -> cat_alias      = $mainCategory -> alias.'_'.$mainCategory -> id;
 
                             // Merge main category's params to article
                             $catParams  = new JRegistry($mainCategory ->  params);

@@ -159,6 +159,11 @@ class TZ_Portfolio_PlusController extends TZ_Portfolio_PlusControllerLegacy
 			');
         }
 
+		$doc -> addScriptDeclaration('
+			var tzDisplayNoMorePageLoad     =   '.$params->get('tz_show_no_more_page', 0).';
+			var tzNoMorePageLoadText        =   "'.$params->get('tz_no_more_page_text', 'No more items to load').'";
+		');
+
         $doc -> addScript(TZ_Portfolio_PlusUri::base(true).'/js/core.min.js');
 
 		$result = parent::display($cachable, $safeurlparams);

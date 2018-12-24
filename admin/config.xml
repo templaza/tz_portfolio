@@ -217,6 +217,18 @@
             <option value="fitRows">COM_TZ_PORTFOLIO_PLUS_PORTFOLIO_FITROWS</option>
             <option value="straightDown">COM_TZ_PORTFOLIO_PLUS_PORTFOLIO_STRAIGHTDOWN</option>
         </field>
+        <field type="radio"
+               class="btn-group switcher"
+               name="tz_show_no_more_page"
+               default="0"
+               label="COM_TZ_PORTFOLIO_PLUS_PORTFOLIO_SHOW_NO_MORE_PAGE_LOAD">
+            <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
+        </field>
+        <field name="tz_no_more_page_text"
+               type="text"
+               default="No more items to load"
+               label="COM_TZ_PORTFOLIO_PLUS_NO_MORE_PAGE_TEXT"/>
         <field name="tz_column_width"
                 type="text"
                 default="360"
