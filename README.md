@@ -10,6 +10,12 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+04/01/2019 - 2.1.1
+
+	- Fix pagination error in back-end.
+	- Fix error "Show all categories".
+	- Optimize function of auto-tracking the recently-read article.
+
 24/12/2018 - 2.1.0
 
 	- Fix error sort filter with tag.

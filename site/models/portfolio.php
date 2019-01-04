@@ -731,6 +731,21 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
         return false;
     }
 
+    public function getAvailableItem() {
+	    if (isset($_COOKIE["tppLatestItem"]) && $tppLatestItem  =   $_COOKIE["tppLatestItem"]) {
+	    	$tppLatestItem  =   str_replace('tzelement','', $tppLatestItem);
+		    $query  =   $this->getListQuery();
+		    $query->where ('c.id = '.$tppLatestItem);
+		    $db = JFactory::getDbo();
+		    $db->setQuery($query);
+		    $data   =   $db->loadObject();
+		    if ($data) {
+		    	return $data;
+		    }
+	    }
+		return false;
+    }
+
     public function ajaxComments(){
 		$input	= JFactory::getApplication() -> input;
         $data   = json_decode(base64_decode($input -> getString('url')));

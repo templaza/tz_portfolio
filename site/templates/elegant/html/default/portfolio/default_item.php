@@ -50,7 +50,7 @@ if($this -> items):
             $class  = $item -> cat_alias;
             if(isset($item -> second_categories) && $item -> second_categories &&  count($item -> second_categories)) {
                 foreach($item -> second_categories as $category){
-                    $class  .= ' '.$category -> alias;
+                    $class  .= ' '.$category -> alias.'_'.$category -> id;
                 }
             }
         }

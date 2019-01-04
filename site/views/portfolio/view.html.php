@@ -141,6 +141,13 @@ class TZ_Portfolio_PlusViewPortfolio extends JViewLegacy
             }
         }
 
+        $availableItem  =   $this->get('AvailableItem');
+        $availableItem  ?   $doc -> addScriptDeclaration('var tzItemAvailable = 1;') : $doc -> addScriptDeclaration('var tzItemAvailable = 0;');
+
+	    $doc -> addScriptDeclaration('
+			var tzDisplayNoMorePageLoad     =   '.$params->get('tz_show_no_more_page', 0).';
+			var tzNoMorePageLoadText        =   "'.$params->get('tz_no_more_page_text', 'No more items to load').'";
+		');
 
         $this -> document -> addStyleSheet('components/com_tz_portfolio_plus/css/tzportfolioplus.min.css',
             array('version' => 'auto'));

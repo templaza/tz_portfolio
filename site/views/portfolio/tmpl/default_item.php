@@ -47,12 +47,12 @@ if($this -> items):
             }
         }
         elseif($params -> get('tz_filter_type','tags') == 'categories'){
-            $class  = 'category'.$item -> catid;
-            if(isset($item -> second_categories) && $item -> second_categories &&  count($item -> second_categories)) {
-                foreach($item -> second_categories as $category){
-                    $class  .= ' category'.$category -> id;
-                }
-            }
+	        $class  = $item -> cat_alias;
+	        if(isset($item -> second_categories) && $item -> second_categories &&  count($item -> second_categories)) {
+		        foreach($item -> second_categories as $category){
+			        $class  .= ' '.$category -> alias.'_'.$category -> id;
+		        }
+	        }
         }
         elseif($params -> get('tz_filter_type','tags') == 'letters'){
             $class  = mb_strtolower(mb_substr(trim($item -> title),0,1));
