@@ -732,15 +732,17 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
     }
 
     public function getAvailableItem() {
-	    if (isset($_COOKIE["tppLatestItem"]) && $tppLatestItem  =   $_COOKIE["tppLatestItem"]) {
-	    	$tppLatestItem  =   str_replace('tzelement','', $tppLatestItem);
-		    $query  =   $this->getListQuery();
-		    $query->where ('c.id = '.$tppLatestItem);
-		    $db = JFactory::getDbo();
-		    $db->setQuery($query);
-		    $data   =   $db->loadObject();
-		    if ($data) {
-		    	return $data;
+	    if (isset($_COOKIE["tppLatestItem"])  && $_COOKIE["tppLatestItem"] !='undefined' && $tppLatestItem  =   $_COOKIE["tppLatestItem"]) {
+	    	$tppLatestItem  =   (int)str_replace('tzelement','', $tppLatestItem);
+	    	if ($tppLatestItem) {
+			    $query  =   $this->getListQuery();
+			    $query->where ('c.id = '.$tppLatestItem);
+			    $db = JFactory::getDbo();
+			    $db->setQuery($query);
+			    $data   =   $db->loadObject();
+			    if ($data) {
+				    return $data;
+			    }
 		    }
 	    }
 		return false;

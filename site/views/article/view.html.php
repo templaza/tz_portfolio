@@ -543,8 +543,12 @@ class TZ_Portfolio_PlusViewArticle extends TZ_Portfolio_PlusViewLegacy
             }
         }
 
-        if(!isset($active -> id)){
-            return $homeId;
+        if(!isset($active -> id)) {
+	        if(isset($homeId)){
+		        return $homeId;
+	        } else {
+		        return 0;
+	        }
         }
 
         return $active -> id;
