@@ -10,6 +10,10 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+12/02/2019 - 2.1.3
+
+	- Fix error one-click installation of add-ons and templates on live site.
+
 15/01/2019 - 2.1.2
 
 	- Fix error when Cookie return 'undefined' on Portfolio page

@@ -100,8 +100,10 @@ if(empty($this -> itemsServer)){
     
                             }
                         }).done(function (res) {
-                            $this.addClass("disabled").html(\''.$installed.'\');
-    
+                            if(res.success){
+                                $this.addClass("disabled").html(\''.$installed.'\');
+                            }
+        
                             // Always redirect that can show message queue from session
                             if (res.data.redirect) {
                                 location.href = res.data.redirect;

@@ -1014,15 +1014,27 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
         $target     = null;
 
         // Parse the Content-Disposition header to get the file name
-        if (isset($response->headers['Content-Disposition']) && $content = $response -> headers['Content-Disposition']){
-            if(is_array($content)){
-                $content    = array_shift($content);
+        $contentDisposition = false;
+        if(isset($response->headers['Content-Disposition'])){
+            $contentDisposition = 'Content-Disposition';
+        }elseif(isset($response -> headers['CONTENT-DISPOSITION'])){
+            $contentDisposition = 'CONTENT-DISPOSITION';
+        }if(isset($response -> headers['content-disposition'])){
+            $contentDisposition = 'content-disposition';
+        }
+
+        if ($contentDisposition && ($content = $response->headers[$contentDisposition])) {
+            if (is_array($content)) {
+                $content = array_shift($content);
             }
-             if(preg_match("/\s*filename\s?=\s?(.*)/", $content, $parts))
-            {
+            if (preg_match("/\s*filename\s?=\s?(.*)/", $content, $parts)) {
                 $flds = explode(';', $parts[1]);
                 $target = trim($flds[0], '"');
             }
+        }
+
+        if(!$target){
+            return false;
         }
 
         $tmp_dest	= JPATH_ROOT . '/tmp/tz_portfolio_plus_install/' . $target;
