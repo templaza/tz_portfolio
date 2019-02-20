@@ -55,9 +55,9 @@ class TZ_Portfolio_PlusUser extends \JUser{
     {
         if (null === $userHelper)
         {
-            if(version_compare(JVERSION, '3.8', '>=')){
+            if(class_exists('UserWrapper')){
                 $userHelper = new UserWrapper;
-            }else{
+            }elseif(class_exists('JUserWrapperHelper')){
                 $userHelper	= new JUserWrapperHelper;
             }
         }

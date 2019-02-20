@@ -19,6 +19,9 @@
 
 // No direct access
 defined('_JEXEC') or die;
+use Joomla\CMS\Document\HtmlDocument;
+
+$this -> addStyleSheet(TZ_Portfolio_PlusUri::base(true).'/css/all.min.css', array('version' => 'v=5.7.2'));
 
 if(!$this -> params -> get('load_style', 0)){
     $tpl_path   = TZ_Portfolio_PlusUri::base(true).'/templates/system/css/template.css';

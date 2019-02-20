@@ -19,6 +19,8 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Layout\LayoutHelper;
+
 JHtml::_('formbehavior.chosen', 'select');
 
 $options = array(
@@ -37,12 +39,12 @@ $extension	= $this->escape($this->state->get('filter.extension'));
 		<p><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_CATEGORIES_BATCH_TIP'); ?></p>
 		<div class="control-group">
 			<div class="controls">
-				<?php echo JHtml::_('batch.access');?>
+                <?php echo LayoutHelper::render('joomla.html.batch.access', array()); ?>
 			</div>
 		</div>
 		<div class="control-group">
 			<div class="controls">
-				<?php echo JHtml::_('batch.language'); ?>
+                <?php echo LayoutHelper::render('joomla.html.batch.language', array()); ?>
 			</div>
 		</div>
 		<?php if ($published >= 0) : ?>
@@ -51,7 +53,7 @@ $extension	= $this->escape($this->state->get('filter.extension'));
 					<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_CATEGORIES_BATCH_CATEGORY_LABEL'); ?>
 				</label>
 				<div id="batch-choose-action" class="combo controls">
-					<select name="batch[category_id]" class="inputbox" id="batch-category-id">z
+					<select name="batch[category_id]" class="inputbox" id="batch-category-id">
 						<option value=""><?php echo JText::_('JSELECT') ?></option>
 						<?php echo JHtml::_('select.options', JHtml::_('tzcategory.categories', $extension, array('filter.published' => $published)));?>
 					</select>

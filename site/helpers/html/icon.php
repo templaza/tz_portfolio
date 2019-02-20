@@ -33,7 +33,7 @@ class JHtmlIcon
 
         if ($params->get('show_cat_icons', 1)) {
 
-            $icon	= 'icon-plus';
+            $icon	= 'tps tp-plus-circle';
             if(count($options) && isset($options['icon'])){
                 $icon	= $options['icon'];
                 unset($options['icon']);
@@ -66,7 +66,7 @@ class JHtmlIcon
 
         if ($params->get('show_cat_icons', 1)) {
 
-            $icon	= 'icon-envelope';
+            $icon	= 'tpr tp-envelope';
             if(count($attribs) && isset($attribs['icon'])){
                 $icon	= $attribs['icon'];
                 unset($attribs['icon']);
@@ -152,7 +152,7 @@ class JHtmlIcon
         $overlib .= '&lt;br /&gt;';
         $overlib .= JText::sprintf('COM_TZ_PORTFOLIO_PLUS_WRITTEN_BY', htmlspecialchars($author, ENT_COMPAT, 'UTF-8'));
 
-        $icon	= $article->state ? ' icon-edit' : 'icon-eye-close';
+        $icon	= $article->state ? ' tps tp-edit' : 'tpr tp-eye-slash';
         if($article->state && count($attribs) && isset($attribs['icon'])){
             $icon	= $attribs['icon'];
             unset($attribs['icon']);
@@ -190,7 +190,7 @@ class JHtmlIcon
 
         // checks template image directory for image, if non found default are loaded
         if ($params->get('show_cat_icons', 1)) {
-            $icon	= 'icon-print';
+            $icon	= 'tps tp-print';
             if(count($attribs) && isset($attribs['icon'])){
                 $icon	= $attribs['icon'];
                 unset($attribs['icon']);
@@ -217,7 +217,7 @@ class JHtmlIcon
     {
         // checks template image directory for image, if non found default are loaded
         if ($params->get('show_cat_icons', 1)) {
-            $icon	= 'icon-print';
+            $icon	= 'tps tp-print';
             if(count($attribs) && isset($attribs['icon'])){
                 $icon	= $attribs['icon'];
                 unset($attribs['icon']);

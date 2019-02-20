@@ -10,6 +10,15 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+20/02/2019 - 2.1.4
+
+	- Fix error of sort category filter in portfolio view.
+	- Added fancybox v3.5.6 library in core.
+	- Added the latest awesome font v5.2.7 (overrided awesome font with tp prefix).
+	- Apply awesome font html to some icons of vote add-on (use awesome font).
+	- Change the words from "Style" to "Layout" and "Template" to "Style".
+	- Compatible with Joomla 4 Alpha 6.
+
 12/02/2019 - 2.1.3
 
 	- Fix error one-click installation of add-ons and templates on live site.

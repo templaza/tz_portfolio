@@ -70,19 +70,19 @@ JHtmlBootstrap::startTabSet();
                                 <div class="pull-left plazart-admin-layout-header"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_LAYOUTBUIDER_HEADER')?></div>
                                 <div class="pull-right">
                                     <button type="button" class="btn tz-admin-dv-lg active" data-device="lg">
-                                        <i class="fa fa-desktop"></i><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_LARGE');?>
+                                        <i class="tps tp-desktop"></i> <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_LARGE');?>
                                     </button>
                                     <button type="button" class="btn tz-admin-dv-md" data-device="md" data-toggle="tooltip"
                                             title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ONLY_BOOTSTRAP_3');?>">
-                                        <i class="fa fa-laptop"></i><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_MEDIUM');?>
+                                        <i class="tps tp-laptop"></i> <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_MEDIUM');?>
                                     </button>
                                     <button type="button" class="btn tz-admin-dv-sm" data-device="sm" data-toggle="tooltip"
                                             title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ONLY_BOOTSTRAP_3');?>">
-                                        <i class="fa fa-tablet"></i><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SMALL');?>
+                                        <i class="tps tp-tablet-alt"></i> <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SMALL');?>
                                     </button>
                                     <button type="button" class="btn tz-admin-dv-xs" data-device="xs" data-toggle="tooltip"
                                             title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ONLY_BOOTSTRAP_3');?>">
-                                        <i class="fa fa-mobile"></i><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_EXTRA_SMALL');?>
+                                        <i class="tps tp-mobile-alt"></i> <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_EXTRA_SMALL');?>
                                     </button>
                                 </div>
                                 <div class="clearfix"></div>

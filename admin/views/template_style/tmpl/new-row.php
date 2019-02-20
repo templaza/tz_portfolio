@@ -62,19 +62,19 @@ if($rowInColumn = $this -> state -> get('template.rowincolumn', false)){
                 <option<?php echo ($containerType == 'container-fluid')?' selected=""':''?> value="container-fluid"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_FULL_WIDTH');?></option>
             </select>
             <?php } ?>
-            <a href="" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_MOVE_THIS_ROW');?>" class="fa fa-arrows <?php
+            <a href="" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_MOVE_THIS_ROW');?>" class="tps tp-arrows <?php
             echo $rowInColumn?'row-move-in-column':'rowmove'; ?>"></a>
             <a href="javascript:" class="accordion-toggle"
                title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_TOGGLE_THIS_ROW');?>"
                data-toggle="collapse" data-parent="#<?php echo $parentId;?>"
                data-target="#<?php echo $id;?>">
-                <span class="fa fa-chevron-up"></span><span class="fa fa-chevron-down"></span>
+                <span class="tps tp-chevron-up"></span><span class="tps tp-chevron-down"></span>
             </a>
             <a href="#rowsettingbox" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ROW_SETTINGS');
-            ?>" class="fa fa-cog rowsetting" rel="rowpopover" data-container="#<?php echo $parentId; ?>"></a>
-            <a href="" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ADD_NEW_ROW');?>" class="fa fa-bars <?php echo $newRowClass; ?>"></a>
-            <a href="" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ADD_NEW_COLUMN');?>" class="fa fa-columns add-column"></a>
-            <a href="" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_DELETE_ROW');?>" class="fa fa-times rowdelete"></a>
+            ?>" class="tps tp-cog rowsetting" rel="rowpopover" data-container="#<?php echo $parentId; ?>"></a>
+            <a href="" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ADD_NEW_ROW');?>" class="tps tp-bars <?php echo $newRowClass; ?>"></a>
+            <a href="" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ADD_NEW_COLUMN');?>" class="tps tp-columns add-column"></a>
+            <a href="" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_DELETE_ROW');?>" class="tps tp-times rowdelete"></a>
         </div>
         <div class="hr clr"></div>
 

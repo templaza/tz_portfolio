@@ -47,7 +47,7 @@
 
         <field type="radio" name="list_view"
                default="0"
-               class="btn-group switcher" filter="intval"
+               class="switcher btn-group" filter="intval"
                label="COM_TZ_PORTFOLIO_PLUS_LIST_VIEW_LABEL"
                description="COM_TZ_PORTFOLIO_PLUS_LIST_VIEW_DESC">
             <option value="0">JNO</option>
@@ -56,7 +56,7 @@
 
         <field type="radio" name="detail_view"
                default="1"
-               class="btn-group switcher" filter="intval"
+               class="switcher btn-group" filter="intval"
                label="COM_TZ_PORTFOLIO_PLUS_DETAILS_VIEW_LABEL"
                description="COM_TZ_PORTFOLIO_PLUS_DETAILS_VIEW_DESC">
             <option value="0">JNO</option>
@@ -65,7 +65,7 @@
 
         <field type="radio" name="advanced_search"
                default="0"
-               class="btn-group switcher" filter="intval"
+               class="switcher btn-group" filter="intval"
                label="COM_TZ_PORTFOLIO_PLUS_ADVANCED_SEARCH_LABEL"
                description="COM_TZ_PORTFOLIO_PLUS_ADVANCED_SEARCH_DESC">
             <option value="0">JNO</option>
@@ -100,28 +100,28 @@
     <fields name="params">
         <fieldset name="request" label="JGLOBAL_FIELDSET_BASIC">
             <field type="radio" name="required"
-                   class="btn-group switcher" default="0"
+                   class="switcher btn-group" default="0"
                    label="JOPTION_REQUIRED"
                     description="COM_TZ_PORTFOLIO_PLUS_EXTRAFIELDS_REQUIRED_DESC">
                 <option value="0">JNO</option>
                 <option value="1">JYES</option>
             </field>
             <field type="radio" name="show_title"
-                   class="btn-group switcher" default="1"
+                   class="switcher btn-group" default="1"
                    label="JGLOBAL_SHOW_TITLE_LABEL"
                    description="COM_TZ_PORTFOLIO_PLUS_EXTRAFIELDS_SHOW_TITLE_DESC">
                 <option value="0">JHIDE</option>
                 <option value="1">JSHOW</option>
             </field>
             <field type="radio" name="show_label"
-                   class="btn-group switcher" default="1"
+                   class="switcher btn-group" default="1"
                    label="COM_TZ_PORTFOLIO_PLUS_EXTRAFIELDS_SHOW_LABEL"
                    description="COM_TZ_PORTFOLIO_PLUS_EXTRAFIELDS_SHOW_LABEL_DESC">
                 <option value="0">JHIDE</option>
                 <option value="1">JSHOW</option>
             </field>
             <field type="radio" name="enable_search_link"
-                   default="0" class="btn-group switcher"
+                   default="0" class="switcher btn-group"
                    label="COM_TZ_PORTFOLIO_PLUS_EXTRAFIELDS_ENABLE_SEARCH_LINK_LABEL"
                    description="COM_TZ_PORTFOLIO_PLUS_EXTRAFIELDS_ENABLE_SEARCH_LINK_DESC">
                 <option value="0">JNO</option>

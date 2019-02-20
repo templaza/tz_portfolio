@@ -22,6 +22,7 @@ defined('_JEXEC') or die;
 
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
+use Joomla\CMS\Language\LanguageHelper;
 use TZ_Portfolio_Plus\Installer\TZ_Portfolio_PlusInstaller;
 
 jimport('joomla.filesytem.file');
@@ -697,7 +698,7 @@ class com_tz_portfolio_plusInstallerScript{
                 </tr>
                 <?php foreach ($status->modules as $module): ?>
                     <?php
-                    if(!$lang -> exists((string) $module['name'],JPATH_SITE)):
+                    if(!LanguageHelper::exists((string) $module['name'],JPATH_SITE)):
                         $lang -> load((string)$module['name'],JPATH_SITE);
                     endif;
                     ?>
@@ -717,7 +718,7 @@ class com_tz_portfolio_plusInstallerScript{
                 </tr>
                 <?php foreach ($status->plugins as $plugin): ?>
                     <?php
-                    if(!$lang -> exists('plg_'.$plugin['group'].'_'.(string)$plugin['name'],JPATH_ADMINISTRATOR, null, true)):
+                    if(!LanguageHelper::exists('plg_'.$plugin['group'].'_'.(string)$plugin['name'],JPATH_ADMINISTRATOR, null, true)):
                         $lang -> load('plg_'.$plugin['group'].'_'.(string)$plugin['name'],JPATH_ADMINISTRATOR, null, true);
                     endif;
                     ?>
@@ -731,14 +732,14 @@ class com_tz_portfolio_plusInstallerScript{
 
             <?php if ($status && isset($status -> templates) && count($status->templates)): ?>
                 <tr>
-                    <th><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_TEMPLATE_OF_COMPONENT'); ?></th>
+                    <th><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_TEMPLATE'); ?></th>
                     <th></th>
                     <th></th>
                 </tr>
                 <?php foreach ($status->templates as $template): ?>
                     <?php
                     $tmplPath   = JPATH_SITE.'/components/com_tz_portfolio_plus/templates/'.$template['name'];
-                    if(!$lang -> exists('tpl_'.(string)$template['name'], $tmplPath, null, true)):
+                    if(!LanguageHelper::exists('tpl_'.(string)$template['name'], $tmplPath, null, true)):
                         $lang -> load('tpl_'.(string)$template['name'], $tmplPath, null, true);
                     endif;
                     ?>
@@ -764,7 +765,7 @@ class com_tz_portfolio_plusInstallerScript{
                     <?php
                     $addonPath  = JPATH_SITE.'/components/com_tz_portfolio_plus/addons/'
                         .$addon['group'].'/'.$addon['name'];
-                    if(!$lang -> exists('plg_'.$addon['group'].'_'.(string)$addon['name'], $addonPath, null, true)):
+                    if(!LanguageHelper::exists('plg_'.$addon['group'].'_'.(string)$addon['name'], $addonPath, null, true)):
                         $lang -> load('plg_'.$addon['group'].'_'.(string)$addon['name'], $addonPath, null, true);
                     endif;
                     ?>
@@ -832,7 +833,7 @@ class com_tz_portfolio_plusInstallerScript{
                 </tr>
                 <?php foreach ($status->modules as $module): ?>
                     <?php
-                    if($lang -> exists($module['name'])):
+                    if(LanguageHelper::exists($module['name'])):
                         $lang -> load($module['name']);
                     endif;
                     ?>
@@ -852,7 +853,7 @@ class com_tz_portfolio_plusInstallerScript{
                 </tr>
                 <?php foreach ($status->plugins as $plugin): ?>
                     <?php
-                    if($lang -> exists('plg_'.$plugin['group'].'_'.$plugin['name'])):
+                    if(LanguageHelper::exists('plg_'.$plugin['group'].'_'.$plugin['name'])):
                         $lang -> load('plg_'.$plugin['group'].'_'.$plugin['name']);
                     endif;
                     ?>

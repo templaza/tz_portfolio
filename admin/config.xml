@@ -2,19 +2,19 @@
 <config>
     <!-- START PARAMETERS FOR ALL PAGE -->
     <fieldset name="tz_fieldset_general" label="COM_TZ_PORTFOLIO_PLUS_FIELDSET_GENERAL"
-            description="COM_TZ_PORTFOLIO_PLUS_CONFIG_SETTINGS_DESC">
+              description="COM_TZ_PORTFOLIO_PLUS_CONFIG_SETTINGS_DESC">
         <field name="tz_article_limit"
-                type="text"
-                default="10"
-                label="COM_TZ_PORTFOLIO_PLUS_TZ_ARTICLE_LIMIT"
-                description="COM_TZ_PORTFOLIO_PLUS_TZ_ARTICLE_LIMIT_DESC"/>
+               type="text"
+               default="10"
+               label="COM_TZ_PORTFOLIO_PLUS_TZ_ARTICLE_LIMIT"
+               description="COM_TZ_PORTFOLIO_PLUS_TZ_ARTICLE_LIMIT_DESC"/>
         <field name="tz_article_intro_limit"
                label="COM_TZ_PORTFOLIO_PLUS_ARTICLE_LIMIT"
                description="COM_TZ_PORTFOLIO_PLUS_ARTICLE_LIMIT_DESC"/>
         <field name="use_filter_first_letter" type="radio"
-               class="btn-group switcher" default="0"
+               class="switcher btn-group" default="0"
                label="COM_TZ_PORTFOLIO_PLUS_USE_FILTER_FIRST_LETTER"
-                description="COM_TZ_PORTFOLIO_PLUS_USE_FILTER_FIRST_LETTER_DESC">
+               description="COM_TZ_PORTFOLIO_PLUS_USE_FILTER_FIRST_LETTER_DESC">
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
@@ -33,7 +33,7 @@
                label="COM_TZ_PORTFOLIO_PLUS_PAGINATION_TITLE"/>
         <field name="show_limit_box"
                type="radio"
-               class="btn-group switcher"
+               class="switcher btn-group"
                default="0"
                label="COM_TZ_PORTFOLIO_PLUS_SHOW_LIMIT_BOX"
                description="COM_TZ_PORTFOLIO_PLUS_SHOW_LIMIT_BOX_DESC">
@@ -49,7 +49,7 @@
             <option value="2">JGLOBAL_AUTO</option>
         </field>
         <field name="show_pagination_results"
-               type="radio" class="btn-group switcher"
+               type="radio" class="switcher btn-group"
                default="1"
                label="JGLOBAL_PAGINATION_RESULTS_LABEL"
                description="JGLOBAL_PAGINATION_RESULTS_DESC">
@@ -116,7 +116,7 @@
                class="alert alert-warning btn-block"
                label="COM_TZ_PORTFOLIO_PLUS_FEED_TITLE"/>
         <field name="show_feed_link"
-               type="radio" class="btn-group switcher"
+               type="radio" class="switcher btn-group"
                default="1"
                label="JGLOBAL_SHOW_FEED_LINK_LABEL"
                description="JGLOBAL_SHOW_FEED_LINK_DESC">
@@ -124,7 +124,7 @@
             <option value="1">JSHOW</option>
         </field>
         <field name="feed_summary"
-               type="radio" class="btn-group switcher"
+               type="radio" class="switcher btn-group"
                default="0"
                label="JGLOBAL_FEED_SUMMARY_LABEL"
                description="JGLOBAL_FEED_SUMMARY_DESC">
@@ -148,14 +148,14 @@
             <option value="ajaxInfiScroll">COM_TZ_PORTFOLIO_PLUS_AJAX_INFINITE_SCROLL</option>
         </field>
         <field type="radio" name="tz_show_filter"
-               class="btn-group switcher"
+               class="switcher btn-group"
                default="1"
                label="COM_TZ_PORTFOLIO_PLUS_SHOW_FILTER">
             <option value="0">JHIDE</option>
             <option value="1">JSHOW</option>
         </field>
         <field type="radio" name="show_all_filter"
-               class="btn-group switcher" default="0"
+               class="switcher btn-group" default="0"
                showon="tz_show_filter:1"
                label="COM_TZ_PORTFOLIO_PLUS_SHOW_ALL_FILTER"
                description="COM_TZ_PORTFOLIO_PLUS_SHOW_ALL_FILTER_DESC">
@@ -170,7 +170,7 @@
             <option value="categories">COM_TZ_PORTFOLIO_PLUS_CATEGORIES</option>
         </field>
         <field type="radio" name="filter_second_category"
-               default="1" class="btn-group switcher"
+               default="1" class="switcher btn-group"
                showon="tz_show_filter:1[AND]tz_filter_type:categories"
                label="COM_TZ_PORTFOLIO_PLUS_FILTER_SECONDARY_CATEGORY_LABEL"
                description="COM_TZ_PORTFOLIO_PLUS_FILTER_SECONDARY_CATEGORY_DESC">
@@ -187,7 +187,7 @@
         </field>
         <field type="radio"
                name="show_sort"
-               class="btn-group switcher"
+               class="switcher btn-group"
                default="0"
                label="COM_TZ_PORTFOLIO_PLUS_PORTFOLIO_SHOW_SORT">
             <option value="0">JHIDE</option>
@@ -201,7 +201,7 @@
             <option value="title">JGLOBAL_TITLE</option>
         </field>
         <field type="radio"
-               class="btn-group switcher"
+               class="switcher btn-group"
                name="show_layout"
                default="0"
                label="COM_TZ_PORTFOLIO_PLUS_PORTFOLIO_SHOW_LAYOUT">
@@ -218,7 +218,7 @@
             <option value="straightDown">COM_TZ_PORTFOLIO_PLUS_PORTFOLIO_STRAIGHTDOWN</option>
         </field>
         <field type="radio"
-               class="btn-group switcher"
+               class="switcher btn-group"
                name="tz_show_no_more_page"
                default="0"
                label="COM_TZ_PORTFOLIO_PLUS_PORTFOLIO_SHOW_NO_MORE_PAGE_LOAD">
@@ -230,12 +230,12 @@
                default="No more items to load"
                label="COM_TZ_PORTFOLIO_PLUS_NO_MORE_PAGE_TEXT"/>
         <field name="tz_column_width"
-                type="text"
-                default="360"
-                label="COM_TZ_PORTFOLIO_PLUS_TZ_COLUMN_WIDTH"/>
+               type="text"
+               default="360"
+               label="COM_TZ_PORTFOLIO_PLUS_TZ_COLUMN_WIDTH"/>
         <!--<field type="text" name="column_count"-->
-               <!--default="4-1200,3-1024,2-768,1-480"-->
-               <!--label="COM_TZ_PORTFOLIO_PLUS_COLUMN_COUNT_LABEL"/>-->
+        <!--default="4-1200,3-1024,2-768,1-480"-->
+        <!--label="COM_TZ_PORTFOLIO_PLUS_COLUMN_COUNT_LABEL"/>-->
 
         <!-- Start tag's parameters -->
         <field type="spacer" hr="true"/>
@@ -244,7 +244,7 @@
                label="COM_TZ_PORTFOLIO_PLUS_FIELDSET_TAG_LISTINGS_LABEL"/>
         <field name="show_tag_title_heading"
                type="radio"
-               class="btn-group switcher"
+               class="switcher btn-group"
                default="1"
                label="COM_TZ_PORTFOLIO_PLUS_SHOW_TAGS_TITLE"
                description="COM_TZ_PORTFOLIO_PLUS_SHOW_TAGS_TITLE_DESC">
@@ -274,7 +274,7 @@
     <fieldset name="fieldset_date_listings" label="COM_TZ_PORTFOLIO_PLUS_FIELDSET_DATE_LISTINGS_LABEL"
               description="COM_TZ_PORTFOLIO_PLUS_FIELDSET_DATE_LISTINGS_DESC">
         <field name="show_date_title" type="radio"
-               class="btn-group switcher"
+               class="switcher btn-group"
                default="1"
                label="JGLOBAL_SHOW_TITLE_LABEL"
                description="JGLOBAL_SHOW_TITLE_DESC">
@@ -282,7 +282,7 @@
             <option value="1">JSHOW</option>
         </field>
         <field name="date_link_titles"
-               type="radio" class="btn-group switcher"
+               type="radio" class="switcher btn-group"
                default="1"
                label="JGLOBAL_LINKED_TITLES_LABEL"
                description="JGLOBAL_LINKED_TITLES_DESC">
@@ -290,7 +290,7 @@
             <option value="1">JYES</option>
         </field>
         <field name="show_date_intro" type="radio"
-               class="btn-group switcher"
+               class="switcher btn-group"
                default="1"
                label="JGLOBAL_SHOW_INTRO_LABEL"
                description="JGLOBAL_SHOW_INTRO_DESC">
@@ -298,7 +298,7 @@
             <option value="1">JSHOW</option>
         </field>
         <field name="show_date_category" type="radio"
-               class="btn-group switcher"
+               class="switcher btn-group"
                label="JGLOBAL_SHOW_CATEGORY_LABEL"
                description="JGLOBAL_SHOW_CATEGORY_DESC"
                default="1">
@@ -306,7 +306,7 @@
             <option value="1">JSHOW</option>
         </field>
         <field name="date_link_category" type="radio"
-               class="btn-group switcher"
+               class="switcher btn-group"
                label="JGLOBAL_LINK_CATEGORY_LABEL"
                description="JGLOBAL_LINK_CATEGORY_DESC"
                default="1">
@@ -314,7 +314,7 @@
             <option value="1">JYES</option>
         </field>
         <field name="show_date_parent_category"
-               type="radio" class="btn-group switcher"
+               type="radio" class="switcher btn-group"
                default="0"
                label="JGLOBAL_SHOW_PARENT_CATEGORY_LABEL"
                description="JGLOBAL_SHOW_PARENT_CATEGORY_DESC">
@@ -322,7 +322,7 @@
             <option value="1">JSHOW</option>
         </field>
         <field name="date_link_parent_category"
-               type="radio" class="btn-group switcher"
+               type="radio" class="switcher btn-group"
                default="1"
                label="JGLOBAL_LINK_PARENT_CATEGORY_LABEL"
                description="JGLOBAL_LINK_PARENT_CATEGORY_DESC">
@@ -332,7 +332,7 @@
         <field type="spacer" hr="true"/>
 
         <field name="show_date_author" type="radio"
-               class="btn-group switcher"
+               class="switcher btn-group"
                default="1"
                label="JGLOBAL_SHOW_AUTHOR_LABEL"
                description="JGLOBAL_SHOW_AUTHOR_DESC">
@@ -340,7 +340,7 @@
             <option value="1">JSHOW</option>
         </field>
         <field name="date_link_author"
-               type="radio" class="btn-group switcher"
+               type="radio" class="switcher btn-group"
                default="1"
                label="JGLOBAL_LINK_AUTHOR_LABEL"
                description="JGLOBAL_LINK_AUTHOR_DESC">
@@ -348,7 +348,7 @@
             <option value="1">JYES</option>
         </field>
         <field name="show_date_create_date"
-               type="radio" class="btn-group switcher"
+               type="radio" class="switcher btn-group"
                default="1"
                label="JGLOBAL_SHOW_CREATE_DATE_LABEL"
                description="JGLOBAL_SHOW_CREATE_DATE_DESC">
@@ -356,7 +356,7 @@
             <option value="1">JSHOW</option>
         </field>
         <field name="show_date_modify_date"
-               type="radio" class="btn-group switcher"
+               type="radio" class="switcher btn-group"
                default="0"
                label="JGLOBAL_SHOW_MODIFY_DATE_LABEL"
                description="JGLOBAL_SHOW_MODIFY_DATE_DESC">
@@ -364,7 +364,7 @@
             <option value="1">JSHOW</option>
         </field>
         <field name="show_date_publish_date"
-               type="radio" class="btn-group switcher"
+               type="radio" class="switcher btn-group"
                default="0"
                label="JGLOBAL_SHOW_PUBLISH_DATE_LABEL"
                description="JGLOBAL_SHOW_PUBLISH_DATE_DESC">
@@ -372,7 +372,7 @@
             <option value="1">JSHOW</option>
         </field>
         <field name="show_date_readmore"
-               type="radio" class="btn-group switcher"
+               type="radio" class="switcher btn-group"
                default="1"
                label="JGLOBAL_SHOW_READMORE_LABEL"
                description="JGLOBAL_SHOW_READMORE_DESC">
@@ -380,7 +380,7 @@
             <option value="1">JSHOW</option>
         </field>
         <field name="show_date_hits"
-               type="radio" class="btn-group switcher"
+               type="radio" class="switcher btn-group"
                default="1"
                label="JGLOBAL_SHOW_HITS_LABEL"
                description="JGLOBAL_SHOW_HITS_DESC">
@@ -389,7 +389,7 @@
         </field>
         <field name="show_date_tags"
                type="radio"
-               class="btn-group switcher"
+               class="switcher btn-group"
                default="1"
                label="COM_TZ_PORTFOLIO_PLUS_SHOW_TAGS"
                description="COM_TZ_PORTFOLIO_PLUS_SHOW_TAGS_DESC">
@@ -398,7 +398,7 @@
         </field>
         <field type="spacer" hr="true" />
         <field name="show_date_icons"
-               type="radio" class="btn-group switcher"
+               type="radio" class="switcher btn-group"
                default="1"
                label="JGLOBAL_SHOW_ICONS_LABEL"
                description="JGLOBAL_SHOW_ICONS_DESC">
@@ -406,7 +406,7 @@
             <option value="1">JSHOW</option>
         </field>
         <field name="show_date_print_icon"
-               type="radio" class="btn-group switcher"
+               type="radio" class="switcher btn-group"
                default="0"
                label="COM_TZ_PORTFOLIO_PLUS_SHOW_PRINT_LABEL"
                description="COM_TZ_PORTFOLIO_PLUS_SHOW_PRINT_DESC">
@@ -414,7 +414,7 @@
             <option value="1">JSHOW</option>
         </field>
         <field name="show_date_email_icon"
-               type="radio" class="btn-group switcher"
+               type="radio" class="switcher btn-group"
                default="0"
                label="COM_TZ_PORTFOLIO_PLUS_SHOW_EMAIL_LABEL"
                description="COM_TZ_PORTFOLIO_PLUS_SHOW_EMAIL_DESC">
@@ -430,7 +430,7 @@
               description="COM_TZ_PORTFOLIO_PLUS_FIELDSET_SEARCH_DESC">
 
         <field name="show_search_intro" type="radio"
-               class="btn-group switcher"
+               class="switcher btn-group"
                default="1"
                label="JGLOBAL_SHOW_INTRO_LABEL"
                description="JGLOBAL_SHOW_INTRO_DESC">
@@ -438,10 +438,10 @@
             <option value="1">JSHOW</option>
         </field>
         <field type="radio" name="show_search_category_filter"
-               default="0" class="btn-group btn-group-yesno switcher"
+               default="0" class="switcher btn-group"
                label="JGLOBAL_SHOW_CATEGORY_LABEL">
-            <option value="1">JYES</option>
             <option value="0">JNO</option>
+            <option value="1">JYES</option>
         </field>
         <field type="tzcategory" name="search_parent_cat"
                show_root="true" default="0"
@@ -450,34 +450,34 @@
                description="COM_TZ_PORTFOLIO_PLUS_SEARCH_PARENT_CAT_DESC">
         </field>
         <field type="radio" name="show_s_parent_root"
-               default="1" class="btn-group switcher"
+               default="1" class="switcher btn-group"
                showon="show_search_category:1"
                label="COM_TZ_PORTFOLIO_PLUS_SHOW_PARENT_ROOT_LABEL">
-            <option value="1">JYES</option>
             <option value="0">JNO</option>
+            <option value="1">JYES</option>
         </field>
         <field type="radio" name="search_subcategory"
-               default="0" class="btn-group switcher"
+               default="0" class="switcher btn-group"
                label="COM_TZ_PORTFOLIO_PLUS_SEARCH_INCLUDE_SUBCATEGORIES_LABEL"
                description="COM_TZ_PORTFOLIO_PLUS_SEARCH_INCLUDE_SUBCATEGORIES_DESC">
-            <option value="1">JYES</option>
             <option value="0">JNO</option>
+            <option value="1">JYES</option>
         </field>
         <field type="radio" name="show_s_gfield_title"
-               default="1" class="btn-group switcher"
+               default="1" class="switcher btn-group"
                label="COM_TZ_PORTFOLIO_PLUS_SEARCH_SHOW_GROUP_FIELD_TITLE_LABEL">
-            <option value="1">JYES</option>
             <option value="0">JNO</option>
+            <option value="1">JYES</option>
         </field>
         <field type="spacer" hr="true"/>
         <field type="radio" name="show_search_category"
-               default="0" class="btn-group btn-group-yesno switcher"
+               default="0" class="switcher btn-group"
                label="JGLOBAL_SHOW_CATEGORY_LABEL">
-            <option value="1">JYES</option>
             <option value="0">JNO</option>
+            <option value="1">JYES</option>
         </field>
         <field name="show_search_author" type="radio"
-               class="btn-group switcher"
+               class="switcher btn-group"
                default="1"
                label="JGLOBAL_SHOW_AUTHOR_LABEL"
                description="JGLOBAL_SHOW_AUTHOR_DESC">
@@ -485,7 +485,7 @@
             <option value="1">JSHOW</option>
         </field>
         <field name="search_link_author"
-               type="radio" class="btn-group switcher"
+               type="radio" class="switcher btn-group"
                default="1"
                label="JGLOBAL_LINK_AUTHOR_LABEL"
                description="JGLOBAL_LINK_AUTHOR_DESC">
@@ -493,7 +493,7 @@
             <option value="1">JYES</option>
         </field>
         <field name="show_search_create_date"
-               type="radio" class="btn-group switcher"
+               type="radio" class="switcher btn-group"
                default="1"
                label="JGLOBAL_SHOW_CREATE_DATE_LABEL"
                description="JGLOBAL_SHOW_CREATE_DATE_DESC">
@@ -501,7 +501,7 @@
             <option value="1">JSHOW</option>
         </field>
         <field name="show_search_modify_date"
-               type="radio" class="btn-group switcher"
+               type="radio" class="switcher btn-group"
                default="0"
                label="JGLOBAL_SHOW_MODIFY_DATE_LABEL"
                description="JGLOBAL_SHOW_MODIFY_DATE_DESC">
@@ -509,7 +509,7 @@
             <option value="1">JSHOW</option>
         </field>
         <field name="show_search_publish_date"
-               type="radio" class="btn-group switcher"
+               type="radio" class="switcher btn-group"
                default="0"
                label="JGLOBAL_SHOW_PUBLISH_DATE_LABEL"
                description="JGLOBAL_SHOW_PUBLISH_DATE_DESC">
@@ -517,7 +517,7 @@
             <option value="1">JSHOW</option>
         </field>
         <field name="show_search_readmore"
-               type="radio" class="btn-group switcher"
+               type="radio" class="switcher btn-group"
                default="1"
                label="JGLOBAL_SHOW_READMORE_LABEL"
                description="JGLOBAL_SHOW_READMORE_DESC">
@@ -525,7 +525,7 @@
             <option value="1">JSHOW</option>
         </field>
         <field name="show_search_hits"
-               type="radio" class="btn-group switcher"
+               type="radio" class="switcher btn-group"
                default="1"
                label="JGLOBAL_SHOW_HITS_LABEL"
                description="JGLOBAL_SHOW_HITS_DESC">
@@ -534,7 +534,7 @@
         </field>
         <field name="show_search_tags"
                type="radio"
-               class="btn-group switcher"
+               class="switcher btn-group"
                default="1"
                label="COM_TZ_PORTFOLIO_PLUS_SHOW_TAGS"
                description="COM_TZ_PORTFOLIO_PLUS_SHOW_TAGS_DESC">
@@ -543,7 +543,7 @@
         </field>
         <field name="show_search_item_media"
                type="radio"
-               class="btn-group switcher"
+               class="switcher btn-group"
                default="1"
                label="COM_TZ_PORTFOLIO_PLUS_SHOW_MEDIA"
                description="COM_TZ_PORTFOLIO_PLUS_SHOW_MEDIA_DESC">
@@ -552,7 +552,7 @@
         </field>
         <field type="spacer" hr="true" />
         <field name="show_search_icons"
-               type="radio" class="btn-group switcher"
+               type="radio" class="switcher btn-group"
                default="1"
                label="JGLOBAL_SHOW_ICONS_LABEL"
                description="JGLOBAL_SHOW_ICONS_DESC">
@@ -560,7 +560,7 @@
             <option value="1">JSHOW</option>
         </field>
         <field name="show_search_print_icon"
-               type="radio" class="btn-group switcher"
+               type="radio" class="switcher btn-group"
                default="0"
                label="COM_TZ_PORTFOLIO_PLUS_SHOW_PRINT_LABEL"
                description="COM_TZ_PORTFOLIO_PLUS_SHOW_PRINT_DESC">
@@ -568,7 +568,7 @@
             <option value="1">JSHOW</option>
         </field>
         <field name="show_search_email_icon"
-               type="radio" class="btn-group switcher"
+               type="radio" class="switcher btn-group"
                default="0"
                label="COM_TZ_PORTFOLIO_PLUS_SHOW_EMAIL_LABEL"
                description="COM_TZ_PORTFOLIO_PLUS_SHOW_EMAIL_DESC">
@@ -583,7 +583,7 @@
               label="JCATEGORIES"
               description="COM_CONTENT_CONFIG_CATEGORIES_SETTINGS_DESC">
         <field name="show_base_description" type="radio"
-               class="btn-group switcher"
+               class="switcher btn-group"
                default="1"
                label="JGLOBAL_FIELD_SHOW_BASE_DESCRIPTION_LABEL"
                description="JGLOBAL_FIELD_SHOW_BASE_DESCRIPTION_DESC">
@@ -591,7 +591,7 @@
             <option value="1">JSHOW</option>
         </field>
         <field name="show_description_image" type="radio"
-               class="btn-group switcher"
+               class="switcher btn-group"
                default="0"
                label="JGLOBAL_SHOW_CATEGORY_IMAGE_LABEL"
                description="JGLOBAL_SHOW_CATEGORY_IMAGE_DESC">
@@ -610,7 +610,7 @@
             <option value="5">J5</option>
         </field>
         <field name="show_empty_categories_cat" type="radio"
-               class="btn-group switcher"
+               class="switcher btn-group"
                default="0"
                label="JGLOBAL_SHOW_EMPTY_CATEGORIES_LABEL"
                description="COM_TZ_PORTFOLIO_PLUS_SHOW_EMPTY_CATEGORIES_DESC">
@@ -618,7 +618,7 @@
             <option value="1">JSHOW</option>
         </field>
         <field name="show_subcat_desc_cat" type="radio"
-               class="btn-group switcher"
+               class="switcher btn-group"
                default="1"
                label="JGLOBAL_SHOW_SUBCATEGORIES_DESCRIPTION_LABEL"
                description="JGLOBAL_SHOW_SUBCATEGORIES_DESCRIPTION_DESC">
@@ -626,7 +626,7 @@
             <option value="1">JSHOW</option>
         </field>
         <field name="show_cat_num_articles_cat" type="radio"
-               class="btn-group switcher"
+               class="switcher btn-group"
                default="1"
                label="COM_TZ_PORTFOLIO_PLUS_NUMBER_CATEGORY_ITEMS_LABEL"
                description="COM_TZ_PORTFOLIO_PLUS_NUMBER_CATEGORY_ITEMS_DESC">
@@ -639,76 +639,72 @@
     <!-- START ADVANCED'S PARAMTERS -->
     <fieldset name="advanced" label="COM_TZ_PORTFOLIO_PLUS_FIELDSET_ADVANCED">
         <field type="radio" name="enable_jquery"
-               default="0" class="btn-group switcher"
+               default="0" class="switcher btn-group"
                label="COM_TZ_PORTFOLIO_PLUS_ENABLE_JQUERY_LIBRARY_LABEL">
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
 
         <field type="radio" name="enable_bootstrap"
-               default="1" class="btn-group switcher"
+               default="1" class="switcher btn-group"
                label="COM_TZ_PORTFOLIO_PLUS_ENABLE_BOOTSTRAP_LIBRARY_LABEL">
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
 
-        <field type="text" name="token_key"
-               label="COM_TZ_PORTFOLIO_PLUS_TOKEN_KEY"
-               description="COM_TZ_PORTFOLIO_PLUS_TOKEN_KEY_DESC"/>
-
         <field name="tz_portfolio_plus_router" type="spacer"
                class="alert alert-warning btn-block"
                label="COM_TZ_PORTFOLIO_PLUS_ROUTER"/>
         <field name="tzSef" type="radio"
-               class="btn-group switcher" default="1"
+               class="switcher btn-group" default="1"
                label="COM_TZ_PORTFOLIO_PLUS_ADVANCED_SEF_LABEL"
-                description="COM_TZ_PORTFOLIO_PLUS_ADVANCED_SEF_DESC">
+               description="COM_TZ_PORTFOLIO_PLUS_ADVANCED_SEF_DESC">
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
         <field name="sef_users_prefix" type="text"
                default="users"
                label="COM_TZ_PORTFOLIO_PLUS_SEF_USERS_PREFIX_LABEL"
-                description="COM_TZ_PORTFOLIO_PLUS_SEF_USERS_PREFIX_DESC"/>
+               description="COM_TZ_PORTFOLIO_PLUS_SEF_USERS_PREFIX_DESC"/>
         <field name="sef_tags_prefix" type="text"
                default="tags"
                label="COM_TZ_PORTFOLIO_PLUS_SEF_TAGS_PREFIX_LABEL"
-                description="COM_TZ_PORTFOLIO_PLUS_SEF_TAGS_PREFIX_DESC"/>
+               description="COM_TZ_PORTFOLIO_PLUS_SEF_TAGS_PREFIX_DESC"/>
         <field name="sef_date_prefix" type="text"
                default="date"
                label="COM_TZ_PORTFOLIO_PLUS_SEF_DATE_PREFIX_LABEL"
-                description="COM_TZ_PORTFOLIO_PLUS_SEF_DATE_PREFIX_DESC"/>
+               description="COM_TZ_PORTFOLIO_PLUS_SEF_DATE_PREFIX_DESC"/>
         <field name="sef_article_separator" type="list"
                default="slash_revert_id"
-                label="COM_TZ_PORTFOLIO_PLUS_SEF_ARTICLE_SEPARATOR_LABEL"
-                description="COM_TZ_PORTFOLIO_PLUS_SEF_ARTICLE_SEPARATOR_DESC">
+               label="COM_TZ_PORTFOLIO_PLUS_SEF_ARTICLE_SEPARATOR_LABEL"
+               description="COM_TZ_PORTFOLIO_PLUS_SEF_ARTICLE_SEPARATOR_DESC">
             <option value="dash">COM_TZ_PORTFOLIO_PLUS_USE_DASH</option>
             <option value="slash">COM_TZ_PORTFOLIO_PLUS_USE_FORWARD_SLASH</option>
             <option value="slash_revert_id">COM_TZ_PORTFOLIO_PLUS_USE_FORWARD_SLASH_AND_REVERT_ID</option>
         </field>
         <field name="sef_use_article_id" type="radio"
-               class="btn-group switcher" default="1"
+               class="switcher btn-group" default="1"
                label="COM_TZ_PORTFOLIO_PLUS_SEF_USE_ARTICLE_ID_LABEL"
-                description="COM_TZ_PORTFOLIO_PLUS_SEF_USE_ARTICLE_ID_DESC">
+               description="COM_TZ_PORTFOLIO_PLUS_SEF_USE_ARTICLE_ID_DESC">
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
         <field name="sef_use_article_alias" type="radio"
-               class="btn-group switcher" default="1"
+               class="switcher btn-group" default="1"
                label="COM_TZ_PORTFOLIO_PLUS_SEF_USE_ARTICLE_ALIAS_LABEL"
                description="COM_TZ_PORTFOLIO_PLUS_SEF_USE_ARTICLE_ALIAS_DESC">
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
         <field name="sef_remove_category_id" type="radio"
-               class="btn-group switcher" default="0"
+               class="switcher btn-group" default="0"
                label="COM_TZ_PORTFOLIO_PLUS_SEF_REMOVE_CATEGORY_ID_LABEL"
                description="COM_TZ_PORTFOLIO_PLUS_SEF_REMOVE_CATEGORY_ID_DESC">
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
         <field name="sef_use_parent_category" type="radio"
-               class="btn-group switcher" default="1"
+               class="switcher btn-group" default="1"
                label="COM_TZ_PORTFOLIO_PLUS_SEF_USE_PARENT_CATEGORY_LABEL"
                description="COM_TZ_PORTFOLIO_PLUS_SEF_USE_PARENT_CATEGORY_DESC">
             <option value="0">JNO</option>
@@ -717,13 +713,13 @@
         <field name="sef_user_separator" type="list"
                default="slash_revert_id"
                label="COM_TZ_PORTFOLIO_PLUS_SEF_USER_SEPARATOR_LABEL"
-                description="COM_TZ_PORTFOLIO_PLUS_SEF_USER_SEPARATOR_DESC">
+               description="COM_TZ_PORTFOLIO_PLUS_SEF_USER_SEPARATOR_DESC">
             <option value="dash">COM_TZ_PORTFOLIO_PLUS_USE_DASH</option>
             <option value="slash">COM_TZ_PORTFOLIO_PLUS_USE_FORWARD_SLASH</option>
             <option value="slash_revert_id">COM_TZ_PORTFOLIO_PLUS_USE_FORWARD_SLASH_AND_REVERT_ID</option>
         </field>
         <field name="sef_use_user_alias" type="radio"
-               class="btn-group switcher" default="1"
+               class="switcher btn-group" default="1"
                label="COM_TZ_PORTFOLIO_PLUS_SEF_USE_USER_ALIAS_LABEL"
                description="COM_TZ_PORTFOLIO_PLUS_SEF_USE_USER_ALIAS_DESC">
             <option value="0">JNO</option>
@@ -738,7 +734,7 @@
             <option value="slash_revert_id">COM_TZ_PORTFOLIO_PLUS_USE_FORWARD_SLASH_AND_REVERT_ID</option>
         </field>
         <field name="sef_use_tag_alias" type="radio"
-               class="btn-group switcher" default="1"
+               class="switcher btn-group" default="1"
                label="COM_TZ_PORTFOLIO_PLUS_SEF_USE_TAG_ALIAS_LABEL"
                description="COM_TZ_PORTFOLIO_PLUS_SEF_USE_TAG_ALIAS_DESC">
             <option value="0">JNO</option>
@@ -748,7 +744,7 @@
     <!-- END ADVANCED'S PARAMETERS -->
 
     <!-- START PERMISSIONS'S PARAMTERS -->
-	<fieldset name="permissions"
+    <fieldset name="permissions"
               label="JCONFIG_PERMISSIONS_LABEL"
               description="JCONFIG_PERMISSIONS_DESC">
         <field name="rules"
@@ -759,6 +755,6 @@
                filter="rules"
                component="com_tz_portfolio_plus"
                section="component" />
-	</fieldset>
+    </fieldset>
     <!-- END PERMISSIONS'S PARAMTERS -->
 </config>

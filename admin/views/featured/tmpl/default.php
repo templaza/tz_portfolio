@@ -212,7 +212,7 @@ $assoc		= JLanguageAssociations::isEnabled();
                                     <?php
                                     $editIcon   = '';
                                     if($j4Compare) {
-                                        $editIcon = $item->checked_out ? '' : '<span class="fa fa-pencil-square mr-2" aria-hidden="true"></span>';
+                                        $editIcon = $item->checked_out ? '' : '<span class="tps tp-pencil-square mr-2" aria-hidden="true"></span>';
                                     }
                                     ?>
                                     <a href="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&task=article.edit&id='.$item->id);?>">

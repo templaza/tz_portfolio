@@ -83,9 +83,8 @@ if($this -> items):
                     || $params -> get('access-edit')) : ?>
             <div class="tpp-item-icon">
                 <div class="btn-group pull-right" role="presentation">
-                    <a class="btn btn-default btn-secondary btn-sm dropdown-toggle"
-                       data-target="#" data-toggle="dropdown" href="#">
-                        <i class="icon-cog"></i> <span class="caret"></span>
+                    <a class="btn btn-default btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="tps tp-cog"></i> <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right">
                         <?php if ($params->get('show_cat_print_icon', 0)) : ?>

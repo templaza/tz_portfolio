@@ -98,7 +98,7 @@ $xml	= simplexml_load_file(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/tz_portfolio_plus.
                         </div>
                         <div class="tpVersion">
                             <b class="checking">
-                                <i class="fa fa-circle-o-notch fa-spin"></i>Checking For Updates ...</b>
+                                <i class="tps tp-circle-notch tp-spin"></i> Checking For Updates ...</b>
                             <b class="latest">Software Is Up To Date</b>
                             <b class="requires-updating">
                                 Requires Updating

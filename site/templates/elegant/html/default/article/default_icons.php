@@ -29,7 +29,7 @@ $canEdit	= $this->item->params->get('access-edit');
         <div class="tp-item-tools row-table">
             <div class="btn-group pull-right">
                 <a class="btn btn-default btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown"<?php echo $params->get('enable_bootstrap',1) ? ' href="#"' :''; ?>>
-                    <i class="icon-cog"></i> <span class="caret"></span>
+                    <i class="tps tp-cog"></i> <span class="caret"></span>
                 </a>
                 <?php // Note the actions class is deprecated. Use dropdown-menu instead. ?>
                 <ul class="dropdown-menu actions">

@@ -20,26 +20,30 @@
     /*padding-right: 4px;*/
     margin-right: 4px;
 }
-.rating > .voted span{
+.rating-item > span{
     display: inline-block;
     margin: 0;
     overflow: hidden;
     position: absolute;
-    right: 0;
-    top: 0;
-    /*padding-right: 2px;*/
-}
-
-.rating > .rating-item:hover span:before,
-.rating > .rating-item:hover ~ a span:before,
-.rating > .voted:before,
-.rating > .rating-item:hover:before,
-.rating > .rating-item:hover ~ .rating-item:before {
-    /*content: "\42";*/
-    color: #c66969;
-    top: 0;
     left: 0;
+    top: 0;
+    -webkit-transform: rotateY(180deg);
+    -moz-transform: rotateY(180deg);
+    -ms-transform: rotateY(180deg);
+    -o-transform: rotateY(180deg);
+    transform: rotateY(180deg);
+}
+.rating > .rating-item:hover span,
+.rating > .rating-item:hover ~ a span{
+    width: 100% !important;
 }
 .content_rating .loading{
     display: inline-block;
+}
+[dir=rtl] .rating{
+    direction: ltr;
+}
+[dir=rtl] .rating-item > span{
+    right: 0;
+    left: auto;
 }

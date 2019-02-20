@@ -193,26 +193,26 @@ $doc -> addScriptDeclaration('
         <div class="btn-toolbar">
             <div class="btn-group">
                 <button type="button" class="btn btn-primary" onclick="Joomla.submitbutton('article.save')">
-                    <span class="icon-ok"></span><?php echo $saveText; ?>
+                    <i class="tps tp-check"></i> <?php echo $saveText; ?>
                 </button>
             </div>
             <?php if(!$canApprove){ ?>
                 <div class="btn-group">
                     <button type="button" class="btn btn-primary" onclick="Joomla.submitbutton('article.draft')">
-                        <span class="icon-ok"></span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SAVE_DRAFT') ?>
+                        <i class="tps tp-check"></i> <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SAVE_DRAFT') ?>
                     </button>
                 </div>
             <?php } ?>
             <?php if($canApprove && ($this -> item -> state == 3 || $this -> item -> state == 4)){ ?>
                 <div class="btn-group">
                     <button type="button" class="btn btn-primary" onclick="Joomla.submitbutton('article.reject')">
-                        <span class="icon-ok"></span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_REJECT') ?>
+                        <i class="tps tp-check"></i> <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_REJECT') ?>
                     </button>
                 </div>
             <?php } ?>
             <div class="btn-group">
                 <button type="button" class="btn" onclick="Joomla.submitbutton('article.cancel')">
-                    <span class="icon-cancel"></span><?php echo JText::_('JCANCEL') ?>
+                    <i class="tps tp-times-circle"></i> <?php echo JText::_('JCANCEL') ?>
                 </button>
             </div>
             <?php if ($params->get('save_history', 0) && $this->item->id) : ?>

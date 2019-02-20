@@ -29,7 +29,7 @@ if(COM_TZ_PORTFOLIO_PLUS_EDITION == 'free'){
 <div class="alert tpp-upgrade-pro">
     <button data-dismiss="alert" class="close" type="button">×</button>
     <div class="content">
-        <span class="fa fa-flag-checkered tpp-upgrade-pro__icon"></span>
+        <span class="tps tp-flag-checkered tpp-upgrade-pro__icon"></span>
         <div class="content__inner">
             <h4>Get TZ Portfolio Plus Pro to unlock the best experience ever</h4>
             <p>That you can use the full features included (Addons, Templates, Extension, etc), premium support, and more. <a href="https://www.tzportfolio.com" target="_blank"><strong>Get TZ Portfolio Plus Pro now!</strong></a>

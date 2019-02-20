@@ -24,7 +24,7 @@ defined('_JEXEC') or die();
     <?php foreach($this -> itemCategories as $item):?>
         <a href="#<?php echo str_replace(' ','-',$item -> title)?>"
            class="btn btn-default btn-secondary btn-sm"
-           data-option-value=".<?php echo 'category'.$item -> id;?>" data-order="<?php echo $item -> order;?>">
+           data-option-value=".<?php echo $item -> alias.'_'.$item -> id;?>">
             <?php echo $item -> title;?>
         </a>
     <?php endforeach;?>

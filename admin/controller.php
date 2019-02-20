@@ -66,7 +66,8 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
         $document = JFactory::getDocument();
         $app    = JFactory::getApplication();
 
-		$document -> addStyleSheet(JURI::base(true).'/components/com_tz_portfolio_plus/fonts/font-awesome-4.5.0/css/font-awesome.min.css');
+//		$document -> addStyleSheet(JURI::base(true).'/components/com_tz_portfolio_plus/fonts/font-awesome-4.5.0/css/font-awesome.min.css');
+        $document -> addStyleSheet(JUri::root(true).'/components/com_tz_portfolio_plus/css/all.min.css');
 		$document -> addStyleSheet(JURI::base(true).'/components/com_tz_portfolio_plus/css/style.min.css');
 
         JHtml::_('jquery.framework');
@@ -152,10 +153,6 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
         require_once JPATH_COMPONENT.'/helpers/categories.php';
 
         $display    = parent::display($cachable, $urlparams);
-
-        if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
-            $document->addScript(TZ_Portfolio_PlusUri::base(true, true) . '/js/joomla4.min.js', array('version' => 'auto', 'relative' => true));
-        }
 
         // Footer
         JLayoutHelper::render('footer');

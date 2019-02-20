@@ -57,7 +57,7 @@ JHtml::addIncludePath(JPATH_COMPONENT.'/helpers');
                 $cols       = TZ_Portfolio_PlusContentHelper::getBootstrapColumns($col);
                 $colCounter = 0;
 
-                foreach ($this->items as $key => &$item) :
+                foreach ($this->items as $i => &$item) :
                     ?>
 
                     <?php if(isset($item -> date_group) AND !empty($item -> date_group)

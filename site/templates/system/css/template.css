@@ -131,18 +131,14 @@
     margin-bottom: 15px;
 }
 .rating .rating-item{
-    color: #aaa;
+    color: #f5d608;
 }
 .rating .rating-item:hover,
 .rating .rating-item:focus,
 .rating .rating-item:active{
     color: #f5d608;
 }
-.rating > .rating-item:hover span::before,
-.rating > .rating-item:hover ~ a span::before,
-.rating > .voted::before,
-.rating > .rating-item:hover::before,
-.rating > .rating-item:hover ~ .rating-item::before{
+.rating-item > span{
     color: #f5d608;
 }
 
@@ -191,5 +187,16 @@
 .tzpp_bootstrap3 .modal-body{
     width: 100%;
     background: #fff;
+}
+.tzpp_bootstrap3 .tpp-author-about .avatar{
+    float: left;
+    display: flex;
+    padding-right: 0;
+    margin-right: 10px;
+    align-items: center;
+    justify-content: center;
+}
+.tpp-author-about .title{
+    margin-top: 0;
 }
 /* End styles for article view */

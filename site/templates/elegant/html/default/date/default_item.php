@@ -51,7 +51,7 @@ if(!isset($item -> mediatypes) || (isset($item -> mediatypes) && !in_array($item
             <div class="tp-item-tools row-table">
                 <div class="btn-group pull-right">
                     <a class="btn btn-default btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown"<?php echo $params->get('enable_bootstrap',1) ? ' href="#"' :''; ?>>
-                        <i class="icon-cog"></i> <span class="caret"></span>
+                        <i class="tps tp-cog"></i> <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
                         <?php if ($params->get('show_date_print_icon', 0)) : ?>

@@ -31,6 +31,6 @@ if(!$icon){
 ?>
 
 <button onclick="<?php echo $doTask; ?>" rel="help" class="btn btn-secondary btn-small btn-sm">
-    <span class="fa fa-<?php echo $icon; ?>" aria-hidden="true"></span>
+    <span class="tpb tp-<?php echo $icon; ?>" aria-hidden="true"></span>
     <?php echo $text; ?>
 </button>

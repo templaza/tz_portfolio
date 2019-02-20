@@ -109,7 +109,7 @@ if($presets = $this -> presets):
             <h3 class="preset-name hasTooltip" data-placement="bottom" title="<?php echo $preset -> name;?>"><?php echo $preset -> name;?></h3>
             <i data-preset="<?php echo $preset -> name;?>" data-target="#removePreset" data-toggle="modal"
                title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_REMOVE_PRESET_DESCRIPTION');?>"
-               class="fa fa-times removepreset hasTooltip"></i>
+               class="tps tp-times removepreset hasTooltip"></i>
         </div>
     <?php }?>
 </div>

@@ -37,7 +37,7 @@ $mnuActive  = $menu -> getActive()
                id="search-searchword" size="30" maxlength="<?php echo $upper_limit; ?>"
                value="<?php echo $this->escape($this->state -> get('filter.searchword')); ?>" class="form-control" />
         <button name="search" onclick="this.form.submit()" class="btn btn-primary hasTooltip"
-                title="<?php echo JHtml::tooltipText('JSEARCH_FILTER_SUBMIT');?>"><span class="icon-search"></span><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
+                title="<?php echo JHtml::tooltipText('JSEARCH_FILTER_SUBMIT');?>"><i class="tps tp-search"></i> <?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
     </div>
 
     <?php if($params -> get('show_search_category',0)) { ?>

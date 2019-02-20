@@ -31,7 +31,7 @@ $canEdit	= $this->item->params->get('access-edit');
             <div class="btn-group pull-right">
                 <a class="btn btn-default btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" id="dropdownMenuButton-<?php
                 echo $this -> item -> id; ?>" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                    <i class="icon-cog"></i> <span class="caret"></span>
+                    <i class="tps tp-cog"></i> <span class="caret"></span>
                 </a>
                 <?php // Note the actions class is deprecated. Use dropdown-menu instead. ?>
                 <ul class="dropdown-menu actions" aria-labelledby="dropdownMenuButton-<?php

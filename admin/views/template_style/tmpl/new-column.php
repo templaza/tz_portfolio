@@ -45,10 +45,10 @@ if($item){
     <div id="<?php echo $columnToolId; ?>" class="columntools">
         <a href="#columnsettingbox" rel="popover" data-placement="bottom" data-container="#<?php
         echo $columnToolId; ?>"
-           title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_COLUMN_SETTINGS');?>" class="fa fa-cog rowcolumnspop"></a>
-        <a href="" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ADD_NEW_ROW');?>" class="fa fa-bars add-rowin-column"></a>
-        <a href="" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_REMOVE_COLUMN');?>" class="fa fa-times columndelete"></a>
-        <a href="" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_MOVE_COLUMN');?>" class="fa fa-arrows columnmove"></a>
+           title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_COLUMN_SETTINGS');?>" class="tps tp-cog rowcolumnspop"></a>
+        <a href="" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ADD_NEW_ROW');?>" class="tps tp-bars add-rowin-column"></a>
+        <a href="" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_REMOVE_COLUMN');?>" class="tps tp-times columndelete"></a>
+        <a href="" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_MOVE_COLUMN');?>" class="tps tp-arrows columnmove"></a>
     </div>
 
     <input type="hidden" class="widthinput-xs" name="" value="<?php echo $this -> get_value($item,"col-xs") ?>">

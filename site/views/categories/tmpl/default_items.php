@@ -42,7 +42,7 @@ if (count($this->items[$this->parent->id]) > 0 && $this->maxLevelcat != 0) :
 				</span>
 			<?php endif; ?>
 			<?php if (count($item->getChildren()) > 0 && $this->maxLevelcat > 1) : ?>
-				<a href="#category-<?php echo $item->id;?>" data-toggle="collapse" data-toggle="button" class="btn btn-mini btn-default pull-right"><i class="icon-plus"></i></a>
+				<a href="#category-<?php echo $item->id;?>" data-toggle="collapse" data-toggle="button" class="btn btn-mini btn-default pull-right"><i class="tps tp-plus-circle"></i></a>
 			<?php endif;?>
 		</h3>
         <?php if ($this->params->get('show_description_image',0) && $item->images) : ?>

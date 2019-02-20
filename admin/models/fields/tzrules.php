@@ -22,6 +22,7 @@
 // no direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Access\Access;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 JFormHelper::loadFieldClass('Rules');
@@ -83,7 +84,9 @@ class JFormFieldTZRules extends JFormFieldRules
         $isGlobalConfig = ($component === 'com_tz_portfolio_plus' && $section === 'component');
 
         // Get the actions for the asset.
-        $actions = JAccess::getActions($component, $section);
+        $actions = Access::getActionsFromFile(
+            JPATH_ADMINISTRATOR . '/components/' . $component . '/access.xml',
+            "/access/section[@name='" . $section . "']/");
         if($addon && $addonGroup) {
             $actions = TZ_Portfolio_PlusAccess::getAddOnActions($addon, $addonGroup, $section);
         }

@@ -202,7 +202,7 @@ if ($saveOrder)
                                     <?php
                                     $editIcon   = '';
                                     if($j4Compare) {
-                                        $editIcon = $item->checked_out ? '' : '<span class="fa fa-pencil-square mr-2" aria-hidden="true"></span>';
+                                        $editIcon = $item->checked_out ? '' : '<span class="tps tp-pen-square mr-2" aria-hidden="true"></span>';
                                     }
                                     ?>
                                     <a href="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&task=category.edit&id='.$item->id.'&extension='.$extension);?>">

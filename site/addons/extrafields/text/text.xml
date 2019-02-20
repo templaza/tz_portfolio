@@ -7,7 +7,7 @@
     <license>GNU/GPL v2 or later http://www.gnu.org/licenses/gpl-2.0.html</license>
     <authorEmail>support@templaza.com</authorEmail>
     <authorUrl>www.templaza.com/</authorUrl>
-    <version>2.1.3</version>
+    <version>2.1.4</version>
     <description>PLG_EXTRAFIELDS_TEXT_XML_DESCRIPTION</description>
 
     <files>
@@ -47,7 +47,7 @@
                 <field type="text" name="placeholder"
                        label="PLG_EXTRAFIELDS_TEXT_PLACEHOLDER_LABEL"/>
                 <field type="radio" name="suggestion"
-                       class="btn-group switcher" default="0"
+                       class="switcher btn-group" default="0"
                        label="PLG_EXTRAFIELDS_TEXT_SUGGESTION_LABEL"
                        description="PLG_EXTRAFIELDS_TEXT_SUGGESTION_DESC">
                     <option value="0">JNO</option>

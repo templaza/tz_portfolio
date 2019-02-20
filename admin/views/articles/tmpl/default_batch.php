@@ -20,6 +20,8 @@
 // no direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Layout\LayoutHelper;
+
 $published = $this->state->get('filter.published');
 ?>
 <div class="modal hide fade" id="collapseModal">
@@ -31,12 +33,12 @@ $published = $this->state->get('filter.published');
 		<p><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ARTICLES_BATCH_TIP'); ?></p>
 		<div class="control-group">
 			<div class="controls">
-				<?php echo JHtml::_('batch.access');?>
+                <?php echo LayoutHelper::render('joomla.html.batch.access', array()); ?>
 			</div>
 		</div>
 		<div class="control-group">
 			<div class="controls">
-				<?php echo JHtml::_('batch.language'); ?>
+                <?php echo LayoutHelper::render('joomla.html.batch.language', array()); ?>
 			</div>
 		</div>
 		<?php if ($published >= 0) : ?>

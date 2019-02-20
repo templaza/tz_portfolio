@@ -8,6 +8,8 @@
  */
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Layout\LayoutHelper;
+
 $options = array(
 	JHtml::_('select.option', 'c', JText::_('JLIB_HTML_BATCH_COPY')),
 	JHtml::_('select.option', 'm', JText::_('JLIB_HTML_BATCH_MOVE'))
@@ -23,12 +25,12 @@ $j4compare  = COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE;
     <?php echo JHtml::_('tzbootstrap.addrow');?>
 		<div class="<?php echo $j4compare?'form-group col-md-6':'control-group span6'; ?>">
 			<div class="controls">
-				<?php echo JHtml::_('batch.language'); ?>
+                <?php echo LayoutHelper::render('joomla.html.batch.language', array()); ?>
 			</div>
 		</div>
 		<div class="<?php echo $j4compare?'form-group col-md-6':'control-group span6'; ?>">
 			<div class="controls">
-				<?php echo JHtml::_('batch.access'); ?>
+                <?php echo LayoutHelper::render('joomla.html.batch.access', array()); ?>
 			</div>
 		</div>
     <?php echo JHtml::_('tzbootstrap.endrow');?>

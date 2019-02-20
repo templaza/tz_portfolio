@@ -317,12 +317,24 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
             $language   = JFactory::getLanguage();
             $language -> load('plg_'.$this -> _type.'_'.$this -> _name);
 
-            $module_name   = null;
+            $modParams      = new Registry();
+            $module_name    = null;
+
             if(!empty($data)){
                 if(is_array($data) && isset($data['module'])){
                     $module_name   = $data['module'];
+                    if(isset($data['params']) && is_string($data['params'])){
+                        $modParams -> loadString($data['params']);
+                    }else{
+                        $modParams -> loadObject($data['params']);
+                    }
                 }elseif(is_object($data) && isset($data -> module)){
                     $module_name   = $data -> module;
+                    if(isset($data -> params) && is_string($data -> params)){
+                        $modParams -> loadString($data -> params);
+                    }else{
+                        $modParams -> loadObject($data -> params);
+                    }
                 }
             }else{
                 $input  = $app -> input;
@@ -374,6 +386,31 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
                 $base . '/modules/' . $module_name,
                 $base . '/module/' . $module_name
             );
+
+            if($tplId = (int) $modParams -> def('template_id', 0)) {
+                $tpTemplate = TZ_Portfolio_PlusTemplate::getTemplateById($tplId);
+            }
+            else{
+                $tpTemplate = TZ_Portfolio_PlusTemplate::getTemplate(true);
+            }
+            $tmpFolders         = array();
+            $tpTemplateFolders  = Folder::folders( COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH);
+            if($tpTemplateFolders && count($tpTemplateFolders)){
+                foreach($tpTemplateFolders as $tmpFolder){
+                    $htmlPath   = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH.'/'.$tmpFolder.'/html';
+                    $tmpLayouts = Folder::folders($htmlPath);
+                    foreach ($tmpLayouts as $tmpLayout){
+                        $tmpFolders[]   = $htmlPath.'/'.$tmpLayout.'/'.$module_name.'/plg_'.$this -> _type.'_'
+                            .$this -> _name;
+                    }
+                }
+            }
+            if($jTemplate      = \JFactory::getApplication()->getTemplate()){
+                $tmpFolders[]    = $tpTemplate -> base_path.'/' . $module_name . '/plg_'.$this -> _type.'_'
+                    .$this -> _name;
+            }
+
+            $tplFolders = array_merge($tplFolders, $tmpFolders);
 
             $path = JPath::find($tplFolders, 'config.xml');
 

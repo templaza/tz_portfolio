@@ -44,7 +44,7 @@ if($item = $this -> item):
             <div class="btn-group dropdown pull-right" role="presentation">
                 <a class="btn btn-default btn-secondary btn-sm dropdown-toggle"
                    data-target="#" data-toggle="dropdown"<?php echo $params->get('enable_bootstrap',1) ? ' href="#"' :''; ?>>
-                    <i class="icon-cog"></i> <span class="caret"></span>
+                    <i class="tps tp-cog"></i> <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
                     <?php if ($params->get('show_search_print_icon', 0)) : ?>
