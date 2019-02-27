@@ -22,7 +22,7 @@ defined('_JEXEC') or die;
 
 if($item && $image && isset($image -> url) && !empty($image -> url)):
     $doc    = JFactory::getDocument();
-    $doc -> addStyleSheet(TZ_Portfolio_PlusUri::base().'/addons/mediatype/image/css/style.css');
+    $doc -> addStyleSheet(TZ_Portfolio_PlusUri::base().'/addons/mediatype/image/css/style.css', array('version' => 'auto'));
     if($params -> get('mt_show_image',1)):
         ?>
 <div class="tz_portfolio_plus_image">

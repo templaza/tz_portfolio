@@ -40,19 +40,39 @@ class TZ_Portfolio_PlusExtraFieldDropDownList extends TZ_Portfolio_PlusExtraFiel
             $optGroupState = "close";
             foreach ($options AS $option)
             {
-                if ($option->text == strtoupper($option->text))
+                $_optionText        = null;
+                $_optionValue       = null;
+                $_optionDisabled    = null;
+
+                if(is_object($option)){
+                    $_optionText    = $option -> text;
+                    $_optionValue   = $option -> value;
+                    if (isset($option->disabled) && $option->disabled)
+                    {
+                        $_optionDisabled    = $option->disabled;
+                    }
+                }else{
+                    $_optionText    = $option['text'];
+                    $_optionValue   = $option['value'];
+                    if (isset($option['disabled']) && $option['disabled'])
+                    {
+                        $_optionDisabled    = $option['disabled'];
+                    }
+                }
+
+                if ($_optionText == strtoupper($_optionText))
                 {
-                    $text = JText::_($option->text);
+                    $text = JText::_($_optionText);
                 }
                 else
                 {
-                    $text = $option->text;
+                    $text = $_optionText;
                 }
 
                 $selectOptionItem['text']  = htmlspecialchars($text, ENT_COMPAT, 'UTF-8');
-                $selectOptionItem['value'] = htmlspecialchars($option->value, ENT_COMPAT, 'UTF-8');
+                $selectOptionItem['value'] = htmlspecialchars($_optionValue, ENT_COMPAT, 'UTF-8');
 
-                if (strtoupper($option->value) == "<OPTGROUP>")
+                if (strtoupper($_optionValue) == "<OPTGROUP>")
                 {
                     if ($optGroupState == "open")
                     {
@@ -62,14 +82,14 @@ class TZ_Portfolio_PlusExtraFieldDropDownList extends TZ_Portfolio_PlusExtraFiel
                     $selectOptions[] = JHtml::_('select.option', '<OPTGROUP>', $selectOptionItem['text']);
                     $optGroupState   = "open";
                 }
-                elseif (strtoupper($option->value) == "</OPTGROUP>")
+                elseif (strtoupper($_optionValue) == "</OPTGROUP>")
                 {
                     $selectOptions[] = JHtml::_('select.option', '</OPTGROUP>');
                     $optGroupState   = "close";
                 }
                 else
                 {
-                    if (isset($option->disabled) && $option->disabled)
+                    if ($_optionDisabled)
                     {
                         $selectOptions[] = JHtml::_('select.option', $selectOptionItem['value'], $selectOptionItem['text'], "value", "text", true);
                     }

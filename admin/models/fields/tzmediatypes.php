@@ -48,8 +48,8 @@ class JFormFieldTZMediaTypes extends JFormFieldList
             foreach($plugins as $plugin){
                 $std    = new stdClass();
                 $std -> value   = $plugin -> name;
-                $lang -> load('plg_'.$plugin -> type.'_'.$plugin -> name,COM_TZ_PORTFOLIO_PLUS_ADDON_PATH
-                .DIRECTORY_SEPARATOR.$plugin -> type.DIRECTORY_SEPARATOR.$plugin -> name);
+
+                TZ_Portfolio_PlusPluginHelper::loadLanguage($plugin -> name, $plugin -> type);
                 if($lang -> hasKey('PLG_'.$plugin -> type.'_'.$plugin -> name.'_TITLE')) {
                     $std -> text    = JText::_('PLG_'.$plugin -> type.'_'.$plugin -> name.'_TITLE');
                 }else{

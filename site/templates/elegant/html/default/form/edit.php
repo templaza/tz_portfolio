@@ -31,9 +31,9 @@ JHtml::_('formbehavior.chosen', 'select');
 $params = $this->state->get('params');
 
 $doc    = JFactory::getDocument();
-$doc -> addScript(TZ_Portfolio_PlusUri::root(true, null, true).'/js/jquery-ui.min.js');
-$doc -> addStyleSheet(TZ_Portfolio_PlusUri::root(true, null, true).'/css/jquery-ui.min.css');
-$doc -> addStyleSheet(TZ_Portfolio_PlusUri::root(true, null, true).'/css/tz_portfolio_plus.min.css');
+$doc -> addScript(TZ_Portfolio_PlusUri::root(true, null, true).'/js/jquery-ui.min.js', array('version' => 'v=1.11.4'));
+$doc -> addStyleSheet(TZ_Portfolio_PlusUri::root(true, null, true).'/css/jquery-ui.min.css', array('version' => 'v=1.11.4'));
+$doc -> addStyleSheet(TZ_Portfolio_PlusUri::root(true, null, true).'/css/tz_portfolio_plus.min.css', array('version' => 'auto'));
 
 $doc -> addScriptDeclaration('
 (function($){
@@ -62,6 +62,9 @@ $doc -> addScriptDeclaration('
                 
         $(document).ready(function(){
             $("[data-toggle=dropdown]").parent().on("hidden.bs.dropdown", function(){ $(this).show();});
+            $(".hasPopover, [rel=popover]").on("mouseleave", function () {
+                $(this).show();
+            });
         });
     });
 })(jQuery);

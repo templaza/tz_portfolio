@@ -182,11 +182,8 @@ class TZ_Portfolio_PlusModelAddons extends JModelList
                     $item -> data_manager    = $plugin -> getDataManager();
                 }
 
-                $langPath   = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.DIRECTORY_SEPARATOR.$item -> folder
-                    .DIRECTORY_SEPARATOR.$item -> element;
                 $langKey    = 'plg_'.$item -> folder.'_'.$item -> element;
-
-                if($loaded = $language -> load($langKey, $langPath)) {
+                if($loaded = TZ_Portfolio_PlusPluginHelper::loadLanguage($item -> element, $item -> folder)) {
                     $langKey = strtoupper($langKey);
                     if ($language->hasKey($langKey)) {
                         $item->name = JText::_($langKey);

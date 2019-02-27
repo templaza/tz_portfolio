@@ -53,7 +53,7 @@ class TZ_Portfolio_PlusViewDate extends JViewLegacy{
         $user	= JFactory::getUser();
         $doc    = JFactory::getDocument();
 
-        $doc -> addStyleSheet('components/com_tz_portfolio_plus/css/tzportfolioplus.min.css');
+        $doc -> addStyleSheet('components/com_tz_portfolio_plus/css/tzportfolioplus.min.css', array('version' => 'auto'));
 
         // Get some data from the models
         $state		= $this->get('State');
@@ -302,7 +302,7 @@ class TZ_Portfolio_PlusViewDate extends JViewLegacy{
         $this -> char           = $state -> get('filter.char');
         $this -> availLetter    = $model -> getAvailableLetter();
 
-        $doc -> addStyleSheet('components/com_tz_portfolio_plus/css/tzportfolioplus.min.css');
+        $doc -> addStyleSheet('components/com_tz_portfolio_plus/css/tzportfolioplus.min.css', array('version' => 'auto'));
 
         // Add feed links
         if ($this->params->get('show_feed_link', 1)) {

@@ -166,6 +166,13 @@ if($list){
             </div>
         <?php } ?>
     </div>
+    <?php if($params -> get('show_view_all', 0)){?>
+        <div class="tpp-portfolio__action text-center">
+            <a href="<?php echo $params -> get('view_all_link');?>"<?php echo ($target = $params -> get('view_all_target'))?' target="'
+                .$target.'"':'';?> class="btn btn-primary btn-view-all"><?php
+                echo $params -> get('view_all_text', 'View All Portfolios');?></a>
+        </div>
+    <?php } ?>
 </div>
 <?php
 }

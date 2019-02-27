@@ -41,8 +41,8 @@ class JFormFieldTZMultipleField extends JFormField
         }
         $doc    = JFactory::getDocument();
         if(!$this -> head) {
-            $doc->addScript(TZ_Portfolio_PlusUri::root(true,null,true).'/js/jquery-ui.min.js');
-            $doc->addStyleSheet(TZ_Portfolio_PlusUri::root(true,null,true). '/css/jquery-ui.min.css');
+            $doc->addScript(TZ_Portfolio_PlusUri::root(true,null,true).'/js/jquery-ui.min.js', array('version' => 'v=1.11.4'));
+            $doc->addStyleSheet(TZ_Portfolio_PlusUri::root(true,null,true). '/css/jquery-ui.min.css', array('version' => 'v=1.11.4'));
             $doc->addStyleDeclaration('.tz_pricing-table-table .ui-sortable-helper{
                 background: #fff;
             }');

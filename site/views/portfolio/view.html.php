@@ -97,7 +97,7 @@ class TZ_Portfolio_PlusViewPortfolio extends JViewLegacy
         }
         $this -> ajaxLink   .=  '&amp;page=2';
 
-        $doc -> addStyleSheet('components/com_tz_portfolio_plus/css/isotope.min.css');
+        $doc -> addStyleSheet('components/com_tz_portfolio_plus/css/isotope.min.css', array('version' => 'auto'));
         $this -> document -> addScript('components/com_tz_portfolio_plus/js/jquery.isotope.min.js', array('version' => 'auto', 'relative' => true));
 
         if($params -> get('tz_portfolio_plus_layout', 'ajaxButton') == 'ajaxButton'

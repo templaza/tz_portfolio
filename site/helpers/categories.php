@@ -32,10 +32,10 @@ class TZ_Portfolio_PlusFrontHelperCategories{
             $config     = array('condition' => null, 'reverse_contentid' => false);
             if(count($options)) {
                 $config     = array_merge($config,$options);
-                $_options   = implode(',',$config);
+                $_options   = serialize($config);
             }
             if(is_array($articleId)) {
-                $storeId = md5(__METHOD__ . '::'.implode(',', $articleId).'::'.$_options);
+                $storeId = md5(__METHOD__ . '::'.serialize($articleId).'::'.$_options);
             }else{
                 $storeId = md5(__METHOD__ . '::'.$articleId.'::'.$_options);
             }
@@ -118,10 +118,10 @@ class TZ_Portfolio_PlusFrontHelperCategories{
             $config     = array('main' => null, 'condition' => null, 'reverse_contentid' => true);
             if(count($options)) {
                 $config     = array_merge($config,$options);
-                $_options   = implode(',',$config);
+                $_options   = serialize($config);
             }
             if(is_array($articleId)) {
-                $storeId = md5(__METHOD__ . '::'.implode(',', $articleId).'::'.$_options);
+                $storeId = md5(__METHOD__ . '::'.serialize($articleId).'::'.$_options);
             }else{
                 $storeId = md5(__METHOD__ . '::'.$articleId.'::'.$_options);
             }
@@ -195,12 +195,11 @@ class TZ_Portfolio_PlusFrontHelperCategories{
                     }
 
                     self::$cache[$storeId]  = $categories;
+
                     return $categories;
                 }
-
                 self::$cache[$storeId]  = false;
             }
-
             return self::$cache[$storeId];
         }
         return false;
@@ -209,7 +208,7 @@ class TZ_Portfolio_PlusFrontHelperCategories{
     public static function getCategoriesById($id, $options = array('second_by_article' => false, 'orderby' => null)){
         if($id){
             if(is_array($id)){
-                $storeId    = md5(__METHOD__ . '::' . implode(',',$id));
+                $storeId    = md5(__METHOD__ . '::' . serialize($id));
             }else {
                 $storeId    = md5(__METHOD__ . '::' . $id);
             }
@@ -289,7 +288,7 @@ class TZ_Portfolio_PlusFrontHelperCategories{
     public static function getSubCategoriesByParentId($parentid){
         if($parentid){
             if(is_array($parentid)){
-                $storeId    = md5(__METHOD__ . '::' . implode(',',$parentid));
+                $storeId    = md5(__METHOD__ . '::' . serialize($parentid));
             }else {
                 $storeId    = md5(__METHOD__ . '::' . $parentid);
             }
@@ -331,7 +330,10 @@ class TZ_Portfolio_PlusFrontHelperCategories{
     }
 
     public static function getAllCategories($options = array('second_by_article' => false, 'orderby' => null)){
-        $storeId    = md5(__METHOD__);
+        $storeId    = __METHOD__;
+        $storeId   .= ':'.serialize($options);
+        $storeId    = md5($storeId);
+
         if(!isset(self::$cache[$storeId])){
             $db     =  TZ_Portfolio_PlusDatabase::getDbo();
             $query  =  $db -> getQuery(true);

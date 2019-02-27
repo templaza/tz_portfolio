@@ -31,9 +31,9 @@ JHtml::_('formbehavior.chosen', 'select');
 $params = $this->state->get('params');
 
 $doc    = JFactory::getDocument();
-$doc -> addScript(TZ_Portfolio_PlusUri::root(true, null, true).'/js/jquery-ui.min.js');
-$doc -> addStyleSheet(TZ_Portfolio_PlusUri::root(true, null, true).'/css/jquery-ui.min.css');
-$doc -> addStyleSheet(TZ_Portfolio_PlusUri::root(true, null, true).'/css/tz_portfolio_plus.min.css');
+$doc -> addScript(TZ_Portfolio_PlusUri::root(true, null, true).'/js/jquery-ui.min.js', array('version' => 'v=1.11.4'));
+$doc -> addStyleSheet(TZ_Portfolio_PlusUri::root(true, null, true).'/css/jquery-ui.min.css', array('version' => 'v=1.11.4'));
+$doc -> addStyleSheet(TZ_Portfolio_PlusUri::root(true, null, true).'/css/tz_portfolio_plus.min.css', array('version' => 'auto'));
 
 if(!$this -> tagsSuggest){
     $this -> tagsSuggest    = 'null';
@@ -83,7 +83,7 @@ $doc -> addScriptDeclaration('
     <?php } ?>
 
     <form action="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&a_id=' . (int) $this->item->id);
-    ?>" method="post" name="adminForm" id="adminForm" class="form-validate form-vertical"
+    ?>" method="post" name="adminForm" id="item-form" class="form-validate form-vertical"
           enctype="multipart/form-data">
 
         <?php echo JHtml::_('bootstrap.startTabSet', 'tp-tab-edit', array('active' => 'tp-tab-edit__general')); ?>

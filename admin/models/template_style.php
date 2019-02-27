@@ -112,8 +112,7 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
         $formFile = JPath::clean($template_path.DIRECTORY_SEPARATOR.'template.xml');
 
         // Load the core and/or local language file(s).
-        $lang->load('tpl_' . $template, $template_path, null, false, true)
-        ||	$lang->load('tpl_' . $template, $template_path . '/templates/' . $template, null, false, true);
+        TZ_Portfolio_PlusTemplate::loadLanguage($template);
 
         $default_directory  = 'components'.DIRECTORY_SEPARATOR.'com_tz_portfolio_plus'.DIRECTORY_SEPARATOR.'templates';
         $directory          = $default_directory.DIRECTORY_SEPARATOR.$template.DIRECTORY_SEPARATOR.'html';
@@ -555,10 +554,13 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
                                 $image_path = JPATH_ROOT.DIRECTORY_SEPARATOR.$presets['image'];
                                 if(\JFile::exists($image_path)){
                                     $image_name = $preset_name.'.'.\JFile::getExt($image_path);
-                                    if(File::copy($image_path, COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH
+                                    $folder     = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH
                                         .DIRECTORY_SEPARATOR. $table -> template.DIRECTORY_SEPARATOR
-                                        .'images'.DIRECTORY_SEPARATOR.'presets'
-                                        .DIRECTORY_SEPARATOR.$image_name)){
+                                        .'images'.DIRECTORY_SEPARATOR.'presets';
+                                    if(!\JFolder::exists($folder)){
+                                        Folder::create($folder);
+                                    }
+                                    if(File::copy($image_path, $folder.DIRECTORY_SEPARATOR.$image_name)){
                                         $presets['image']   = 'templates/'.$table -> template
                                             .'/images/presets/'.$image_name;
                                     }

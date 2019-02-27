@@ -62,7 +62,7 @@ if(isset($item) && $item){
     ?>"  itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
         <span class="rating">
             <a href="javascript:void(0);"
-               data-rating-article-id="<?php echo $this -> item -> id; ?>"
+               data-rating-article-id="<?php echo $item -> id; ?>"
                data-rating-point="5"
                data-rating-total="<?php echo $rating_sum; ?>"
                data-rating-count="<?php echo $rating_count; ?>"
@@ -78,7 +78,7 @@ if(isset($item) && $item){
                 ?>
                 <span class="tps tp-star" style="width: <?php echo round($percent);?>%"></span>
             </a><a href="javascript:void(0);"
-                   data-rating-article-id="<?php echo $this -> item -> id; ?>"
+                   data-rating-article-id="<?php echo $item -> id; ?>"
                    data-rating-point="4"
                    data-rating-total="<?php echo $rating_sum; ?>"
                    data-rating-count="<?php echo $rating_count; ?>"
@@ -94,7 +94,7 @@ if(isset($item) && $item){
                 ?>
                 <span class="tps tp-star" style="width: <?php echo round($percent);?>%"></span>
             </a><a href="javascript:void(0);"
-                   data-rating-article-id="<?php echo $this -> item -> id; ?>"
+                   data-rating-article-id="<?php echo $item -> id; ?>"
                    data-rating-point="3"
                    data-rating-total="<?php echo $rating_sum; ?>"
                    data-rating-count="<?php echo $rating_count; ?>"
@@ -110,7 +110,7 @@ if(isset($item) && $item){
                 ?>
                 <span class="tps tp-star" style="width: <?php echo round($percent);?>%"></span>
             </a><a href="javascript:void(0);"
-                   data-rating-article-id="<?php echo $this -> item -> id; ?>"
+                   data-rating-article-id="<?php echo $item -> id; ?>"
                    data-rating-point="2"
                    data-rating-total="<?php echo $rating_sum; ?>"
                    data-rating-count="<?php echo $rating_count; ?>"
@@ -126,7 +126,7 @@ if(isset($item) && $item){
                 ?>
                 <span class="tps tp-star" style="width: <?php echo round($percent);?>%"></span>
             </a><a href="javascript:void(0);"
-                   data-rating-article-id="<?php echo $this -> item -> id; ?>"
+                   data-rating-article-id="<?php echo $item -> id; ?>"
                    data-rating-point="1"
                    data-rating-total="<?php echo $rating_sum; ?>"
                    data-rating-count="<?php echo $rating_count; ?>"

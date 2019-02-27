@@ -73,9 +73,9 @@ if(empty($this -> itemsServer)){
 }else{
     $itemsServer   = $this -> itemsServer;
 
-    $loading    = '<span class="loading"><span class="icon-loop tpp-spiner"></span> '
+    $loading    = '<span class="loading"><span class="tps tp-sync-alt text-update tp-spin"></span> '
         .JText::_('COM_TZ_PORTFOLIO_PLUS_INSTALLING').'</span>';
-    $installed  = '<span class="installed"><span class="icon icon-ok"></span> '
+    $installed  = '<span class="installed"><span class="tps tp-check"></span> '
         .JText::_('COM_TZ_PORTFOLIO_PLUS_INSTALLED').'</span>';
 
     $doc    = JFactory::getDocument();
@@ -168,7 +168,7 @@ if(empty($this -> itemsServer)){
                         ?>
                         <li>
                             <a href="<?php echo $item -> pProduce -> pProduceUrl;
-                            ?>" class="install-now btn btn-outline-secondary"><span class="icon-download"></span> <?php
+                            ?>" class="install-now btn btn-outline-secondary"><i class="tps tp-download"></i> <?php
                                     echo JText::_('COM_TZ_PORTFOLIO_PLUS_INSTALL_NOW'); ?></a>
                         </li>
                             <?php
@@ -177,7 +177,7 @@ if(empty($this -> itemsServer)){
                             ?>
                         <li>
                             <a href="<?php echo $item -> pProduce -> pProduceUrl;
-                            ?>" class="install-now btn btn-outline-secondary"><span class="icon-loop"></span> <?php
+                            ?>" class="install-now btn btn-outline-secondary"><span class="tps tp-sync-alt text-update"></span> <?php
                                 echo JText::_('COM_TZ_PORTFOLIO_PLUS_UPDATE_NOW'); ?></a>
                         </li>
                             <?php
@@ -186,7 +186,7 @@ if(empty($this -> itemsServer)){
                             ?>
                         <li>
                             <a href="<?php echo $item -> pProduce -> pProduceUrl?$item -> pProduce -> pProduceUrl:$item -> link;
-                            ?>" target="_blank" class="btn btn-outline-secondary"><span class="icon-cart"></span> <?php
+                            ?>" target="_blank" class="btn btn-outline-secondary"><span class="tps tp-shopping-cart"></span> <?php
                                 echo JText::_('COM_TZ_PORTFOLIO_PLUS_BUY_NOW'); ?></a>
                         </li>
                                 <?php
@@ -197,6 +197,12 @@ if(empty($this -> itemsServer)){
                         <?php
                                 break;
                         }?>
+                        <?php if(isset($item -> liveDemoUrl) && $item -> liveDemoUrl){ ?>
+                        <li>
+                            <a target="_blank" class="btn btn-success" href="<?php echo $item -> liveDemoUrl; ?>"><i class="tpr tp-eye"></i> <?php
+                                echo JText::_('COM_TZ_PORTFOLIO_PLUS_LIVE_DEMO');?></a>
+                        </li>
+                        <?php } ?>
                         <li>
                             <a data-toggle="modal" href="#tpp-addon__modal-detail-<?php echo $i; ?>"><?php
                                 echo JText::_('COM_TZ_PORTFOLIO_PLUS_MORE_DETAIL');?></a>

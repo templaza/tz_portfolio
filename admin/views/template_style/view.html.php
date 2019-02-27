@@ -55,10 +55,10 @@ class TZ_Portfolio_PlusViewTemplate_Style extends JViewLegacy
 
         parent::display($tpl);
 
-        $this -> document -> addScript(JUri::base(true).'/components/com_tz_portfolio_plus/js/libs.min.js');
-        $this -> document -> addScript(JUri::base(true).'/components/com_tz_portfolio_plus/js/jquery-ui.min.js');
-        $this -> document -> addScript(JUri::base(true).'/components/com_tz_portfolio_plus/js/layout-admin.min.js');
-        $this -> document -> addScript(JUri::base(true).'/components/com_tz_portfolio_plus/js/spectrum.min.js');
+        $this -> document -> addScript(JUri::base(true).'/components/com_tz_portfolio_plus/js/libs.min.js', array('version' => 'auto'));
+        $this -> document -> addScript(JUri::base(true).'/components/com_tz_portfolio_plus/js/jquery-ui.min.js', array('version' => 'v=1.11.4'));
+        $this -> document -> addScript(JUri::base(true).'/components/com_tz_portfolio_plus/js/layout-admin.min.js', array('version' => 'auto'));
+        $this -> document -> addScript(JUri::base(true).'/components/com_tz_portfolio_plus/js/spectrum.min.js', array('version' => 'auto'));
         $this -> document -> addScriptDeclaration('
         jQuery(document).ready(function(){
             jQuery.tzLayoutAdmin({

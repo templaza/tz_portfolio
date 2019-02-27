@@ -75,7 +75,7 @@ class TZ_Portfolio_PlusViewCategories extends JViewLegacy
 		$this -> parent		= $parent;
 		$this -> items		= $items;
 
-        $doc -> addStyleSheet('components/com_tz_portfolio_plus/css/tzportfolioplus.min.css');
+        $doc -> addStyleSheet('components/com_tz_portfolio_plus/css/tzportfolioplus.min.css', array('version' => 'auto'));
 
 		$this->_prepareDocument();
 

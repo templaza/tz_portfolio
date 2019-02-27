@@ -52,7 +52,8 @@ class JFormFieldTZTag extends JFormFieldList{
                 'allowCustom'   => TZ_Portfolio_PlusUser::getUser()->authorise('core.create',
                     'com_tz_portfolio_plus.tag') ? $this->allowCustom() : false,
             );
-            JLayoutHelper::render('form.field.tag', $displayData);
+
+            $this->getRenderer('form.field.tag')->render($displayData);
         }
 
         if (!is_array($this->value) && !empty($this->value))
@@ -170,7 +171,7 @@ class JFormFieldTZTag extends JFormFieldList{
 
     protected function getRenderer($layoutId = 'default')
     {
-        $renderer = new FileLayout($layoutId,COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/layouts');
+        $renderer   = new FileLayout($layoutId,COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/layouts');
 
         $renderer->setDebug($this->isDebugEnabled());
 
@@ -183,5 +184,4 @@ class JFormFieldTZTag extends JFormFieldList{
 
         return $renderer;
     }
-
 }

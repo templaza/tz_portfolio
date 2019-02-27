@@ -74,7 +74,8 @@ if($multiple_option){
         ob_end_clean();
 
         $doc = JFactory::getDocument();
-        $doc->addScript(TZ_Portfolio_PlusUri::base(true, true) . '/js/jquery-ui.min.js');
+        $doc->addScript(TZ_Portfolio_PlusUri::base(true, true) . '/js/jquery-ui.min.js',
+            array('version' => 'v=1.11.4'));
         $doc->addStyleDeclaration('#jform_' . $group . ' .table{
                         margin-top: 5px;
                     }');
@@ -158,13 +159,15 @@ if($multiple_option){
                     <td>
                         <input type="text" id="<?php echo $id_text; ?>" name="<?php echo $formControl; ?>[<?php
                         echo $group; ?>][<?php echo $key; ?>][text]" required="" size="35" value="<?php
-                        echo htmlspecialchars($value -> text); ?>" class="form-control input-medium required"/>
+                        echo is_object($value)?htmlspecialchars($value -> text):htmlspecialchars($value['text']);
+                        ?>" class="form-control input-medium required"/>
                         <label id="<?php echo $id_text; ?>-lbl" class="required hide hidden" for="<?php echo $id_text;
                         ?>"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_OPTION_FIELD_VALUE_LABEL'); ?></label>
                     </td>
                     <td>
                         <input type="text" id="<?php echo $id_value; ?>" name="<?php echo $name_value;
-                        ?>" class="form-control input-mini" size="15" value="<?php echo htmlspecialchars($value -> value); ?>"/>
+                        ?>" class="form-control input-mini" size="15" value="<?php
+                        echo is_object($value)?htmlspecialchars($value -> value):htmlspecialchars($value['value']); ?>"/>
                     </td>
                     <td class="center text-center">
                     <?php if($multiple) { ?>

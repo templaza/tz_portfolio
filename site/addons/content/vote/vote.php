@@ -58,14 +58,14 @@ class PlgTZ_Portfolio_PlusContentVote extends TZ_Portfolio_PlusPlugin
 
     public function onAlwaysLoadDocument($context){
         $document = JFactory::getDocument();
-        $document->addStyleSheet(TZ_Portfolio_PlusUri::root(true).'/addons/content/vote/css/vote.css');
+        $document->addStyleSheet(TZ_Portfolio_PlusUri::root(true).'/addons/content/vote/css/vote.css', array('version' => 'auto'));
 
         $document -> addScript(TZ_Portfolio_PlusUri::root(true) . '/js/modernizr.custom.js',
-            array('version' => 'auto', 'relative' => true));
+            array('version' => 'v=2.8.3', 'relative' => true));
         $document -> addScript(TZ_Portfolio_PlusUri::root(true) . '/js/classie.min.js',
             array('version' => 'auto', 'relative' => true));
         $document -> addScript(TZ_Portfolio_PlusUri::root(true) . '/js/notificationfx.min.js',
-            array('version' => 'auto', 'relative' => true));
+            array('version' => 'v=1.0.0', 'relative' => true));
     }
 
     public function onBeforeDisplayAdditionInfo($context, &$article, $params, $page = 0, $layout = 'default'
@@ -100,34 +100,34 @@ class PlgTZ_Portfolio_PlusContentVote extends TZ_Portfolio_PlusPlugin
                         .'/addons/content/vote/js/vote.min.js');
 
                     $document -> addStyleSheet(TZ_Portfolio_PlusUri::root(true) . '/css/ns-default.min.css',
-                        array('version' => 'auto'));
+                        array('version' => 'v=1.0.0'));
 
                     switch ($params -> get('ct_vote_notice_layout', 'growl')){
 
                         case 'growl':
                             $document -> addStyleSheet(TZ_Portfolio_PlusUri::root(true)
-                                . '/css/ns-style-growl.min.css', array('version' => 'auto'));
+                                . '/css/ns-style-growl.min.css', array('version' => 'v=1.0.0'));
                             break;
                         case 'attached':
                             $document -> addStyleSheet(TZ_Portfolio_PlusUri::root(true)
-                                . '/css/ns-style-attached.min.css', array('version' => 'auto'));
+                                . '/css/ns-style-attached.min.css', array('version' => 'v=1.0.0'));
                             break;
                         case 'bar':
                             $document -> addStyleSheet(TZ_Portfolio_PlusUri::root(true)
-                                . '/css/ns-style-bar.min.css', array('version' => 'auto'));
+                                . '/css/ns-style-bar.min.css', array('version' => 'v=1.0.0'));
                             break;
                         case 'other':
                             $document -> addStyleSheet(TZ_Portfolio_PlusUri::root(true)
-                                . '/css/ns-style-other.min.css', array('version' => 'auto'));
+                                . '/css/ns-style-other.min.css', array('version' => 'v=1.0.0'));
                             break;
                     }
 
                     $document -> addScript(TZ_Portfolio_PlusUri::root(true) . '/js/modernizr.custom.js',
-                        array('version' => 'auto', 'relative' => true));
+                        array('version' => '2.8.3', 'relative' => true));
                     $document -> addScript(TZ_Portfolio_PlusUri::root(true) . '/js/classie.min.js',
                         array('version' => 'auto', 'relative' => true));
                     $document -> addScript(TZ_Portfolio_PlusUri::root(true) . '/js/notificationfx.min.js',
-                        array('version' => 'auto', 'relative' => true));
+                        array('version' => 'v=1.0.0', 'relative' => true));
 
                     $document -> addScriptDeclaration('
                     if(typeof TZ_Portfolio_PlusAddOnContentVote !== undefined){

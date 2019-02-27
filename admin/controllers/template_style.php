@@ -23,6 +23,7 @@ jimport('joomla.application.component.controllerform');
 
 class TZ_Portfolio_PlusControllerTemplate_Style extends JControllerForm
 {
+    protected $view_list = 'template_styles';
 
     public function addGrid(){
 

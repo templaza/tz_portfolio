@@ -36,9 +36,9 @@ if(!COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
 }
 
 $doc    = JFactory::getDocument();
-$doc -> addScript(TZ_Portfolio_PlusUri::base(true, true).'/js/jquery-ui.min.js');
-$doc -> addStyleSheet(TZ_Portfolio_PlusUri::base(true, true).'/css/jquery-ui.min.css');
-$doc -> addStyleSheet(TZ_Portfolio_PlusUri::base(true, true).'/css/tz_portfolio_plus.min.css');
+$doc -> addScript(TZ_Portfolio_PlusUri::base(true, true).'/js/jquery-ui.min.js', array('version' => 'v=1.11.4'));
+$doc -> addStyleSheet(TZ_Portfolio_PlusUri::base(true, true).'/css/jquery-ui.min.css', array('version' => 'v=1.11.4'));
+$doc -> addStyleSheet(TZ_Portfolio_PlusUri::base(true, true).'/css/tz_portfolio_plus.min.css', array('version' => 'auto'));
 
 // Create shortcut to parameters.
 $params = $this->state->get('params');

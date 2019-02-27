@@ -73,9 +73,9 @@ if(empty($this -> itemsServer)){
 }else{
     $itemsServer   = $this -> itemsServer;
 
-    $loading    = '<span class="loading"><span class="icon-loop tpp-spiner"></span> '
+    $loading    = '<span class="loading"><span class="tps tp-sync-alt text-update tp-spin"></span> '
         .JText::_('COM_TZ_PORTFOLIO_PLUS_INSTALLING').'</span>';
-    $installed  = '<span class="installed"><span class="icon icon-ok"></span> '
+    $installed  = '<span class="installed"><span class="tps tp-check"></span> '
         .JText::_('COM_TZ_PORTFOLIO_PLUS_INSTALLED').'</span>';
 
     $doc    = JFactory::getDocument();
@@ -167,7 +167,7 @@ if(empty($this -> itemsServer)){
                         ?>
                         <li>
                             <a href="<?php echo $item -> pProduce -> pProduceUrl;
-                            ?>" class="install-now btn btn-outline-secondary"><span class="icon-download"></span> <?php
+                            ?>" class="install-now btn btn-outline-secondary"><span class="tps tp-download"></span> <?php
                                     echo JText::_('COM_TZ_PORTFOLIO_PLUS_INSTALL_NOW'); ?></a>
                         </li>
                             <?php
@@ -176,7 +176,7 @@ if(empty($this -> itemsServer)){
                             ?>
                         <li>
                             <a href="<?php echo $item -> pProduce ->  pProduceUrl;
-                            ?>" class="install-now btn btn-outline-secondary"><span class="icon-loop"></span> <?php
+                            ?>" class="install-now btn btn-outline-secondary"><span class="tps tp-sync-alt text-update"></span> <?php
                                 echo JText::_('COM_TZ_PORTFOLIO_PLUS_UPDATE_NOW'); ?></a>
                         </li>
                             <?php
@@ -185,7 +185,7 @@ if(empty($this -> itemsServer)){
                             ?>
                         <li>
                             <a href="<?php echo $item -> pProduce ->  pProduceUrl?$item -> pProduce ->  pProduceUrl:$item -> link;
-                            ?>" target="_blank" class="btn btn-outline-secondary"><span class="icon-cart"></span> <?php
+                            ?>" target="_blank" class="btn btn-outline-secondary"><span class="tps tp-shopping-cart"></span> <?php
                                 echo JText::_('COM_TZ_PORTFOLIO_PLUS_BUY_NOW'); ?></a>
                         </li>
                                 <?php

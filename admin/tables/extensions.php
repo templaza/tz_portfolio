@@ -59,8 +59,7 @@ class TZ_Portfolio_PlusTableExtensions extends JTable
         if(isset($this -> folder) && isset($this -> element) && $this -> folder && $this -> element) {
             $text = 'PLG_' . strtoupper($this->folder . '_' . $this->element);
 
-            $lang -> load('plg_'.strtolower($this -> folder.'_'.$this -> element),
-                COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.'/'.$this -> folder.'/'.$this -> element);
+            TZ_Portfolio_PlusPluginHelper::loadLanguage($this -> element, $this -> folder);
 
         }else{
             $text   = strtoupper($this -> name);

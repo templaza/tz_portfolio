@@ -63,7 +63,7 @@ if ($saveOrder)
 
 $assoc		= JLanguageAssociations::isEnabled();
 
-$this -> document -> addScript(TZ_Portfolio_PlusUri::root(true).'/js/core.min.js');
+$this -> document -> addScript(TZ_Portfolio_PlusUri::root(true).'/js/core.min.js', array('version' => 'auto'));
 $this -> document -> addScriptDeclaration('(function($, TZ_Portfolio_Plus){
         "use strict";
         TZ_Portfolio_Plus.dialogAjax(["'.$this -> getName().'.approve", "'.$this -> getName().'.reject"]);

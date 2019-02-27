@@ -41,34 +41,34 @@ class PlgTZ_Portfolio_PlusContentVoteViewDate extends JViewLegacy{
 
         if(!$this -> head['display']) {
             $this -> document -> addStyleSheet(TZ_Portfolio_PlusUri::root(true) . '/css/ns-default.min.css',
-                array('version' => 'auto'));
+                array('version' => 'v=1.0.0'));
 
             switch ($params -> get('ct_vote_notice_layout', 'growl')){
 
                 case 'growl':
                     $this -> document -> addStyleSheet(TZ_Portfolio_PlusUri::root(true)
-                        . '/css/ns-style-growl.min.css', array('version' => 'auto'));
+                        . '/css/ns-style-growl.min.css', array('version' => 'v=1.0.0'));
                     break;
                 case 'attached':
                     $this -> document -> addStyleSheet(TZ_Portfolio_PlusUri::root(true)
-                        . '/css/ns-style-attached.min.css', array('version' => 'auto'));
+                        . '/css/ns-style-attached.min.css', array('version' => 'v=1.0.0'));
                     break;
                 case 'bar':
                     $this -> document -> addStyleSheet(TZ_Portfolio_PlusUri::root(true)
-                        . '/css/ns-style-bar.min.css', array('version' => 'auto'));
+                        . '/css/ns-style-bar.min.css', array('version' => 'v=1.0.0'));
                     break;
                 case 'other':
                     $this -> document -> addStyleSheet(TZ_Portfolio_PlusUri::root(true)
-                        . '/css/ns-style-other.min.css', array('version' => 'auto'));
+                        . '/css/ns-style-other.min.css', array('version' => 'v=1.0.0'));
                     break;
             }
 
             $this -> document -> addScript(TZ_Portfolio_PlusUri::root(true) . '/js/modernizr.custom.js',
-                array('version' => 'auto', 'relative' => true));
+                array('version' => '2.8.3', 'relative' => true));
             $this -> document -> addScript(TZ_Portfolio_PlusUri::root(true) . '/js/classie.min.js',
                 array('version' => 'auto', 'relative' => true));
             $this -> document -> addScript(TZ_Portfolio_PlusUri::root(true) . '/js/notificationfx.min.js',
-                array('version' => 'auto', 'relative' => true));
+                array('version' => 'v=1.0.0', 'relative' => true));
 
             $this -> document -> addStyleSheet(TZ_Portfolio_PlusUri::root(true) . '/addons/content/vote/css/vote.css',
                 array('version' => 'auto'));

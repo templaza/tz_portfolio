@@ -332,4 +332,22 @@ class TZ_Portfolio_PlusPluginHelper extends TZ_Portfolio_PlusPluginHelperLegacy 
         return false;
     }
 
+    public static function loadLanguage($element, $type){
+
+        $lang           = JFactory::getLanguage();
+        $tag            = $lang -> getTag();
+        $basePath       = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/' . $type . '/' . $element;
+        $_filename      = $type . '_' . $element;
+
+        $prefix      = 'tp_addon_';
+        if(!\JFile::exists($basePath.'/language/'.$tag.'/'.$tag.'.'.$prefix.$_filename.'.ini')){
+            $prefix = 'plg_';
+        }
+        $extension = $prefix . $_filename;
+
+        $load   = $lang->load(strtolower($extension), $basePath, null, false, true);
+
+        return $load;
+    }
+
 }

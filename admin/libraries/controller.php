@@ -63,8 +63,7 @@ class TZ_Portfolio_PlusControllerLegacy  extends JControllerLegacy{
                     if($bool_tpl) {
                         $name   = strtolower($name);
                         // Load template language
-                        $lang   = JFactory::getLanguage();
-                        $lang -> load('tpl_'.$template -> template, COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH.DIRECTORY_SEPARATOR.$template -> template);
+                        TZ_Portfolio_PlusTemplate::loadLanguage($template -> template);
 
                         $componentPath  = array_pop($path['template']);
                         if(isset($template -> base_path) && $template -> base_path) {
@@ -103,7 +102,7 @@ class TZ_Portfolio_PlusControllerLegacy  extends JControllerLegacy{
                             . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'template.css')
                         ) {
                             $view->document->addStyleSheet(TZ_Portfolio_PlusUri::base(true) . '/templates/'
-                                . $template -> template . '/css/template.css');
+                                . $template -> template . '/css/template.css', array('version' => 'auto'));
                         }
 
                         // Parse document of view to require template.php(in tz portfolio template) file.

@@ -10,6 +10,16 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+27/02/2019 - 2.1.5
+
+	- Fix error save preset's thumbnail of style.
+	- Fix error edit form and enter tag of edit form in front-end.
+	- Fix error language conflict of Joomla Content Vote.
+	- Fix some styles of add-ons and styles online.
+	- Added demo link for addons and styles online.
+	- Change language files of add-ons and styles (with prefix "plg_" to "tp_addon_" and "tpl_" to "tp_style_").
+	- Opitimize packages.
+
 20/02/2019 - 2.1.4
 
 	- Fix error of sort category filter in portfolio view.

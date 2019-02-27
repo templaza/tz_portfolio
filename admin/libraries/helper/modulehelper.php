@@ -108,7 +108,7 @@ class TZ_Portfolio_PlusModuleHelper extends JModuleHelper{
 
                 $docClone   = clone($doc);
                 $docClone -> addStyleSheet(TZ_Portfolio_PlusUri::base(true) . '/templates/'
-                    . $tpTemplate -> template . '/css/template.css');
+                    . $tpTemplate -> template . '/css/template.css', array('version' => 'auto'));
 
                 $docClone -> parse($docOptions);
                 $doc -> setHeadData($docClone -> getHeadData());

@@ -64,7 +64,7 @@ class TZ_Portfolio_PlusViewSearch extends JViewLegacy
         $app    = JFactory::getApplication();
         $doc    = JFactory::getDocument();
 
-        $doc -> addStyleSheet('components/com_tz_portfolio_plus/css/tzportfolioplus.min.css');
+        $doc -> addStyleSheet('components/com_tz_portfolio_plus/css/tzportfolioplus.min.css', array('version' => 'auto'));
 
         $state          = $this -> get('State');
         $params         = $state -> get('params');

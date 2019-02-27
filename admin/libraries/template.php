@@ -324,4 +324,21 @@ class TZ_Portfolio_PlusTemplate {
         }
         return (int) $templateId;
     }
+
+    public static function loadLanguage($template){
+
+        $lang           = JFactory::getLanguage();
+        $tag            = $lang -> getTag();
+        $basePath       = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH . '/' .$template;
+
+        $prefix      = 'tp_style_';
+        if(!\JFile::exists($basePath.'/language/'.$tag.'/'.$tag.'.'.$prefix.$template.'.ini')){
+            $prefix = 'tpl_';
+        }
+        $extension = $prefix . $template;
+
+        $load   = $lang->load(strtolower($extension), $basePath, null, false, true);
+
+        return $load;
+    }
 }

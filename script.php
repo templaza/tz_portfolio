@@ -293,7 +293,7 @@ class com_tz_portfolio_plusInstallerScript{
             $path   = $sourcePath . '/site/templates/'.$name;
             $result = $tzInstaller -> install($path);
 
-            $status -> templates[] = array('name' => $name, 'result' => $result);
+            $status -> styles[] = array('name' => $name, 'result' => $result);
         }
     }
 
@@ -669,6 +669,10 @@ class com_tz_portfolio_plusInstallerScript{
         $lang   = JFactory::getLanguage();
         $lang -> load('com_tz_portfolio_plus');
         $rows   = 0;
+        JLoader::register('TZ_Portfolio_PlusPluginHelper', JPATH_ADMINISTRATOR
+            .'/components/com_tz_portfolio_plus/libraries/plugin/helper.php');
+        JLoader::register('TZ_Portfolio_PlusTemplate', JPATH_ADMINISTRATOR
+            .'/components/com_tz_portfolio_plus/libraries/template.php');
         ?>
         <h2 style="margin-top: 20px;"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS'); ?></h2>
         <span style="font-weight: normal"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_DESCRIPTION');?></span>
@@ -730,24 +734,21 @@ class com_tz_portfolio_plusInstallerScript{
                 <?php endforeach; ?>
             <?php endif; ?>
 
-            <?php if ($status && isset($status -> templates) && count($status->templates)): ?>
+            <?php if ($status && isset($status -> styles) && count($status->styles)): ?>
                 <tr>
                     <th><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_TEMPLATE'); ?></th>
                     <th></th>
                     <th></th>
                 </tr>
-                <?php foreach ($status->templates as $template): ?>
+                <?php foreach ($status-> styles as $style): ?>
                     <?php
-                    $tmplPath   = JPATH_SITE.'/components/com_tz_portfolio_plus/templates/'.$template['name'];
-                    if(!LanguageHelper::exists('tpl_'.(string)$template['name'], $tmplPath, null, true)):
-                        $lang -> load('tpl_'.(string)$template['name'], $tmplPath, null, true);
-                    endif;
+                    TZ_Portfolio_PlusTemplate::loadLanguage($style['name']);
                     ?>
                     <tr class="row<?php echo (++ $rows % 2); ?>">
-                        <td class="key"><?php echo JText::_(strtoupper('tz_portfolio_plus_tpl_'.$template['name'])); ?></td>
+                        <td class="key"><?php echo JText::_(strtoupper('tz_portfolio_plus_tpl_'.$style['name'])); ?></td>
                         <td></td>
                         <td>
-                            <span style="color: green; font-weight: bold;"><?php echo ($template['result'])?
+                            <span style="color: green; font-weight: bold;"><?php echo ($style['result'])?
                                     JText::_('COM_TZ_PORTFOLIO_PLUS_INSTALLED'):
                                     JText::_('COM_TZ_PORTFOLIO_PLUS_NOT_INSTALLED'); ?></span>
                         </td>
@@ -763,11 +764,7 @@ class com_tz_portfolio_plusInstallerScript{
                 </tr>
                 <?php foreach ($status->addons as $addon): ?>
                     <?php
-                    $addonPath  = JPATH_SITE.'/components/com_tz_portfolio_plus/addons/'
-                        .$addon['group'].'/'.$addon['name'];
-                    if(!LanguageHelper::exists('plg_'.$addon['group'].'_'.(string)$addon['name'], $addonPath, null, true)):
-                        $lang -> load('plg_'.$addon['group'].'_'.(string)$addon['name'], $addonPath, null, true);
-                    endif;
+                    TZ_Portfolio_PlusPluginHelper::loadLanguage($addon['name'], $addon['group']);
                     ?>
                     <tr class="row<?php echo (++ $rows % 2); ?>">
                         <td class="key"><?php echo JText::_(strtoupper('plg_'.$addon['group'].'_'.$addon['name'])); ?></td>

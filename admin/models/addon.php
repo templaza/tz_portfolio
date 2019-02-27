@@ -179,7 +179,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
             }
 
             // Load the core and/or local language file(s).
-            $lang->load('plg_' . $folder . '_' . $element, COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/' . $folder . '/' . $element, null, false, true);
+            TZ_Portfolio_PlusPluginHelper::loadLanguage($element, $folder);
 
             if (file_exists($formFile))
             {

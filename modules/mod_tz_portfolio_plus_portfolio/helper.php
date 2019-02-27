@@ -274,7 +274,7 @@ class modTZ_Portfolio_PlusPortfolioHelper
     {
         if ($articles = self::getList($params)) {
             $contentId = self::__getArticleByKey($articles, 'content_id');
-            return TZ_Portfolio_PlusFrontHelperCategories::getCategoriesByArticleId($contentId, array('reverse_contentid' => true, 'groupby' => 'id'));
+            return TZ_Portfolio_PlusFrontHelperCategories::getCategoriesByArticleId($contentId, array('reverse_contentid' => true, 'groupby' => 'c.id'));
         }
         return false;
     }
@@ -316,7 +316,7 @@ class modTZ_Portfolio_PlusPortfolioHelper
     {
         if ($articles = self::getList($params)) {
             $contentId = self::__getArticleByKey($articles, 'content_id');
-            return TZ_Portfolio_PlusFrontHelperCategories::getCategoriesByArticleId($contentId, array('reverse_contentid' => false, 'groupby' => 'id'));
+            return TZ_Portfolio_PlusFrontHelperCategories::getCategoriesByArticleId($contentId, array('reverse_contentid' => false, 'groupby' => 'c.id'));
         }
         return false;
     }

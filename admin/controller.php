@@ -66,9 +66,9 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
         $document = JFactory::getDocument();
         $app    = JFactory::getApplication();
 
-//		$document -> addStyleSheet(JURI::base(true).'/components/com_tz_portfolio_plus/fonts/font-awesome-4.5.0/css/font-awesome.min.css');
-        $document -> addStyleSheet(JUri::root(true).'/components/com_tz_portfolio_plus/css/all.min.css');
-		$document -> addStyleSheet(JURI::base(true).'/components/com_tz_portfolio_plus/css/style.min.css');
+        $document -> addStyleSheet(JUri::root(true).'/components/com_tz_portfolio_plus/css/all.min.css',
+            array('version' => 'v=5.2.7'));
+		$document -> addStyleSheet(JURI::base(true).'/components/com_tz_portfolio_plus/css/style.min.css', array('version' => 'auto'));
 
         JHtml::_('jquery.framework');
 

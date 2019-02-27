@@ -30,7 +30,27 @@ if ($options)
     <ul class='nav'>
     <?php }?>
 
-    <?php foreach ($options AS $key => $option){ ?>
+    <?php foreach ($options AS $key => $option){
+        $optText        = null;
+        $optValue       = null;
+        $optDisabled    = null;
+
+        if(is_object($option)){
+            $optText    = $option -> text;
+            $optValue   = $option -> value;
+            if ((isset($option->disabled) && $option->disabled))
+            {
+                $optDisabled    = $option -> disabled;
+            }
+        }else{
+            $optText    = $option['text'];
+            $optValue   = $option['value'];
+            if ((isset($option['disabled']) && $option['disabled']))
+            {
+                $optDisabled    = $option['disabled'];
+            }
+        }
+        ?>
 
         <?php if($number_columns){ ?>
         <?php
@@ -39,19 +59,19 @@ if ($options)
         <li style="width: <?php echo $width; ?>%; float: left; clear: none;">
         <?php }?>
             <?php
-            if ($option->text == strtoupper($option->text))
+            if ($optText == strtoupper($optText))
             {
-                $text = JText::_($option->text);
+                $text = JText::_($optText);
             }
             else
             {
-                $text = $option->text;
+                $text = $optText;
             }
 
-            $this->setAttribute("value", htmlspecialchars($option->value, ENT_COMPAT, 'UTF-8'), "input");
+            $this->setAttribute("value", htmlspecialchars($optValue, ENT_COMPAT, 'UTF-8'), "input");
             $this -> setAttribute("class", "form-check-input", "input");
 
-            if (in_array($option->value, $value))
+            if (in_array($optValue, $value))
             {
                 $this->setAttribute("checked", "checked", "input");
             }
@@ -60,7 +80,7 @@ if ($options)
                 $this->setAttribute("checked", null, "input");
             }
 
-            if ((isset($option->disabled) && $option->disabled))
+            if ((isset($optDisabled) && $optDisabled))
             {
                 $this->setAttribute("disabled", "disabled", "input");
             }

@@ -72,11 +72,10 @@ class TZ_Portfolio_PlusModelTemplate extends TZ_Portfolio_PlusModelAddon
         // Add template's information to table tz_portfolio_plus_templates
         $tpl_data   = null;
         if(!$this -> getTemplateStyle($data['element'])){
-            $tpl_path       = COM_TZ_PORTFOLIO_PLUS_PATH_SITE.DIRECTORY_SEPARATOR.'templates';
 
             $lang   = JFactory::getLanguage();
             $tpl_data['title']      = $data['element'].' - '.JText::_('JDEFAULT');
-            if($lang -> load('tpl_'.$data['element'],$tpl_path.DIRECTORY_SEPARATOR.$data['element'])){
+            if(TZ_Portfolio_PlusTemplate::loadLanguage($data['element'])){
                 if($lang ->hasKey('TZ_PORTFOLIO_PLUS_TPL_'.$data['element'])){
                     $tpl_data['title']      = JText::_('TZ_PORTFOLIO_PLUS_TPL_'.$data['element']).' - '.JText::_('JDEFAULT');
                 }

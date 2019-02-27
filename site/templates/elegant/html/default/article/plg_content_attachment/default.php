@@ -23,7 +23,7 @@
 defined('_JEXEC') or die;
 
 if($attachs = $this -> attachments):
-    $this -> document -> addStyleSheet(TZ_Portfolio_PlusUri::root(true).'/addons/content/attachment/css/style.css');
+    $this -> document -> addStyleSheet(TZ_Portfolio_PlusUri::root(true).'/addons/content/attachment/css/style.css', array('version' => 'auto'));
     $params = $this -> params;
 ?>
     <div class="tpAttachment">

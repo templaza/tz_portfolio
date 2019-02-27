@@ -131,10 +131,17 @@ class TZ_Portfolio_PlusExtraField{
             if (\JFile::exists($fieldXmlPath))
             {
                 $lang           = JFactory::getLanguage();
+                $tag            = $lang -> getTag();
 
                 $langPath   = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.DIRECTORY_SEPARATOR.'extrafields'
                     .DIRECTORY_SEPARATOR . $fieldFolder;
-                $lang -> load('plg_extrafields_'.$fieldFolder,$langPath);
+                $prefix = 'tp_addon_extrafields_';
+
+                if(!\JFile::exists($langPath.'/language/'.$tag.'/'.$tag.'.'.$prefix.$fieldFolder.'.ini')){
+                    $prefix = 'plg_extrafields_';
+                }
+
+                $lang -> load($prefix.$fieldFolder,$langPath);
             }
 
             self::$cache[$storeId] = true;

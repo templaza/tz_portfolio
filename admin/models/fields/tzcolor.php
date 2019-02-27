@@ -167,8 +167,8 @@ class JFormFieldTZColor extends JFormField
         // Add Script
         if (!self::$initialised)
         {
-            JFactory::getDocument() -> addStyleSheet(JUri::root().'/administrator/components/com_tz_portfolio_plus/css/spectrum.min.css');
-            JFactory::getDocument() -> addScript(JUri::root().'/administrator/components/com_tz_portfolio_plus/js/spectrum.min.js');
+            JFactory::getDocument() -> addStyleSheet(JUri::root().'/administrator/components/com_tz_portfolio_plus/css/spectrum.min.css', array('version' => 'auto'));
+            JFactory::getDocument() -> addScript(JUri::root().'/administrator/components/com_tz_portfolio_plus/js/spectrum.min.js', array('version' => 'auto'));
 
             self::$initialised = true;
         }

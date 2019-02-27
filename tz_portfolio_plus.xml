@@ -15,7 +15,7 @@
     <jedUrl>https://extensions.joomla.org/extension/tz-portfolio</jedUrl>
     <facebookUrl>https://www.facebook.com/tzportfolio</facebookUrl>
     <facebookGroupUrl>https://www.facebook.com/groups/tzportfolio</facebookGroupUrl>
-	<version>2.1.4</version>
+	<version>2.1.5</version>
     
     <scriptfile>script.php</scriptfile>
 
@@ -126,8 +126,8 @@
     </templates>
 
     <updateservers>
-        <server type="extension" pirority="1" name="TZ Portfolio Plus Pro Component">
-            <![CDATA[http://www.tzportfolio.com/tzupdates/tz_portfolio_plus_pro.xml]]>
+        <server type="extension" pirority="1" name="TZ Portfolio Plus Free Component">
+            <![CDATA[http://tzportfolio.com/tzupdates/tz_portfolio_plus_update.xml]]>
         </server>
     </updateservers>
 

@@ -23,13 +23,13 @@ defined('_JEXEC') or die;
 use Joomla\Utilities\ArrayHelper;
 
 $doc = JFactory::getDocument();
-$doc->addScript(JUri::root() . '/components/com_tz_portfolio_plus/js/jquery.isotope.min.js');
-$doc->addScript(JUri::root() . '/components/com_tz_portfolio_plus/js/tz_portfolio_plus.min.js');
-$doc->addStyleSheet(JUri::base(true) . '/components/com_tz_portfolio_plus/css/isotope.min.css');
-$doc->addStyleSheet(JUri::base(true) . '/modules/'.$module -> module.'/css/style.css');
+$doc->addScript(JUri::root() . '/components/com_tz_portfolio_plus/js/jquery.isotope.min.js', array('version' => 'auto'));
+$doc->addScript(JUri::root() . '/components/com_tz_portfolio_plus/js/tz_portfolio_plus.min.js', array('version' => 'auto'));
+$doc->addStyleSheet(JUri::base(true) . '/components/com_tz_portfolio_plus/css/isotope.min.css', array('version' => 'auto'));
+$doc->addStyleSheet(JUri::base(true) . '/modules/'.$module -> module.'/css/style.css', array('version' => 'auto'));
 
 if($params -> get('load_style', 0)) {
-    $doc->addStyleSheet(JUri::base(true) . '/modules/'.$module -> module.'/css/basic.css');
+    $doc->addStyleSheet(JUri::base(true) . '/modules/'.$module -> module.'/css/basic.css', array('version' => 'auto'));
 }
 if ($params->get('height_element')) {
     $doc->addStyleDeclaration('
@@ -39,7 +39,7 @@ if ($params->get('height_element')) {
     ');
 }
 if($params -> get('enable_resize_image', 0)){
-    $doc -> addScript(JUri::base(true) . '/modules/'.$module -> module.'/js/resize.js');
+    $doc -> addScript(JUri::base(true) . '/modules/'.$module -> module.'/js/resize.js', array('version' => 'auto'));
     if ($params->get('height_element')) {
         $doc->addStyleDeclaration('
         #portfolio' . $module->id . ' .tzpp_media img{
@@ -229,5 +229,12 @@ if ($list):
         </div>
         <?php endforeach; ?>
     </div>
+    <?php if($params -> get('show_view_all', 0)){?>
+    <div class="tpp-portfolio__action text-center">
+        <a href="<?php echo $params -> get('view_all_link');?>"<?php echo ($target = $params -> get('view_all_target'))?' target="'
+            .$target.'"':'';?> class="btn btn-primary btn-view-all"><?php
+            echo $params -> get('view_all_text', 'View All Portfolios');?></a>
+    </div>
+    <?php } ?>
 </div>
 <?php endif; ?>

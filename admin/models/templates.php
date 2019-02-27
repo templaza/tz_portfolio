@@ -95,9 +95,7 @@ class TZ_Portfolio_PlusModelTemplates extends JModelList
                         $installer  = JInstaller::getInstance($tpl_path.DIRECTORY_SEPARATOR.$folder);
                         if($manifest = $installer ->isManifest($xmlFile)){
 
-
-                            $lang   = JFactory::getLanguage();
-                            $lang -> load('tpl_'.((string) $manifest -> name),$tpl_path.DIRECTORY_SEPARATOR.$folder);
+                            TZ_Portfolio_PlusTemplate::loadLanguage((string) $manifest -> name);
 
                             $item                   = new stdClass();
                             $item -> id             = $i;

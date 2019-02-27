@@ -31,6 +31,8 @@ $doc->addScript(JUri::root() . '/components/com_tz_portfolio_plus/js/jquery.isot
     array('version' => 'auto', 'relative' => true));
 $doc->addStyleSheet(JUri::base(true) . '/components/com_tz_portfolio_plus/css/isotope.min.css',
     array('version' => 'auto', 'relative' => true));
+$doc->addStyleSheet(JUri::base(true) . '/modules/'.$module -> module.'/css/style.css',
+    array('version' => 'auto'));
 $doc->addStyleSheet(JUri::base(true) . '/components/com_tz_portfolio_plus/css/tzportfolioplus.min.css',
     array('version' => 'auto', 'relative' => true));
 
@@ -265,5 +267,12 @@ if ($list):
                 </div>
             <?php endforeach; ?>
         </div>
+        <?php if($params -> get('show_view_all', 0)){?>
+            <div class="tpp-portfolio__action text-center">
+                <a href="<?php echo $params -> get('view_all_link');?>"<?php echo ($target = $params -> get('view_all_target'))?' target="'
+                    .$target.'"':'';?> class="btn btn-primary btn-view-all"><?php
+                    echo $params -> get('view_all_text', 'View All Portfolios');?></a>
+            </div>
+        <?php } ?>
     </div>
 <?php endif; ?>

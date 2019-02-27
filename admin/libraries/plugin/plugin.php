@@ -173,8 +173,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
             list($option, $viewName)    = explode('.', $context);
 
             // Load plugin's language
-            $language   = JFactory::getLanguage();
-            $language -> load('plg_'.$this -> _type.'_'.$this -> _name);
+            TZ_Portfolio_PlusPluginHelper::loadLanguage($this -> _name, $this -> _type);
 
             // Add plugin form's path
             JForm::addFormPath(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.'/'.$this -> _type.'/'.$this -> _name.'/admin/models/form');
@@ -227,8 +226,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
                 parse_str(parse_url(htmlspecialchars_decode($link), PHP_URL_QUERY), $args);
 
                 // Load plugin's language
-                $language   = JFactory::getLanguage();
-                $language -> load('plg_'.$this -> _type.'_'.$this -> _name);
+                TZ_Portfolio_PlusPluginHelper::loadLanguage($this -> _name, $this -> _type);
 
                 if (isset($args['view'])) {
 
@@ -314,8 +312,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
             $base   = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.'/'.$this -> _type.'/'.$this -> _name;
 
             // Load plugin's language
-            $language   = JFactory::getLanguage();
-            $language -> load('plg_'.$this -> _type.'_'.$this -> _name);
+            TZ_Portfolio_PlusPluginHelper::loadLanguage($this -> _name, $this -> _type);
 
             $modParams      = new Registry();
             $module_name    = null;
@@ -635,15 +632,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
 
     public function loadLanguage($extension = '', $basePath = JPATH_ADMINISTRATOR)
     {
-        if (empty($extension))
-        {
-            $extension = 'plg_' . $this->_type . '_' . $this->_name;
-        }
-
-        $lang   = JFactory::getLanguage();
-        $load   = $lang->load(strtolower($extension), COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/' . $this->_type . '/' . $this->_name, null, false, true);
-
-        return $load;
+        return TZ_Portfolio_PlusPluginHelper::loadLanguage($this -> _name, $this -> _type);
     }
 
     public function onRenderAddonView(){

@@ -21,10 +21,10 @@ if(isset($this -> item) && $this -> item):
     $params = $this -> params;
 
     $doc = JFactory::getDocument();
-    $doc->addStyleSheet(TZ_Portfolio_PlusUri::root(true).'/addons/content/charity/css/charity.css');
+    $doc->addStyleSheet(TZ_Portfolio_PlusUri::root(true).'/addons/content/charity/css/charity.css', array('version' => 'auto'));
 
     if($params -> get('load_style', 0)){
-        $doc -> addStyleSheet(TZ_Portfolio_PlusUri::root(true).'/addons/content/charity/css/style.css');
+        $doc -> addStyleSheet(TZ_Portfolio_PlusUri::root(true).'/addons/content/charity/css/style.css', array('version' => 'auto'));
     }
 
     $modelsP    = $this -> getModel();

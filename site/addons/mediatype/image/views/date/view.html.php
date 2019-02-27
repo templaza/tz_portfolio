@@ -47,7 +47,7 @@ class PlgTZ_Portfolio_PlusMediaTypeImageViewDate extends JViewLegacy{
 
                         if(!$this -> head) {
                             $doc = JFactory::getDocument();
-                            $doc->addStyleSheet(TZ_Portfolio_PlusUri::base(true). '/addons/mediatype/image/css/style.css');
+                            $doc->addStyleSheet(TZ_Portfolio_PlusUri::base(true). '/addons/mediatype/image/css/style.css', array('version' => 'auto'));
                             $this -> head   = true;
                         }
 
