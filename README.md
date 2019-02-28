@@ -17,6 +17,7 @@ Demo: http://demo.tzportfolio.com/
 	- Fix error language conflict of Joomla Content Vote.
 	- Fix some styles of add-ons and styles online.
 	- Added demo link for addons and styles online.
+	- Added "View All Portfolios" button link for module TZ Portfolio Plus Portfolio.
 	- Change language files of add-ons and styles (with prefix "plg_" to "tp_addon_" and "tpl_" to "tp_style_").
 	- Opitimize packages.
 
