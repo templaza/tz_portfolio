@@ -36,7 +36,7 @@ Demo: http://demo.tzportfolio.com/
 
 15/01/2019 - 2.1.2
 
-	- Fix error when Cookie return 'undefined' on Portfolio page
+	- Fix error when Cookie return 'undefined' on Portfolio page.
 	- Fix notice when homeid not set.
 
 04/01/2019 - 2.1.1
