@@ -742,7 +742,17 @@ class com_tz_portfolio_plusInstallerScript{
                 </tr>
                 <?php foreach ($status-> styles as $style): ?>
                     <?php
-                    TZ_Portfolio_PlusTemplate::loadLanguage($style['name']);
+
+                    $tag            = $lang -> getTag();
+                    $basePath       = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH . '/' .$style['name'];
+
+                    $prefix      = 'tp_style_';
+                    if(!\JFile::exists($basePath.'/language/'.$tag.'/'.$tag.'.'.$prefix.$style['name'].'.ini')){
+                        $prefix = 'tpl_';
+                    }
+                    $extension = $prefix . $style['name'];
+
+                    $lang->load(strtolower($extension), $basePath, null, false, true);
                     ?>
                     <tr class="row<?php echo (++ $rows % 2); ?>">
                         <td class="key"><?php echo JText::_(strtoupper('tz_portfolio_plus_tpl_'.$style['name'])); ?></td>
@@ -764,7 +774,17 @@ class com_tz_portfolio_plusInstallerScript{
                 </tr>
                 <?php foreach ($status->addons as $addon): ?>
                     <?php
-                    TZ_Portfolio_PlusPluginHelper::loadLanguage($addon['name'], $addon['group']);
+                    $tag            = $lang -> getTag();
+                    $basePath       = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/' . $addon['group'] . '/' . $addon['name'];
+                    $_filename      = $addon['group'] . '_' . $addon['name'];
+
+                    $prefix      = 'tp_addon_';
+                    if(!\JFile::exists($basePath.'/language/'.$tag.'/'.$tag.'.'.$prefix.$_filename.'.ini')){
+                        $prefix = 'plg_';
+                    }
+                    $extension = $prefix . $_filename;
+
+                    $lang->load(strtolower($extension), $basePath, null, false, true);
                     ?>
                     <tr class="row<?php echo (++ $rows % 2); ?>">
                         <td class="key"><?php echo JText::_(strtoupper('plg_'.$addon['group'].'_'.$addon['name'])); ?></td>
