@@ -15,7 +15,7 @@ Demo: http://demo.tzportfolio.com/
 	- Fix error TZ_Portfolio_PlusPluginHelper::loadLanguage() when update online from v2.1.4
     - Fix error edit ACL permission with Joomla 4 Alpha 6
     - Fix error category display all category (parent and child) on same level. in the back-end.
-    - Add dm_uploader library to core.
+    - Add dm_uploader jQuery library to core.
 
 27/02/2019 - 2.1.5
 
