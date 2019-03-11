@@ -10,6 +10,11 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+11/03/2019 - 2.1.7
+
+	- Fix error display "view demo" button in Install Addon view.
+	- Change View display in Menu select from "Articles" to "My Articles".
+
 05/03/2019 - 2.1.6
 
 	- Fix error TZ_Portfolio_PlusPluginHelper::loadLanguage() when update online from v2.1.4

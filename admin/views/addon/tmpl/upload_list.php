@@ -196,6 +196,12 @@ if(empty($this -> itemsServer)){
                         <?php
                                 break;
                         }?>
+                        <?php if(isset($item -> liveDemoUrl) && $item -> liveDemoUrl){ ?>
+                            <li>
+                                <a target="_blank" class="btn btn-success" href="<?php echo $item -> liveDemoUrl; ?>"><i class="tpr tp-eye"></i> <?php
+                                    echo JText::_('COM_TZ_PORTFOLIO_PLUS_LIVE_DEMO');?></a>
+                            </li>
+                        <?php } ?>
                         <li>
                             <a data-toggle="modal" href="#tpp-addon__modal-detail-<?php echo $i; ?>"><?php
                                 echo JText::_('COM_TZ_PORTFOLIO_PLUS_MORE_DETAIL');?></a>

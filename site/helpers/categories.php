@@ -132,6 +132,8 @@ class TZ_Portfolio_PlusFrontHelperCategories{
 
                 $query  -> select('c.*, m.contentid AS contentid');
                 $query  -> from('#__tz_portfolio_plus_categories AS c');
+
+                $query -> select('m.main');
                 $query  -> join('INNER', '#__tz_portfolio_plus_content_category_map AS m ON m.catid = c.id');
                 $query  -> join('INNER', '#__tz_portfolio_plus_content AS cc ON cc.id = m.contentid');
                 $query  -> where('extension = '.$db -> quote('com_tz_portfolio_plus'));
