@@ -10,6 +10,11 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+14/03/2019 - 2.1.8
+
+	- Fix error choose article of "Single Article" menu item type with Joomla 3.9.4.
+	- Optimize core package file.
+
 11/03/2019 - 2.1.7
 
 	- Fix error display "view demo" button in Install Addon view.

@@ -109,6 +109,11 @@ class JFormFieldModal_Article extends JFormFieldCheckboxes
         return $renderer;
     }
 
+    protected function getLayoutPaths()
+    {
+        return array();
+    }
+
     protected function _getItems($ids){
         if($ids){
             $db     = TZ_Portfolio_PlusDatabase::getDbo();
