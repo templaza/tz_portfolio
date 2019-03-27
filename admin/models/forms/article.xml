@@ -490,14 +490,24 @@
 				<option value="0">JHIDE</option>
 				<option value="1">JSHOW</option>
 			</field>
-			<field name="related_limit" type="text" label="COM_TZ_PORTFOLIO_PLUS_LIMIT_RELATED"/>
+			<field type="list" name="related_article_by"
+				   label="COM_TZ_PORTFOLIO_PLUS_RELATED_ARTICLE_BY"
+				   description="COM_TZ_PORTFOLIO_PLUS_RELATED_ARTICLE_BY_DESC">
+				<option value="">COM_TZ_PORTFOLIO_PLUS_OPTION_INHERIT_FROM_CATEGORY</option>
+				<option value="category">JCATEGORY</option>
+				<option value="tag">COM_TZ_PORTFOLIO_PLUS_TAG</option>
+			</field>
+			<field name="related_limit" type="text"
+				   label="COM_TZ_PORTFOLIO_PLUS_LIMIT_RELATED"/>
 			<field name="show_related_heading" type="list"
 				   label="COM_TZ_PORTFOLIO_PLUS_SHOW_RELATED_HEADING">
 				<option value="">COM_TZ_PORTFOLIO_PLUS_OPTION_INHERIT_FROM_CATEGORY</option>
 				<option value="0">JHIDE</option>
 				<option value="1">JSHOW</option>
 			</field>
-			<field name="related_heading" type="text" label="COM_TZ_PORTFOLIO_PLUS_RELATED_HEADING"/>
+			<field name="related_heading" type="text"
+				   showon="show_related_article:1"
+				   label="COM_TZ_PORTFOLIO_PLUS_RELATED_HEADING"/>
 
 			<field type="list" name="show_related_title"
 				   label="COM_TZ_PORTFOLIO_PLUS_SHOW_RELATED_TITLE_LABEL">
@@ -513,7 +523,8 @@
 				<option value="0">JHIDE</option>
 				<option value="2">COM_TZ_PORTFOLIO_PLUS_RELATED_ONLY_SHOW_FEATURED</option>
 			</field>
-			<field name="related_orderby" type="list" label="COM_TZ_PORTFOLIO_PLUS_RELATED_ORDERBY">
+			<field name="related_orderby" type="list"
+				   label="COM_TZ_PORTFOLIO_PLUS_RELATED_ORDERBY">
 				<option value="">COM_TZ_PORTFOLIO_PLUS_OPTION_INHERIT_FROM_CATEGORY</option>
 				<option value="rdate">COM_TZ_PORTFOLIO_PLUS_MOST_RECENT</option>
 				<option value="date">COM_TZ_PORTFOLIO_PLUS_MOST_OLDEST</option>

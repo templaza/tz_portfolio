@@ -49,7 +49,7 @@ class TZ_Portfolio_PlusControllerArticle extends TZ_Portfolio_PlusControllerArti
             $allow  = false;
         }
 
-        $maxArticles    = 50;
+        $maxArticles    = 30;
         $total          = $model->getTotal();
 
         if($total >= $maxArticles){

@@ -103,6 +103,9 @@ class TZ_Portfolio_PlusController extends TZ_Portfolio_PlusControllerLegacy
         // Add core.js file of Joomla to use Joomla object.
         JHtml::_('behavior.core');
 
+        $doc -> addStyleSheet(TZ_Portfolio_PlusUri::base(true).'/css/all.min.css', array('version' => 'v=5.7.2'));
+        $doc -> addStyleSheet(TZ_Portfolio_PlusUri::base(true).'/css/v4-shims.min.css', array('version' => 'v=5.7.2'));
+
         if($params -> get('enable_jquery',0)){
             $doc -> addScript(TZ_Portfolio_PlusUri::base(true).'/js/jquery-1.11.3.min.js');
             $doc -> addScript(TZ_Portfolio_PlusUri::base(true).'/js/jquery-noconflict.min.js');

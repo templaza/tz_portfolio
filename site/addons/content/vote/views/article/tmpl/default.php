@@ -35,7 +35,7 @@ if(isset($this -> item) && $this -> item){
             $this->document->addScriptDeclaration('
             (function($){
                 $(document).ready(function(){
-                    $(".tpp-item-page").tzPortfolioPlusAddOnVote({
+                    $(".js-tpp-addon-vote__article").tzPortfolioPlusAddOnVote({
                         mainSelector: ".js-tpp-addon-vote__article",
                         counterSelector: ".js-tpp-counter",
                         itemSelector: ".rating > a",

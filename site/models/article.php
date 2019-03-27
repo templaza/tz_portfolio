@@ -120,6 +120,22 @@ class TZ_Portfolio_PlusModelArticle extends JModelItem
                     $query -> where('c.featured = 1');
                 }
 
+                if($article -> params -> get('related_article_by', 'tag') == 'tag'){
+                    $query -> join('INNER', '#__tz_portfolio_plus_tag_content_map AS tm ON tm.contentid = c.id');
+                    $query -> join('INNER', '#__tz_portfolio_plus_tags AS t ON t.id = tm.tagsid');
+
+                    $subquery   = $db -> getQuery(true);
+
+                    $subquery -> select('t2.id');
+                    $subquery -> from('#__tz_portfolio_plus_tags AS t2');
+                    $subquery -> join('INNER', '#__tz_portfolio_plus_tag_content_map AS tm2 ON tm2.tagsid = t2.id');
+                    $subquery -> join('INNER', '#__tz_portfolio_plus_content AS c2 ON c2.id = tm2.contentid');
+                    $subquery -> where('c2.id = '. $pk);
+
+                    $query -> where('t.id IN('.(string) $subquery.')');
+                }
+
+
                 // Filter by language
                 if ($this->getState('filter.language'))
                 {

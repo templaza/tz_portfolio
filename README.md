@@ -10,6 +10,13 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+27/03/2019 - 2.1.9
+
+	- Fix error can't voted in article view.
+	- Change limited articles to 30 in free version.
+	- Add feature related article by Tag
+	  (added option "Related Article By" in Article View Options. Its default is "Tag").
+
 14/03/2019 - 2.1.8
 
 	- Fix error choose article of "Single Article" menu item type with Joomla 3.9.4.

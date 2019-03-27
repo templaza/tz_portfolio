@@ -584,24 +584,38 @@
 				<option value="0">JHIDE</option>
 				<option value="1">JSHOW</option>
 			</field>
+			<field type="list" name="related_article_by"
+				   default="tag"
+				   showon="show_related_article:1"
+				   label="COM_TZ_PORTFOLIO_PLUS_RELATED_ARTICLE_BY"
+				   description="COM_TZ_PORTFOLIO_PLUS_RELATED_ARTICLE_BY_DESC">
+				<option value="category">JCATEGORY</option>
+				<option value="tag">COM_TZ_PORTFOLIO_PLUS_TAG</option>
+			</field>
 			<field name="related_limit" type="text" default="5"
+				   showon="show_related_article:1"
 				   label="COM_TZ_PORTFOLIO_PLUS_LIMIT_RELATED"/>
 			<field name="show_related_heading" type="radio"
 				   class="switcher btn-group"
 				   default="1"
+				   showon="show_related_article:1"
 				   label="COM_TZ_PORTFOLIO_PLUS_SHOW_RELATED_HEADING">
 				<option value="0">JHIDE</option>
 				<option value="1">JSHOW</option>
 			</field>
-			<field name="related_heading" type="text" label="COM_TZ_PORTFOLIO_PLUS_RELATED_HEADING"/>
+			<field name="related_heading" type="text"
+				   showon="show_related_article:1"
+				   label="COM_TZ_PORTFOLIO_PLUS_RELATED_HEADING"/>
 			<field type="radio" name="show_related_title"
 				   class="switcher btn-group" default="1"
+				   showon="show_related_article:1"
 				   label="COM_TZ_PORTFOLIO_PLUS_SHOW_RELATED_TITLE_LABEL">
 				<option value="0">JHIDE</option>
 				<option value="1">JSHOW</option>
 			</field>
 			<field name="show_related_featured" type="list"
 				   default="1"
+				   showon="show_related_article:1"
 				   label="COM_TZ_PORTFOLIO_PLUS_SHOW_RELATED_FEATURED">
 				<option value="1">JSHOW</option>
 				<option value="0">JHIDE</option>
@@ -609,6 +623,7 @@
 			</field>
 			<field name="related_orderby" type="list"
 				   default="rdate"
+				   showon="show_related_article:1"
 				   label="COM_TZ_PORTFOLIO_PLUS_RELATED_ORDERBY">
 				<option value="o">COM_TZ_PORTFOLIO_PLUS_ORIGINAL</option>
 				<option value="rdate">COM_TZ_PORTFOLIO_PLUS_MOST_RECENT</option>
