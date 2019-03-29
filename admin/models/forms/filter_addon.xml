@@ -23,5 +23,6 @@
 			<option value="alpha">JGLOBAL_TITLE_ALPHABETICAL</option>
 			<option value="ralpha">JGLOBAL_TITLE_REVERSE_ALPHABETICAL</option>
 		</field>
+		<field type="hidden" name="form_submited" default="1"/>
 	</fields>
 </form>

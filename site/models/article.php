@@ -104,7 +104,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelItem
 
                 $db     = JFactory::getDbo();
                 $query  = $db -> getQuery(true);
-                $query -> select('c.*, cc.id AS catid,CASE WHEN CHAR_LENGTH(c.alias) THEN CONCAT_WS(":", c.id, c.alias) ELSE c.id END as slug');
+                $query -> select('DISTINCT c.*, cc.id AS catid,CASE WHEN CHAR_LENGTH(c.alias) THEN CONCAT_WS(":", c.id, c.alias) ELSE c.id END as slug');
                 $query -> select('CASE WHEN CHAR_LENGTH(cc.alias) THEN CONCAT_WS(":", cc.id, cc.alias) ELSE cc.id END as catslug');
                 $query -> from($db -> quoteName('#__tz_portfolio_plus_content').' AS c');
                 $query -> join('INNER', '#__tz_portfolio_plus_content_category_map AS m ON m.contentid = c.id AND m.main = 1');

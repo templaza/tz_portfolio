@@ -10,6 +10,11 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+29/03/2019 - 2.2.0
+
+	- Fix error duplicate of related articles by tag.
+	- Fix error order of addons and styles online install.
+
 27/03/2019 - 2.1.9
 
 	- Fix error can't voted in article view.

@@ -77,6 +77,21 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
             (isset($filters['type'])?$filters['type']:null), 'string');
         $this -> setState('filter.type',$type);
 
+        if ($list = $app->getUserStateFromRequest($this->option . '.'.$this -> getName() . '.list', 'list', array(), 'array'))
+        {
+            $ordering   = 'rdate';
+            if(isset($list['fullordering'])) {
+                $ordering = $list['fullordering'];
+            }
+            $this->setState('list.ordering', $ordering);
+        }
+
+        if($listSubmit  = $app -> input -> get('list', array(), 'array')){
+            if(isset($list['form_submited'])) {
+                $this->setState('list.form_submited', $list['form_submited']);
+            }
+        }
+
         // Support old ordering field
         $oldOrdering = $app->input->get('filter_order', 'rdate');
 
@@ -136,6 +151,14 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
         if (empty($data))
         {
             $data = $this->getItem();
+        }
+
+        // Pre-fill the list options
+        if (!property_exists($data, 'list'))
+        {
+            $data->list = array(
+                'fullordering'  => $this->getState('list.ordering')
+            );
         }
 
         $this->preprocessData('com_tz_portfolio_plus.'.$input -> getCmd('view'), $data);
@@ -744,6 +767,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
         $filters        = $this -> getState('filters');
         $cacheFileName  = $this -> getState('cache.filename');
         $ordering       = $this -> getState('list.ordering');
+        $formSubmited   = $this -> getState('list.form_submited');
 
         // Cache time is 1 day
         $cacheTime      = 24 * 60 * 60;
@@ -775,6 +799,10 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
                     break;
                 }
             }
+        }
+
+        if($formSubmited){
+            $hasCache   = false;
         }
 
         if($hasCache && $data && isset($data -> start) && $data -> start != $limitstart){
