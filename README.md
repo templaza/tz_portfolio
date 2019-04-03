@@ -10,6 +10,10 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+03/04/2019 - 2.2.1
+
+	- Fix error can not vote when the site uses self url.
+
 29/03/2019 - 2.2.0
 
 	- Fix error duplicate of related articles by tag.

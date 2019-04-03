@@ -1138,7 +1138,9 @@ class TZ_Portfolio_PlusRouter extends RouterBase
                         if($params -> get('sef_remove_category_id', 0)) {
                             $catAlias  = preg_replace('/:/', '-', $segments[$count - 2], 1);
                         }else{
-                            list($catId, $catAlias) = explode(':', $segments[$count - 2]);
+                            if(strpos($segments[$count - 2], ':') != false) {
+                                list($catId, $catAlias) = explode(':', $segments[$count - 2]);
+                            }
                         }
                     }
                 }else{
@@ -1147,7 +1149,9 @@ class TZ_Portfolio_PlusRouter extends RouterBase
                         if($params -> get('sef_remove_category_id', 0)) {
                             $catAlias  = preg_replace('/:/', '-', $segments[$count - 1], 1);
                         }else {
-                            list($catId, $catAlias) = explode(':', $segments[$count - 1]);
+                            if(strpos($segments[$count - 1], ':') != false) {
+                                list($catId, $catAlias) = explode(':', $segments[$count - 1]);
+                            }
                         }
                     }
                 }
