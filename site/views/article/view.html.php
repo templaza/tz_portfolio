@@ -413,9 +413,6 @@ class TZ_Portfolio_PlusViewArticle extends TZ_Portfolio_PlusViewLegacy
         if (empty($title)) {
             $title = $this->item->title;
         }
-        if(!empty($title)){
-            $title  = htmlspecialchars($title);
-        }
         $this->document->setTitle($title);
 
         $description    = null;
@@ -434,7 +431,6 @@ class TZ_Portfolio_PlusViewArticle extends TZ_Portfolio_PlusViewLegacy
         }
 
         if($description){
-            $description    = htmlspecialchars($description);
             $this -> document -> setDescription($description);
         }
 

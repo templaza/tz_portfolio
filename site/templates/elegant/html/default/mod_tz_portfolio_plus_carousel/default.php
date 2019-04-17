@@ -27,7 +27,7 @@ $tplParams = $tzTemplate->params;
 if($list){
 ?>
 <div id="module__<?php echo $module -> id;?>" class="tplElegant tpp-module-carousel tpp-module__carousel<?php echo $moduleclass_sfx;?>">
-    <div class="owl-carousel owl-theme">
+    <div class="owl-carousel owl-theme element">
         <?php foreach($list as $i => $item){
             // Get article's extrafields
             $extraFields    = TZ_Portfolio_PlusFrontHelperExtraFields::getExtraFields($item, null,

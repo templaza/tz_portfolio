@@ -184,4 +184,9 @@ class JFormFieldTZTag extends JFormFieldList{
 
         return $renderer;
     }
+
+    protected function getLayoutPaths()
+    {
+        return array();
+    }
 }

@@ -10,6 +10,12 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+17/04/2019 - 2.2.2
+
+	- Fix error add tag from edit form on front-end.
+	- Fix error display &amp; of article title on browser title.
+	- Update elegant style v1.9 (update styles for module TZ Portfolio Plus Carousel).
+
 03/04/2019 - 2.2.1
 
 	- Fix error can not vote when the site uses self url.
