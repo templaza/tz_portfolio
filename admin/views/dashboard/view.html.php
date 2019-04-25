@@ -16,6 +16,8 @@ jimport('joomla.application.component.view');
  * @subpakage	TZ.Portfolio
  */
 class TZ_Portfolio_PlusViewDashboard extends JViewLegacy {
+    protected $xml;
+
     /**
      * Display the view.
      */

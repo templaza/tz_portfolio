@@ -23,6 +23,8 @@ defined('_JEXEC') or die;
 // Create a shortcut for params.
 $params = &$this->item->params;
 
+$tpParams   = TZ_Portfolio_PlusTemplate::getTemplate(true) -> params;
+
 $images = json_decode($this->item->images);
 $canEdit	= $this->item->params->get('access-edit');
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
@@ -106,7 +108,7 @@ if(!isset($item -> mediatypes) || (isset($item -> mediatypes) && !in_array($item
 
     <?php if ($params->get('show_date_create_date', 1)) : ?>
     <span class="TzBlogCreate">
-      <span class="date" itemprop="dateCreated"> <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_CREATED_DATE_ON', JHtml::_('date', $this->item->created, JText::_('DATE_FORMAT_LC2'))); ?></span>
+      <span class="date" itemprop="dateCreated"> <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_CREATED_DATE_ON', JHtml::_('date', $this->item->created, $tpParams -> get('date_format', 'l, d F Y H:i'))); ?></span>
     </span>
     <?php endif; ?>
 
@@ -182,13 +184,13 @@ if(!isset($item -> mediatypes) || (isset($item -> mediatypes) && !in_array($item
 
     <?php if ($params->get('show_date_modify_date',0)) : ?>
     <div class="TzBlogModified" itemprop="dateModified">
-    <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_LAST_UPDATED', JHtml::_('date', $this->item->modified, JText::_('DATE_FORMAT_LC2'))); ?>
+    <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_LAST_UPDATED', JHtml::_('date', $this->item->modified, $tpParams -> get('date_format', 'l, d F Y H:i'))); ?>
     </div>
     <?php endif; ?>
 
     <?php if ($params->get('show_date_publish_date',0)) : ?>
     <div class="TzBlogPublished" itemprop="datePublished">
-    <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_PUBLISHED_DATE_ON', JHtml::_('date', $this->item->publish_up, JText::_('DATE_FORMAT_LC2'))); ?>
+    <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_PUBLISHED_DATE_ON', JHtml::_('date', $this->item->publish_up, $tpParams -> get('date_format', 'l, d F Y H:i'))); ?>
     </div>
     <?php endif; ?>
 

@@ -756,7 +756,7 @@ class TZ_Portfolio_PlusTableContent extends JTable
         if($state == -2){
             $query -> set('status='.$this -> state);
         }else{
-            if(isset($this -> status) && $this -> state == -2) {
+            if(isset($this -> status) && $this -> status && $this -> state == -2) {
                 $query->set('state =' . $this->status);
             }
         }

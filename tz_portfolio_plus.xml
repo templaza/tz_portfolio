@@ -15,7 +15,8 @@
     <jedUrl>https://extensions.joomla.org/extension/tz-portfolio</jedUrl>
     <facebookUrl>https://www.facebook.com/tzportfolio</facebookUrl>
     <facebookGroupUrl>https://www.facebook.com/groups/tzportfolio</facebookGroupUrl>
-	<version>2.2.2</version>
+    <feedBlogUrl>http://feeds.feedburner.com/tzportfolio/blog</feedBlogUrl>
+	<version>2.2.3</version>
     
     <scriptfile>script.php</scriptfile>
 

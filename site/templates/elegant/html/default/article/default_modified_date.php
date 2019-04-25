@@ -24,12 +24,14 @@ $params = $this -> item -> params;
 
 if($params -> get('show_modify_date',1)){
     if(isset($this -> item -> modified)) {
+
+        $tpParams   = TZ_Portfolio_PlusTemplate::getTemplate(true) -> params;
     ?>
     <div class="tpModified hasTooltip" title="<?php
     echo JText::_('TPL_ELEGANT_MODIFIED_DATE');?>">
         <i class="tp tp-pencil-square-o"></i>
-        <time itemprop="dateModified" datetime="<?php echo JHtml::_('date', $this->item->modified, JText::_('DATE_FORMAT_FILTER_DATE')); ?>">
-        <?php echo JHtml::_('date', $this->item->modified, JText::_('DATE_FORMAT_LC')); ?>
+        <time itemprop="dateModified" datetime="<?php echo JHtml::_('date', $this->item->modified, $tpParams -> get('date_format', 'l, d F Y')); ?>">
+        <?php echo JHtml::_('date', $this->item->modified, $tpParams -> get('date_format', 'l, d F Y')); ?>
         </time>
     </div>
     <?php

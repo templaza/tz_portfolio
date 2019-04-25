@@ -37,7 +37,7 @@ $document   = JFactory::getDocument();
         if(version_compare(JVERSION, '4.0', '>=')) {
             $scriptOptions  = $document -> getScriptOptions('webcomponents');
             $scriptOptions = array_map (function($value){
-                if(strpos($value, JUri::root(true).'/media/system/webcomponents/js/joomla-field-permissions.js') !== false){
+                if(strpos($value, JUri::root(true).'/media/system/js/fields/joomla-field-permissions.js') !== false){
                     return JUri::base(true).'/components/com_tz_portfolio_plus/js/tpp-field-permissions.min.js';
                 }
                 return $value;

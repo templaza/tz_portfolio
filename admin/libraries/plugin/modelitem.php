@@ -62,7 +62,7 @@ class TZ_Portfolio_PlusPluginModelItem extends JModelItem{
         parent::populateState();
     }
 
-    public function getItem(){
+    public function getItem($pk = null){
         if($article = $this -> article){
             return $this -> article;
         }

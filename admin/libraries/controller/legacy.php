@@ -67,7 +67,7 @@ class TZ_Portfolio_Plus_AddOnControllerLegacy extends JControllerLegacy{
             'layout' => $viewLayout))){
 
             // Check manage permission if the addon have manage datas (only use of back-end)
-            if($app -> isAdmin() && $addon_id = $this -> input -> get('addon_id', 0, 'int')){
+            if($app -> isClient('administrator') && $addon_id = $this -> input -> get('addon_id', 0, 'int')){
                 if($plugin = TZ_Portfolio_PlusPluginHelper::getPluginById($addon_id)){
                     $user   = TZ_Portfolio_PlusUser::getUser();
 

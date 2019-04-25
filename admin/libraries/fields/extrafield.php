@@ -80,7 +80,7 @@ class TZ_Portfolio_PlusExtraField{
         $this -> params = new Registry();
         if(isset($field -> params) && !empty($field -> params)) {
             $params         = new Registry($field->params);
-            if($app -> isSite()) {
+            if($app -> isClient('site')) {
                 if($this -> plugin_params) {
                     $this->params = $this->plugin_params->merge($params);
                 }
@@ -88,7 +88,7 @@ class TZ_Portfolio_PlusExtraField{
                 $this -> params = $params;
             }
         }else{
-            if($app -> isSite()) {
+            if($app -> isClient('site')) {
                 $this->params   = $this->plugin_params;
             }else{
                 $this -> params = new Registry();

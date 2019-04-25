@@ -6,7 +6,8 @@
 
 // No direct access.
 defined('_JEXEC') or die;
-$xml	= simplexml_load_file(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/tz_portfolio_plus.xml');
+$xml	        = simplexml_load_file(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/tz_portfolio_plus.xml');
+$this -> xml    = $xml;
 ?>
 <script type="text/javascript">
     "use strict";
@@ -105,8 +106,8 @@ $xml	= simplexml_load_file(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/tz_portfolio_plus.
                                 <a href="http://www.tzportfolio.com/" class="btn btn-default btn-sm btn-secondary">Update Now</a>
                             </b>
                             <div class="versions-meta">
-                                <div class="text-muted local-version">Installed Version: <span data-local-version="<?php echo $xml->version; ?>"><?php echo $xml->version; ?></span></div>
-                                <div class="text-muted latest-version">Latest Version: <span data-online-version="">N/A</span></div>
+                                <div class="text-muted local-version"><?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_INSTALLED_VERSION', '');?> <span data-local-version="<?php echo $xml->version; ?>"><?php echo $xml->version; ?></span></div>
+                                <div class="text-muted latest-version"><?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_LATEST_VERSION', '');?> <span data-online-version="">N/A</span></div>
                             </div>
                         </div>
                         <div class="tpDetail">
@@ -119,6 +120,7 @@ $xml	= simplexml_load_file(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/tz_portfolio_plus.
                             </ul>
                         </div>
                     </div>
+                    <?php echo $this -> loadTemplate('feed');?>
                 </div>
             <?php echo JHtml::_('tzbootstrap.endrow');?>
         </div>

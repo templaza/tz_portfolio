@@ -22,6 +22,7 @@ defined('_JEXEC') or die;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
 use Joomla\Registry\Registry;
+use Joomla\CMS\MVC\Model\BaseModel;
 
 jimport('joomla.filesytem.file');
 JLoader::import('framework',JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/includes');
@@ -36,8 +37,13 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
 
     public function __construct(&$subject, $config = array())
     {
-        JModelLegacy::addIncludePath(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.DIRECTORY_SEPARATOR.$config['type']
-            .DIRECTORY_SEPARATOR.$config['name'].DIRECTORY_SEPARATOR.'models','PlgTZ_Portfolio_Plus'.$config['type'].'Model');
+        if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+            BaseModel::addIncludePath(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . DIRECTORY_SEPARATOR . $config['type']
+                . DIRECTORY_SEPARATOR . $config['name'] . DIRECTORY_SEPARATOR . 'models', 'PlgTZ_Portfolio_Plus' . $config['type'] . 'Model');
+        }else{
+            JModelLegacy::addIncludePath(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . DIRECTORY_SEPARATOR . $config['type']
+                . DIRECTORY_SEPARATOR . $config['name'] . DIRECTORY_SEPARATOR . 'models', 'PlgTZ_Portfolio_Plus' . $config['type'] . 'Model');
+        }
 
         JLoader::register('TZ_Portfolio_PlusPluginHelper',COM_TZ_PORTFOLIO_PLUS_LIBRARIES
             .DIRECTORY_SEPARATOR.'plugin'.DIRECTORY_SEPARATOR.'helper.php');
@@ -129,10 +135,22 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
 
     // Prepare form of the plugin ~ onContentPrepareForm of joomla
     public function onContentPrepareForm($form, $data){
-        $app    = JFactory::getApplication();
-        $name   = $form -> getName();
+        $app            = JFactory::getApplication();
+        $name           = $form -> getName();
+        $extension      = null;
+        $adminAllows    = array(
+            'com_menus',
+            'com_modules',
+            'com_tz_portfolio_plus',
 
-        if ($app->isAdmin() || ($app -> isSite() && $name == 'com_tz_portfolio_plus.form')) {
+        );
+
+        if(strpos($name, '.')){
+            list($extension, $view) = explode('.', $name, 2);
+        }
+
+        if (($app -> isClient('administrator') && in_array($extension, $adminAllows))
+            || ($app -> isClient('site') && $name == 'com_tz_portfolio_plus.form')) {
 
             $component_id   = null;
             if(!empty($data)){
@@ -169,7 +187,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
         $app        = JFactory::getApplication();
         $context    = $form -> getName();
 
-        if($app -> isAdmin() || ($app -> isSite() && $context  == 'com_tz_portfolio_plus.form')){
+        if($app -> isClient('administrator') || ($app -> isClient('site') && $context  == 'com_tz_portfolio_plus.form')){
             list($option, $viewName)    = explode('.', $context);
 
             // Load plugin's language
@@ -182,7 +200,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
             JForm::addFieldPath(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.'/'.$this -> _type.'/'.$this -> _name.'/admin/models/field');
             JForm::addFieldPath(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.'/'.$this -> _type.'/'.$this -> _name.'/admin/models/fields');
 
-            if($app -> isSite() && $context  == 'com_tz_portfolio_plus.form') {
+            if($app -> isClient('site') && $context  == 'com_tz_portfolio_plus.form') {
                 JForm::addFormPath(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/' . $this->_type . '/' . $this->_name . '/models/form');
                 JForm::addFormPath(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/' . $this->_type . '/' . $this->_name . '/models/forms');
 
@@ -203,7 +221,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
     // Load xml form file for menu in back-end of the plugin (this trigger called in system tz_portfolio_plus plugin)
     protected function menuPrepareForm($form, $data){
         $app            = JFactory::getApplication();
-        if($app -> isAdmin()){
+        if($app -> isClient('administrator')){
             $formFile       = false;
             $addonFormFile  = false;
             $link           = false;
@@ -304,7 +322,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
     // Load xml form file for menu in back-end of the plugin (this trigger called in system tz_portfolio_plus plugin)
     protected function modulePrepareForm($form, $data){
         $app            = JFactory::getApplication();
-        if($app -> isAdmin()){
+        if($app -> isClient('administrator')){
             $formFile   = false;
             $link       = false;
 
@@ -579,9 +597,19 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
         if(!$prefix){
             $_prefix    = 'PlgTZ_Portfolio_Plus'.ucfirst($this -> _type).'Model';
         }
-        JModelLegacy::addIncludePath(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.DIRECTORY_SEPARATOR.$this -> _type
-            .DIRECTORY_SEPARATOR.$this -> _name.DIRECTORY_SEPARATOR.'admin'.DIRECTORY_SEPARATOR.'models',$_prefix);
-        if($model  = JModelLegacy::getInstance($_name,$_prefix, $config)) {
+
+        $path   = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.DIRECTORY_SEPARATOR.$this -> _type
+            .DIRECTORY_SEPARATOR.$this -> _name.DIRECTORY_SEPARATOR.'admin'.DIRECTORY_SEPARATOR.'models';
+
+        if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+            BaseModel::addIncludePath($path, $_prefix);
+            $model  = BaseModel::getInstance($_name,$_prefix, $config);
+        }else{
+            JModelLegacy::addIncludePath($path, $_prefix);
+            $model  = JModelLegacy::getInstance($_name,$_prefix, $config);
+        }
+
+        if($model) {
             $model -> set('plugin_type', $this -> _type);
             $model->setState('params', $this->params);
             return $model;
@@ -650,7 +678,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
 
     public function onAfterGetMenuTypeOptions(&$data, $object){
         $app    = JFactory::getApplication();
-        if($app -> isAdmin()){
+        if($app -> isClient('administrator')){
             $input  = $app -> input;
             if($input -> get('option') == 'com_menus' && ($input -> get('view') == 'menutypes'
                     || $input -> get('view') == 'item')){
@@ -677,7 +705,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
                             }
                         }
 
-                        if(count($args) && $args['option'] != $component){
+                        if(count($args) && isset($args['option']) && $args['option'] != $component){
                             return false;
                         }
 

@@ -652,7 +652,7 @@ class TZ_Portfolio_PlusFrontHelperExtraFields{
             }
 
             $query -> group('f.id');
-            if ($app->isSite())
+            if ($app-> isClient('site'))
             {
                 $query->where('f.advanced_search = 1');
             }

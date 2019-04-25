@@ -45,6 +45,7 @@ if ($item->type == 'link' || $item->type == 'quote') {
 <?php
 // Start Description and some info
 if(!isset($item -> mediatypes) || (isset($item -> mediatypes) && !in_array($item -> type,$item -> mediatypes))):
+    $tpParams   = TZ_Portfolio_PlusTemplate::getTemplate(true) -> params;
 ?>
     <div class="tpHead">
         <?php if ($params->get('show_date_print_icon', 0) || $params->get('show_date_email_icon', 0) || $canEdit) : ?>
@@ -106,7 +107,7 @@ if(!isset($item -> mediatypes) || (isset($item -> mediatypes) && !in_array($item
                 <?php if ($params->get('show_date_create_date', 1)) : ?>
 
                     <div class="date"><i class="tp tp-clock-o"></i>
-                        <time itemprop="datePublished" datetime="<?php echo JHtml::_('date', $this->item->created, JText::_('DATE_FORMAT_LC')); ?>"><?php echo JHtml::_('date', $this->item->created, JText::_('DATE_FORMAT_LC')); ?></time>
+                        <time itemprop="datePublished" datetime="<?php echo JHtml::_('date', $this->item->created, $tpParams -> get('date_format', 'l, d F Y')); ?>"><?php echo JHtml::_('date', $this->item->created, $tpParams -> get('date_format', 'l, d F Y')); ?></time>
                     </div>
 
                 <?php endif; ?>
@@ -185,13 +186,13 @@ if(!isset($item -> mediatypes) || (isset($item -> mediatypes) && !in_array($item
                 <?php if ($params->get('show_date_publish_date', 0)) : ?>
                     <div class="TzBlogPublished">
                         <i class="tp tp-calendar"></i>
-                        <time itemprop="datePublished" datetime="<?php echo JHtml::_('date', $this->item->publish_up, JText::_('DATE_FORMAT_LC')); ?>"><?php echo JHtml::_('date', $this->item->publish_up, JText::_('DATE_FORMAT_LC')); ?></time>
+                        <time itemprop="datePublished" datetime="<?php echo JHtml::_('date', $this->item->publish_up, $tpParams -> get('date_format', 'l, d F Y')); ?>"><?php echo JHtml::_('date', $this->item->publish_up, $tpParams -> get('date_format', 'l, d F Y')); ?></time>
                     </div>
                 <?php endif; ?>
                 <?php if ($params->get('show_date_modify_date', 0)) : ?>
                     <div class="TzBlogModified">
                         <i class="tp tp-pencil-square-o"></i>
-                        <time itemprop="dateModified" datetime="<?php echo JHtml::_('date', $this->item->modified, JText::_('DATE_FORMAT_LC')); ?>"><?php echo JHtml::_('date', $this->item->modified, JText::_('DATE_FORMAT_LC')); ?></time>
+                        <time itemprop="dateModified" datetime="<?php echo JHtml::_('date', $this->item->modified, $tpParams -> get('date_format', 'l, d F Y')); ?>"><?php echo JHtml::_('date', $this->item->modified, $tpParams -> get('date_format', 'l, d F Y')); ?></time>
                     </div>
                 <?php endif; ?>
                 <?php echo $item->event->afterDisplayAdditionInfo; ?>

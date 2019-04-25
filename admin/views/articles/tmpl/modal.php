@@ -22,7 +22,7 @@ defined('_JEXEC') or die;
 
 $app    = JFactory::getApplication();
 
-if ($app->isSite()) {
+if ($app->isClient('site')) {
     JSession::checkToken('get') or jexit(JText::_('JINVALID_TOKEN'));
 }
 

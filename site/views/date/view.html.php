@@ -21,6 +21,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\MVC\Model\BaseModel;
 
 jimport('joomla.application.component.view');
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
@@ -292,8 +293,14 @@ class TZ_Portfolio_PlusViewDate extends JViewLegacy{
         $this -> items      = $items;
         $this -> pagination = $pagination;
 
-        JModelLegacy::addIncludePath(COM_TZ_PORTFOLIO_PLUS_PATH_SITE.DIRECTORY_SEPARATOR.'models');
-        $model  = JModelLegacy::getInstance('Portfolio','TZ_Portfolio_PlusModel',array('ignore_request' => true));
+        if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE){
+            BaseModel::addIncludePath(COM_TZ_PORTFOLIO_PLUS_PATH_SITE.DIRECTORY_SEPARATOR.'models', 'TZ_Portfolio_PlusModel');
+            $model  = BaseModel::getInstance('Portfolio','TZ_Portfolio_PlusModel',array('ignore_request' => true));
+        }else{
+            JModelLegacy::addIncludePath(COM_TZ_PORTFOLIO_PLUS_PATH_SITE.DIRECTORY_SEPARATOR.'models', 'TZ_Portfolio_PlusModel');
+            $model  = JModelLegacy::getInstance('Portfolio','TZ_Portfolio_PlusModel',array('ignore_request' => true));
+        }
+
         $pParams    = clone($params);
         $pParams -> set('tz_catid',$params -> get('tz_catid',array()));
         $model -> setState('params',$pParams);

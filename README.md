@@ -10,6 +10,14 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+25/04/2019 - 2.2.3
+
+	- Fix warning when creating a menu.
+	- Fix error edit state of article in front-end.
+    - Compatible with Joomla 4 Alpha 8.
+	- Added latest blog feed for dashboard in admin.
+	- Added option "Date Format" for the layouts.
+
 17/04/2019 - 2.2.2
 
 	- Fix error add tag from edit form on front-end.

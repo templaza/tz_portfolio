@@ -23,12 +23,13 @@ defined('_JEXEC') or die('Restricted access');
 $params = $this -> item -> params;
 
 if($params -> get('show_publish_date',1)){
+    $tpParams   = TZ_Portfolio_PlusTemplate::getTemplate(true) -> params;
 ?>
 <div class="tpDate hasTooltip" title="<?php
 echo JText::_('TPL_ELEGANT_PUBLISH_DATE');?>">
     <i class="tp tp-calendar"></i>
-    <time itemprop="datePublished" datetime="<?php echo JHtml::_('date', $this->item->publish_up, JText::_('DATE_FORMAT_FILTER_DATE')); ?>">
-        <?php echo JHtml::_('date', $this->item->publish_up, JText::_('DATE_FORMAT_LC')); ?>
+    <time itemprop="datePublished" datetime="<?php echo JHtml::_('date', $this->item->publish_up, $tpParams -> get('date_format', 'l, d F Y')); ?>">
+        <?php echo JHtml::_('date', $this->item->publish_up, $tpParams -> get('date_format', 'l, d F Y')); ?>
     </time>
 </div>
 <?php } ?>

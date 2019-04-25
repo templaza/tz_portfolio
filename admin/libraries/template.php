@@ -273,7 +273,7 @@ class TZ_Portfolio_PlusTemplate {
         $_catId     = null;
         $_artId     = null;
 
-        if($app -> isSite()) {
+        if($app -> isClient('site')) {
             $params = $app->getParams();
             $templateId = $params->get('tz_template_style_id');
         }

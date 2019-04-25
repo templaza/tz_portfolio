@@ -68,7 +68,7 @@ class TZ_Portfolio_PlusExtraFieldTextArea extends TZ_Portfolio_PlusExtraField
         $app    = JFactory::getApplication();
         $config = \JFactory::getConfig();
         $editor = '';
-        if ($app->isAdmin())
+        if ($app->isClient('administrator'))
         {
             if ($this->params->get('use_editor_back_end', 0))
             {

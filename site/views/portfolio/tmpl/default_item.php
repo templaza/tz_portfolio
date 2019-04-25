@@ -24,6 +24,7 @@ use Joomla\Utilities\ArrayHelper;
 $doc    = JFactory::getDocument();
 
 if($this -> items):
+    $tpParams   = TZ_Portfolio_PlusTemplate::getTemplate(true) -> params;
 ?>
     <?php foreach($this -> items as $i => $item):
         $this -> item   = $item;
@@ -202,19 +203,19 @@ if($this -> items):
 
                 <?php if ($params->get('show_cat_create_date',0)) : ?>
                 <div class="tpp-item-created" itemprop="dateCreated">
-                    <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_CREATED_DATE_ON', JHtml::_('date', $item->created, JText::_('DATE_FORMAT_LC2'))); ?>
+                    <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_CREATED_DATE_ON', JHtml::_('date', $item->created, $tpParams -> get('date_format', 'l, d F Y H:i'))); ?>
                 </div>
                 <?php endif; ?>
 
                 <?php if ($params->get('show_cat_modify_date', 0)) : ?>
                 <div class="tpp-item-modified" itemprop="dateModified">
-                    <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_LAST_UPDATED', JHtml::_('date', $item->modified, JText::_('DATE_FORMAT_LC2'))); ?>
+                    <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_LAST_UPDATED', JHtml::_('date', $item->modified, $tpParams -> get('date_format', 'l, d F Y H:i'))); ?>
                 </div>
                 <?php endif; ?>
 
                 <?php if ($params->get('show_cat_publish_date',0)) : ?>
                 <div class="tpp-item-published" itemprop="datePublished">
-                    <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_PUBLISHED_DATE_ON', JHtml::_('date', $item->publish_up, JText::_('DATE_FORMAT_LC2'))); ?>
+                    <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_PUBLISHED_DATE_ON', JHtml::_('date', $item->publish_up, $tpParams -> get('date_format', 'l, d F Y H:i'))); ?>
                 </div>
                 <?php endif; ?>
 

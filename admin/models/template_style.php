@@ -342,7 +342,7 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
             }
 
             // Trigger the onContentBeforeSave event.
-            $result = \JFactory::getApplication() -> triggerEvent($this->event_before_save, array($this->option . '.' . $this->name, $table, $isNew));
+            $result = \JFactory::getApplication() -> triggerEvent($this->event_before_save, array($this->option . '.' . $this->name, $table, $isNew, $data));
 
             if (in_array(false, $result, true))
             {

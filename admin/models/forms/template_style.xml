@@ -43,6 +43,11 @@
                 <option value="1">JYES</option>
                 <option value="0">JNO</option>
             </field>
+            <field name="date_format" type="text"
+                   default="l, d F Y H:i"
+                   label="COM_TZ_PORTFOLIO_PLUS_DATE_FORMAT"
+                   description="COM_TZ_PORTFOLIO_PLUS_DATE_FORMAT_DESC"/>
+
         </fieldset>
         <fieldset name="advanced" label="JGLOBAL_FIELDSET_ADVANCED">
         </fieldset>

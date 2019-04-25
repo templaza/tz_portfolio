@@ -20,7 +20,7 @@
 // no direct access
 defined('_JEXEC') or die;
 
-if (JFactory::getApplication()->isSite()) {
+if (JFactory::getApplication()-> isClient('site')) {
 	JSession::checkToken('get') or jexit(JText::_('JINVALID_TOKEN'));
 }
 

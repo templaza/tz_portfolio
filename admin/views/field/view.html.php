@@ -20,6 +20,8 @@
 // No direct access
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+
 jimport('joomla.application.component.view');
 
 class TZ_Portfolio_PlusViewField extends JViewLegacy
@@ -37,8 +39,8 @@ class TZ_Portfolio_PlusViewField extends JViewLegacy
         $this -> canDo	= TZ_Portfolio_PlusHelper::getActions(COM_TZ_PORTFOLIO_PLUS, 'field'
             , $this -> item -> id);
 
-        JModelLegacy::addIncludePath(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.DIRECTORY_SEPARATOR.'models','TZ_Portfolio_PlusModel');
-        $groupModel = JModelLegacy::getInstance('Groups','TZ_Portfolio_PlusModel',array('ignore_request' => true));
+        BaseDatabaseModel::addIncludePath(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.DIRECTORY_SEPARATOR.'models','TZ_Portfolio_PlusModel');
+        $groupModel = BaseDatabaseModel::getInstance('Groups','TZ_Portfolio_PlusModel',array('ignore_request' => true));
         if($groupModel) {
             $groupModel->setState('filter_order', 'name');
             $groupModel->setState('filter_order_Dir', 'ASC');

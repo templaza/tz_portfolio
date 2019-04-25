@@ -36,6 +36,10 @@
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
                 </field>
+                <field name="date_format" type="text"
+                       default="l, d F Y"
+                       label="COM_TZ_PORTFOLIO_PLUS_DATE_FORMAT"
+                       description="COM_TZ_PORTFOLIO_PLUS_DATE_FORMAT_DESC"/>
             </fieldset>
         </fields>
     </config>

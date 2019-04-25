@@ -24,6 +24,7 @@ use Joomla\Utilities\ArrayHelper;
 $doc    = JFactory::getDocument();
 
 if($this -> items):
+    $tpParams   = TZ_Portfolio_PlusTemplate::getTemplate(true) -> params;
 ?>
     <?php foreach($this -> items as $i => $item):
         $this -> item   = $item;
@@ -162,7 +163,7 @@ if($this -> items):
                             <div class="TzPortfolioDate hasTooltip" itemprop="dateCreated" title="<?php
                             echo JText::_('TPL_ELEGANT_CREATED_DATE');?>">
                                 <i class="tp tp-clock-o"></i>
-                                <?php echo JHtml::_('date', $item->created, JText::_('DATE_FORMAT_LC')); ?>
+                                <?php echo JHtml::_('date', $item->created, $tpParams -> get('date_format', 'l, d F Y')); ?>
                             </div>
                         <?php endif; ?>
 
@@ -170,7 +171,7 @@ if($this -> items):
                             <div class="TzPortfolioModified hasTooltip" itemprop="dateModified" title="<?php
                             echo JText::_('TPL_ELEGANT_MODIFIED_DATE');?>">
                                 <i class="tp tp-pencil-square-o"></i>
-                                <?php echo JHtml::_('date', $item->modified, JText::_('DATE_FORMAT_LC')); ?>
+                                <?php echo JHtml::_('date', $item->modified, $tpParams -> get('date_format', 'l, d F Y')); ?>
                             </div>
                         <?php endif; ?>
 
@@ -178,7 +179,7 @@ if($this -> items):
                             <div class="published hasTooltip" itemprop="datePublished" title="<?php
                             echo JText::_('TPL_ELEGANT_PUBLISH_DATE');?>">
                                 <i class="tp tp-clock-o"></i>
-                                <?php echo JHtml::_('date', $item->publish_up, JText::_('DATE_FORMAT_LC')); ?>
+                                <?php echo JHtml::_('date', $item->publish_up, $tpParams -> get('date_format', 'l, d F Y')); ?>
                             </div>
                         <?php endif; ?>
 

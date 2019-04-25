@@ -28,7 +28,7 @@ class PlgTZ_Portfolio_PlusUserProfile extends TZ_Portfolio_PlusPlugin
         $app    = JFactory::getApplication();
         $name   = $form->getName();
 
-        if($app -> isAdmin()){
+        if($app -> isClient('administrator')){
             if($name == 'com_users.user' || $name == 'com_admin.profile') {
                 JForm::addFieldPath(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.DIRECTORY_SEPARATOR
                     .'models'.DIRECTORY_SEPARATOR.'fields');

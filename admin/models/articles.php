@@ -447,7 +447,7 @@ class TZ_Portfolio_PlusModelArticles extends JModelList
         // Get fields group
         $data   = array();
 
-		if ($app->isSite()) {
+		if ($app->isClient('site')) {
 			$user	= JFactory::getUser();
 			$groups	= $user->getAuthorisedViewLevels();
 

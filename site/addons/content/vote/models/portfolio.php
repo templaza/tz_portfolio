@@ -22,9 +22,9 @@ defined('_JEXEC') or die;
 
 class PlgTZ_Portfolio_PlusContentVoteModelPortfolio extends TZ_Portfolio_PlusPluginModelItem{
 
-    public function getItem()
+    public function getItem($pk = null)
     {
-        if($item = parent::getItem()) {
+        if($item = parent::getItem($pk)) {
             if(isset($item -> id)){
                 $item -> rating_count   = 0;
                 $item -> rating_sum     = 0;

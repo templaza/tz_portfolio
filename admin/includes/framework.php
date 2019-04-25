@@ -53,8 +53,12 @@ tzportfolioplusimport('model.dialog');
 // Register class TZ_Portfolio_PlusModelRejectBase from libraries folder.
 tzportfolioplusimport('model.reject');
 
+/* Register class TZ_Portfolio_PlusModelAdmin from libraries folder. */
+tzportfolioplusimport('model.adminlegacy');
+
 // Register class TZ_Portfolio_PlusControllerRejectBase from libraries folder.
 tzportfolioplusimport('controller.reject');
+
 
 // Register class TZ_Portfolio_PlusControllerArticleBase from libraries folder.
 tzportfolioplusimport('controller.article');
