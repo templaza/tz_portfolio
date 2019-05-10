@@ -10,6 +10,15 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+10/05/2019 - 2.2.4
+
+	- Fix issue with feed data loading (latest blog feed).
+	- Fix issue with default style override.
+	- Update the latest awesome font v5.8.2 (overrided awesome font with tp prefix).
+	- Added option allow user install sample data with new user.
+	- Added option "Remember Recent Article" in global config.
+	- Added intro guide for some views: dashboard, add-ons, styles, install add-on, install style in admin.
+
 25/04/2019 - 2.2.3
 
 	- Fix warning when creating a menu.

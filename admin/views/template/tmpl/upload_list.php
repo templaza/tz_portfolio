@@ -199,7 +199,8 @@ if(empty($this -> itemsServer)){
                         }?>
                         <?php if(isset($item -> liveDemoUrl) && $item -> liveDemoUrl){ ?>
                         <li>
-                            <a target="_blank" class="btn btn-success" href="<?php echo $item -> liveDemoUrl; ?>"><i class="tpr tp-eye"></i> <?php
+                            <a target="_blank" class="btn btn-success js-tpp-live-demo" href="<?php
+                            echo $item -> liveDemoUrl; ?>"><i class="tpr tp-eye"></i> <?php
                                 echo JText::_('COM_TZ_PORTFOLIO_PLUS_LIVE_DEMO');?></a>
                         </li>
                         <?php } ?>

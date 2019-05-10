@@ -25,27 +25,8 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Access\Access;
 
 class TZ_Portfolio_PlusAccess extends Access{
-//    public static function getActions($component, $section = 'component')
-//    {
-//        \JLog::add(__METHOD__ . ' is deprecated. Use Access::getActionsFromFile or Access::getActionsFromData instead.', \JLog::WARNING, 'deprecated');
-//
-//        $actions = self::getActionsFromFile(
-//            JPATH_ADMINISTRATOR . '/components/' . $component . '/access.xml',
-//            "/access/section[@name='" . $section . "']/"
-//        );
-//
-//        if (empty($actions))
-//        {
-//            return array();
-//        }
-//        else
-//        {
-//            return $actions;
-//        }
-//    }
     public static function getAddOnActions($addon, $group, $section = 'component')
     {
-//        var_dump(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/'.$group.'/' . $addon . '/access.xml'); die();
         \JLog::add(__METHOD__ . ' is deprecated. Use Access::getActionsFromFile or Access::getActionsFromData instead.', \JLog::WARNING, 'deprecated');
 
         $actions = self::getActionsFromFile(

@@ -24,6 +24,51 @@ JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
+
+$this->document->addStyleSheet(TZ_Portfolio_PlusUri::base() . '/vendor/intro/introjs.min.css', array('version' => 'v=2.9.3'));
+$this->document->addScript(TZ_Portfolio_PlusUri::base() . '/vendor/intro/intro.min.js', array('version' => 'v=2.9.3'));
+$this->document->addScript(TZ_Portfolio_PlusUri::base() . '/js/introguide.min.js', array('version' => 'v=2.9.3'));
+
+if(JFactory::getLanguage() -> isRtl()) {
+    $this->document->addStyleSheet(TZ_Portfolio_PlusUri::base() . '/vendor/intro/introjs-rtl.min.css', array('version' => 'v=2.9.3'));
+}
+
+$this -> document -> addScriptDeclaration('
+(function($,window){
+    "use strict";
+    
+    $(document).ready(function(){
+        var addonSteps  = [
+                {
+                    /* Step 1: Upload */
+                    element: $("[data-target=\\"#tpp-addon__upload\\"]")[0],
+                    intro: "<div class=\\"head\\">Upload</div>You can install manual add-on by upload a package.",
+                    position: "right"
+                },
+                {
+                    /* Step 2: Install online */
+                    element: $(".action-links .install-now")[0],
+                    intro: "<div class=\\"head\\">Install or update online</div>You can install or update an add-on\'s package from server.",
+                    position: "top"
+                }];
+                
+        if($(".action-links .js-tpp-live-demo").length){
+            addonSteps[2]   = {
+                /* Step 3: Demo link */
+                element: $(".action-links .js-tpp-live-demo")[0],
+                intro: "<div class=\\"head\\">Live Demo</div>You can view live demo from this.",
+                position: "top"
+            }
+        }
+                
+        
+        tppIntroGuide("'.$this -> getName().'",addonSteps , '.(TZ_Portfolio_PlusHelper::introGuideSkipped($this -> getName())?1:0).', "'.JSession::getFormToken().'");
+        
+    });
+     
+     
+})(jQuery,window);
+');
 ?>
 
 <?php echo JHtml::_('tzbootstrap.addrow');?>

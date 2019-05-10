@@ -24,27 +24,22 @@
 // no direct access
 defined('_JEXEC') or die;
 
-if($xml = $this -> xml) {
-    if($rssurl = $xml->feedBlogUrl){
-        $rss    = new JFeedFactory;
-        if($feeds = $rss->getFeed($rssurl)) {
+if($feeds = $this -> feedBlog) {
+    ?>
+    <div class="tp-feed-blog">
+        <h4 class="title"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_LATEST_FROM_OUR_BLOG'); ?></h4>
+        <ul class="inside">
+            <?php for ($i = 0, $max = min(count($feeds), 5); $i < $max; $i++) {
+                $feed   = $feeds[$i];
+                $uri  = $feed->uri || !$feed->isPermaLink ? trim($feed->uri) : trim($feed->guid);
+                $uri  = !$uri || stripos($uri, 'http') !== 0 ? $rssurl : $uri;
             ?>
-            <div class="tp-feed-blog">
-                <h4 class="title">Latest from our blog</h4>
-                <ul class="inside">
-                    <?php for ($i = 0, $max = min(count($feeds), 5); $i < $max; $i++) {
-                        $feed   = $feeds[$i];
-                        $uri  = $feed->uri || !$feed->isPermaLink ? trim($feed->uri) : trim($feed->guid);
-                        $uri  = !$uri || stripos($uri, 'http') !== 0 ? $rssurl : $uri;
-                    ?>
-                        <li><a href="<?php echo htmlspecialchars($uri, ENT_COMPAT, 'UTF-8'); ?>" target="_blank"><?php echo trim($feed -> title); ?></a>
-                            <span class="rss-date">
-							<?php echo JHtml::_('date', $feed->publishedDate, JText::_('DATE_FORMAT_LC3')); ?>
-                            </span></li>
-                    <?php } ?>
-                </ul>
-            </div>
-            <?php
-        }
-    }
+                <li><a href="<?php echo htmlspecialchars($uri, ENT_COMPAT, 'UTF-8'); ?>" target="_blank"><?php echo trim($feed -> title); ?></a>
+                    <span class="rss-date">
+                    <?php echo JHtml::_('date', $feed->publishedDate, JText::_('DATE_FORMAT_LC3')); ?>
+                    </span></li>
+            <?php } ?>
+        </ul>
+    </div>
+    <?php
 }

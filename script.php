@@ -674,8 +674,85 @@ class com_tz_portfolio_plusInstallerScript{
         JLoader::register('TZ_Portfolio_PlusTemplate', JPATH_ADMINISTRATOR
             .'/components/com_tz_portfolio_plus/libraries/template.php');
         ?>
+        <script>
+            (function($){
+                "use strict";
+                $(document).ready(function(){
+                    $(".js-tpp-install-demo-data > button").on("click", function(){
+                        var $this   = $(this);
+                        if($this.hasClass("installing") || $this.hasClass("disabled")){
+                            return;
+                        }
+
+                        var $button = $this.clone(true);
+
+                        $this.html("<span class=\"icon-support tpp-spiner\"></span> <?php
+                            echo JText::_('COM_TZ_PORTFOLIO_PLUS_INSTALLING'); ?>");
+
+                        $this.addClass("installing");
+                        $.ajax({
+                            method: "POST",
+                            url: "index.php?option=com_tz_portfolio_plus",
+                            dataType: "json",
+                            data: {
+                                "task": "installdemo",
+                                "<?php echo JSession::getFormToken(); ?>": 1
+                            }
+                        }).done(function (response) {
+                            if (response.message) {
+                                if (response.success) {
+                                    Joomla.renderMessages({"message": [response.message]});
+                                    $this.removeClass("installing")
+                                        .addClass("disabled")
+                                        .html("<span class=\"icon-checkmark\"></span> <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_INSTALLED'); ?>");
+                                } else {
+                                    Joomla.renderMessages({"error": [response.message]});
+                                    $this.removeClass("installing").html($button.html());
+                                }
+                            }
+                        });
+                    });
+                });
+            })(jQuery);
+        </script>
+        <style>
+            @-moz-keyframes spin {
+                0% { -moz-transform: rotate(0deg); }
+                100% { -moz-transform: rotate(359deg); }
+            }
+            @-webkit-keyframes spin {
+                0% { -webkit-transform: rotate(0deg); }
+                100% { -webkit-transform: rotate(359deg); }
+            }
+            @-o-keyframes spin {
+                0% { -o-transform: rotate(0deg); }
+                100% { -o-transform: rotate(359deg); }
+            }
+            @-ms-keyframes spin {
+                0% { -ms-transform: rotate(0deg); }
+                100% { -ms-transform: rotate(359deg); }
+            }
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(359deg); }
+            }
+            .tpp-spiner{
+                -webkit-animation: spin 2s infinite linear;
+                -moz-animation: spin 2s infinite linear;
+                -o-animation: spin 2s infinite linear;
+                animation: spin 2s infinite linear;
+            }
+            .js-tpp-install-demo-data .installing > span{
+                margin: 0;
+                height: 13px;
+            }
+        </style>
         <h2 style="margin-top: 20px;"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS'); ?></h2>
         <span style="font-weight: normal"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_DESCRIPTION');?></span>
+        <div class="js-tpp-install-demo-data" style="margin-top: 15px;">
+            <button type="button" class="btn btn-primary"><span class="icon-database"></span> <?php
+                echo JText::_('COM_TZ_PORTFOLIO_PLUS_INSTALL_SAMPLE_DATA');?></button>
+        </div>
         <h3 style="margin-top: 20px;"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_INSTALL_STATUS'); ?></h3>
         <table class="table table-striped">
             <thead>

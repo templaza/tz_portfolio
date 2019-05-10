@@ -30,7 +30,8 @@ if(!$icon){
 }
 ?>
 
-<button onclick="<?php echo $doTask; ?>" rel="help" class="btn btn-secondary btn-small btn-sm">
+<button onclick="<?php echo $doTask; ?>" rel="help" class="btn btn-secondary btn-small btn-sm"<?php
+echo COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE?' id="toolbar-'.$displayData['id'].'"':'';?>>
     <span class="tpb tp-<?php echo $icon; ?>" aria-hidden="true"></span>
     <?php echo $text; ?>
 </button>

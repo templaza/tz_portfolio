@@ -84,75 +84,12 @@ class TZ_Portfolio_Plus_AddOnControllerLegacy extends JControllerLegacy{
                     }
                 }
             }
-
-//            if($addon = $this -> addon){
-//                $plugin_path = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . DIRECTORY_SEPARATOR
-//                    . $addon -> type . DIRECTORY_SEPARATOR
-//                    . $addon -> name;
-//
-//                // Create template path of tz_portfolio_plus
-//                $template = TZ_Portfolio_PlusTemplate::getTemplate(true);
-//                $tplparams = $template->params;
-//
-//                // Create default template of tz_portfolio_plus
-//                $defaultPath = null;
-//                $tpath = null;
-//
-//                if(isset($template -> home_path) && $template -> home_path){
-//                    $defaultPath    = $template -> home_path. DIRECTORY_SEPARATOR
-//                        .($viewName?$viewName . DIRECTORY_SEPARATOR:''). 'plg_'
-//                        . $addon -> type . '_' . $addon -> name;
-//                }
-//                if(isset($template -> base_path) && $template -> base_path){
-//                    $tpath    = $template -> base_path. DIRECTORY_SEPARATOR
-//                        .($viewName?$viewName . DIRECTORY_SEPARATOR:'') . 'plg_'
-//                        . $addon -> type . '_' . $addon -> name;
-//                }
-//
-//                $vpaths = $view->get('_path');
-//                $vpaths = $vpaths['template'];
-//                $view->set('_path', array('template' => array()));
-//
-//                $plgVPath = $plugin_path . DIRECTORY_SEPARATOR . 'views'
-//                    . DIRECTORY_SEPARATOR . $viewName . DIRECTORY_SEPARATOR . 'tmpl';
-//
-//                if (!in_array($plgVPath, $vpaths)) {
-//                    $view->addTemplatePath($plgVPath);
-//                }
-//
-//                // Create template path from template site
-//                $_template = JFactory::getApplication()->getTemplate();
-//                $jPathSite = JPATH_SITE . '/templates/' . $_template . '/html/com_tz_portfolio_plus/'
-//                    . $viewName . '/plg_' . $addon -> type . '_' . $addon -> name;
-//
-//                // Add default template path
-//                if ($defaultPath && !in_array($defaultPath, $vpaths)) {
-//                    $view->addTemplatePath($defaultPath);
-//                }
-//                // Add template path which chosen in menu
-//                if ($tpath && !in_array($tpath, $vpaths)) {
-//                    $view->addTemplatePath($tpath);
-//                }
-//                // Add template path from template site
-//                if (!in_array($jPathSite, $vpaths)) {
-//                    $view->addTemplatePath($jPathSite);
-//                }
-//            }
         }
         $view -> setLayout($viewLayout);
 
         // Get/Create the model
         if ($model = $this->getModel($viewName))
         {
-//            if($this -> addon){
-//                $model -> set('addon',$this -> addon);
-//            }
-//            if($this -> article){
-//                $model -> set('article',$this -> article);
-//            }
-//            if($this -> trigger_params){
-//                $model -> set('trigger_params',$this -> trigger_params);
-//            }
             // Push the model into the view (as default)
             $view->setModel($model, true);
         }
@@ -218,11 +155,11 @@ class TZ_Portfolio_Plus_AddOnControllerLegacy extends JControllerLegacy{
                 $defaultPath = null;
                 $tpath = null;
 
-                if(isset($template -> home_path) && $template -> home_path){
-                    $defaultPath    = $template -> home_path. DIRECTORY_SEPARATOR
-                        .($name?$name . DIRECTORY_SEPARATOR:''). 'plg_'
-                        . $addon -> type . '_' . $addon -> name;
-                }
+//                if(isset($template -> home_path) && $template -> home_path){
+//                    $defaultPath    = $template -> home_path. DIRECTORY_SEPARATOR
+//                        .($name?$name . DIRECTORY_SEPARATOR:''). 'plg_'
+//                        . $addon -> type . '_' . $addon -> name;
+//                }
                 if(isset($template -> base_path) && $template -> base_path){
                     $tpath    = $template -> base_path. DIRECTORY_SEPARATOR
                         .($name?$name . DIRECTORY_SEPARATOR:'') . 'plg_'

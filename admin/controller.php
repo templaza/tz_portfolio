@@ -20,6 +20,11 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\Filesystem\File;
+use Joomla\CMS\Filesystem\Path;
+use Joomla\Utilities\ArrayHelper;
+use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
+
 class TZ_Portfolio_PlusController extends JControllerLegacy
 {
 	/**
@@ -230,4 +235,141 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
         return true;
     }
 
+    public function introGuide(){
+
+        $this->checkToken();
+
+        $app    = JFactory::getApplication();
+	    $input  = $this -> input;
+        $view   = $input -> get('v');
+
+	    $folderPath = COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/cache';
+
+        if(!$view){
+            $app -> close();
+        }
+
+        $filePath   = Path::clean($folderPath.'/introguide.json');
+
+        $config     = new stdClass();
+
+        if(\JFile::exists($filePath)) {
+            $config = file_get_contents($filePath);
+            $config = json_decode($config);
+        }
+        $config -> $view    = 1;
+
+        $config = json_encode($config);
+
+        try {
+            echo File::write($filePath, $config);
+        }catch (Exception $e){
+        }
+        JFactory::getApplication() -> close();
+    }
+
+    public function installdemo(){
+
+        $this->checkToken();
+
+        $result     = false;
+        $message    = null;
+        $app        = JFactory::getApplication();
+        $db         = JFactory::getDbo();
+        $query      = $db -> getQuery(true);
+
+        $query -> select('COUNT(*)');
+        $query -> from('#__tz_portfolio_plus_content');
+
+        $db -> setQuery($query);
+
+        if($db -> loadResult()){
+            $message    = JText::_('COM_TZ_PORTFOLIO_PLUS_INSTALL_SAMPLE_DATA_ERROR');
+        }else{
+            $file       = Path::clean(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/install/demo.sql');
+            $buffer     = file_get_contents($file);
+            $queries    = TZ_Portfolio_PlusDatabase::splitQueries($buffer);
+            $db     = JFactory::getDbo();
+
+            foreach ($queries as $sql) {
+                // Trim any whitespace.
+                $sql    = trim($sql);
+                $db -> setQuery($sql);
+                $result = $db -> execute();
+            }
+
+            /* Update created_by with current user */
+            $user   = JFactory::getUser();
+
+            $query  -> clear();
+            $query -> update('#__tz_portfolio_plus_content');
+            $query -> set('created_by = '.$user -> get('id'));
+            $db -> setQuery($query);
+            $db -> execute();
+
+            /* Update asset_id */
+            $query -> clear();
+            $query -> select('*');
+            $query -> from('#__tz_portfolio_plus_content');
+
+            $db -> setQuery($query);
+
+            if($items = $db -> loadObjectList()){
+                /* Get Category */
+                $query  -> clear();
+                $query -> select('*');
+                $query -> from('#__tz_portfolio_plus_categories');
+                $query -> where('extension = '.$db -> quote('com_tz_portfolio_plus'));
+                $query -> where('published = 1');
+                $query -> order('id ASC');
+
+                $db -> setQuery($query);
+                if($category = $db -> loadObject()){
+                    /* Update category with it is available */
+                    $query -> clear();
+                    $query -> update('#__tz_portfolio_plus_content_category_map');
+                    $query -> set('catid='.$category -> id);
+                    $db -> setQuery($query);
+                    $db -> execute();
+                }
+
+                \JTable::addIncludePath(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.DIRECTORY_SEPARATOR.'tables');
+                $table  = \JTable::getInstance('Content', 'TZ_Portfolio_PlusTable');
+
+                foreach($items as $item){
+                    $table -> load($item -> id);
+                    $table -> store();
+                }
+            }
+
+            /* Create menu if not exists */
+            $menu       = $app -> getMenu('site');
+            $menuItems  = $menu -> getItems('link', 'index.php?option=com_tz_portfolio_plus&view=portfolio');
+            if(!count($menuItems)){
+                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_menus/tables');
+                JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_menus/models');
+                $modelMenu  = JModelLegacy::getInstance('Item', 'MenusModel');
+
+                $component  = JComponentHelper::getComponent('com_tz_portfolio_plus');
+
+                $modelMenu -> save(array('title' => 'TZ Portfolio Plus',
+                    'component_id' => $component -> id,
+                    'menutype' => 'mainmenu',
+                    'link' => 'index.php?option=com_tz_portfolio_plus&view=portfolio',
+                    'type' => 'component',
+                    'level' => 1,
+                    'published' => 1,
+                    'parent_id' => 1,
+                    'client_id' => 0,
+                    'language' => '*'));
+            }
+
+            $message    = JText::_('COM_TZ_PORTFOLIO_PLUS_INSTALL_SAMPLE_DATA_SUCCESSFULL');
+        }
+
+        echo new JResponseJson('', $message, !$result);
+
+        $app -> setHeader('Content-Type', 'application/json', true);
+        $app -> close();
+    }
 }

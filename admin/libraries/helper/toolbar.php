@@ -37,7 +37,7 @@ class TZ_Portfolio_PlusToolbarHelper extends JToolbarHelper {
         $id     = $id?$id:'customhelp';
 
         $layout = new JLayoutFile('toolbar.customhelp');
-        $html   = $layout->render(array('doTask' => $doTask, 'text' => $text, 'icon' => $icon));
+        $html   = $layout->render(array('doTask' => $doTask, 'text' => $text, 'icon' => $icon, 'id' => $id));
         $bar -> appendButton('Custom', $html, $id);
     }
 
@@ -93,4 +93,8 @@ class TZ_Portfolio_PlusToolbarHelper extends JToolbarHelper {
             'index.php?option=com_tz_portfolio_plus&view=addons'
         );
     }
+
+//    public static function customScript($task = '', $icon = '', $iconOver = '', $alt = '', $listSelect = true)
+//    {
+//    }
 }

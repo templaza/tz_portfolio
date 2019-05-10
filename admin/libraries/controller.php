@@ -53,7 +53,7 @@ class TZ_Portfolio_PlusControllerLegacy  extends JControllerLegacy{
             $view -> document   = JFactory::getDocument();
             if($template   = TZ_Portfolio_PlusTemplate::getTemplate(true)){
                 if($template -> id){
-                    $tplparams  = $template -> params;
+//                    $tplparams  = $template -> params;
                     $path       = $view -> get('_path');
 
                     $bool_tpl   = false;
@@ -69,9 +69,9 @@ class TZ_Portfolio_PlusControllerLegacy  extends JControllerLegacy{
                         if(isset($template -> base_path) && $template -> base_path) {
                             $path['template'][] = $template->base_path . DIRECTORY_SEPARATOR . $name;
                         }
-                        if(isset($template -> home_path) && $template -> home_path) {
-                            $path['template'][] = $template->home_path . DIRECTORY_SEPARATOR . $name;
-                        }
+//                        if(isset($template -> home_path) && $template -> home_path) {
+//                            $path['template'][] = $template->home_path . DIRECTORY_SEPARATOR . $name;
+//                        }
                         $path['template'][] = $componentPath;
                         $view -> set('_path',$path);
                     }

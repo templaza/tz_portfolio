@@ -31,6 +31,32 @@ $lang -> load('com_installer');
 
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
+
+$this->document->addStyleSheet(TZ_Portfolio_PlusUri::base() . '/vendor/intro/introjs.min.css', array('version' => 'v=2.9.3'));
+$this->document->addScript(TZ_Portfolio_PlusUri::base() . '/vendor/intro/intro.min.js', array('version' => 'v=2.9.3'));
+$this->document->addScript(TZ_Portfolio_PlusUri::base() . '/js/introguide.min.js', array('version' => 'v=2.9.3'));
+
+if(JFactory::getLanguage() -> isRtl()) {
+    $this->document->addStyleSheet(TZ_Portfolio_PlusUri::base() . '/vendor/intro/introjs-rtl.min.css', array('version' => 'v=2.9.3'));
+}
+
+$this -> document -> addScriptDeclaration('
+(function($){
+    "use strict";
+    
+    $(document).ready(function(){
+        var styleSteps  = [
+                {
+                    /* Step 1: Install */
+                    element: $("#toolbar-new > button")[0],
+                    intro: "<div class=\\"head\\">Install style</div>You can install manual or online style.",
+                    position: "right"
+                }];
+        
+        tppIntroGuide("'.$this -> getName().'",styleSteps , '.(TZ_Portfolio_PlusHelper::introGuideSkipped($this -> getName())?1:0).', "'.JSession::getFormToken().'");
+    });
+})(jQuery);
+');
 ?>
 <style>
     .tz_portfolio_plus-templates .thumbnail > img{

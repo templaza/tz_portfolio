@@ -6,8 +6,61 @@
 
 // No direct access.
 defined('_JEXEC') or die;
+
 $xml	        = simplexml_load_file(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/tz_portfolio_plus.xml');
-$this -> xml    = $xml;
+
+$this->document->addStyleSheet(TZ_Portfolio_PlusUri::base() . '/vendor/intro/introjs.min.css', array('version' => 'v=2.9.3'));
+$this->document->addScript(TZ_Portfolio_PlusUri::base() . '/vendor/intro/intro.min.js', array('version' => 'v=2.9.3'));
+$this->document->addScript(TZ_Portfolio_PlusUri::base() . '/js/introguide.min.js', array('version' => 'v=2.9.3'));
+
+if(JFactory::getLanguage() -> isRtl()) {
+    $this->document->addStyleSheet(TZ_Portfolio_PlusUri::base() . '/vendor/intro/introjs-rtl.min.css', array('version' => 'v=2.9.3'));
+}
+
+$this -> document -> addScriptDeclaration('
+(function($){
+    "use strict";    
+    $(document).ready(function(){
+        tppIntroGuide("'.$this -> getName().'", [
+                {
+                    /* Step 1: Video tutorial */
+                    element: $("#toolbar-youtube")[0],
+                    intro: "<div class=\\"head\\">Video tutorials</div>You can see how to create each section one by one and configure options from video tutorials.",
+                    position: "left"
+                },
+                {
+                    /* Step 2: Document */
+                    element: $("#toolbar-help")[0],
+                    intro: "<div class=\\"head\\">Help</div>You can see how to create each section one by one and configure options from documentation.",
+                    position: "left"
+                },
+                {
+                    /* Step 3: Options */
+                    element: $("#toolbar-options")[0],
+                    intro: "<div class=\\"head\\">Options</div>Go to global configuration to configure basic options of TZ Portfolio+",
+                    position: "left"
+                },
+                {
+                    /* Step 4: Sidebar */
+                    element: $("#j-sidebar-container")[0],
+                    intro: "<div class=\\"head\\">Sidebar</div>The sidebar displays all items which TZ Portfolio+ manages its",
+                    position: "right"
+                },
+                {
+                    /* Step 5: Quick link */
+                    element: $(".tpQuicklink")[0],
+                    intro: "<div class=\\"head\\">Quick links</div>You can access to each item with quick link",
+                    position: "top"
+                },
+                {
+                    /* Step 6: Information */
+                    element: $(".tpInfo")[0],
+                    intro: "<div class=\\"head\\">Information</div>You can easily observe latest version of TZ Portfolio+ and main support channels",
+                    position: "left"
+                }], '.(TZ_Portfolio_PlusHelper::introGuideSkipped($this -> getName())?1:0).', "'.JSession::getFormToken().'");
+    });
+})(jQuery);
+');
 ?>
 <script type="text/javascript">
     "use strict";

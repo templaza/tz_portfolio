@@ -233,6 +233,14 @@
                type="text"
                default="360"
                label="COM_TZ_PORTFOLIO_PLUS_TZ_COLUMN_WIDTH"/>
+        <field type="radio"
+               name="remember_recent_article"
+               default="1"
+               class="switcher btn-group"
+               label="COM_TZ_PORTFOLIO_PLUS_REMEMBER_RECENT_ARTICLE">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
         <!--<field type="text" name="column_count"-->
         <!--default="4-1200,3-1024,2-768,1-480"-->
         <!--label="COM_TZ_PORTFOLIO_PLUS_COLUMN_COUNT_LABEL"/>-->

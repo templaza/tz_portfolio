@@ -47,6 +47,46 @@ if ($saveOrder)
         JHtml::_('sortablelist.sortable', 'addonList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
     }
 }
+
+$this->document->addStyleSheet(TZ_Portfolio_PlusUri::base() . '/vendor/intro/introjs.min.css', array('version' => 'v=2.9.3'));
+$this->document->addScript(TZ_Portfolio_PlusUri::base() . '/vendor/intro/intro.min.js', array('version' => 'v=2.9.3'));
+$this->document->addScript(TZ_Portfolio_PlusUri::base() . '/js/introguide.min.js', array('version' => 'v=2.9.3'));
+
+if(JFactory::getLanguage() -> isRtl()) {
+    $this->document->addStyleSheet(TZ_Portfolio_PlusUri::base() . '/vendor/intro/introjs-rtl.min.css', array('version' => 'v=2.9.3'));
+}
+
+$this -> document -> addScriptDeclaration('
+(function($){
+    "use strict";
+    
+    $(document).ready(function(){
+        var addonSteps  = [
+                {
+                    /* Step 1: Install */
+                    element: $("#toolbar-new > button")[0],
+                    intro: "<div class=\\"head\\">Install Addon</div>You can install manual or online add-on.",
+                    position: "right"
+                },
+                {
+                    /* Step 2: Config options of addon */
+                    element: $("#addonList .js-tpp-title")[0],
+                    intro: "<div class=\\"head\\">Config Add-On</div>Go to global configuration to configure basic options of add-on.",
+                    position: "top"
+                }];
+        if($("#addonList .js-tpp-data-manage").length){
+            addonSteps[2]   = {
+                /* Step 2: Config options of addon */
+                element: $("#addonList .js-tpp-data-manage")[0],
+                intro: "<div class=\\"head\\">Data Management</div>Go to the page management of add-on.",
+                position: "right"
+            }
+        }
+        
+        tppIntroGuide("'.$this -> getName().'",addonSteps , '.(TZ_Portfolio_PlusHelper::introGuideSkipped($this -> getName())?1:0).', "'.JSession::getFormToken().'");
+    });
+})(jQuery);
+');
 ?>
 <form action="index.php?option=com_tz_portfolio_plus&view=addons" method="post" name="adminForm"
       class="tz_portfolio_plus-addons"
@@ -194,7 +234,7 @@ if ($saveOrder)
                                 <?php endif; ?>
                                 <?php if($canEdit){?>
                                 <a href="index.php?option=com_tz_portfolio_plus&task=addon.edit&id=<?php
-                                echo $item -> id;?>"><?php
+                                echo $item -> id;?>" class="js-tpp-title"><?php
                                     echo $item->name;
                                 ?></a>
                                 <?php }else{
@@ -205,7 +245,7 @@ if ($saveOrder)
                                 if($item -> data_manager){
                                 ?>
                                     <a href="<?php echo JRoute::_(TZ_Portfolio_PlusHelperAddon_Datas::getRootURL($item -> id));?>"
-                                       class="btn btn-secondary btn-small btn-sm hasTooltip"
+                                       class="btn btn-secondary btn-small btn-sm hasTooltip js-tpp-data-manage"
                                        title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ADDON_DATA_MANAGER')?>">
                                         <span class="icon-book"></span><span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ADDON_DATA_MANAGER')?></span>
                                     </a>

@@ -164,4 +164,38 @@ class TZ_Portfolio_PlusModelDashboard extends TZ_Portfolio_PlusModelArticles
         //echo nl2br(str_replace('#__','jos_',(string)$query));
         return $query;
     }
+
+    public function getFeedBlog(){
+
+        $options = array(
+            'defaultgroup'	=> 'com_tz_portfolio_plus',
+            'storage' 		=> 'file',
+            'caching'		=> true,
+            'lifetime'      => 12 * 60 * 60,
+            'cachebase'		=> JPATH_ADMINISTRATOR.'/cache'
+        );
+        $cache = JCache::getInstance('', $options);
+
+        if($cacheData = $cache -> get('feedblog')){
+            return $cacheData;
+        }
+
+        $file   = COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/tz_portfolio_plus.xml';
+
+        if(!JFile::exists($file)){
+            return false;
+        }
+
+        $xml    = simplexml_load_file(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/tz_portfolio_plus.xml');
+
+        if($xml->feedBlogUrl){
+            $rssurl = $xml -> feedBlogUrl;
+            $rss    = new JFeedFactory;
+            if($feeds = $rss->getFeed($rssurl)) {
+                $cache -> store($feeds, 'feedblog');
+                return $feeds;
+            }
+        }
+        return false;
+    }
 }

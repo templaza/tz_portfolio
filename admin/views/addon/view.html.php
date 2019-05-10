@@ -116,5 +116,9 @@ class TZ_Portfolio_PlusViewAddon extends JViewLegacy
 
         TZ_Portfolio_PlusToolbarHelper::customHelp('https://www.youtube.com/channel/UCrLN8LMXTyTahwDKzQ-YOqg/videos'
             ,'COM_TZ_PORTFOLIO_PLUS_VIDEO_TUTORIALS', 'youtube', 'youtube');
+
+        if($this -> getLayout() == 'upload') {
+            JToolbarHelper::link('javascript:', JText::_('COM_TZ_PORTFOLIO_PLUS_INTRO_GUIDE'), 'support');
+        }
     }
 }

@@ -20,6 +20,8 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Filesystem\Path;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 class TZ_Portfolio_PlusHelper
@@ -585,5 +587,26 @@ class TZ_Portfolio_PlusHelper
                 $update -> set('downloadurl', $downloadUrl);
             }
         }
+    }
+
+    public static function introGuideSkipped($view){
+	    if(!$view){
+	        return false;
+        }
+
+        $introGuide = new stdClass();
+        $filePath   = Path::clean(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/cache'.'/introguide.json');
+
+	    if(!File::exists($filePath)){
+	        return false;
+        }
+
+        $introGuide = file_get_contents($filePath);
+        $introGuide = json_decode($introGuide);
+        if($introGuide && isset($introGuide -> $view) && $introGuide -> $view) {
+            return true;
+        }
+
+        return false;
     }
 }
