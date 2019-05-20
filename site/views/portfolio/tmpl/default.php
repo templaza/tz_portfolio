@@ -74,6 +74,8 @@ jQuery(document).ready(function(){
                     <?php if($params -> get('tz_filter_type','tags') == 'categories'):?>
                         <?php echo $this -> loadTemplate('filter_categories');?>
                     <?php endif;?>
+
+                    <?php echo $this -> filterSubCategory?implode("\n", $this -> filterSubCategory):''; ?>
                 </div>
             </div>
         <?php endif;?>

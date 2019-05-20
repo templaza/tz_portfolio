@@ -63,6 +63,7 @@ if($this -> items):
      data-date="<?php echo strtotime($item -> created); ?>"
      data-title="<?php echo $this->escape($item -> title); ?>"
      data-hits="<?php echo (int) $item -> hits; ?>"
+     data-portfolio-item-id="<?php echo $item -> id; ?>"
      class="element <?php echo $class.$tzItemClass.$tzItemFeatureClass;?>"
      itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 

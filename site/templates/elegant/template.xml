@@ -2,7 +2,7 @@
 <!DOCTYPE install PUBLIC "-//Joomla! 2.5//DTD template 1.0//EN" "http://www.joomla.org/xml/dtd/2.5/template-install.dtd">
 <extension version="3.1" type="tz_portfolio_plus-template" method="upgrade">
     <name>elegant</name>
-    <version>1.9</version>
+    <version>2.0</version>
     <creationDate>August 17th 2017</creationDate>
     <author>Sonny</author>
     <authorEmail>sonlv@templaza.com</authorEmail>
@@ -40,6 +40,12 @@
                        default="l, d F Y"
                        label="COM_TZ_PORTFOLIO_PLUS_DATE_FORMAT"
                        description="COM_TZ_PORTFOLIO_PLUS_DATE_FORMAT_DESC"/>
+                <field type="list" name="filter_style"
+                       label="TP_STYLE_ELEGANT_FILTER_STYLE"
+                       description="TP_STYLE_ELEGANT_FILTER_STYLE_DESC">
+                    <option value="">JDEFAULT</option>
+                    <option value="dropdown">COM_TZ_PORTFOLIO_PLUS_DROP_DOWN_SELECTION</option>
+                </field>
             </fieldset>
         </fields>
     </config>

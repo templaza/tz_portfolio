@@ -20,12 +20,51 @@
 //no direct access
 defined('_JEXEC') or die();
 ?>
-<?php if($this -> itemCategories):?>
-    <?php foreach($this -> itemCategories as $item):?>
-        <a href="#<?php echo str_replace(' ','-',$item -> title)?>"
-           class="btn btn-default btn-secondary btn-sm"
-           data-option-value=".<?php echo $item -> alias.'_'.$item -> id;?>">
-            <?php echo $item -> title;?>
-        </a>
-    <?php endforeach;?>
-<?php endif;?>
+
+<?php
+$params = $this -> params;
+if(!$params -> get('show_all_filter', 0) || $params -> get('tz_portfolio_plus_layout', 'ajaxButton') == 'default'){
+    if($this -> itemCategories){ ?>
+        <?php foreach($this -> itemCategories as $item):?>
+            <a href="#<?php echo str_replace(' ','-',$item -> title)?>"
+               class="btn btn-default btn-secondary btn-sm"
+               data-option-value=".<?php echo $item -> alias.'_'.$item -> id;?>">
+                <?php echo $item -> title;?>
+            </a>
+        <?php endforeach;?>
+    <?php }
+}else{ ?>
+    <?php
+    $categories = array();
+    if(isset($this -> parentCategory -> id) && isset($this -> categories[$this -> parentCategory -> id])) {
+        $categories = $this->categories[$this->parentCategory->id];
+    }
+    if(count($categories) > 0){
+        foreach($categories as $item){
+            if (count($item->getChildren()) > 0 || $item -> numitems){
+            ?>
+            <a href="#<?php echo str_replace(' ','-',$item -> title)?>"
+               class="btn btn-default btn-secondary btn-sm"
+               data-term="<?php echo $item -> id; ?>"
+               data-option-value=".<?php echo $item -> alias.'_'.$item -> id;?>">
+                <?php echo $item -> title;?>
+            </a>
+            <?php if (count($item->getChildren()) > 0){
+                $this->categories[$item->id] = $item->getChildren();
+                $this->parentCategory = $item;
+                ob_start();
+                ?>
+                <div class="sub-category" data-sub-category-of="<?php echo $item -> id; ?>">
+                    <a href="javascript:" data-term="<?php echo $item -> id;
+                    ?>" class="btn btn-default btn-secondary btn-sm js-subcategory-back-href"><?php
+                        echo $item -> title;?>:</a>
+                    <?php echo $this -> loadTemplate('filter_categories');?>
+                </div>
+                <?php
+                $this -> filterSubCategory[]    = ob_get_contents();
+                ob_end_clean();
+            } ?>
+        <?php }
+        }
+    }
+} ?>

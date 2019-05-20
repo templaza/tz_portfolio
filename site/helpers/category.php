@@ -73,6 +73,12 @@ class TZ_Portfolio_PlusCategories extends JCategories
 			$query->where('c.published = 1');
 		}
 
+//        // Filter by ids
+//        if (isset($this -> _options['filter.id']) && ($filterIds = $this -> _options['filter.id'])
+//            && is_array($filterIds) && count($filterIds)){
+//            $query -> where('c.id IN('.implode(',', $filterIds).')');
+//        }
+
 		$query->order('c.lft');
 
 		// Note: s for selected id
@@ -125,6 +131,12 @@ class TZ_Portfolio_PlusCategories extends JCategories
 
 		if (count($results))
 		{
+		    $filterIds  = array();
+		    if(isset($this -> _options['filter.id'])){
+                $filterIds = $this -> _options['filter.id'];
+                $filterIds  = array_filter($filterIds);
+            }
+
 			// Foreach categories
 			foreach ($results as $result)
 			{
@@ -133,6 +145,11 @@ class TZ_Portfolio_PlusCategories extends JCategories
 				{
 					$result->id = 'root';
 				}
+
+                // Filter by ids
+                if ($result->id != 'root' && count($filterIds) && !in_array($result -> id, $filterIds)){
+                    continue;
+                }
 
 				// Deal with parent_id
 				if ($result->parent_id == 1)

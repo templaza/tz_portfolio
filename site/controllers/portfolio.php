@@ -33,13 +33,26 @@ class TZ_Portfolio_PlusControllerPortfolio extends TZ_Portfolio_PlusControllerLe
 
     function ajax(){
 
+        $app        = JFactory::getApplication();
         $document   = JFactory::getDocument();
         $viewType   = $document->getType();
         $vName      = $this->input->get('view', $this->default_view);
         $viewLayout = $this->input->get('layout', 'default', 'string');
         $sublayout  = 'item';
 
-        $input		= JFactory::getApplication() -> input;
+        $data['Itemid']     = $this->input -> getInt('Itemid');
+        $data['page']       = $this->input -> getInt('page');
+        $data['layout']     = $this->input -> getString('layout');
+        $data['char']       = $this->input -> getString('char');
+        $data['id']         = $this->input -> getInt('id');
+        $data['uid']        = $this->input -> getInt('uid');
+        $data['tid']        = $this->input -> getInt('tid');
+        $data['tagAlias']   = $this->input -> getString('tagAlias');
+        $data['shownIds']   = $this->input -> get('shownIds', array(), 'array');
+        $data['shownIds']   = array_unique($data['shownIds']);
+        $data['shownIds']   = array_filter($data['shownIds']);
+
+        $input		= $app -> input;
         $Itemid     = $input -> getInt('Itemid');
 
         $params = JComponentHelper::getParams('com_tz_portfolio_plus');
@@ -56,7 +69,7 @@ class TZ_Portfolio_PlusControllerPortfolio extends TZ_Portfolio_PlusControllerLe
 
             // Get/Create the model
             if ($model = $this->getModel($vName)) {
-                if (!$model->ajax()) {
+                if (!$model->ajax($data)) {
                     var_dump($model -> getError());
                     die();
                 }
@@ -83,7 +96,8 @@ class TZ_Portfolio_PlusControllerPortfolio extends TZ_Portfolio_PlusControllerLe
                 if($params -> get('tz_filter_type', 'categories') == 'tags'){
                     $filter = $view -> loadTemplate('filter_tags');
                 }
-                if($params -> get('tz_filter_type', 'categories') == 'categories'){
+                if(($params -> get('tz_filter_type', 'categories') == 'categories')
+                    && !(int) $params -> get('show_all_filter', 0)){
                     $filter = $view -> loadTemplate('filter_categories');
                 }
                 if($filter) {
@@ -93,14 +107,12 @@ class TZ_Portfolio_PlusControllerPortfolio extends TZ_Portfolio_PlusControllerLe
             }
 
             $html -> articles   = $content;
+//            $html -> countItems = $model -> getTotal();
+
+            $app -> setHeader('Content-Type', 'application/json', true);
+
             echo json_encode($html);
         }
-        die();
+        $app -> close();
     }
-
-//    public function ajaxComments(){
-//        $model  = $this -> getModel();
-//        echo $model -> ajaxComments();
-//        die();
-//    }
 }

@@ -66,9 +66,6 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
             $limit  = (int) $params -> get('tz_article_limit',10);
         }
 
-        $db		= $this->getDbo();
-        $query	= $db->getQuery(true);
-
         if ((!$user->authorise('core.edit.state', 'com_tz_portfolio_plus')) &&  (!$user->authorise('core.edit', 'com_tz_portfolio_plus'))){
             // limit to published for people who can't edit or edit.state.
             $this->setState('filter.published', 1);
@@ -86,6 +83,7 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
         $this -> setState('catid',$params -> get('catid'));
         $this -> setState('filter.char',$app -> input -> getString('char',null));
         $this -> setState('filter.tagId', $app -> input -> getInt('tid'));
+        $this -> setState('filter.tagAlias', $app -> input -> getString('tagAlias'));
         $this -> setState('filter.userId', $app -> input -> getInt('uid'));
         $this -> setState('filter.featured',null);
         $this -> setState('filter.year',null);
@@ -94,6 +92,8 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
 
         $this -> setState('filter.searchword', $app->input->getString('searchword'));
         $this -> setState('filter.fields', $app -> input -> get('fields', array(), 'array'));
+
+        $this -> setState('filter.shownIds', $app -> input -> get('shownIds', array(), 'array'));
 
         $orderby    = '';
         $secondary  = TZ_Portfolio_PlusHelperQuery::orderbySecondary($params -> get('orderby_sec', 'rdate'));
@@ -132,9 +132,16 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
         $query -> select('t.title AS tagName');
         $query -> join('LEFT',$db -> quoteName('#__tz_portfolio_plus_tags').' AS t ON t.id=x.tagsid');
 
-        // Filter by tag
+        // Filter by tag id
         if($tagId = $this -> getState('filter.tagId')) {
             $query->where('t.id =' .$tagId);
+        }
+
+        // Filter by tag alias
+        if($tagAlias = $this -> getState('filter.tagAlias')) {
+//            $query -> select('t2.title AS tagName');
+//            $query -> join('INNER',$db -> quoteName('#__tz_portfolio_plus_tags').' AS t2 ON t2.id=x.tagsid');
+            $query->where('t.alias =' .$db -> quote($tagAlias));
         }
 
         $query -> select(' u.name AS author');
@@ -211,6 +218,12 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
         if($char = $this -> getState('filter.char')){
             $query -> where('c.title LIKE '.$db -> quote(urldecode(mb_strtolower($char)).'%'));
             $query -> where('ASCII(SUBSTR(LOWER(c.title),1,1)) = ASCII('.$db -> quote(mb_strtolower($char)).')');
+        }
+
+        // Filter by shownids
+        $shownIds = $this -> getState('filter.shownIds', array());
+        if(count($shownIds)){
+            $query -> where('c.id NOT IN( '.implode(',', $shownIds).')');
         }
 
         // Filter by word from filter module
@@ -518,21 +531,20 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
         return false;
     }
 
-    public function ajax(){
+    public function ajax($data = null){
 
         $list   = null;
-        $data   = null;
 
         $params = JComponentHelper::getParams('com_tz_portfolio_plus');
 
 		$input		= JFactory::getApplication() -> input;
-        $Itemid     = $input -> getInt('Itemid');
-        $page       = $input -> getInt('page');
-        $layout     = $input -> getString('layout');
-        $char       = $input -> getString('char');
-        $catid      = $input -> getInt('id');
-        $uid        = $input -> getInt('uid');
-        $tagid      = $input -> getInt('tid');
+        $Itemid     = $data['Itemid'];
+        $page       = $data['page'];
+        $layout     = $data['layout'];
+        $char       = $data['char'];
+        $catid      = $data['id'];
+        $uid        = $data['uid'];
+        $tagid      = $data['tid'];
 
         $tags       = stripslashes($input -> getString('tags'));
         $tags       = json_decode($tags);
@@ -566,6 +578,8 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
         $this -> setState('filter.category_id',$catid);
         $this -> setState('filter.userId',$uid);
         $this -> setState('filter.tagId',$tagid);
+        $this -> setState('filter.tagAlias',$data['tagAlias']);
+        $this -> setState('filter.shownIds',$data['shownIds']);
 
         $orderby    = '';
         $secondary  = TZ_Portfolio_PlusHelperQuery::orderbySecondary($params -> get('orderby_sec', 'rdate'));
@@ -581,9 +595,9 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
 //            die();
 //        }
 
-        if($offset >= $this -> getTotal()){
-            return false;
-        }
+//        if(!count($data['shownIds']) && $offset >= $this -> getTotal()){
+//            return false;
+//        }
 
         return true;
     }
@@ -647,23 +661,19 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
                 break;
         }
 
-        if($catid = $params -> get('catid')){
-            $catid  = array_unique($catid);
-            $catid  = array_filter($catid);
+        $catid = $params -> get('catid', array());
+        $catid  = array_unique($catid);
+        $catid  = array_filter($catid);
 
-            $options    = array('second_by_article' => true, 'orderby' => $orderby);
-            if(!$params -> get('filter_second_category', 1)){
-                $options['second_by_article']   = false;
-            }
-
-            if(count($catid) && $categories = TZ_Portfolio_PlusFrontHelperCategories::getCategoriesById($catid, $options)){
-                return $categories;
-            }else{
-                return TZ_Portfolio_PlusFrontHelperCategories::getAllCategories($options);
-            }
-
+        $options    = array('second_by_article' => true, 'orderby' => $orderby);
+        if(!$params -> get('filter_second_category', 1)){
+            $options['second_by_article']   = false;
         }
-        return false;
+
+        if(count($catid) && $categories = TZ_Portfolio_PlusFrontHelperCategories::getCategoriesById($catid, $options)){
+            return $categories;
+        }
+        return TZ_Portfolio_PlusFrontHelperCategories::getAllCategories($options);
     }
 
     public function getTagsByArticle($filterAlias = null){

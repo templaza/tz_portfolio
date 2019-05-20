@@ -42,12 +42,17 @@ class TZ_Portfolio_PlusViewPortfolio extends JViewLegacy
     protected $availLetter      = null;
     protected $itemCategories   = null;
 
+    protected $categories       = array();
+    protected $parentCategory;
+    protected $filterSubCategory;
+
     function __construct($config = array()){
         $this -> item           = new stdClass();
         parent::__construct($config);
     }
 
     function display($tpl=null){
+
         $app        = JFactory::getApplication('site');
         $input      = $app -> input;
         $config     = JFactory::getConfig();
@@ -72,6 +77,17 @@ class TZ_Portfolio_PlusViewPortfolio extends JViewLegacy
 
         $this -> state  = $state;
         $params         = $state -> get('params');
+
+        $categories	= JCategories::getInstance('TZ_Portfolio_Plus', array(
+            'countItems'    => true,
+            'filter.id'     => $params -> get('catid', array())));
+        $parent    = $categories->get('root');
+
+        if($parent) {
+            $this->categories = array($parent->id => $parent->getChildren());
+            $this->parentCategory = $parent;
+            $this->maxLevelcat = $parent;
+        }
 
         // Get filter user information
         if(($authorId = $state -> get('filter.userId')) &&
@@ -145,8 +161,11 @@ class TZ_Portfolio_PlusViewPortfolio extends JViewLegacy
         $availableItem  ?   $doc -> addScriptDeclaration('var tzItemAvailable = 1;') : $doc -> addScriptDeclaration('var tzItemAvailable = 0;');
 
 	    $doc -> addScriptDeclaration('
-			var tzDisplayNoMorePageLoad     =   '.$params->get('tz_show_no_more_page', 0).';
-			var tzNoMorePageLoadText        =   "'.$params->get('tz_no_more_page_text', 'No more items to load').'";
+            TZ_Portfolio_Plus.infiniteScroll    = Object.assign(TZ_Portfolio_Plus.infiniteScroll, {
+                displayNoMorePageLoad: '.$params->get('tz_show_no_more_page', 0).',
+			    noMorePageLoadText: "'.$params->get('tz_no_more_page_text', 'No more items to load').'",
+			    countItems: '.$this -> get('Total').'
+            });
 		');
 
         $this -> document -> addStyleSheet('components/com_tz_portfolio_plus/css/tzportfolioplus.min.css',
@@ -156,7 +175,7 @@ class TZ_Portfolio_PlusViewPortfolio extends JViewLegacy
 
         $list   = $this -> get('Items');
         
-        if($params -> get('show_all_filter',0)){
+        if($params -> get('show_all_filter',0) && $params -> get('tz_portfolio_plus_layout', 'ajaxButton') != 'default'){
             if(!$this -> itemTags) {
                 $this->itemTags = $this->get('AllTags');
             }

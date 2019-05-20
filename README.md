@@ -10,6 +10,14 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+20/05/2019 - 2.2.5
+
+	- Improving Filter selection with All category and sub-category.
+	- Load ajax only load article of selected category or selected tag.
+	- Update style Elegant v2.0:
+		+ Improving Filter selection with All category and sub-category.
+		+ Added option "Filter Style" - style for filter of portfolio view. It has 2 values: Default, Drop-down selection.
+
 10/05/2019 - 2.2.4
 
 	- Fix issue with feed data loading (latest blog feed).

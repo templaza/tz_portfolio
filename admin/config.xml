@@ -153,10 +153,10 @@
                label="COM_TZ_PORTFOLIO_PLUS_SHOW_FILTER">
             <option value="0">JHIDE</option>
             <option value="1">JSHOW</option>
-        </field>
+        </field>        
         <field type="radio" name="show_all_filter"
                class="switcher btn-group" default="0"
-               showon="tz_show_filter:1"
+               showon="tz_show_filter:1[AND]tz_portfolio_plus_layout!:default"
                label="COM_TZ_PORTFOLIO_PLUS_SHOW_ALL_FILTER"
                description="COM_TZ_PORTFOLIO_PLUS_SHOW_ALL_FILTER_DESC">
             <option value="0">JNO</option>
@@ -171,14 +171,14 @@
         </field>
         <field type="radio" name="filter_second_category"
                default="1" class="switcher btn-group"
-               showon="tz_show_filter:1[AND]tz_filter_type:categories"
+               showon="tz_show_filter:1[AND]show_all_filter:0[AND]tz_filter_type:categories[OR]tz_portfolio_plus_layout:default"
                label="COM_TZ_PORTFOLIO_PLUS_FILTER_SECONDARY_CATEGORY_LABEL"
                description="COM_TZ_PORTFOLIO_PLUS_FILTER_SECONDARY_CATEGORY_DESC">
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
         <field name="filter_tags_categories_order" type="list"
-               showon="tz_show_filter:1"
+               showon="tz_show_filter:1[AND]show_all_filter:0"
                label="COM_TZ_PORTFOLIO_PLUS_TAGS_CATEGORIES_ORDER"
                description="COM_TZ_PORTFOLIO_PLUS_TAGS_CATEGORIES_ORDER_DESC">
             <option value="auto">COM_TZ_PORTFOLIO_PLUS_AUTO</option>
@@ -195,6 +195,7 @@
         </field>
         <field type="list" name="sort_fields"
                multiple="true"
+               showon="show_sort:1"
                label="COM_TZ_PORTFOLIO_PLUS_SORT_FIELDS_FILTER">
             <option value="date">JDATE</option>
             <option value="hits">JGLOBAL_HITS</option>
