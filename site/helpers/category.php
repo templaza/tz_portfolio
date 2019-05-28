@@ -76,10 +76,11 @@ class TZ_Portfolio_PlusCategories extends JCategories
 //        // Filter by ids
 //        if (isset($this -> _options['filter.id']) && ($filterIds = $this -> _options['filter.id'])
 //            && is_array($filterIds) && count($filterIds)){
-//            $query -> where('c.id IN('.implode(',', $filterIds).')');
+////            $query -> where('c.id IN('.implode(',', $filterIds).')');
 //        }
 
-		$query->order('c.lft');
+		$query->order('c.lft ');
+//        $query->order('c.title ASC');
 
 		// Note: s for selected id
 		if ($id != 'root')
@@ -138,7 +139,7 @@ class TZ_Portfolio_PlusCategories extends JCategories
             }
 
 			// Foreach categories
-			foreach ($results as $result)
+			foreach ($results as $i => $result)
 			{
 				// Deal with root category
 				if ($result->id == 1)
@@ -147,8 +148,16 @@ class TZ_Portfolio_PlusCategories extends JCategories
 				}
 
                 // Filter by ids
-                if ($result->id != 'root' && count($filterIds) && !in_array($result -> id, $filterIds)){
-                    continue;
+                if ($result->id != 'root' && count($filterIds)){
+                    if(!in_array($result -> id, $filterIds)) {
+                        continue;
+                    }else{
+                        // Set parent_id is 1(root) if parent_id not in filter ids
+                        if(!in_array($result -> parent_id, $filterIds)){
+                            $result -> parent_id    = 1;
+                        }
+
+                    }
                 }
 
 				// Deal with parent_id
@@ -166,6 +175,7 @@ class TZ_Portfolio_PlusCategories extends JCategories
 					// If this is not root and if the current node's parent is in the list or the current node parent is 0
 					if ($result->id != 'root' && (isset($this->_nodes[$result->parent_id]) || $result->parent_id == 1))
 					{
+//					    var_dump($result -> id);
 						// Compute relationship between node and its parent - set the parent in the _nodes field
 						$this->_nodes[$result->id]->setParent($this->_nodes[$result->parent_id]);
 					}
@@ -191,8 +201,14 @@ class TZ_Portfolio_PlusCategories extends JCategories
 
 					if ($result->id != 'root' && (isset($this->_nodes[$result->parent_id]) || $result->parent_id))
 					{
-						// Compute relationship between node and its parent
-						$this->_nodes[$result->id]->setParent($this->_nodes[$result->parent_id]);
+//                        if (count($filterIds) && !in_array($result->parent_id, $filterIds))
+//                        {
+//                            $this->_nodes[$result->id]->setParent($this->_nodes['root']);
+//                        }else {
+
+                            // Compute relationship between node and its parent
+                            $this->_nodes[$result->id]->setParent($this->_nodes[$result->parent_id]);
+//                        }
 					}
 
 					// If the node's parent id is not in the _nodes list and the node is not root (doesn't have parent_id == 0),
@@ -215,5 +231,15 @@ class TZ_Portfolio_PlusCategories extends JCategories
 		{
 			$this->_nodes[$id] = null;
 		}
+
+//		if($result -> id == 6){
+//		    var_dump($result->parent_id);
+//		    var_dump($this->_nodes[$result->parent_id]);
+////		    var_dump($this->_nodes[$id]);
+//        }
 	}
+
+	public function getFilter(){
+//	    var_dump($this->_nodes); die('getFilter');
+    }
 }

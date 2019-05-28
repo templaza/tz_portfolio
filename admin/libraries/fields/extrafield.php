@@ -807,7 +807,7 @@ class TZ_Portfolio_PlusExtraField{
             }
             else
             {
-                return $this -> attributes[$type]->toString('ini');
+                return ' '.$this -> attributes[$type]->toString('ini');
             }
         }
     }
@@ -1106,14 +1106,11 @@ class TZ_Portfolio_PlusExtraField{
             return '';
         }
 
-        $storeId = md5(__METHOD__ . "::" . $this->id);
-        if (!isset(self::$cache[$storeId]) || $forceModifyQuery)
+        if ($search || $forceModifyQuery)
         {
             $query -> join('LEFT', '#__tz_portfolio_plus_field_content_map AS field_values_'.$this -> id
                 . ' ON (c.id = field_values_' . $this -> id . '.contentid AND field_values_' . $this -> id
                 . '.fieldsid = ' . $this -> id . ')');
-
-            self::$cache[$storeId] = true;
         }
 
         $db     = TZ_Portfolio_PlusDatabase::getDbo();

@@ -16,7 +16,7 @@
     <facebookUrl>https://www.facebook.com/tzportfolio</facebookUrl>
     <facebookGroupUrl>https://www.facebook.com/groups/tzportfolio</facebookGroupUrl>
     <feedBlogUrl>http://feeds.feedburner.com/tzportfolio/blog</feedBlogUrl>
-	<version>2.2.5</version>
+	<version>2.2.6</version>
     
     <scriptfile>script.php</scriptfile>
 

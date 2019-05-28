@@ -51,6 +51,7 @@ class TZ_Portfolio_PlusControllerPortfolio extends TZ_Portfolio_PlusControllerLe
         $data['shownIds']   = $this->input -> get('shownIds', array(), 'array');
         $data['shownIds']   = array_unique($data['shownIds']);
         $data['shownIds']   = array_filter($data['shownIds']);
+        $data['fields']     = $this->input -> get('fields', array(), 'array');
 
         $input		= $app -> input;
         $Itemid     = $input -> getInt('Itemid');

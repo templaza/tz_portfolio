@@ -10,6 +10,12 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+28/05/2019 - 2.2.6
+
+	- Fix error load ajax when filter extrafields.
+	- Fix error with multi-level categories filtering.
+	- Fix error of core js (filter click) with module TZ Portfolio Plus Portfolio.
+
 20/05/2019 - 2.2.5
 
 	- Improving Filter selection with All category and sub-category.

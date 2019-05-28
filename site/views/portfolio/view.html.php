@@ -78,15 +78,18 @@ class TZ_Portfolio_PlusViewPortfolio extends JViewLegacy
         $this -> state  = $state;
         $params         = $state -> get('params');
 
-        $categories	= JCategories::getInstance('TZ_Portfolio_Plus', array(
-            'countItems'    => true,
-            'filter.id'     => $params -> get('catid', array())));
-        $parent    = $categories->get('root');
+        if($params -> get('tz_show_filter', 1) && $params -> get('show_all_filter', 1)
+            && $params -> get('tz_filter_type', 'categories') == 'categories'){
+            $categories	= JCategories::getInstance('TZ_Portfolio_Plus', array(
+                'countItems'    => true,
+                'filter.id'     => $params -> get('catid', array())));
+            $parent    = $categories->get('root');
 
-        if($parent) {
-            $this->categories = array($parent->id => $parent->getChildren());
-            $this->parentCategory = $parent;
-            $this->maxLevelcat = $parent;
+            if($parent) {
+                $this->categories = array($parent->id => $parent->getChildren());
+                $this->parentCategory = $parent;
+                $this->maxLevelcat = $parent;
+            }
         }
 
         // Get filter user information
@@ -160,11 +163,13 @@ class TZ_Portfolio_PlusViewPortfolio extends JViewLegacy
         $availableItem  =   $this->get('AvailableItem');
         $availableItem  ?   $doc -> addScriptDeclaration('var tzItemAvailable = 1;') : $doc -> addScriptDeclaration('var tzItemAvailable = 0;');
 
+        $total  = $this -> get('Total');
+
 	    $doc -> addScriptDeclaration('
             TZ_Portfolio_Plus.infiniteScroll    = Object.assign(TZ_Portfolio_Plus.infiniteScroll, {
                 displayNoMorePageLoad: '.$params->get('tz_show_no_more_page', 0).',
 			    noMorePageLoadText: "'.$params->get('tz_no_more_page_text', 'No more items to load').'",
-			    countItems: '.$this -> get('Total').'
+			    countItems: '.($total?$total:0).'
             });
 		');
 

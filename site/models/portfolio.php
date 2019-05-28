@@ -580,6 +580,7 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
         $this -> setState('filter.tagId',$tagid);
         $this -> setState('filter.tagAlias',$data['tagAlias']);
         $this -> setState('filter.shownIds',$data['shownIds']);
+        $this -> setState('filter.fields',$data['fields']);
 
         $orderby    = '';
         $secondary  = TZ_Portfolio_PlusHelperQuery::orderbySecondary($params -> get('orderby_sec', 'rdate'));
