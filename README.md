@@ -10,6 +10,13 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+11/06/2019 - 2.2.7
+
+	- Fix error cache of portfolio view with filter fields.
+	- Fix error ajax load by a category.
+	- Both Free and Pro version are included in 1 package.
+	- Added installation wizard feature.
+
 28/05/2019 - 2.2.6
 
 	- Fix error load ajax when filter extrafields.
