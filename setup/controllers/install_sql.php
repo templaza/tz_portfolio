@@ -93,12 +93,15 @@ class TZ_Portfolio_PlusSetupControllerInstall_Sql extends TZ_Portfolio_PlusSetup
             $total += 1;
         }
 
+        // Alter tables
+        $this -> alterTable();
+
+        $this -> createSectionPermissions();
+
         // lets fix the created_by id
         $this->fixArticlesAuthorId();
 
         $this -> addDefaultStylePreset();
-
-        $this -> createSectionPermissions();
 
         $this->setInfo(JText::sprintf('COM_EASYBLOG_INSTALLATION_SQL_EXECUTED_SUCCESS', $total), true);
         return $this->output();
@@ -151,7 +154,7 @@ class TZ_Portfolio_PlusSetupControllerInstall_Sql extends TZ_Portfolio_PlusSetup
             $asset = $db->loadObject();
         }
 
-        $assetTbl   = JTable::getInstance('Asset');
+        $assetTbl       = JTable::getInstance('Asset');
 
         /* Get all categories with created_user_id is 0 */
         $query -> clear();

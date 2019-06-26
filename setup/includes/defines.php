@@ -70,7 +70,6 @@ if(!defined('COM_TZ_PORTFOLIO_PLUS_SETUP_HASH')) {
     define('COM_TZ_PORTFOLIO_PLUS_SETUP_HASH', md5($version));
 }
 if(!defined('COM_TZ_PORTFOLIO_PLUS_SETUP_PACKAGE')) {
-    $version    = '2.2.7';
     define('COM_TZ_PORTFOLIO_PLUS_SETUP_PACKAGE', 'com_tz_portfolio_plus_v'.$version.'_component.zip');
 }
 

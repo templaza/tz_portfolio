@@ -10,6 +10,14 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+26/06/2019 - 2.2.8
+
+	- Fix error cache of portfolio view with filter fields of version 2.2.7.
+	- Fix language of installation wizard.
+	- Fix error don't display image of v2.2.7
+	- Fix error 1054 Unknown column 'asset_id' in 'field list' when update old version to v2.2.7
+	- Added some languages of installation wizard to language file.
+
 11/06/2019 - 2.2.7
 
 	- Fix error cache of portfolio view with filter fields.

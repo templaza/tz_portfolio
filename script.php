@@ -150,24 +150,28 @@ class com_tz_portfolio_plusInstallerScript{
                 border-color: #7fc682;
             }
         </style>
+        <?php
+        $lang = JFactory::getLanguage();
+        $lang -> load('com_tz_portfolio_plus', JPATH_ADMINISTRATOR);
+        ?>
         <div class="tpp-installation-status">
             <div class="box-head">
                 <div class="logo">
-                    <img src="<?php echo JUri::root().'/administrator/components/com_tz_portfolio_plus/setup/assets/images/logo.png';?>" alt="TZ Portfolio+"/>
+                    <img src="<?php echo JUri::root().'/administrator/components/com_tz_portfolio_plus/setup/assets/images/logo.png';?>" alt="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS'); ?>"/>
                 </div>
-                <h2 class="title">TZ Portfolio+<small>Warm up your creative power.</small></h2>
+                <h2 class="title"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS'); ?><small><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_DESCRIPTION'); ?></small></h2>
             </div>
             <div class="box-content">
-                <h3>Thanks You for using TZ Portfolio+</h3>
-                <p>Thank you for using TZ Portfolio+, the most complete portfolio manager system! Before you are able to access TZ Portfolio+, you will need to proceed with the Initial Setup.</p>
-                <a href="<?php echo JUri::root();?>administrator/index.php?option=com_tz_portfolio_plus" class="btn btn-success">Continue with installation</a>
+                <h3><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_THANKS_YOU_FOR_USING'); ?></h3>
+                <p><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_THANKS_YOU_FOR_USING_DESC'); ?></p>
+                <a href="<?php echo JUri::root();?>administrator/index.php?option=com_tz_portfolio_plus" class="btn btn-success"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_CONTINUE_WITH_INSTALLATION'); ?></a>
             </div>
         </div>
     <?php
     }
     function uninstallationResult($status){
         $lang   = JFactory::getLanguage();
-        $lang -> load('com_tz_portfolio_plus');
+        $lang -> load('com_tz_portfolio_plus', JPATH_ADMINISTRATOR);
         $rows   = 0;
         ?>
         <h2 style="margin-top: 20px;"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS'); ?></h2>

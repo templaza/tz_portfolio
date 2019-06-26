@@ -16,7 +16,7 @@
     <facebookUrl>https://www.facebook.com/tzportfolio</facebookUrl>
     <facebookGroupUrl>https://www.facebook.com/groups/tzportfolio</facebookGroupUrl>
     <feedBlogUrl>http://feeds.feedburner.com/tzportfolio/blog</feedBlogUrl>
-	<version>2.2.7</version>
+	<version>2.2.8</version>
     
     <scriptfile>script.php</scriptfile>
 	
@@ -72,7 +72,7 @@
 
     <updateservers>
         <server type="extension" pirority="1" name="TZ Portfolio Plus Component">
-            <![CDATA[http://www.tzportfolio.com/tzupdates/tz_portfolio_plus_pro.xml]]>
+            <![CDATA[http://www.tzportfolio.com/tzupdates/tz_portfolio_plus.xml]]>
         </server>
     </updateservers>
 
