@@ -25,6 +25,7 @@
 defined('_JEXEC') or die;
 
 $input -> set('active', 0);
+$xml    = simplexml_load_file(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/tz_portfolio_plus.xml');
 ?>
 <script>
     $(document).ready(function(){
@@ -42,15 +43,15 @@ $input -> set('active', 0);
 		<i class="icon-checkmark"></i>
 	</div>
 
-	<p>TZ Portfolio+ has been installed on your site. Should you require any assistance please head to our <a href="https://www.tzportfolio.com/help/forum.html">forums</a> and <a href="https://www.tzportfolio.com/document.html">documentations</a>.
+	<p><?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_SETUP_COMPLETED_DESC', $xml -> forumUrl, $xml -> guideUrl);?>
 
     <br><br>
 
-	<p><b>Check us out on our social media for upates and news:</b></p>
+	<p><b><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_CHECK_US_SOCIAL_DESC');?></b></p>
 
-	<a class="btn btn-social hasTooltip" href="https://www.facebook.com/groups/tzportfolio" target="_blank" title="Our Fanpage"><i class="tpb tp-facebook-f"></i></a>
-	<a class="btn btn-social hasTooltip" href="https://www.youtube.com/channel/UCrLN8LMXTyTahwDKzQ-YOqg/videos" target="_blank" title="Video Tutorials"><i class="tpb tp-youtube"></i></a>
-	<a class="btn btn-social hasTooltip" href="https://extensions.joomla.org/extension/tz-portfolio" target="_blank" title="Rate on JED"><i class="tpb tp-joomla"></i></a>
-	<a class="btn btn-social hasTooltip" href="https://www.transifex.com/templaza-com/tz-portfolio-plus" target="_blank" title="Find & Help Translate"><i class="tps tp-globe"></i></a>
+	<a class="btn btn-social hasTooltip" href="<?php echo (string) $xml -> facebookUrl;?>" target="_blank" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_FANPAGE');?>"><i class="tpb tp-facebook-f"></i></a>
+	<a class="btn btn-social hasTooltip" href="<?php echo (string) $xml -> youtubeUrl;?>" target="_blank" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_VIDEO_TUTORIALS');?>"><i class="tpb tp-youtube"></i></a>
+	<a class="btn btn-social hasTooltip" href="<?php echo (string) $xml -> jedUrl;?>" target="_blank" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_RATE_ON_JED');?>"><i class="tpb tp-joomla"></i></a>
+	<a class="btn btn-social hasTooltip" href="<?php echo (string) $xml -> transifexUrl;?>" target="_blank" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_FIND_HELP_TRANSLATE');?>"><i class="tps tp-globe"></i></a>
 
 </div>

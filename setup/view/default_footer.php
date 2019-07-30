@@ -118,7 +118,12 @@ defined('_JEXEC') or die;
 
 <?php if ($active == 'complete') { ?>
 <div class="navi">
-    <a class="btn btn-default" href="<?php echo JURI::root();?>index.php?option=com_tz_portfolio_plus" target="_blank">
+    <?php
+    $menu   = JFactory::getApplication() -> getMenu('site');
+    $menuTpp    = $menu -> getItems('link', 'index.php?option=com_tz_portfolio_plus&view=portfolio');
+    $menuItemid = count($menuTpp)?$menuTpp[0] -> id:0;
+    ?>
+    <a class="btn btn-default" href="<?php echo JURI::root().($menuItemid?'index.php?option=com_tz_portfolio_plus&Itemid='.$menuItemid:'');?>" target="_blank">
         <b><span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_LAUNCH_FRONTEND');?></span></b>
     </a>
     <a class="btn btn-primary" href="<?php echo JURI::root();?>administrator/index.php?option=com_tz_portfolio_plus">

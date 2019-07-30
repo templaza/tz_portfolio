@@ -49,7 +49,7 @@ $(document).ready(function(){
 		<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SETUP_INSTALLING_DESC');?>
 	</p>
 
-	<div class="alert alert-primary" data-installation-completed style="display: none;">
+	<div class="alert alert-primary" data-installation-message style="display: none;">
 		<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SETUP_INSTALLING_COMPLETED'); ?>
 	</div>
 

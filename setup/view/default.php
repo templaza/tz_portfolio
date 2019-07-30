@@ -31,7 +31,6 @@ defined('_JEXEC') or die;
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!--    <title>--><?php //echo JText::_('COM_EASYBLOG_INSTALLER_INSTALLATION_TITLE'); ?><!-- - --><?php //echo JText::_('COM_EASYBLOG_INSTALLER_INSTALLATION_STEP_TITLE');?><!-- --><?php //echo $active; ?><!--</title>-->
     <link href="<?php echo COM_TZ_PORTFOLIO_PLUS_SETUP_URL;?>/assets/images/logo.png" rel="shortcut icon" type="image/vnd.microsoft.icon"/>
 
     <?php if (JVERSION < 4.0 ) { ?>
@@ -42,7 +41,6 @@ defined('_JEXEC') or die;
         <link type="text/css" href="<?php echo JURI::root(true);?>/media/system/scss/_icomoon.scss" rel="stylesheet" />
     <?php } ?>
 
-<!--    <link type="text/css" href="//fonts.googleapis.com/css?family=Roboto:400,400italic,700,700italic,500italic,500,300italic,300" rel="stylesheet">-->
     <?php if($active == 'complete'){ ?>
     <link type="text/css" href="<?php echo JUri::root(); ?>/components/com_tz_portfolio_plus/css/all.min.css?<?php echo COM_TZ_PORTFOLIO_PLUS_SETUP_HASH; ?>" rel="stylesheet" />
     <?php } ?>
@@ -73,8 +71,8 @@ defined('_JEXEC') or die;
                     <img src="<?php echo COM_TZ_PORTFOLIO_PLUS_SETUP_URL;?>/assets/images/logo.png" height="48" width="48" />
                     </div>
                     <div class="text-left">
-                        <h3>TZ Portfolio Plus</h3>
-                        <span>The most complete portfolio manager system!</span>
+                        <h3><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS');?></h3>
+                        <span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_DESCRIPTION_3');?></span>
                     </div>
                 </div>
             </div>

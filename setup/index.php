@@ -26,6 +26,7 @@ defined('_JEXEC') or die;
 
 /* Require defines */
 require_once (dirname(__FILE__).'/includes/defines.php');
+require_once (dirname(__FILE__).'/includes/string.php');
 
 jimport('joomla.filesystem.file');
 jimport('joomla.filesystem.folder');

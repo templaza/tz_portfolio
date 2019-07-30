@@ -10,6 +10,23 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+30/07/2019 - 2.2.9
+	
+	- Fix error don't set margin of layout.
+	- Fix error display about author.
+	- Fix error save add-on option in module.
+	- Fix error redirect to panel in edit layout.
+	- Fix error front-end link when installed component.
+	- Fix error icon move of row block in Single Layout Builder.
+	- Update limited content to 50.
+	- Add watermark for image add-on.
+	- Add notice "Under Contruction" if install process is not finished.
+	- Load default.json data when template configure is null.
+	- Allow download/upload preset in template preset.
+	- Add update notice in panel:
+	    + Added plugin Quickicon - TZ Portfolio Plus.
+	- Added some lanugages of setup to language file.
+
 26/06/2019 - 2.2.8
 
 	- Fix error cache of portfolio view with filter fields of version 2.2.7.

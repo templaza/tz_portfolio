@@ -78,13 +78,6 @@ class TZ_Portfolio_PlusSetupControllerAddons extends TZ_Portfolio_PlusSetupContr
         $result->addonPath  = $addonsExtractPath;
         $result->stylePath  = $stylesExtractPath;
 
-//        // Since we combine maintenance page with this,
-//        // we need to get the scripts to execute as well
-//        $maintenance = $this->getMaintenanceScripts();
-
-//        $result->scripts = $maintenance['scripts'];
-//        $result->maintenanceMsg = $maintenance['message'];
-
         $result->scripts = array();
 
         return $this->output($result);
@@ -113,17 +106,6 @@ class TZ_Portfolio_PlusSetupControllerAddons extends TZ_Portfolio_PlusSetupContr
             'mod_tz_portfolio_plus_categories',
             'mod_tz_portfolio_plus_articles_archive'
         );
-//        $installedModules = array();
-
-//        // Get installed module.
-//        // We only do this for upgrade from 3.x
-//        if ($this->isUpgradeFrom3x()) {
-//            $installedModules = $this->getInstalledModules();
-//        }
-
-//        // Get previous version installed.
-//        // If previous version exists, means this is an upgrade
-//        $isUpgrade = $this->getPreviousVersion('scriptversion');
 
         foreach ($items as $item) {
             $element = basename($item);
@@ -140,12 +122,6 @@ class TZ_Portfolio_PlusSetupControllerAddons extends TZ_Portfolio_PlusSetupContr
             $module->element = $element;
             $module->disabled = false;
             $module->checked = true;
-
-
-//            // we tick modules that are installed on the site
-//            if ($isUpgrade) {
-//                $module->checked = $this->isModuleInstalled($element);
-//            }
 
             // Check if the module of core, put a flag
             // Disable this only if the module is checked.
@@ -180,7 +156,8 @@ class TZ_Portfolio_PlusSetupControllerAddons extends TZ_Portfolio_PlusSetupContr
         $plugins = array();
 
         $pluginsProtect = array(
-            'plg_system_tz_portfolio_plus'
+            'plg_system_tz_portfolio_plus',
+            'plg_quickicon_tz_portfolio_plus'
         );
 
         foreach ($groups as $group) {
