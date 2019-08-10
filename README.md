@@ -10,6 +10,17 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+10/08/2019 - 2.3.0
+	
+	- Fix error js of ajax button or Ajax infinitescroll when disable filter.
+	- Fix error display white page of portfolio view on IE 11.
+	- Fix error load ajax of portfolio view when search key word from module TZ Portfolio Plus Filter.
+	- Fix error overload of edit layout in back-end.
+	- Changed style active pro version in back-end.
+	- Added delete license in dashboard with activated pro version.
+	- Added bootstrap v4.3.1 library (customized - Added parent class "tpp-bootstrap").
+	- Added option "Enable Bootstrap Library" in modules: TZ Portfolio Plus Categories, TZ Portfolio Plus Portfolio, TZ Portfolio Plus Tags, TZ Portfolio Plus Archived Articles.
+
 30/07/2019 - 2.2.9
 	
 	- Fix error don't set margin of layout.

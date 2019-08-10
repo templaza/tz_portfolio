@@ -109,7 +109,7 @@ class TZ_Portfolio_PlusSetupControllerLicense extends TZ_Portfolio_PlusSetupCont
         $file    = COM_TZ_PORTFOLIO_PLUS_SETUP_LICENCE_PATH.'/license.php';
 
         if(JFile::exists($file)){
-            $license    = JFile::read($file);
+            $license    = file_get_contents($file);
             $license    = str_replace('<?php die("Access Denied"); ?>#x#', '', $license);
             $license    = trim($license);
             if(!empty($license)) {

@@ -38,7 +38,8 @@ defined('_JEXEC') or die;
         <link type="text/css" href="<?php echo JURI::root(true);?>/media/jui/css/icomoon.css" rel="stylesheet" />
     <?php } else { ?>
         <link type="text/css" href="<?php echo JURI::root(true);?>/media/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-        <link type="text/css" href="<?php echo JURI::root(true);?>/media/system/scss/_icomoon.scss" rel="stylesheet" />
+        <link type="text/css" href="<?php echo JURI::root(true);?>/media/vendor/fontawesome-free/css/fontawesome.css" rel="stylesheet" />
+        <link type="text/css" href="<?php echo JURI::base(true);?>/templates/atum/css/fontawesome.css" rel="stylesheet" />
     <?php } ?>
 
     <?php if($active == 'complete'){ ?>

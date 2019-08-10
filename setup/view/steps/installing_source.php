@@ -82,19 +82,6 @@ defined('_JEXEC') or die;
 
                 submit.find("> span:first").html("<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SKIP_THIS_STEP'); ?>");
 
-                // // User is not allowed to install
-                // if (result.state == 401) {
-                //
-                //     // Set the error message
-                //     $('[data-api-errors]').removeClass("alert-warning").addClass("alert-danger").removeClass('hide');
-                //     $('.installation-inner').addClass("hide");
-                //     $('[data-error-message]').html(result.message);
-                //     $('[data-source-method]').addClass('hide');
-                //     $('[data-checking]').addClass('hide');
-                //
-                //     return false;
-                // }
-
                 // User is not allowed to install
                 if (result.state == 400) {
 
@@ -103,7 +90,7 @@ defined('_JEXEC') or die;
                     $('[data-api-errors]').removeClass('hide');
                     $('[data-error-message]').html(result.message);
                     $('[data-source-method]').addClass('hide');
-                    $('[data-api-key]').removeClass("hidden");
+                    $('[data-api-key]').removeClass("hidden hide");
                     // submit.addClass("hide");
                     $('[data-installation-check-licences]').removeClass("hide");
 

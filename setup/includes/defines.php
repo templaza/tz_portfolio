@@ -60,7 +60,7 @@ if(!defined('COM_TZ_PORTFOLIO_PLUS_SETUP_ACTIVE')) {
 
 
 // Get the current version
-$contents = JFile::read(JPATH_ROOT. '/administrator/components/com_tz_portfolio_plus/tz_portfolio_plus.xml');
+$contents = file_get_contents(JPATH_ROOT. '/administrator/components/com_tz_portfolio_plus/tz_portfolio_plus.xml');
 $parser = simplexml_load_string($contents);
 
 $version = $parser->xpath('version');

@@ -295,6 +295,10 @@ var tpp = {
                                     var currentWidth = parseInt(progressBar[0].style.width);
                                     var percentage = Math.round(currentWidth + each);
 
+                                    if(percentage > 100){
+                                        percentage  = 100;
+                                    }
+
                                     $('[data-progress-active-message]').html(data.message);
 
                                     progressBar.css('width', percentage + '%');
@@ -330,15 +334,19 @@ var tpp = {
 
                                     var progressBarResult = $('[data-progress-bar-result]');
                                     var currentWidth = parseInt(progressBar[0].style.width);
-                                    var percentage = Math.round(currentWidth + each) + '%';
+                                    var percentage = Math.round(currentWidth + each);
+
+                                    if(percentage > 100){
+                                        percentage  = 100;
+                                    }
 
                                     $('[data-progress-active-message]').html(data.message);
 
                                     // Update the width of the progress bar
-                                    progressBar.css('width', percentage);
+                                    progressBar.css('width', percentage + '%');
 
                                     // We need to update the progress bar here
-                                    progressBarResult.html(percentage);
+                                    progressBarResult.html(percentage + '%');
 
                                     installNextAddon();
                                 });

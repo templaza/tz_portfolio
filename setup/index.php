@@ -58,7 +58,6 @@ $reinstall = $input->get('reinstall', false, 'bool') || $input->get('install', f
 $update = $input->get('update', false, 'bool');
 
 // Process controller
-//$controller = $input->get('controller', '', 'cmd');
 $task = $input->get('task', null);
 
 if($task){
@@ -74,7 +73,7 @@ if($task){
 }
 
 //Initialize steps
-$contents = JFile::read(COM_TZ_PORTFOLIO_PLUS_SETUP_CONFIG . '/install.json');
+$contents = file_get_contents(COM_TZ_PORTFOLIO_PLUS_SETUP_CONFIG . '/install.json');
 $steps = json_decode($contents);
 
 // Workflow

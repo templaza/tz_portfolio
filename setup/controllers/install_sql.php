@@ -75,7 +75,7 @@ class TZ_Portfolio_PlusSetupControllerInstall_Sql extends TZ_Portfolio_PlusSetup
 
         foreach ($queryFiles as $file) {
             // Get the contents of the file
-            $contents = JFile::read($file);
+            $contents = file_get_contents($file);
             $queries = $this->splitSql($contents);
 
             foreach ($queries as $query) {
@@ -209,7 +209,7 @@ class TZ_Portfolio_PlusSetupControllerInstall_Sql extends TZ_Portfolio_PlusSetup
                 $def_value      = file_get_contents($def_file);
                 $template_sql2  = 'INSERT INTO `#__tz_portfolio_plus_templates`(`id`, `title`, `home`, `params`) VALUES(1, \'system - Default\', \'1\',\''.$def_value.'\')';
                 $db -> setQuery($template_sql2);
-                $db -> query();
+                $db -> execute();
             }
         }
     }
