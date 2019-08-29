@@ -1,3 +1,6 @@
+[![Github All Releases](https://img.shields.io/github/downloads/templaza/tz_portfolio_plus/total.svg)](https://github.com/templaza/tz_portfolio_plus/releases)
+[![GitHub release](https://img.shields.io/github/release/templaza/tz_portfolio_plus.svg)](https://github.com/templaza/tz_portfolio_plus/releases)
+
 # TZ Portfolio+ | Joomla 3.x
 
 TZ Portfolio is a really good portfolio developing extensions for Joomla that allows users to display, style and manage their portfolio easily.
