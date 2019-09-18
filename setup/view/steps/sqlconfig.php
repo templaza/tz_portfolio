@@ -27,6 +27,16 @@ defined('_JEXEC') or die;
 ?>
 <script>
     $(document).ready(function(){
+        $("[data-installation-form] input[type=radio][name=sample_data]").on("change", function(){
+            var $this   = $(this);
+            if(this.value == 1){
+                var result = confirm("<?php echo htmlspecialchars(JText::_('COM_TZ_PORTFOLIO_PLUS_SETUP_SAMPLE_DATA_QUESTION'))?>");
+                if(!result){
+                    $this.prop("checked", "");
+                    $("#field_sample_data0").prop("checked", true);
+                }
+            }
+        });
         submit.on('click', function() {
             form.submit();
         });
@@ -34,7 +44,7 @@ defined('_JEXEC') or die;
 </script>
 
 <form action="index.php?option=com_tz_portfolio_plus" method="post" name="installation" data-installation-form>
-    <p class="section-desc">Are you a newbie with TZ Portfolio+? If yes, don't worry! We have prepared sample articles for you after you install the component successfully in the first time. So you can follow these samples and then create new ones by your own.</p>
+    <p class="section-desc"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SETUP_DATABASE_CONFIG_DESC');?></p>
     
     <div class="installation-inner">
         <div class="control-group">

@@ -10,6 +10,21 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+18/09/2019 - 2.3.1
+	
+	- Fix error Can't save user profile information.
+	- Fix error Can not read property 'setAttribute' of null at Object.onLoad popper.min.js
+	- Remove google+ in User profile manager.
+	- Fix issue menu-alias/category-alias/article-alias:
+		+ Added options "Remove category" and "Prefix Portfolio URLs" in global config.
+	- Set default config is bootstrap 4.
+	- Update Elegant style with Bootstrap 4.
+	- Improve UX on TZ Portfolio+ is Free message in back-end.
+	- Remove style, addon folder before them install or update completed.
+	- Add Extensions Manager view in the back-end
+	- Add Notification when addon or style has new version.
+	- Add pop-up confirm install Sample data on Install Process.
+
 10/08/2019 - 2.3.0
 	
 	- Fix error js of ajax button or Ajax infinitescroll when disable filter.

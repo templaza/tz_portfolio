@@ -665,7 +665,7 @@
             <option value="1">JYES</option>
         </field>
         <field type="list" name="bootstrapversion"
-               default="3"
+               default="4"
                showon="enable_bootstrap:1"
                label="COM_TZ_PORTFOLIO_PLUS_BOOTSTRAP_VERSION">
             <option value="3">JGLOBAL_SEF_ADVANCED_LEGACY</option>
@@ -682,12 +682,24 @@
             <option value="0">JNO</option>
             <option value="1">JYES</option>
         </field>
+        <field type="radio" name="sef_remove_category"
+               class="switcher btn-group" default="1"
+               label="COM_TZ_PORTFOLIO_PLUS_REMOVE_CATEGORY_LABEL"
+               description="COM_TZ_PORTFOLIO_PLUS_REMOVE_CATEGORY_DESC">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+        <field name="sef_portfolio_prefix" type="text"
+               default="category"
+               showon="sef_remove_category:1"
+               label="COM_TZ_PORTFOLIO_PLUS_SEF_PORTFOLIO_PREFIX_LABEL"
+               description="COM_TZ_PORTFOLIO_PLUS_SEF_PORTFOLIO_PREFIX_DESC"/>
         <field name="sef_users_prefix" type="text"
-               default="users"
+               default="user"
                label="COM_TZ_PORTFOLIO_PLUS_SEF_USERS_PREFIX_LABEL"
                description="COM_TZ_PORTFOLIO_PLUS_SEF_USERS_PREFIX_DESC"/>
         <field name="sef_tags_prefix" type="text"
-               default="tags"
+               default="tag"
                label="COM_TZ_PORTFOLIO_PLUS_SEF_TAGS_PREFIX_LABEL"
                description="COM_TZ_PORTFOLIO_PLUS_SEF_TAGS_PREFIX_DESC"/>
         <field name="sef_date_prefix" type="text"

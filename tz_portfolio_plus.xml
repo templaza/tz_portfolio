@@ -17,7 +17,8 @@
     <facebookGroupUrl>https://www.facebook.com/groups/tzportfolio</facebookGroupUrl>
     <transifexUrl>https://www.transifex.com/templaza-com/tz-portfolio-plus</transifexUrl>
     <youtubeUrl>https://www.youtube.com/channel/UCrLN8LMXTyTahwDKzQ-YOqg/videos</youtubeUrl>
-    <version>2.3.0</version>
+    <tokenUrl>https://www.tzportfolio.com/blog/how-to-activate-pro-version-for-tz-portfolio-2-2-7.html</tokenUrl>
+    <version>2.3.1</version>
 
     <scriptfile>script.php</scriptfile>
 
@@ -51,6 +52,7 @@
             <menu link="option=com_tz_portfolio_plus&amp;view=addons">com_tz_portfolio_plus_addons</menu>
             <menu link="option=com_tz_portfolio_plus&amp;view=template_styles">com_tz_portfolio_plus_template_styles</menu>
             <menu link="option=com_tz_portfolio_plus&amp;view=templates">com_tz_portfolio_plus_templates</menu>
+            <menu link="option=com_tz_portfolio_plus&amp;view=extension&amp;layout=upload">com_tz_portfolio_plus_extensions</menu>
             <menu link="option=com_tz_portfolio_plus&amp;view=acls">com_tz_portfolio_plus_acl</menu>
         </submenu>
         <languages folder="languages/admin">

@@ -23,7 +23,7 @@ defined('_JEXEC') or die;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
 use Joomla\CMS\Language\LanguageHelper;
-use TZ_Portfolio_Plus\Installer\TZ_Portfolio_PlusInstaller;
+//use TZ_Portfolio_Plus\Installer\TZ_Portfolio_PlusInstaller;
 
 jimport('joomla.filesytem.file');
 jimport('joomla.filesytem.folder');

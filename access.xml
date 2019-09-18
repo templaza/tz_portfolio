@@ -35,6 +35,8 @@
 				description="COM_TZ_PORTFOLIO_PLUS_ACTION_MANAGE_STYLE_DESC" />
 		<action name="core.manage.template" title="COM_TZ_PORTFOLIO_PLUS_ACTION_MANAGE_TEMPLATE"
 				description="COM_TZ_PORTFOLIO_PLUS_ACTION_MANAGE_TEMPLATE_DESC" />
+		<action name="core.manage.extension" title="COM_TZ_PORTFOLIO_PLUS_ACTION_MANAGE_EXTENSION"
+				description="COM_TZ_PORTFOLIO_PLUS_ACTION_MANAGE_EXTENSION_DESC" />
 		<action name="core.manage.acl" title="COM_TZ_PORTFOLIO_PLUS_ACTION_MANAGE_ACL"
 				description="COM_TZ_PORTFOLIO_PLUS_ACTION_MANAGE_ACL_DESC" />
 	</section>
@@ -112,5 +114,9 @@
 		<action name="core.delete" title="JTOOLBAR_UNINSTALL" description="COM_TZ_PORTFOLIO_PLUS_ACTION_UNINSTALL_DESC" />
 		<action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC" />
 		<action name="core.edit.state" title="JACTION_EDITSTATE" description="JACTION_EDITSTATE_COMPONENT_DESC" />
+	</section>
+	<section name="extension">
+		<action name="core.create" title="JTOOLBAR_INSTALL"
+				description="COM_TZ_PORTFOLIO_PLUS_EXTENSION_ACTION_INSTALL_DESC" />
 	</section>
 </access>

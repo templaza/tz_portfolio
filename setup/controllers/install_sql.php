@@ -103,6 +103,18 @@ class TZ_Portfolio_PlusSetupControllerInstall_Sql extends TZ_Portfolio_PlusSetup
 
         $this -> addDefaultStylePreset();
 
+        if($params = JComponentHelper::getParams('com_tz_portfolio_plus')){
+            $params -> set('bootstrapversion', 4);
+            $db     = JFactory::getDbo();
+            $query  = $db -> getQuery(true);
+            $query -> update('#__extensions');
+            $query -> set('params ='.$db -> quote($params -> toString()));
+            $query -> where('type='.$db -> quote('component'));
+            $query -> where('element='.$db -> quote('com_tz_portfolio_plus'));
+            $db -> setQuery($query);
+            $db -> execute();
+        }
+
         $this->setInfo(JText::sprintf('COM_EASYBLOG_INSTALLATION_SQL_EXECUTED_SUCCESS', $total), true);
         return $this->output();
     }
