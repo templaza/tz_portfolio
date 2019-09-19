@@ -1,5 +1,5 @@
 ![GitHub Release Date](https://img.shields.io/github/release-date/templaza/tz_portfolio_plus)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/m/templaza/tz_portfolio_plus?color=green)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/templaza/tz_portfolio_plus)
 [![GitHub release](https://img.shields.io/github/release/templaza/tz_portfolio_plus.svg)](https://github.com/templaza/tz_portfolio_plus/releases)
 ![GitHub](https://img.shields.io/github/license/templaza/tz_portfolio_plus)
 ![Follow Us](https://img.shields.io/twitter/follow/templazavn?style=social)
