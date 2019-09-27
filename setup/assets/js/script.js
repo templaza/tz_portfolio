@@ -60,7 +60,7 @@ var tpp = {
 
     ajax: function(task, properties, callback) {
 
-        var prop = $.extend(tpp.options, properties);
+        var prop = $.extend({},tpp.options, properties);
 
         var dfd = $.Deferred();
 

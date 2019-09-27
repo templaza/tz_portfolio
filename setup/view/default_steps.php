@@ -30,7 +30,7 @@ if(isset($steps) && $steps){
         <li class="<?php echo $step -> className?>">
             <div class="circle">
                 <span class="number"><?php echo $i + 1; ?></span>
-                <span class="icon-checkmark complete"></span>
+                <span class="icon-checkmark mr-0 complete"></span>
             </div>
             <div class="title"><?php echo JText::_($step -> title); ?></div>
         </li>
@@ -39,7 +39,7 @@ if(isset($steps) && $steps){
 <li class="<?php echo $active == 'complete' ? ' current' : '';?>">
     <div class="circle">
         <span class="number"><?php echo count($steps) + 1; ?></span>
-        <span class="icon-checkmark complete"></span>
+        <span class="icon-checkmark mr-0 complete"></span>
     </div>
     <div class="title"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_COMPLETED'); ?></div>
 </li>

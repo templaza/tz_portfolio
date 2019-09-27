@@ -49,11 +49,15 @@ defined('_JEXEC') or die;
     <div class="installation-inner">
         <div class="control-group">
             <h4><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_INSTALL_SAMPLE_DATA');?></h4>
-            <fieldset id="field_sample_data" class="switcher btn-group radio">
+            <?php $joomla4  = version_compare(JVERSION, 4.0, '>='); ?>
+            <fieldset id="field_sample_data" class="switcher<?php echo $joomla4?' float-none m-auto has-success':' btn-group radio';?>">
                 <input type="radio" id="field_sample_data0" name="sample_data" value="0" checked="checked">
-                <label for="field_sample_data0" class="btn active btn-danger"><?php echo JText::_('JNO'); ?></label>
+                <label for="field_sample_data0" class="<?php echo !$joomla4?' btn active btn-danger':'';?>"><?php echo JText::_('JNO'); ?></label>
                 <input type="radio" id="field_sample_data1" name="sample_data" value="1">
-                <label for="field_sample_data1" class="btn"><?php echo JText::_('JYES'); ?></label>
+                <label for="field_sample_data1" class="<?php echo !$joomla4?' btn':'';?>"><?php echo JText::_('JYES'); ?></label>
+                <?php if($joomla4){?>
+                    <span class="toggle-outside text-left"><span class="toggle-inside"></span></span>
+                <?php } ?>
             </fieldset>
         </div>
         <input type="hidden" name="method" value="directory" />

@@ -95,7 +95,7 @@ class TZ_Portfolio_PlusSetupControllerAddons extends TZ_Portfolio_PlusSetupContr
         }
 
         // Get a list of modules
-        $items = JFolder::folders($tmp, '.', false, true);
+        $items = \JFolder::folders($tmp, '.', false, true);
 
         $modules = array();
 

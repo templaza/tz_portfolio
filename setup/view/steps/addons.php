@@ -56,8 +56,8 @@ $(document).ready(function(){
 				</div>
 			</div>
 
-			<div class="progress">
-				<div class="progress-bar progress-bar-info progress-bar-striped" data-progress-bar="" style="width: 1%;"></div>
+			<div class="progress mb-3">
+				<div class="progress-bar progress-bar-info progress-bar-striped" data-progress-bar="" style="width: 0%;"></div>
 			</div>
 		</div>
 	</div>

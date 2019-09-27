@@ -16,6 +16,15 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+27/09/2019 - 2.3.2
+	
+	- Fix error warning of feed portfolio view.
+	- Fix error when install component with Joomla 3.8.x
+	- Fix warning countable of addon in back-end.
+	- Fix error show vote of v2.3.1
+	- Fix error offset css of layout builder with bootstrap 4.
+	- Compatible with Joomla 4 Alpha 11.
+
 18/09/2019 - 2.3.1
 	
 	- Fix error Can't save user profile information.

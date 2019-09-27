@@ -671,6 +671,13 @@
             <option value="3">JGLOBAL_SEF_ADVANCED_LEGACY</option>
             <option value="4">v4</option>
         </field>
+        <field type="radio" name="enable_bootstrap_js"
+               default="1" class="switcher btn-group"
+               showon="enable_bootstrap:1"
+               label="COM_TZ_PORTFOLIO_PLUS_ENABLE_BOOTSTRAP_JS_LABEL">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
 
         <field name="tz_portfolio_plus_router" type="spacer"
                class="alert alert-warning btn-block"

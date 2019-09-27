@@ -40,7 +40,7 @@ $xml    = simplexml_load_file(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/tz_portfolio_pl
 </script>
 <div class="tpp-installation__completed">
 	<div class="tpp-complete-icon">
-		<i class="icon-checkmark"></i>
+		<i class="icon-checkmark mr-0"></i>
 	</div>
 
 	<p><?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_SETUP_COMPLETED_DESC', $xml -> forumUrl, $xml -> guideUrl);?>

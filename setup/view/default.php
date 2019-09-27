@@ -38,12 +38,13 @@ defined('_JEXEC') or die;
         <link type="text/css" href="<?php echo JURI::root(true);?>/media/jui/css/icomoon.css" rel="stylesheet" />
     <?php } else { ?>
         <link type="text/css" href="<?php echo JURI::root(true);?>/media/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+        <link type="text/css" href="<?php echo JURI::root(true);?>/media/system/css/fields/switcher.css" rel="stylesheet" />
         <link type="text/css" href="<?php echo JURI::root(true);?>/media/vendor/fontawesome-free/css/fontawesome.css" rel="stylesheet" />
-        <link type="text/css" href="<?php echo JURI::base(true);?>/templates/atum/css/fontawesome.css" rel="stylesheet" />
+        <link type="text/css" href="<?php echo JURI::base(true);?>/templates/atum/css/template.css" rel="stylesheet" />
     <?php } ?>
 
     <?php if($active == 'complete'){ ?>
-    <link type="text/css" href="<?php echo JUri::root(); ?>/components/com_tz_portfolio_plus/css/all.min.css?<?php echo COM_TZ_PORTFOLIO_PLUS_SETUP_HASH; ?>" rel="stylesheet" />
+    <link type="text/css" href="<?php echo JURI::base(true);?>/components/com_tz_portfolio_plus/css/style.min.css?<?php echo COM_TZ_PORTFOLIO_PLUS_SETUP_HASH; ?>" rel="stylesheet" />
     <?php } ?>
     <link type="text/css" href="<?php echo COM_TZ_PORTFOLIO_PLUS_SETUP_URL;?>/assets/css/style.min.css?<?php echo COM_TZ_PORTFOLIO_PLUS_SETUP_HASH; ?>" rel="stylesheet" />
 
@@ -64,7 +65,7 @@ defined('_JEXEC') or die;
 
 <body class="step<?php echo $active;?>">
 
-    <div class="tpp-installation">
+    <div class="tpp-installation<?php echo (JVERSION >= 4.0)?' is-joomla-4':'';?>">
         <div class="head text-center">
             <div class="container-fluid">
                 <div class="top-bar d-flex">
