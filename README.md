@@ -16,6 +16,10 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+30/09/2019 - 2.3.3
+	
+	- Fix error styles of v2.3.2
+
 27/09/2019 - 2.3.2
 	
 	- Fix error warning of feed portfolio view.
