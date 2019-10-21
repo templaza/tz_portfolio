@@ -16,6 +16,13 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+21/10/2019 - 2.3.4
+	
+	- Fix error url with sh404 component.
+	- Fix error remove add-on and style when install or update it
+	- Added 2 files css again: all.min.css and v4-shims.min.css
+	- Optimize front-end's js
+
 30/09/2019 - 2.3.3
 	
 	- Fix error styles of v2.3.2
