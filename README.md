@@ -16,6 +16,13 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+05/11/2019 - 2.3.5
+	
+	- Fix error basic.scss net::ERR_ABORTED 404 (Not Found)
+	- Fix error trying to get property of non-object in administrator\components\com_tz_portfolio_plus\libraries\helper\modulehelper.php
+	- Create some triggers: onTPContentBeforePrepare, onTPExtraFieldPreapare, onTPContentAfterPrepare, onTPAddOnProcess... for add-on dev.
+	- Add options allowing to show category info in portfolio view.
+
 21/10/2019 - 2.3.4
 	
 	- Fix error url with sh404 component.
