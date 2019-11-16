@@ -16,6 +16,15 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+16/11/2019 - 2.3.6
+		
+	- Fix error show category info in portfolio view.
+	- Allow create color params for style used by SASS.
+	- Allow filter articles by secondary categories in back-end.
+	- Update elegant style v2.6:
+		+ Change style for elegant.
+		+ Update options allowing to show category info in portfolio view.
+
 05/11/2019 - 2.3.5
 	
 	- Fix error basic.scss net::ERR_ABORTED 404 (Not Found)
