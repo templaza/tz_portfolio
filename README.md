@@ -16,6 +16,15 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+09/12/2019 - 2.3.7
+	
+	- Fix error delete of user's presets which created when install/update style.
+	- Create trigger: onTPAddonIsLoaded for dev (this event helps developer to create custom type for single layout builder from a plugin).
+	- Update keep user's language of add-on and style when install/update them.
+	- Optimize code generate single layout builder in front-end.
+	- Optimize code of addon user profile.
+	- Update Elegant style v2.7: Update style for filter dropdown (portfolio view).
+
 16/11/2019 - 2.3.6
 		
 	- Fix error show category info in portfolio view.
