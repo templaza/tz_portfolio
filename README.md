@@ -16,6 +16,10 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+13/12/2019 - 2.3.8
+	
+	- Fix issue: language strings didn't show value for addons and styles properly in back-end.
+
 09/12/2019 - 2.3.7
 	
 	- Fix error delete of user's presets which created when install/update style.
