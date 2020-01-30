@@ -39,13 +39,17 @@ if(JFile::exists($file)){
 
     JLoader::import('com_tz_portfolio_plus.includes.framework', JPATH_ADMINISTRATOR . '/components');
 
-// Register helper class
+    // Register helper class
     JLoader::register('TZ_Portfolio_PlusHelper', dirname(__FILE__) . '/helpers/tz_portfolio_plus.php');
 
-// Register helper class
+    // Register helper class
     JLoader::register('TZ_Portfolio_PlusHelperACL', dirname(__FILE__) . '/helpers/acl.php');
 
-// Includes my html object
+    // Register helper class
+    JLoader::register('TZ_Portfolio_PlusHelperAddons', COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH . '/helpers/addons.php');
+    JLoader::register('TZ_Portfolio_PlusHelperTemplates', COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH . '/helpers/templates.php');
+
+    // Includes my html object
     JHtml::addIncludePath(COM_TZ_PORTFOLIO_PLUS_ADMIN_HELPERS_PATH . '/html');
 
     $controller = JControllerLegacy::getInstance('TZ_Portfolio_Plus');

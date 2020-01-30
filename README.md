@@ -16,6 +16,15 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+30/01/2020 - 2.3.9
+	
+	- Fix error rtl of masonry.
+	- Fix error with breadcrumb.
+	- Added options for module TZ Portfolio Plus Tags: "Show Article Counter", "Show Tag All", "Tag All Text", "Choose Menu".
+	- Optimize code generate css from scss.
+	- Optimize feedblog of dashboard in admin.
+	- Optimize load list items from our server of Add-on, Style, Extensions in back-end.
+
 13/12/2019 - 2.3.8
 	
 	- Fix issue: language strings didn't show value for addons and styles properly in back-end.
