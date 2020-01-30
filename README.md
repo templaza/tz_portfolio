@@ -21,6 +21,7 @@ Demo: http://demo.tzportfolio.com/
 	- Fix error rtl of masonry.
 	- Fix error with breadcrumb.
 	- Added options for module TZ Portfolio Plus Tags: "Show Article Counter", "Show Tag All", "Tag All Text", "Choose Menu".
+	- Added article order by Priority for module TZ Portfolio Plus Portfolio.
 	- Optimize code generate css from scss.
 	- Optimize feedblog of dashboard in admin.
 	- Optimize load list items from our server of Add-on, Style, Extensions in back-end.
