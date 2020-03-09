@@ -29,6 +29,13 @@
         <field type="text" name="article_columns"
                label="COM_TZ_PORTFOLIO_PLUS_LISTING_ARTICLE_COLUMNS_LABEL"
                description="COM_TZ_PORTFOLIO_PLUS_LISTING_ARTICLE_COLUMNS_DESC"/>
+        <field type="radio" name="enable_lazyload"
+               default="0"
+               class="switcher btn-group"
+               label="COM_TZ_PORTFOLIO_PLUS_ENABLE_LAZYLOAD">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
 
         <!-- Start pagination options -->
         <field type="spacer" hr="true"/>

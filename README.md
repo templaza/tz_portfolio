@@ -16,6 +16,11 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+07/03/2020 - 2.4.0
+	
+	- Update image lazyload.
+	- Added button Get Free license in TZ Portfolio Dashboard.
+
 30/01/2020 - 2.3.9
 	
 	- Fix error rtl of masonry.

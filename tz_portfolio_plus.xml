@@ -17,8 +17,9 @@
     <facebookGroupUrl>https://www.facebook.com/groups/tzportfolio</facebookGroupUrl>
     <transifexUrl>https://www.transifex.com/templaza-com/tz-portfolio-plus</transifexUrl>
     <youtubeUrl>https://www.youtube.com/channel/UCrLN8LMXTyTahwDKzQ-YOqg/videos</youtubeUrl>
-    <tokenUrl>https://www.tzportfolio.com/blog/how-to-activate-pro-version-for-tz-portfolio-2-2-7.html</tokenUrl>
-    <version>2.3.9</version>
+    <tokenUrl>https://www.tzportfolio.com/blog/how-to-activate-tz-portfolio-pro.html</tokenUrl>
+    <freelicenseUrl>https://www.tzportfolio.com/component/tz_envato_license/licenses.html</freelicenseUrl>
+    <version>2.4.0</version>
 
     <scriptfile>script.php</scriptfile>
 
