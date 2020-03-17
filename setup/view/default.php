@@ -59,7 +59,10 @@ defined('_JEXEC') or die;
     <?php } ?>
 
     <script type="text/javascript">
-        <?php require(COM_TZ_PORTFOLIO_PLUS_SETUP_PATH.'/assets/js/script.js'); ?>
+        <?php
+        // The $lang variable to use in script.js file
+        $lang   = JFactory::getApplication('administrator') -> getLanguage();
+        require(COM_TZ_PORTFOLIO_PLUS_SETUP_PATH.'/assets/js/script.js'); ?>
     </script>
 </head>
 

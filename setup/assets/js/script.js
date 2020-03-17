@@ -57,6 +57,7 @@ var tpp = {
     string: {
         install_complete: "<?php echo TZ_Portfolio_PlusSetupString::jsPlusAddSlashes(JText::_('COM_TZ_PORTFOLIO_PLUS_SETUP_INSTALLING_COMPLETED'));?>"
     },
+    language: "<?php echo $lang -> getTag(); ?>",
 
     ajax: function(task, properties, callback) {
 
@@ -419,6 +420,8 @@ var tpp = {
 
             tpp.ajax('activepro', {
                 "produce": "tz-portfolio-plus",
+                "domain": document.location.hostname,
+                "language": tpp.language,
                 "license": $("[data-license]").val()
             }, function(result) {
 
@@ -432,6 +435,11 @@ var tpp = {
 
                 // Set the path
                 tpp.options.path = result.path;
+
+                // Set the license
+                if(result.license !== "undefined") {
+                    tpp.options.license = result.license;
+                }
 
                 // Run the next command
                 tpp.installation.extract();

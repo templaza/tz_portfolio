@@ -16,6 +16,10 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+17/03/2020 - 2.4.1
+	
+	- Active domain for personal license.
+
 07/03/2020 - 2.4.0
 	
 	- Update image lazyload.

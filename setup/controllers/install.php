@@ -28,32 +28,45 @@ class TZ_Portfolio_PlusSetupControllerInstall extends TZ_Portfolio_PlusSetupCont
 {
     public function activePro(){
 
+        $uri        = JUri::getInstance();
         $license    = $this -> input -> get('license');
         $header     = array('content-type' => 'text/x-json; charset=UTF-8');
+        $lang       = JFactory::getApplication('administrator') -> getLanguage();
 
         $response = \JHttpFactory::getHttp()->post(COM_TZ_PORTFOLIO_PLUS_SETUP_ACTIVE,
-            array('license' => $license, 'produce' => 'tz-portfolio-plus'));
+            array(
+                'license' => $license,
+                'language'  => ($lang -> getTag()),
+                'domain'    => ($uri -> getHost()),
+                'produce' => 'tz-portfolio-plus'
+            )
+        );
 
         if (!$response) {
             return false;
         }
 
-        $result = json_decode($response -> body);
-        if($result && $result -> state == 200 && $result -> license){
+        $result     = json_decode($response -> body);
+        if($result){
+            if($result -> state == 200 && $result -> license){
 
-            $lic    = $result -> license;
-            $data   = '<?php die("Access Denied"); ?>#x#' . serialize($lic);
+                $lic    = $result -> license;
+                $data   = '<?php die("Access Denied"); ?>#x#' . serialize($lic);
 
-            $licPath    = COM_TZ_PORTFOLIO_PLUS_SETUP_LICENCE_PATH.'/license.php';
+                $licPath    = COM_TZ_PORTFOLIO_PLUS_SETUP_LICENCE_PATH.'/license.php';
 
-            if(JFile::exists($licPath)){
-                JFile::delete($licPath);
+                if(JFile::exists($licPath)){
+                    JFile::delete($licPath);
+                }
+
+                JFile::write($licPath, $data);
+
+                $this->setInfo('COM_TZ_PORTFOLIO_PLUS_SETUP_ACTIVE_PRO_VERSION_SUCCESS', true, array('license' => $license));
+            }else{
+                $this->setInfo($result -> message, false);
             }
-
-            JFile::write($licPath, $data);
         }
 
-        $this->setInfo('COM_TZ_PORTFOLIO_PLUS_SETUP_ACTIVE_PRO_VERSION_SUCCESS', true, array('license' => $license));
 
         return $this->output();
     }
