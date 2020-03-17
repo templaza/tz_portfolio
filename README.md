@@ -19,6 +19,8 @@ Demo: http://demo.tzportfolio.com/
 17/03/2020 - 2.4.1
 	
 	- Active domain for personal license.
+	- Fix error active pro when install or update.
+	- Fix some language of setup wizard
 
 07/03/2020 - 2.4.0
 	
