@@ -16,6 +16,18 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+10/06/2020 - 2.4.2
+	
+	- Fix error don't load layout list of Layout style.
+	- Fix error installed extension in extension view.
+	- Fix error default config of layout builder when install style.
+	- Fix error show category's title, image, description in portfolio view when this view choose 1 category.
+	- Added option "Browser Page Title" for article.
+	- Added lightbox for article of image addon.
+	- Added option "Enable Lazyload" to views: Portfolio, Date Articles, List All Categories, Search, Single Article.
+	- Update elegant style (update lightbox for article of image addon).
+	- Update lightbox jquery library v3.5.7
+
 17/03/2020 - 2.4.1
 	
 	- Active domain for personal license.
