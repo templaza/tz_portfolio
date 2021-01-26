@@ -550,6 +550,48 @@ var tpp = {
                     return false;
                 }
 
+                tpp.installation.installMedia();
+
+                // messagebox
+                //     .html(tpp.string.install_complete)
+                //     .removeClass('hide alert-danger')
+                //     .addClass('alert-primary')
+                //     .show();
+                //
+                // loading
+                //     .addClass('hide');
+                //
+                // submit
+                //     .removeClass('hide');
+                //
+                // submit.on('click', function() {
+                //
+                //     source.val(tpp.options.path);
+                //
+                //     form.submit();
+                // });
+            });
+        },
+
+
+        installMedia : function() {
+
+            // Install the admin stuffs
+            tpp.installation.setActive('data-progress-media');
+
+            tpp.ajax('initialize', {
+                "controller": "install_copy",
+                "type" : "media" }, function(result) {
+
+
+                // Update the progress
+                tpp.installation.update('data-progress-media', result, '25%');
+
+                if (!result.state) {
+                    tpp.installation.showRetry('installMedia', result.message);
+                    return false;
+                }
+
                 messagebox
                     .html(tpp.string.install_complete)
                     .removeClass('hide alert-danger')

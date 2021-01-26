@@ -16,6 +16,20 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+26/01/2021 - 2.4.3
+	
+	- Fix error related articles by tag.
+	- Fix warning can not load add-ons from server in back-end.
+	- Fix error load mootools in article form.
+	- Fix error social line breaks(Update style System v1.2 and Elegant v2.9).
+	- Added layout grid for categories view (List All Categories - Grid).
+	- Added option "Show Image" for TZ Portfolio Plus Portfolio and TZ Portfolio Plus Articles modules.
+	- Added option "Category Order" for TZ Portfolio Plus Portfolio module.
+	- Added fields: tzicon, tzfont, tzmargin, tzpadding.
+	- Added media files to install in package.
+	- Update bootstrap v4.5.3
+	- Update Fontawesome v5.15.1
+
 10/06/2020 - 2.4.2
 	
 	- Fix error don't load layout list of Layout style.

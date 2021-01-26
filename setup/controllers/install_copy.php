@@ -70,6 +70,10 @@ class TZ_Portfolio_PlusSetupControllerInstall_Copy extends TZ_Portfolio_PlusSetu
             $target = JPATH_ROOT . '/components/com_tz_portfolio_plus';
         }
 
+        if ($type == 'media') {
+            $target = JPATH_ROOT . '/media';
+        }
+
         // Ensure that the target folder exists
         if (!JFolder::exists($target)) {
             JFolder::create($target);

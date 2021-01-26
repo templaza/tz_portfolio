@@ -115,7 +115,7 @@ class TZ_Portfolio_PlusSetupControllerInstall_Sql extends TZ_Portfolio_PlusSetup
 //            $db -> execute();
 //        }
 
-        $this->setInfo(JText::sprintf('COM_TZ_PORTFOLIO_PLUS_SETUP_SQL_EXECUTED_SUCCESS', $total), true);
+        $this->setInfo(JText::sprintf('COM_EASYBLOG_INSTALLATION_SQL_EXECUTED_SUCCESS', $total), true);
         return $this->output();
     }
 

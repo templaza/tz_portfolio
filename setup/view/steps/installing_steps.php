@@ -52,3 +52,12 @@ defined('_JEXEC') or die;
 	</div>
 	<span class="progress-state"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SETUP_INITIALIZING');?>...</span>
 </li>
+<li class="pending" data-progress-media>
+	<div class="progress-icon">
+		<i class="icon-checkbox-unchecked"></i>
+	</div>
+	<div class="split__title">
+		<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SETUP_INITIALIZING_MEDIA_FILES');?>
+	</div>
+	<span class="progress-state"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SETUP_INITIALIZING');?>...</span>
+</li>
