@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="COM_CONTENT_FORM_VIEW_DEFAULT_TITLE" option="COM_CONTENT_FORM_VIEW_DEFAULT_OPTION">
+		<help
+			key = "JHELP_MENUS_MENU_ITEM_ARTICLE_CREATE"
+		/>
+		<message>
+			<![CDATA[COM_TZ_PORTFOLIO_PLUS_FORM_VIEW_DEFAULT_DESC]]>
+		</message>
+	</layout>
+	<fields name="params">
+		<fieldset name="request" addfieldpath="administrator/components/com_tz_portfolio_plus/models/fields">
+			<field type="tztemplates" name="tz_template_style_id"
+				   default="0"
+				   label="COM_TZ_PORTFOLIO_PLUS_TEMPLATE_STYLE_LABEL"
+				   description="COM_TZ_PORTFOLIO_PLUS_TEMPLATE_STYLE_DESC">
+				<option value="0">JOPTION_USE_DEFAULT</option>
+			</field>
+		</fieldset>
+		<fieldset name="basic">
+			<field name="enable_category"
+				type="radio"
+                class="btn-group"
+				default="0"
+				label="COM_TZ_PORTFOLIO_PLUS_CREATE_ARTICLE_CATEGORY_LABEL"
+				description="COM_TZ_PORTFOLIO_PLUS_CREATE_ARTICLE_CATEGORY_DESC">
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+			</field>
+			<field name="catid"
+				type="modal_category"
+				   showon="enable_category:1"
+				label="JGLOBAL_CHOOSE_CATEGORY_LABEL"
+				description="JGLOBAL_CHOOSE_CATEGORY_DESC"/>
+		</fieldset>
+	</fields>
+</metadata>
