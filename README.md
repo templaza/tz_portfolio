@@ -16,6 +16,12 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+27/01/2021 - 2.4.4
+	
+	- Fix error awesome font
+	- Fix error field languages.
+	- Fix error can not save add-on content data.
+
 26/01/2021 - 2.4.3
 	
 	- Fix error related articles by tag.
