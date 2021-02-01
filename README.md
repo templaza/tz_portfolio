@@ -16,6 +16,11 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+01/02/2021 - 2.4.5
+	
+	- Fix error add-on language.
+	- Fix error mediatype add-on conflict with content add-on.
+
 27/01/2021 - 2.4.4
 	
 	- Fix error awesome font

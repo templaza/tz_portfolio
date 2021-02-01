@@ -910,6 +910,13 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
 
             if(method_exists($model, 'getForm')) {
                 $this->form = $model->getForm();
+                $_form_data = $this -> form -> getData();
+
+                $this -> form -> reset(true);
+
+                $this->form ->loadFile(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.'/'.$this -> _type.'/'.$this -> _name
+                    .'/admin/models/forms/'.$this -> _name.'.xml', false);
+                $this -> form -> bind($_form_data);
             }
 
             $this -> item   = $article;
