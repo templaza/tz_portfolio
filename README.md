@@ -16,6 +16,11 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+22/02/2021 - 2.4.6
+	
+	- Fix error load add-on content data.
+	- Fix error assign multiple articles when filter in layout.
+
 01/02/2021 - 2.4.5
 	
 	- Fix error add-on language.

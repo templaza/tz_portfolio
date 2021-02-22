@@ -23,6 +23,7 @@ use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
 use Joomla\Registry\Registry;
 use Joomla\CMS\MVC\Model\BaseModel;
+use Joomla\Utilities\ArrayHelper;
 
 jimport('joomla.filesytem.file');
 JLoader::import('framework',JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/includes');
@@ -904,19 +905,29 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
             $table  = $model -> getTable();
             if($table -> load(array('extension_id' => $addon -> id, 'content_id' => $article -> id))) {
                 $model->setState($this->_name . '.id', (int)$table->get('id'));
+
+                $properties = $table->getProperties(1);
+                $data = ArrayHelper::toObject($properties, '\JObject');
+
+                if($data && isset($data -> value) && is_string($data -> value)){
+                    $data -> value  = json_decode($data -> value);
+                }
             }
 
             $path           = TZ_Portfolio_PlusPluginHelper::getLayoutPath($this -> _type, $this -> _name, 'admin');
 
             if(method_exists($model, 'getForm')) {
                 $this->form = $model->getForm();
-                $_form_data = $this -> form -> getData();
-
-                $this -> form -> reset(true);
+//                $_form_data = $this -> form -> getData();
 
                 $this->form ->loadFile(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.'/'.$this -> _type.'/'.$this -> _name
                     .'/admin/models/forms/'.$this -> _name.'.xml', false);
-                $this -> form -> bind($_form_data);
+                $_data   = new stdClass();
+                $_data -> addon  = new stdClass();
+                if(isset($data)) {
+                    $_data->addon->{$this->_name} = $data->value;
+                }
+                $this -> form -> bind($_data);
             }
 
             $this -> item   = $article;

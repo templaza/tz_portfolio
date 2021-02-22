@@ -29,7 +29,6 @@ if ($app->isClient('site')) {
 require_once JPATH_ROOT . '/components/com_tz_portfolio_plus/helpers/route.php';
 
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
-JHtml::_('behavior.framework');
 JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('formbehavior.chosen', '.multipleMediaType', null,
@@ -72,7 +71,8 @@ function tzGetDatas(){
 }');
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&view=articles&layout=modal&tmpl=component&function='.$function.'&'.JSession::getFormToken().'=1');?>"
+<form action="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&view=articles&layout=modal&tmpl=component&function='
+    .$function.($isMultiple?'&ismultiple=true':'').'&'.JSession::getFormToken().'=1');?>"
       method="post" name="adminForm" id="adminForm" class="form-inline tpContainer">
     <?php if($isMultiple){?>
     <div class="btn-toolbar">
