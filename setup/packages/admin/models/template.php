@@ -100,6 +100,9 @@ class TZ_Portfolio_PlusModelTemplate extends TZ_Portfolio_PlusModelAddon
         $style_path = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH.'/'.(string) $manifest -> name.'/config/default.json';
         if(file_exists($style_path)){
             $style  = $this -> getTemplateStyle($style_name);
+            if(is_string($style -> params)){
+                $style -> params    = json_decode($style -> params);
+            }
             if(!isset($style -> layout) || (isset($style -> layout) && !$style -> layout)){
                 $config = file_get_contents($style_path);
                 $config = json_decode($config);

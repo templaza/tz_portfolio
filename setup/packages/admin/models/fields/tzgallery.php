@@ -49,6 +49,7 @@ class JFormFieldTZGallery extends JFormField
      */
     protected function getInput()
     {
+        $this -> value  = (object) $this -> value;
         $class = !empty($this->class) ? ' class="' . $this->class . '"' : '';
         $app            =   JFactory::getApplication();
         $input          =   $app -> input;
@@ -100,16 +101,16 @@ class JFormFieldTZGallery extends JFormField
                     </div>
 
                     <ul class="list-unstyled p-2 d-flex flex-column col" id="gallery_files">
-                        <?php if (isset($this->value["gallery_image"]) && count($this->value["gallery_image"])) : ?>
-                            <?php for ($i=0; $i<count($this->value["gallery_image"]); $i++) :
-                                $image     =   $this->value["gallery_image"][$i];
-                                $title     =   isset($this->value["gallery_image_title"]) ? $this->value["gallery_image_title"][$i] : '';
+                        <?php if (isset($this->value->gallery_image) && count($this->value->gallery_image)) : ?>
+                            <?php for ($i=0; $i<count($this->value->gallery_image); $i++) :
+                                $image     =   $this->value->gallery_image[$i];
+                                $title     =   isset($this->value->gallery_image_title) ? $this->value->gallery_image_title[$i] : '';
                                 ?>
                                 <li class="media" data-name="<?php echo $image; ?>" data-source="server">
                                     <img class="mr-3 mb-2 preview-img" src="<?php echo JUri::root().'/images/tz_portfolio_plus/gallery/'.$input->getInt('id').'/'.$image; ?>" alt="Generic placeholder image">
                                     <div class="media-body mb-1">
                                         <p class="mb-2">
-                                            <strong class="filename"><?php echo $image; ?></strong> - Status: <span class="status text-success">Available</span> - <em class="grid_featured"><input type="radio" name="<?php echo $this->name; ?>[image_featured]" class="grid_image_featured" value="<?php echo $image; ?>"<?php if (isset($this->value['image_featured']) && $this->value['image_featured'] == $image) echo ' checked="checked"'; ?> /> <?php echo JText::_('JFEATURED'); ?></em> - <a href="#" class="delete_grid_image"><?php echo JText::_('JACTION_DELETE'); ?></a>
+                                            <strong class="filename"><?php echo $image; ?></strong> - Status: <span class="status text-success">Available</span> - <em class="grid_featured"><input type="radio" name="<?php echo $this->name; ?>[image_featured]" class="grid_image_featured" value="<?php echo $image; ?>"<?php if (isset($this->value->image_featured) && $this->value->image_featured == $image) echo ' checked="checked"'; ?> /> <?php echo JText::_('JFEATURED'); ?></em> - <a href="#" class="delete_grid_image"><?php echo JText::_('JACTION_DELETE'); ?></a>
                                         </p>
                                         <p class="mb-2">
                                             <input type="text" class="inputbox" name="<?php echo $this->name; ?>[gallery_image_title][]" placeholder="Title..." value="<?php echo $title; ?>" />
@@ -128,7 +129,7 @@ class JFormFieldTZGallery extends JFormField
                                 </li>
                             <?php endfor; ?>
                         <?php endif; ?>
-                        <li class="text-muted text-center empty"<?php if (isset($this->value["gallery_image"]) && is_array($this->value["gallery_image"]) && count($this->value["gallery_image"])) echo ' style="display: none;"'; ?>><?php echo JText::_('PLG_CONTENT_GALLERY_NO_FILE_UPLOADED'); ?></li>
+                        <li class="text-muted text-center empty"<?php if (isset($this->value->gallery_image) && is_array($this->value->gallery_image) && count($this->value->gallery_image)) echo ' style="display: none;"'; ?>><?php echo JText::_('PLG_CONTENT_GALLERY_NO_FILE_UPLOADED'); ?></li>
                     </ul>
                 </div>
             </div>
