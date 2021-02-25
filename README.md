@@ -16,6 +16,13 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+25/02/2021 - 2.4.6
+	
+	- Fix error load add-on content data.
+	- Fix error load data by object type of tzgallery field.
+	- Fix error assign multiple articles when filter in layout.
+	- Fix error config of layout builder when the style after install.
+
 03/02/2021 - 2.4.5
 	
 	- Fix error add-on language.
