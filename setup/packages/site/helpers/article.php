@@ -228,12 +228,12 @@ class TZ_Portfolio_PlusContentHelper{
             $style->md  .=  (isset($paddingmargin->md->bottom) && $paddingmargin->md->bottom) ? $type."-bottom: " . $paddingmargin->md->bottom . ";" : "";
             $style->md  .=  (isset($paddingmargin->md->left) && $paddingmargin->md->left) ? $type."-left: " . $paddingmargin->md->left . ";" : "";
 
-            $style->sm  =  (isset($paddingmargin->sm->left) && $paddingmargin->sm->left) ? $type."-top: " . $paddingmargin->sm->top . ";" : "";
+            $style->sm  =  (isset($paddingmargin->sm->left) && $paddingmargin->sm->top) ? $type."-top: " . $paddingmargin->sm->top . ";" : "";
             $style->sm  .=  (isset($paddingmargin->sm->right) && $paddingmargin->sm->right) ? $type."-right: " . $paddingmargin->sm->right . ";" : "";
             $style->sm  .=  (isset($paddingmargin->sm->bottom) && $paddingmargin->sm->bottom) ? $type."-bottom: " . $paddingmargin->sm->bottom . ";" : "";
             $style->sm  .=  (isset($paddingmargin->sm->left) && $paddingmargin->sm->left) ? $type."-left: " . $paddingmargin->sm->left . ";" : "";
 
-            $style->xs  =  (isset($paddingmargin->xs->left) && $paddingmargin->xs->left) ? $type."-top: " . $paddingmargin->xs->top . ";" : "";
+            $style->xs  =  (isset($paddingmargin->xs->left) && $paddingmargin->xs->top) ? $type."-top: " . $paddingmargin->xs->top . ";" : "";
             $style->xs  .=  (isset($paddingmargin->xs->right) && $paddingmargin->xs->right) ? $type."-right: " . $paddingmargin->xs->right . ";" : "";
             $style->xs  .=  (isset($paddingmargin->xs->bottom) && $paddingmargin->xs->bottom) ? $type."-bottom: " . $paddingmargin->xs->bottom . ";" : "";
             $style->xs  .=  (isset($paddingmargin->xs->left) && $paddingmargin->xs->left) ? $type."-left: " . $paddingmargin->xs->left . ";" : "";
@@ -259,5 +259,28 @@ class TZ_Portfolio_PlusContentHelper{
         $text_style     .=      isset($font->letterSpacing) && $font->letterSpacing ? 'letter-spacing:'.$font->letterSpacing.';' : '';
         $text_style     .=      isset($font->fontSize) && $font->fontSize ? 'font-size:'.$font->fontSize.';' : '';
         return $text_style;
+    }
+
+    public static function responsive_box_data($data, $string = '', $key='{key}') {
+        if ($data && $key && $string) {
+            $obj        =   json_decode($data);
+            $style      =   new stdClass();
+            $style->md  =  (isset($obj->md->top) && $obj->md->top) ? str_replace($key, 'top', $string).": " . $obj->md->top . ";" : "";
+            $style->md  .=  (isset($obj->md->right) && $obj->md->right) ? str_replace($key, 'right', $string).": " . $obj->md->right . ";" : "";
+            $style->md  .=  (isset($obj->md->bottom) && $obj->md->bottom) ? str_replace($key, 'bottom', $string).": " . $obj->md->bottom . ";" : "";
+            $style->md  .=  (isset($obj->md->left) && $obj->md->left) ? str_replace($key, 'left', $string).": " . $obj->md->left . ";" : "";
+
+            $style->sm  =  (isset($obj->sm->left) && $obj->sm->top) ? str_replace($key, 'top', $string).": " . $obj->sm->top . ";" : "";
+            $style->sm  .=  (isset($obj->sm->right) && $obj->sm->right) ? str_replace($key, 'right', $string).": " . $obj->sm->right . ";" : "";
+            $style->sm  .=  (isset($obj->sm->bottom) && $obj->sm->bottom) ? str_replace($key, 'bottom', $string).": " . $obj->sm->bottom . ";" : "";
+            $style->sm  .=  (isset($obj->sm->left) && $obj->sm->left) ? str_replace($key, 'left', $string).": " . $obj->sm->left . ";" : "";
+
+            $style->xs  =  (isset($obj->xs->left) && $obj->xs->top) ? str_replace($key, 'top', $string).": " . $obj->xs->top . ";" : "";
+            $style->xs  .=  (isset($obj->xs->right) && $obj->xs->right) ? str_replace($key, 'right', $string).": " . $obj->xs->right . ";" : "";
+            $style->xs  .=  (isset($obj->xs->bottom) && $obj->xs->bottom) ? str_replace($key, 'bottom', $string).": " . $obj->xs->bottom . ";" : "";
+            $style->xs  .=  (isset($obj->xs->left) && $obj->xs->left) ? str_replace($key, 'left', $string).": " . $obj->xs->left . ";" : "";
+            return $style;
+        }
+        return false;
     }
 }

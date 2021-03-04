@@ -38,13 +38,14 @@ class JHtmlTZPaddingMargin{
         return $html;
     }
 
-    protected static function generation($type  =   'margin', $name, $id, $value) {
+    public static function generation($type  =   'margin', $name, $id, $value) {
         $document = JFactory::getDocument();
+        $document->addStyleSheet(JUri::root().'/administrator/components/com_tz_portfolio_plus/css/addon-admin.css', array('version' => 'auto'));
         $document->addScript(JUri::root().'/administrator/components/com_tz_portfolio_plus/js/addon-admin.js', array('version' => 'auto'));
         $val      = (isset($value) && $value) ? json_decode($value): json_decode('{"md": {"top": "", "right": "", "bottom": "", "left": ""}, "sm": {"top":"", "right":"", "bottom":"", "left":""}, "xs": {"top":"", "right":"", "bottom":"", "left":""}}');
         $html   =   '<div class="tz'.$type.'-container tzportfolio-box-responsive">';
         $html   .=  '<label class="clearfix">';
-        $html   .=  $type == 'margin' ? JText::_('TZPORTFOLIO_ADDON_MARGIN') : JText::_('TZPORTFOLIO_ADDON_PADDING');
+        $html   .=  '<span class="tzportfolio-box-label">'.$type.'</span>';
         $html   .=  '<span class="tzportfolio-lock">';
         $html   .=  '<span class="md active"><i class="icon-locked"></i></span>';
         $html   .=  '<span class="sm"><i class="icon-locked"></i></span>';

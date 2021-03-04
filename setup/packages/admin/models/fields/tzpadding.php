@@ -50,6 +50,6 @@ class JFormFieldTZPadding extends JFormField
      */
     protected function getInput()
     {
-        return JHtml::_('TZPaddingMargin.addPadding', $this->name, $this->id, $this->value);
+        return JHtml::_('TZResponsiveBox.generation', 'padding', $this->name, $this->id, $this->value);
     }
 }
