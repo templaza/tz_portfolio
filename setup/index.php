@@ -125,7 +125,10 @@ if ($active === 'complete') {
         $uploadLimit = ini_get('upload_max_filesize');
         $memoryLimit = ini_get('memory_limit');
         $postSize = ini_get('post_max_size');
-        $magicQuotes = get_magic_quotes_gpc() && JVERSION > 3;
+		
+        if ($phpVersion < 7.4 && function_exists('get_magic_quotes_gpc') && JVERSION > 3) {
+            $magicQuotes = get_magic_quotes_gpc() && JVERSION > 3;
+        }		
 
         if (stripos($memoryLimit, 'G') !== false) {
 
@@ -137,7 +140,7 @@ if ($active === 'complete') {
         $postSize = 4;
         $hasErrors = false;
 
-        if (!$gd || !$curl || $magicQuotes) {
+        if (!$gd || !$curl || (isset($magicQuotes) && $magicQuotes)) {
             $hasErrors = true;
         }
 
