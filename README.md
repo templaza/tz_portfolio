@@ -16,6 +16,11 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+09/03/2021 - 2.4.7
+	
+	- Fix error get_magic_quotes_gpc() in php7.4.
+	- Update language, Fix issue with responsive box, Add new feature for responsive box.
+
 25/02/2021 - 2.4.6
 	
 	- Fix error load add-on content data.
