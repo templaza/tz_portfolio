@@ -25,13 +25,24 @@ $image  = $this -> image;
 $params = $this -> params;
 
 if($params -> get('mt_image_show_image_category', 1) && $item && $image && isset($image -> url) && !empty($image -> url)):
+    $image_uikit  =   $params->get('mt_image_uikit',0);
 ?>
 <div class="tz_portfolio_plus_image">
     <a href="<?php echo $item -> link;?>">
-        <img src="<?php echo $image -> url;?>"
-             alt="<?php echo isset($image -> caption)?$image -> caption:$item -> title;?>"
-             title="<?php echo isset($image -> caption)?$image -> caption:$item -> title;?>"
-             itemprop="thumbnailUrl"/>
+        <?php if ($image_uikit) :
+            $image_properties   =   getimagesize($image -> url);
+            ?>
+            <img data-src="<?php echo $image -> url; ?>" alt="<?php echo isset($image -> caption) && $image -> caption ? $image -> caption : $item -> title; ?>"
+                 title="<?php echo isset($image -> caption) && $image -> caption ? $image -> caption : $item -> title; ?>"
+                <?php
+                if (is_array($image_properties)) echo ' data-width="'.$image_properties[0].'" data-height="'.$image_properties[1].'" ';
+                ?>
+                 itemprop="thumbnailUrl" uk-img />
+        <?php else: ?>
+            <img src="<?php echo $image -> url; ?>" alt="<?php echo isset($image -> caption) && $image -> caption ? $image -> caption : $item -> title; ?>"
+                 title="<?php echo isset($image -> caption) && $image -> caption ? $image -> caption : $item -> title; ?>"
+                 itemprop="thumbnailUrl" />
+        <?php endif; ?>
     </a>
 </div>
 <?php endif;?>

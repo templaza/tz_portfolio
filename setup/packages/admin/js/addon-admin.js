@@ -40,51 +40,52 @@ jQuery( document ).ready( function( $ ) {
         el = $(el);
 
         var base_id = el.find('input.typoData');
-        $(base_id).attr('id', $(base_id).data('id'));
-        base_id =   $(base_id).attr('id');
+        // $(base_id).attr('id', $(base_id).data('id'));
+        var base_el = $(base_id);
+        base_id =   $(base_id).data('id');
 
-        var base_el = $('#' + base_id);
+
         if(base_el.val() === '') base_el.attr('value','{"fontFamily":"","lineHeight":"","fontWeight":"","letterSpacing":"","fontSize":"","fontStyle":"","textTransform":"","textDecoration":""}');
 
         var values = $.parseJSON(base_el.val());
 
-        $('#' + base_id + '_fontfamily').change(function() {
-            values.fontFamily = $('#' + base_id + '_fontfamily').val();
+        el.find('.' + base_id + '_fontfamily').change(function() {
+            values.fontFamily = el.find('.' + base_id + '_fontfamily').val();
             base_el.attr('value', JSON.stringify( values ));
         });
 
-        $('#' + base_id + '_fontweight').change(function() {
-            values.fontWeight = $('#' + base_id + '_fontweight').val();
+        el.find('.' + base_id + '_fontweight').change(function() {
+            values.fontWeight = el.find('.' + base_id + '_fontweight').val();
             base_el.attr('value', JSON.stringify( values ));
         });
 
-        $('#' + base_id + '_fontsize').change(function() {
-            values.fontSize = $('#' + base_id + '_fontsize').val();
+        el.find('.' + base_id + '_fontsize').change(function() {
+            values.fontSize = el.find('.' + base_id + '_fontsize').val();
             base_el.attr('value', JSON.stringify( values ));
         });
 
-        $('#' + base_id + '_lineheight').change(function() {
-            values.lineHeight = $('#' + base_id + '_lineheight').val();
+        el.find('.' + base_id + '_lineheight').change(function() {
+            values.lineHeight = el.find('.' + base_id + '_lineheight').val();
             base_el.attr('value', JSON.stringify( values ));
         });
 
-        $('#' + base_id + '_fontstyle').change(function() {
-            values.fontStyle = $('#' + base_id + '_fontstyle').val();
+        el.find('.' + base_id + '_fontstyle').change(function() {
+            values.fontStyle = el.find('.' + base_id + '_fontstyle').val();
             base_el.attr('value', JSON.stringify( values ));
         });
 
-        $('#' + base_id + '_letterspacing').change(function() {
-            values.letterSpacing = $('#' + base_id + '_letterspacing').val();
+        el.find('.' + base_id + '_letterspacing').change(function() {
+            values.letterSpacing = el.find('.' + base_id + '_letterspacing').val();
             base_el.attr('value', JSON.stringify( values ));
         });
 
-        $('#' + base_id + '_text_transform').change(function() {
-            values.textTransform = $('#' + base_id + '_text_transform').val();
+        el.find('.' + base_id + '_text_transform').change(function() {
+            values.textTransform = el.find('.' + base_id + '_text_transform').val();
             base_el.attr('value', JSON.stringify( values ));
         });
 
-        $('#' + base_id + '_text_decoration').change(function() {
-            values.textDecoration = $('#' + base_id + '_text_decoration').val();
+        el.find('.' + base_id + '_text_decoration').change(function() {
+            values.textDecoration = el.find('.' + base_id + '_text_decoration').val();
             base_el.attr('value', JSON.stringify( values ));
         });
     });
@@ -173,51 +174,51 @@ jQuery( document ).ready( function( $ ) {
             el = $(el);
 
             var base_id = el.find('input.typoData');
-            $(base_id).attr('id', $(base_id).data('id'));
-            base_id =   $(base_id).attr('id');
+            var base_el = $(base_id);
+            // $(base_id).attr('id', $(base_id).data('id'));
+            base_id =   $(base_id).data('id');
 
-            var base_el = $('#' + base_id);
             if(base_el.val() === '') base_el.attr('value','{"fontFamily":"","lineHeight":"","fontWeight":"","letterSpacing":"","fontSize":"","fontStyle":"","textTransform":"","textDecoration":""}');
 
             var values = $.parseJSON(base_el.val());
 
-            $('#' + base_id + '_fontfamily').change(function() {
-                values.fontFamily = $('#' + base_id + '_fontfamily').val();
+            el.find('.' + base_id + '_fontfamily').change(function() {
+                values.fontFamily = el.find('.' + base_id + '_fontfamily').val();
                 base_el.attr('value', JSON.stringify( values ));
             });
 
-            $('#' + base_id + '_fontweight').change(function() {
-                values.fontWeight = $('#' + base_id + '_fontweight').val();
+            el.find('.' + base_id + '_fontweight').change(function() {
+                values.fontWeight = el.find('.' + base_id + '_fontweight').val();
                 base_el.attr('value', JSON.stringify( values ));
             });
 
-            $('#' + base_id + '_fontsize').change(function() {
-                values.fontSize = $('#' + base_id + '_fontsize').val();
+            el.find('.' + base_id + '_fontsize').change(function() {
+                values.fontSize = el.find('.' + base_id + '_fontsize').val();
                 base_el.attr('value', JSON.stringify( values ));
             });
 
-            $('#' + base_id + '_lineheight').change(function() {
-                values.lineHeight = $('#' + base_id + '_lineheight').val();
+            el.find('.' + base_id + '_lineheight').change(function() {
+                values.lineHeight = el.find('.' + base_id + '_lineheight').val();
                 base_el.attr('value', JSON.stringify( values ));
             });
 
-            $('#' + base_id + '_fontstyle').change(function() {
-                values.fontStyle = $('#' + base_id + '_fontstyle').val();
+            el.find('.' + base_id + '_fontstyle').change(function() {
+                values.fontStyle = el.find('.' + base_id + '_fontstyle').val();
                 base_el.attr('value', JSON.stringify( values ));
             });
 
-            $('#' + base_id + '_letterspacing').change(function() {
-                values.letterSpacing = $('#' + base_id + '_letterspacing').val();
+            el.find('.' + base_id + '_letterspacing').change(function() {
+                values.letterSpacing = el.find('.' + base_id + '_letterspacing').val();
                 base_el.attr('value', JSON.stringify( values ));
             });
 
-            $('#' + base_id + '_text_transform').change(function() {
-                values.textTransform = $('#' + base_id + '_text_transform').val();
+            el.find('.' + base_id + '_text_transform').change(function() {
+                values.textTransform = el.find('.' + base_id + '_text_transform').val();
                 base_el.attr('value', JSON.stringify( values ));
             });
 
-            $('#' + base_id + '_text_decoration').change(function() {
-                values.textDecoration = $('#' + base_id + '_text_decoration').val();
+            el.find('.' + base_id + '_text_decoration').change(function() {
+                values.textDecoration = el.find('.' + base_id + '_text_decoration').val();
                 base_el.attr('value', JSON.stringify( values ));
             });
         });
