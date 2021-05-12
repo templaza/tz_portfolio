@@ -23,13 +23,27 @@ defined('_JEXEC') or die;
 if($item && $image && isset($image -> url) && !empty($image -> url)):
     $doc    = JFactory::getDocument();
     $doc -> addStyleSheet(TZ_Portfolio_PlusUri::base().'/addons/mediatype/image/css/style.css', array('version' => 'auto'));
+    $image_uikit  =   $params->get('mt_image_uikit',0);
     if($params -> get('mt_show_image',1)):
         ?>
         <div class="tz_portfolio_plus_image">
             <a href="<?php echo $item -> link;?>">
-                <img src="<?php echo $image -> url;?>"
-                     alt="<?php echo isset($image -> caption)?$image -> caption:$item -> title;?>"
-                     title="<?php echo isset($image -> caption)?$image -> caption:$item -> title;?>" itemprop="image"/>
+                <?php
+                $imagesrc   =   $image -> url;
+                if ($image_uikit) :
+                    $image_properties   =   getimagesize($imagesrc);
+                    ?>
+                    <img data-src="<?php echo $imagesrc; ?>" alt="<?php echo isset($image -> caption) && $image -> caption ? $image -> caption : $item -> title; ?>"
+                         title="<?php echo isset($image -> caption) && $image -> caption ? $image -> caption : $item -> title; ?>"
+                        <?php
+                        if (is_array($image_properties)) echo ' data-width="'.$image_properties[0].'" data-height="'.$image_properties[1].'" ';
+                        ?>
+                         itemprop="image" uk-img />
+                <?php else: ?>
+                    <img src="<?php echo $imagesrc; ?>" alt="<?php echo isset($image -> caption) && $image -> caption ? $image -> caption : $item -> title; ?>"
+                         title="<?php echo isset($image -> caption) && $image -> caption ? $image -> caption : $item -> title; ?>"
+                         itemprop="image" />
+                <?php endif; ?>
             </a>
         </div>
     <?php endif;?>

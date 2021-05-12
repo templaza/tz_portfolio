@@ -49,16 +49,11 @@ if($item && $image && isset($image -> url) && !empty($image -> url)):
             <?php if ($image_uikit) :
                 $image_properties   =   getimagesize($imagesrc);
                 ?>
-                <img data-src="<?php echo $imagesrc; ?>" alt="<?php echo isset($image -> caption) && $image -> caption ? $image -> caption : $item -> title; ?>"
-                     title="<?php echo isset($image -> caption) && $image -> caption ? $image -> caption : $item -> title; ?>"
-                    <?php
+                <img data-src="<?php echo $imagesrc; ?>" alt="<?php echo isset($image -> caption) && $image -> caption ? $image -> caption : $item -> title; ?>" title="<?php echo isset($image -> caption) && $image -> caption ? $image -> caption : $item -> title; ?>"<?php
                     if (is_array($image_properties)) echo ' data-width="'.$image_properties[0].'" data-height="'.$image_properties[1].'" ';
-                    ?>
-                     itemprop="image" uk-img />
+                    ?>itemprop="image" uk-img />
             <?php else: ?>
-                <img src="<?php echo $imagesrc; ?>" alt="<?php echo isset($image -> caption) && $image -> caption ? $image -> caption : $item -> title; ?>"
-                     title="<?php echo isset($image -> caption) && $image -> caption ? $image -> caption : $item -> title; ?>"
-                     itemprop="image" />
+                <img src="<?php echo $imagesrc; ?>" alt="<?php echo isset($image -> caption) && $image -> caption ? $image -> caption : $item -> title; ?>" title="<?php echo isset($image -> caption) && $image -> caption ? $image -> caption : $item -> title; ?>" itemprop="image" />
             <?php endif; ?>
         <?php if($params -> get('image_lightbox_enable', 1)){ ?>
         </a>

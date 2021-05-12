@@ -32,16 +32,11 @@ if($params -> get('mt_image_show_image_category', 1) && $item && $image && isset
         <?php if ($image_uikit) :
             $image_properties   =   getimagesize($image -> url);
             ?>
-            <img data-src="<?php echo $image -> url; ?>" alt="<?php echo isset($image -> caption) && $image -> caption ? $image -> caption : $item -> title; ?>"
-                 title="<?php echo isset($image -> caption) && $image -> caption ? $image -> caption : $item -> title; ?>"
-                <?php
+            <img data-src="<?php echo $image -> url; ?>" alt="<?php echo isset($image -> caption) && $image -> caption ? $image -> caption : $item -> title; ?>" title="<?php echo isset($image -> caption) && $image -> caption ? $image -> caption : $item -> title; ?>"<?php
                 if (is_array($image_properties)) echo ' data-width="'.$image_properties[0].'" data-height="'.$image_properties[1].'" ';
-                ?>
-                 itemprop="thumbnailUrl" uk-img />
+                ?>itemprop="thumbnailUrl" uk-img />
         <?php else: ?>
-            <img src="<?php echo $image -> url; ?>" alt="<?php echo isset($image -> caption) && $image -> caption ? $image -> caption : $item -> title; ?>"
-                 title="<?php echo isset($image -> caption) && $image -> caption ? $image -> caption : $item -> title; ?>"
-                 itemprop="thumbnailUrl" />
+            <img src="<?php echo $image -> url; ?>" alt="<?php echo isset($image -> caption) && $image -> caption ? $image -> caption : $item -> title; ?>" title="<?php echo isset($image -> caption) && $image -> caption ? $image -> caption : $item -> title; ?>" itemprop="thumbnailUrl" />
         <?php endif; ?>
     </a>
 </div>
