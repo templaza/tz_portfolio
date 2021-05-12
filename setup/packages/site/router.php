@@ -1147,7 +1147,8 @@ class TZ_Portfolio_PlusRouter extends RouterBase
                 $query -> join('INNER', '#__tz_portfolio_plus_categories AS cc ON cc.id = m.catid AND m.main = 1');
                 $query -> where('c.alias='.$db -> quote($lastAlias));
 				
-				/* Filter by catid
+				
+                /* Filter by catid
                 * added from v2.4.8
                 */
                 $menu_view  = '';
@@ -1156,7 +1157,9 @@ class TZ_Portfolio_PlusRouter extends RouterBase
                 }
                 if($menu_view == 'portfolio' && ($m_catid = $menuParams -> get('catid'))){
                     $m_catid    = array_filter($m_catid);
-                    $query -> where('cc.id IN('.implode(',', $m_catid).')');
+                    if(count($m_catid)) {
+                        $query->where('cc.id IN(' . implode(',', $m_catid) . ')');
+                    }
                 }
 
                 $db -> setQuery($query);
