@@ -42,7 +42,7 @@ class PlgTZ_Portfolio_PlusMediaTypeImage extends TZ_Portfolio_PlusPlugin
                                 $image_url_ext = \JFile::getExt($image->url);
                                 $image_url = str_replace('.' . $image_url_ext, '_' . $size . '.'
                                     . $image_url_ext, $image->url);
-                                if ($params->get('mt_image_uikit',0) && file_exists(JPATH_BASE.'/'.$image_url)) {
+                                if (file_exists(JPATH_BASE.'/'.$image_url)) {
                                     $image_properties =   getimagesize(JPATH_BASE.'/'.$image_url);
                                 }
                                 $image->url = JURI::base(true) .'/'. $image_url;
