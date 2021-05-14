@@ -26,10 +26,11 @@ jimport('joomla.filesystem.file');
 
 class PlgTZ_Portfolio_PlusMediaTypeImageViewPortfolio extends JViewLegacy{
 
-    protected $item     = null;
-    protected $params   = null;
-    protected $image    = null;
-    protected $head     = false;
+    protected $item                 = null;
+    protected $params               = null;
+    protected $image                = null;
+    protected $head                 = false;
+    protected $image_properties     = false;
 
     public function display($tpl = null){
         $state          = $this -> get('State');
@@ -62,7 +63,10 @@ class PlgTZ_Portfolio_PlusMediaTypeImageViewPortfolio extends JViewLegacy{
                                 }
                                 $image_url = str_replace('.' . $image_url_ext, '_' . $size . '.'
                                     . $image_url_ext, $image->url);
-                                $image->url = JURI::root() . $image_url;
+                                if ($params->get('mt_image_uikit',0) && file_exists(JPATH_BASE.'/'.$image_url)) {
+                                    $this->image_properties =   getimagesize(JPATH_BASE.'/'.$image_url);
+                                }
+                                $image->url = JURI::base( true ) . '/' . $image_url;
                             }
                         }
                         $this->image = $image;

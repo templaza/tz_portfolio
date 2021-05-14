@@ -31,6 +31,7 @@ class PlgTZ_Portfolio_PlusMediaTypeImageViewArticle extends JViewLegacy{
     protected $image    = null;
     protected $state    = null;
     protected $head     = false;
+    protected $image_properties     = false;
 
     public function display($tpl = null){
         $state          = $this -> get('State');
@@ -68,7 +69,7 @@ class PlgTZ_Portfolio_PlusMediaTypeImageViewArticle extends JViewLegacy{
                                 $image_url = str_replace('.' . $image_url_ext, '_' . $size . '.'
                                     . $image_url_ext, $image->url);
 
-                                $image->related_url = JURI::root() . $image_url;
+                                $image->related_url = JURI::base( true ) . '/' . $image_url;
                             }
                         }
 
@@ -80,7 +81,10 @@ class PlgTZ_Portfolio_PlusMediaTypeImageViewArticle extends JViewLegacy{
                                 }
                                 $image_url = str_replace('.' . $image_url_ext, '_' . $size . '.'
                                     . $image_url_ext, $image->url);
-                                $image->url = JURI::root() . $image_url;
+                                if ($params->get('mt_image_uikit',0) && file_exists(JPATH_BASE.'/'.$image_url)) {
+                                    $this->image_properties =   getimagesize(JPATH_BASE.'/'.$image_url);
+                                }
+                                $image->url = JURI::base( true ) . '/' . $image_url;
 
                                 if($this -> getLayout() != 'related') {
                                     JFactory::getDocument()->addCustomTag('<meta property="og:image" content="' . $image->url . '"/>');
@@ -94,7 +98,10 @@ class PlgTZ_Portfolio_PlusMediaTypeImageViewArticle extends JViewLegacy{
                                 $image_url_ext = \JFile::getExt($image->url_detail);
                                 $image_url = str_replace('.' . $image_url_ext, '_' . $size . '.'
                                     . $image_url_ext, $image->url_detail);
-                                $image->url_detail = JURI::root() . $image_url;
+                                if ($params->get('mt_image_uikit',0) && file_exists(JPATH_BASE.'/'.$image_url)) {
+                                    $this->image_properties =   getimagesize(JPATH_BASE.'/'.$image_url);
+                                }
+                                $image->url_detail = JURI::base( true ) . '/' . $image_url;
                             }
                         }
 
