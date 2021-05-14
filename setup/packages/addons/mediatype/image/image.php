@@ -35,27 +35,30 @@ class PlgTZ_Portfolio_PlusMediaTypeImage extends TZ_Portfolio_PlusPlugin
                 $image  = null;
                 if(isset($media -> image)){
                     $image  = clone($media -> image);
-
-
+                    $image_properties = null;
                     if(isset($image -> url) && $image -> url) {
                         if ($size = $params->get('mt_image_size', 'o')) {
                             if (isset($image->url) && !empty($image->url)) {
                                 $image_url_ext = \JFile::getExt($image->url);
                                 $image_url = str_replace('.' . $image_url_ext, '_' . $size . '.'
                                     . $image_url_ext, $image->url);
-                                $image->url = JURI::root() . $image_url;
+                                if ($params->get('mt_image_uikit',0) && file_exists(JPATH_BASE.'/'.$image_url)) {
+                                    $image_properties =   getimagesize(JPATH_BASE.'/'.$image_url);
+                                }
+                                $image->url = JURI::base(true) .'/'. $image_url;
                             }
 
                             if (isset($image->url_detail) && !empty($image->url_detail)) {
                                 $image_url_ext = \JFile::getExt($image->url_detail);
                                 $image_url = str_replace('.' . $image_url_ext, '_' . $size . '.'
                                     . $image_url_ext, $image->url_detail);
-                                $image->url_detail = JURI::root() . $image_url;
+                                $image->url_detail = JURI::base(true) . '/' . $image_url;
                             }
                         }
                     }
                 }
                 $this -> setVariable('image', $image);
+                $this -> setVariable('image_properties', $image_properties);
             }
             $this -> setVariable('item', $article);
 
