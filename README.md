@@ -16,6 +16,15 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+17/05/2021 - 2.4.8
+	
+	- Update style for tzfont, update image addon
+	- Remove override Image Addon in elegant style
+	- Fix error router when article like alias
+	- Remove unnecessary space
+	- Update getimagesize of add-on image
+	- Update image url of add-on image
+
 09/03/2021 - 2.4.7
 	
 	- Fix error get_magic_quotes_gpc() in php7.4.
