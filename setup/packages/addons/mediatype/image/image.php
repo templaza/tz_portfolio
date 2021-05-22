@@ -33,9 +33,9 @@ class PlgTZ_Portfolio_PlusMediaTypeImage extends TZ_Portfolio_PlusPlugin
         if($article){
             if($media = $article -> media){
                 $image  = null;
+                $image_properties = null;
                 if(isset($media -> image)){
                     $image  = clone($media -> image);
-                    $image_properties = null;
                     if(isset($image -> url) && $image -> url) {
                         if ($size = $params->get('mt_image_size', 'o')) {
                             if (isset($image->url) && !empty($image->url)) {
