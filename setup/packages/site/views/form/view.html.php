@@ -23,6 +23,8 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.view');
 tzportfolioplusimport('user.user');
 
+JHtml::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR.'/helpers/html');
+
 class TZ_Portfolio_PlusViewForm extends JViewLegacy
 {
     protected $form;
