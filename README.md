@@ -16,6 +16,11 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+24/06/2021 - 2.4.9
+	
+	- Fix issue with Image Properties
+	- Fix error class not found of create article view
+
 17/05/2021 - 2.4.8
 	
 	- Update style for tzfont, update image addon
