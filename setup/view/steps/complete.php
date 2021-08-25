@@ -49,9 +49,19 @@ $xml    = simplexml_load_file(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/tz_portfolio_pl
 
 	<p><b><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_CHECK_US_SOCIAL_DESC');?></b></p>
 
-	<a class="btn btn-social hasTooltip" href="<?php echo (string) $xml -> facebookUrl;?>" target="_blank" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_FANPAGE');?>"><i class="tpb tp-facebook-f"></i></a>
-	<a class="btn btn-social hasTooltip" href="<?php echo (string) $xml -> youtubeUrl;?>" target="_blank" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_VIDEO_TUTORIALS');?>"><i class="tpb tp-youtube"></i></a>
-	<a class="btn btn-social hasTooltip" href="<?php echo (string) $xml -> jedUrl;?>" target="_blank" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_RATE_ON_JED');?>"><i class="tpb tp-joomla"></i></a>
-	<a class="btn btn-social hasTooltip" href="<?php echo (string) $xml -> transifexUrl;?>" target="_blank" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_FIND_HELP_TRANSLATE');?>"><i class="tps tp-globe"></i></a>
+    <?php
+    $btn_class  = '';
+    if(version_compare(JVERSION, '4.0', 'ge')){
+        $btn_class  = ' d-flex justify-content-center text-center align-items-center';
+        ?>
+    <div class="d-flex justify-content-center text-center align-items-center">
+    <?php }?>
+        <a class="btn btn-social hasTooltip<?php echo $btn_class; ?>" href="<?php echo (string) $xml -> facebookUrl;?>" target="_blank" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_FANPAGE');?>"><i class="tpb tp-facebook-f"></i></a>
+        <a class="btn btn-social hasTooltip<?php echo $btn_class; ?>" href="<?php echo (string) $xml -> youtubeUrl;?>" target="_blank" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_VIDEO_TUTORIALS');?>"><i class="tpb tp-youtube"></i></a>
+        <a class="btn btn-social hasTooltip<?php echo $btn_class; ?>" href="<?php echo (string) $xml -> jedUrl;?>" target="_blank" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_RATE_ON_JED');?>"><i class="tpb tp-joomla"></i></a>
+        <a class="btn btn-social hasTooltip<?php echo $btn_class; ?>" href="<?php echo (string) $xml -> transifexUrl;?>" target="_blank" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_FIND_HELP_TRANSLATE');?>"><i class="tps tp-globe"></i></a>
+    <?php if(version_compare(JVERSION, '4.0', 'ge')){?>
+    </div>
+    <?php }?>
 
 </div>

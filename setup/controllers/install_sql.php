@@ -103,18 +103,6 @@ class TZ_Portfolio_PlusSetupControllerInstall_Sql extends TZ_Portfolio_PlusSetup
 
         $this -> addDefaultStylePreset();
 
-//        if($params = JComponentHelper::getParams('com_tz_portfolio_plus')){
-//            $params -> set('bootstrapversion', 4);
-//            $db     = JFactory::getDbo();
-//            $query  = $db -> getQuery(true);
-//            $query -> update('#__extensions');
-//            $query -> set('params ='.$db -> quote($params -> toString()));
-//            $query -> where('type='.$db -> quote('component'));
-//            $query -> where('element='.$db -> quote('com_tz_portfolio_plus'));
-//            $db -> setQuery($query);
-//            $db -> execute();
-//        }
-
         $this->setInfo(JText::sprintf('COM_EASYBLOG_INSTALLATION_SQL_EXECUTED_SUCCESS', $total), true);
         return $this->output();
     }
@@ -219,7 +207,7 @@ class TZ_Portfolio_PlusSetupControllerInstall_Sql extends TZ_Portfolio_PlusSetup
             $def_file   = JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/views/template_style/tmpl/default.json';
             if(\JFile::exists($def_file)){
                 $def_value      = file_get_contents($def_file);
-                $template_sql2  = 'INSERT INTO `#__tz_portfolio_plus_templates`(`id`, `title`, `home`, `params`) VALUES(1, \'system - Default\', \'1\',\''.$def_value.'\')';
+                $template_sql2  = 'INSERT IGNORE INTO `#__tz_portfolio_plus_templates`(`id`, `title`, `home`, `params`) VALUES(1, \'system - Default\', \'1\',\''.$def_value.'\')';
                 $db -> setQuery($template_sql2);
                 $db -> execute();
             }

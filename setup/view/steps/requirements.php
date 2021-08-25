@@ -10,6 +10,7 @@
 * See COPYRIGHT.php for copyright notices and details.
 */
 defined('_JEXEC') or die('Unauthorized Access');
+
 ?>
 <script type="text/javascript">
 jQuery(document).ready(function(){
@@ -51,10 +52,10 @@ jQuery(document).ready(function(){
 <div class="installation-error">
 	<form name="installation" method="post" data-installation-form>
 
-	<p class="alert alert-warning"><?php echo JText::_('COM_EB_INSTALLATION_TECHNICAL_REQUIREMENTS_DESC');?></p>
+	<p class="alert alert-warning"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_INSTALLATION_TECHNICAL_REQUIREMENTS_DESC');?></p>
 
 	<div class="alert alert-danger" data-requirements-error style="display: none;">
-		<?php echo JText::_('COM_EASYBLOG_INSTALLATION_TECHNICAL_REQUIREMENTS_NOT_MET');?>
+		<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_INSTALLATION_TECHNICAL_REQUIREMENTS_SETTINGS');?>
 	</div>
 
 	<div class="requirements-table" data-system-requirements>
@@ -64,7 +65,7 @@ jQuery(document).ready(function(){
 			<thead>
 				<tr>
 					<td width="75%">
-						<?php echo JText::_('COM_EASYBLOG_INSTALLATION_TECHNICAL_REQUIREMENTS_SETTINGS');?>
+						<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_INSTALLATION_TECHNICAL_REQUIREMENTS_SETTINGS');?>
 					</td>
 					<td class="text-right" width="25%"></td>
 				</tr>
@@ -76,7 +77,7 @@ jQuery(document).ready(function(){
 				<tr class="error">
 					<td>
 						<div class="clearfix">
-							<img class="hasTooltip" src="<?php echo EB_SETUP_URL;?>/assets/images/alert.svg" width="12" height="12" data-original-title="<?php echo JText::_('COM_EB_INSTALLATION_PHP_VERSION_TIPS');?>" data-toggle="tooltip" data-placement="bottom">
+							<img class="hasTooltip" src="<?php echo COM_TZ_PORTFOLIO_PLUS_SETUP_URL;?>/assets/images/alert.svg" width="12" height="12" data-original-title="<?php echo JText::_('COM_EB_INSTALLATION_PHP_VERSION_TIPS');?>" data-toggle="tooltip" data-placement="bottom">
 							PHP Version
 						</div>
 					</td>
@@ -90,7 +91,7 @@ jQuery(document).ready(function(){
 				<tr class="error">
 					<td>
 						<div class="clearfix">
-							<img class="hasTooltip" src="<?php echo EB_SETUP_URL;?>/assets/images/alert.svg" width="12" height="12" data-original-title="<?php echo JText::_('COM_EB_INSTALLATION_PHP_GD_TIPS');?>" data-toggle="tooltip" data-placement="bottom">
+							<img class="hasTooltip" src="<?php echo COM_TZ_PORTFOLIO_PLUS_SETUP_URL;?>/assets/images/alert.svg" width="12" height="12" data-original-title="<?php echo JText::_('COM_EB_INSTALLATION_PHP_GD_TIPS');?>" data-toggle="tooltip" data-placement="bottom">
 							GD Library
 						</div>
 					</td>
@@ -104,7 +105,7 @@ jQuery(document).ready(function(){
 					<tr class="error">
 						<td>
 							<div class="clearfix">
-								<img class="hasTooltip" src="<?php echo EB_SETUP_URL;?>/assets/images/alert.svg" width="12" height="12" data-original-title="<?php echo JText::_('COM_EB_INSTALLATION_PHP_CURL_TIPS');?>" data-toggle="tooltip" data-placement="bottom">
+								<img class="hasTooltip" src="<?php echo COM_TZ_PORTFOLIO_PLUS_SETUP_URL;?>/assets/images/alert.svg" width="12" height="12" data-original-title="<?php echo JText::_('COM_EB_INSTALLATION_PHP_CURL_TIPS');?>" data-toggle="tooltip" data-placement="bottom">
 			
 								CURL Library
 							</div>
@@ -116,11 +117,11 @@ jQuery(document).ready(function(){
 					</tr>
 				<?php } ?>
 
-				<?php if ($magicQuotes) { ?>
+				<?php if (isset($magicQuotes) && $magicQuotes) { ?>
 				<tr class="error">
 					<td>
 						<div class="clearfix">
-							<img class="hasTooltip" src="<?php echo EB_SETUP_URL;?>/assets/images/alert.svg" width="12" height="12" data-original-title="<?php echo JText::_('COM_EB_INSTALLATION_PHP_MAGICQUOTES_TIPS');?>" data-toggle="tooltip" data-placement="bottom">
+							<img class="hasTooltip" src="<?php echo COM_TZ_PORTFOLIO_PLUS_SETUP_URL;?>/assets/images/alert.svg" width="12" height="12" data-original-title="<?php echo JText::_('COM_EB_INSTALLATION_PHP_MAGICQUOTES_TIPS');?>" data-toggle="tooltip" data-placement="bottom">
 							Magic Quotes GPC
 						</div>
 					</td>
@@ -133,7 +134,7 @@ jQuery(document).ready(function(){
 				<?php if ($memoryLimit < 64) { ?>
 				<tr class="error">
 					<td>
-						<img class="hasTooltip" src="<?php echo EB_SETUP_URL;?>/assets/images/alert.svg" width="12" height="12" data-original-title="<?php echo JText::_('COM_EB_INSTALLATION_PHP_MEMORYLIMIT_TIPS');?>" data-toggle="tooltip" data-placement="bottom">
+						<img class="hasTooltip" src="<?php echo COM_TZ_PORTFOLIO_PLUS_SETUP_URL;?>/assets/images/alert.svg" width="12" height="12" data-original-title="<?php echo JText::_('COM_EB_INSTALLATION_PHP_MEMORYLIMIT_TIPS');?>" data-toggle="tooltip" data-placement="bottom">
 						memory_limit
 					</td>
 					<td class="text-right text-error">
@@ -145,7 +146,7 @@ jQuery(document).ready(function(){
 				<?php if (!$mysqlVersion || version_compare($mysqlVersion , '5.0.4') == -1) { ?>
 				<tr class="error">
 					<td>
-						<img class="hasTooltip" src="<?php echo EB_SETUP_URL;?>/assets/images/alert.svg" width="12" height="12" data-original-title="<?php echo JText::_('COM_EB_INSTALLATION_MYSQL_VERSION_TIPS');?>" data-toggle="tooltip" data-placement="bottom">
+						<img class="hasTooltip" src="<?php echo COM_TZ_PORTFOLIO_PLUS_SETUP_URL;?>/assets/images/alert.svg" width="12" height="12" data-original-title="<?php echo JText::_('COM_EB_INSTALLATION_MYSQL_VERSION_TIPS');?>" data-toggle="tooltip" data-placement="bottom">
 						MySQL Version
 					</td>
 					<td class="text-right text-error">
@@ -174,7 +175,7 @@ jQuery(document).ready(function(){
 						<tr class="error">
 							<td>
 								<div class="clearfix">
-									<img src="<?php echo EB_SETUP_URL;?>/assets/images/alert.svg" width="12" height="12">
+									<img src="<?php echo COM_TZ_PORTFOLIO_PLUS_SETUP_URL;?>/assets/images/alert.svg" width="12" height="12">
 									<span><?php echo $file->path;?></span>
 								</div>
 							</td>

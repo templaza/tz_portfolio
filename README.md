@@ -16,6 +16,10 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+25/08/2021 - 2.5.0
+	
+	- Compatible with joomla 4.
+
 24/06/2021 - 2.4.9
 	
 	- Fix issue with Image Properties
