@@ -20,22 +20,25 @@
 // No direct access.
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+
 // Include the component HTML helpers.
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
 
 // Load the tooltip behavior.
-JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.formvalidator');
-JHtml::_('behavior.keepalive');
+HTMLHelper::_('bootstrap.tooltip');
+HTMLHelper::_('behavior.formvalidator');
+HTMLHelper::_('behavior.keepalive');
 
 if(!COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
-    JHtml::_('behavior.tabstate');
-    JHtml::_('formbehavior.chosen', 'select');
+    HTMLHelper::_('behavior.tabstate');
+    HTMLHelper::_('formbehavior.chosen', 'select');
 }else{
-    JHtml::_('formbehavior.chosen', 'select[multiple]');
+    HTMLHelper::_('formbehavior.chosen', 'select[multiple]');
 }
 
-$doc    = JFactory::getDocument();
+$doc    = Factory::getApplication() -> getDocument();
 $doc -> addScript(TZ_Portfolio_PlusUri::base(true, true).'/js/jquery-ui.min.js', array('version' => 'v=1.11.4'));
 $doc -> addStyleSheet(TZ_Portfolio_PlusUri::base(true, true).'/css/jquery-ui.min.css', array('version' => 'v=1.11.4'));
 $doc -> addStyleSheet(TZ_Portfolio_PlusUri::base(true, true).'/css/tz_portfolio_plus.min.css', array('version' => 'auto'));
@@ -90,6 +93,12 @@ $doc -> addScriptDeclaration('(function($){
             });
         });
     })(jQuery);');
+
+$jTab   = 'bootstrap';
+if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE){
+    $jTab   = 'uitab';
+}
+
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&view=article&layout=edit&id='.(int) $this->item->id); ?>"
       method="post"
@@ -97,15 +106,15 @@ $doc -> addScriptDeclaration('(function($){
       id="adminForm"
       class="form-validate tpArticle"
       enctype="multipart/form-data">
-    <?php echo JHtml::_('tzbootstrap.addrow');?>
+    <?php echo HTMLHelper::_('tzbootstrap.addrow');?>
         <div class="span8 col-md-8 form-horizontal">
-            <?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'general')); ?>
+            <?php echo HTMLHelper::_($jTab.'.startTabSet', 'myTab', array('active' => 'general')); ?>
 
                 <?php
                 // Tab general
-                echo JHtml::_('bootstrap.addTab', 'myTab', 'general',
+                echo HTMLHelper::_($jTab.'.addTab', 'myTab', 'general',
                     JText::_('JDETAILS', true)); ?>
-                    <?php echo JHtml::_('tzbootstrap.addrow');?>
+                    <?php echo HTMLHelper::_('tzbootstrap.addrow');?>
                         <div class="span6 col-md-6">
                             <?php echo $this -> form -> renderField('title');?>
                             <?php echo $this -> form -> renderField('alias');?>
@@ -132,85 +141,79 @@ $doc -> addScriptDeclaration('(function($){
                             <?php echo $this -> form -> renderField('language');?>
                             <?php echo $this -> form -> renderField('template_id');?>
                         </div>
-                    <?php echo JHtml::_('tzbootstrap.endrow');?>
+                    <?php echo HTMLHelper::_('tzbootstrap.endrow');?>
 
                     <?php
                     // Before description position
                     echo $this -> loadTemplate('addon_before_description');
 
-                    $tabs_header    = '';
-                    $tabs_content   = '';
+                    ?>
 
-                    if(isset($this -> advancedDesc) && count($this -> advancedDesc)){
-                        foreach($this -> advancedDesc as $i => $advance){
-                            $id              = 'tztabsaddonsplg_'.$advance -> group.'_'
-                                .$advance -> addon;
-                            $tabs_header    .= '<li class="nav-item"><a href="#'.$id.'" data-toggle="tab">'
-                                .$advance -> title.'</a></li>';
-                            $tabs_content   .= '<div class="tab-pane" id="'.$id.'">'
-                                .(isset($advance -> html)?$advance -> html:'').'</div>';
+
+                <?php echo HTMLHelper::_($jTab.'.startTabSet', 'myTabGenearal', ['active' => 'tz_content', 'recall' => true, 'breakpoint' => 768]); ?>
+                    <?php echo HTMLHelper::_($jTab.'.addTab', 'myTabGenearal', 'tz_content', JText::_('COM_TZ_PORTFOLIO_PLUS_TAB_CONTENT')); ?>
+                        <?php echo $this->form->getInput('articletext'); ?>
+                    <?php echo HTMLHelper::_($jTab.'.endTab'); ?>
+                    <?php
+                    if(!empty($this -> pluginsMediaTypeTab) && count($this -> pluginsMediaTypeTab)){
+                        foreach($this -> pluginsMediaTypeTab as $media){
+                            echo HTMLHelper::_($jTab.'.addTab', 'myTabGenearal', 'tztabsaddonsplg_mediatype'
+                                . $media->type->value, $media -> type -> text);
+                                echo $media -> html;
+                            echo HTMLHelper::_($jTab.'.endTab');
                         }
                     }
                     ?>
+                    <?php echo HTMLHelper::_($jTab.'.addTab', 'myTabGenearal', 'tztabsFields', JText::_('COM_TZ_PORTFOLIO_PLUS_TAB_FIELDS')); ?>
+                        <?php echo $this -> loadTemplate('extrafields');?>
+                    <?php echo HTMLHelper::_($jTab.'.endTab'); ?>
 
-                    <ul class="nav nav-tabs">
-                        <li class="nav-item active"><a class="nav-link" href="#tz_content" data-toggle="tab"><?php
-                                echo JText::_('COM_TZ_PORTFOLIO_PLUS_TAB_CONTENT');?></a></li>
-                        <?php echo $this -> loadTemplate('plugin_title_tab');?>
-                        <li class="nav-item"><a class="nav-link" href="#tztabsFields" data-toggle="tab"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_TAB_FIELDS');?></a></li>
+                    <?php
+                    if(!empty($this -> advancedDesc) && count($this -> advancedDesc)){
+                        foreach($this -> advancedDesc as $advance){
+                            echo HTMLHelper::_($jTab.'.addTab', 'myTabGenearal', 'tztabsaddonsplg_'
+                                .$advance -> group.'_'.$advance -> addon, $advance -> title);
+                            echo $advance -> html;
+                            echo HTMLHelper::_($jTab.'.endTab');
+                        }
+                    }
+                    ?>
+                <?php echo HTMLHelper::_($jTab.'.endTabSet'); ?>
 
-                        <?php echo !empty($tabs_header)?$tabs_header:'';?>
-                    </ul>
-                    <?php //-- Begin Content --// ?>
-                    <div class="tab-content">
-                        <?php //-- Begin Tabs --// ?>
-                        <div class="tab-pane active" id="tz_content">
-                            <?php echo $this->form->getInput('articletext'); ?>
-                        </div>
-
-                        <?php echo $this -> loadTemplate('plugin_content_tab');?>
-                        <div class="tab-pane" id="tztabsFields">
-                            <?php echo $this -> loadTemplate('extrafields');?>
-                        </div>
-
-                        <?php echo !empty($tabs_content)?$tabs_content:'';?>
-                        <?php //-- End Tabs --// ?>
-                    </div>
-                    <?php //-- End Content --// ?>
                 <?php
                 // After description position
                 echo $this->loadTemplate('addon_after_description');
                 ?>
 
 
-                <?php echo JHtml::_('bootstrap.endTab');
+                <?php echo HTMLHelper::_($jTab.'.endTab');
                 // End tab general
 
                 ?>
 
                 <?php if($assoc && $extensionassoc){ ?>
-                <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'associations',
+                <?php echo HTMLHelper::_($jTab.'.addTab', 'myTab', 'associations',
                         JText::_('JGLOBAL_FIELDSET_ASSOCIATIONS', true)); ?>
                     <?php echo $this->loadTemplate('associations'); ?>
-                <?php echo JHtml::_('bootstrap.endTab'); ?>
+                <?php echo HTMLHelper::_($jTab.'.endTab'); ?>
                 <?php } ?>
 
                 <?php if ($this->canDo->get('core.admin')){ ?>
-                <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'permissions',
+                <?php echo HTMLHelper::_($jTab.'.addTab', 'myTab', 'permissions',
                     JText::_('JCONFIG_PERMISSIONS_LABEL', true)); ?>
                     <?php echo $this->form->getInput('rules'); ?>
-                <?php echo JHtml::_('bootstrap.endTab'); ?>
+                <?php echo HTMLHelper::_($jTab.'.endTab'); ?>
                 <?php } ?>
-            <?php echo JHtml::_('bootstrap.endTabSet'); ?>
+            <?php echo HTMLHelper::_($jTab.'.endTabSet'); ?>
 
         </div>
         <div class="span4 col-md-4 form-vertical">
-            <?php echo JHtml::_('bootstrap.startAccordion', 'articleOptions', array('active' => 'collapse0'
+            <?php echo HTMLHelper::_('bootstrap.startAccordion', 'articleOptions', array('active' => 'collapse0'
             , 'parent' => true));?>
 
             <?php // Do not show the publishing options if the edit form is configured not to. ?>
             <?php  if ($params['show_publishing_options'] || ( $params['show_publishing_options'] = '' && !empty($editoroptions)) ): ?>
-                <?php echo JHtml::_('bootstrap.addSlide', 'articleOptions', JText::_('JGLOBAL_FIELDSET_PUBLISHING'), 'collapse0'); ?>
+                <?php echo HTMLHelper::_('bootstrap.addSlide', 'articleOptions', JText::_('JGLOBAL_FIELDSET_PUBLISHING'), 'collapse0'); ?>
                 <fieldset>
                     <?php echo $this -> form -> renderField('created_by');?>
                     <?php echo $this -> form -> renderField('created_by_alias');?>
@@ -231,7 +234,7 @@ $doc -> addScriptDeclaration('(function($){
                         <?php echo $this -> form -> renderField('hits');?>
                     <?php endif; ?>
                 </fieldset>
-                <?php echo JHtml::_('bootstrap.endSlide');?>
+                <?php echo HTMLHelper::_('bootstrap.endSlide');?>
             <?php  endif; ?>
 
             <?php  $fieldSets = $this->form->getFieldsets('attribs'); ?>
@@ -246,8 +249,8 @@ $doc -> addScriptDeclaration('(function($){
 
 
                     <?php if ($name != 'editorConfig' && $name != 'basic-limited') :?>
-                        <?php //echo JHtml::_('sliders.panel', JText::_($fieldSet->label), $name.'-options'); ?>
-                        <?php echo JHtml::_('bootstrap.addSlide', 'articleOptions', JText::_($fieldSet->label), 'collapse' . $i++); ?>
+                        <?php //echo HTMLHelper::_('sliders.panel', JText::_($fieldSet->label), $name.'-options'); ?>
+                        <?php echo HTMLHelper::_('bootstrap.addSlide', 'articleOptions', JText::_($fieldSet->label), 'collapse' . $i++); ?>
                         <?php if (isset($fieldSet->description) && trim($fieldSet->description)) : ?>
                             <p class="tip"><?php echo $this->escape(JText::_($fieldSet->description));?></p>
                         <?php endif; ?>
@@ -256,7 +259,7 @@ $doc -> addScriptDeclaration('(function($){
                                 echo $field -> renderField();
                             } ?>
                         </fieldset>
-                        <?php echo JHtml::_('bootstrap.endSlide');?>
+                        <?php echo HTMLHelper::_('bootstrap.endSlide');?>
                     <?php endif ?>
                     <?php // If we are not showing the options we need to use the hidden fields so the values are not lost.  ?>
                 <?php  elseif ($name == 'basic-limited'): ?>
@@ -270,17 +273,17 @@ $doc -> addScriptDeclaration('(function($){
             <?php // The url and images fields only show if the configuration is set to allow them.  ?>
             <?php // This is for legacy reasons. ?>
 
-            <?php echo JHtml::_('bootstrap.addSlide', 'articleOptions', JText::_('JGLOBAL_FIELDSET_METADATA_OPTIONS'), 'meta-options' ); ?>
+            <?php echo HTMLHelper::_('bootstrap.addSlide', 'articleOptions', JText::_('JGLOBAL_FIELDSET_METADATA_OPTIONS'), 'meta-options' ); ?>
             <fieldset class="panelform">
                 <?php echo $this->loadTemplate('metadata'); ?>
             </fieldset>
-            <?php echo JHtml::_('bootstrap.endSlide');?>
-            <?php echo JHtml::_('bootstrap.endAccordion');?>
+            <?php echo HTMLHelper::_('bootstrap.endSlide');?>
+            <?php echo HTMLHelper::_('bootstrap.endAccordion');?>
 
         </div>
-    <?php echo JHtml::_('tzbootstrap.endrow');?>
+    <?php echo HTMLHelper::_('tzbootstrap.endrow');?>
     <input type="hidden" name="task" value="" />
-    <input type="hidden" name="return" value="<?php echo JFactory::getApplication() -> input -> getCmd('return');?>" />
-    <input type="hidden" name="contentid" id="contentid" value="<?php echo JFactory::getApplication() -> input -> getCmd('id');?>">
-    <?php echo JHtml::_('form.token'); ?>
+    <input type="hidden" name="return" value="<?php echo Factory::getApplication() -> input -> getCmd('return');?>" />
+    <input type="hidden" name="contentid" id="contentid" value="<?php echo Factory::getApplication() -> input -> getCmd('id');?>">
+    <?php echo HTMLHelper::_('form.token'); ?>
 </form>

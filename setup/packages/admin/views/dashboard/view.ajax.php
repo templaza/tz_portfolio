@@ -7,6 +7,8 @@
 // No direct access.
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 jimport('joomla.application.component.view');
 
 /**
@@ -22,7 +24,7 @@ class TZ_Portfolio_PlusViewDashboard extends JViewLegacy {
      * Display the view.
      */
     public function display($tpl = null) {
-        $app        = JFactory::getApplication();
+        $app        = Factory::getApplication();
 
         $this -> feedBlog   = $this -> get('FeedBlog');
 

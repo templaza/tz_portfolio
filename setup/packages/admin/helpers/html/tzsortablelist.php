@@ -19,6 +19,8 @@
 
 defined('JPATH_PLATFORM') or die;
 
+use Joomla\CMS\Factory;
+
 abstract class JHtmlTZSortablelist
 {
 
@@ -43,7 +45,7 @@ abstract class JHtmlTZSortablelist
         JHtml::_('stylesheet', 'jui/sortablelist.css', false, true, false);
 
         // Attach sortable to document
-        JFactory::getDocument()->addScriptDeclaration("
+        Factory::getApplication() -> getDocument()->addScriptDeclaration("
 			(function ($){
 				$(document).ready(function (){
 					var sortableList = new $.TZPortfolioPlusSortableList('#"
@@ -65,7 +67,7 @@ abstract class JHtmlTZSortablelist
 
     public static function _proceedSaveOrderButton()
     {
-        JFactory::getDocument()->addScriptDeclaration(
+        Factory::getApplication() -> getDocument()->addScriptDeclaration(
             "(function ($){
 				$(document).ready(function (){
 					var saveOrderButton = $('.saveorder');

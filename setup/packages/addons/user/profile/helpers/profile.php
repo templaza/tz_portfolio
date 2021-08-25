@@ -24,6 +24,8 @@
 // no direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 class PlgTZ_Portfolio_PlusUserProfileHelper{
     
     protected static $cache = array();
@@ -41,7 +43,7 @@ class PlgTZ_Portfolio_PlusUserProfileHelper{
             return self::$cache[$storeId];
         }
 
-        $_author = JFactory::getUser($authorId);
+        $_author = Factory::getApplication() -> getIdentity() -> get($authorId);
 
         if(!$_author){
             return false;

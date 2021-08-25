@@ -22,11 +22,13 @@ define( '_JEXEC', 1 );
 // No direct access
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+
 define('JPATH_BASE', dirname(dirname(dirname(dirname(dirname(dirname(__FILE__)))))));
 require_once ( JPATH_BASE.'/includes/defines.php' );
 require_once ( JPATH_BASE.'/includes/framework.php' );
 
-JFactory::getLanguage() -> load('com_tz_portfolio_plus');
+Factory::getApplication() -> getLanguage() -> load('com_tz_portfolio_plus');
 
 $chars      = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 $prerand    = substr(str_shuffle($chars), 0, 4);
@@ -56,6 +58,7 @@ $parentId   = substr($prerand.uniqid(rand()), 0, 15);
             <a href="" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_MOVE_THIS_ROW');?>" class="tps tp-arrows-alt row-move-in-column"></a>
             <a href="javascript:" class="accordion-toggle"
                data-toggle="collapse" data-parent="#<?php echo $parentId;?>"
+               data-bs-toggle="collapse" data-bs-parent="#<?php echo $parentId;?>"
                data-target="#<?php echo $id;?>">
                 <span class="tps tp-chevron-up"></span><span class="tps tp-chevron-down"></span>
             </a>

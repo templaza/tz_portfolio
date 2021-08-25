@@ -20,6 +20,8 @@
 // No direct access
 defined('JPATH_PLATFORM') or die;
 
+use Joomla\CMS\Factory;
+
 jimport('joomla.application.component.controllerform');
 
 class TZ_Portfolio_Plus_AddOnControllerForm extends TZ_Portfolio_Plus_AddOnControllerLegacy
@@ -150,7 +152,7 @@ class TZ_Portfolio_Plus_AddOnControllerForm extends TZ_Portfolio_Plus_AddOnContr
      */
     public function add()
     {
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
         $context = "$this->option.edit.$this->context";
 
         // Access check.
@@ -321,7 +323,7 @@ class TZ_Portfolio_Plus_AddOnControllerForm extends TZ_Portfolio_Plus_AddOnContr
     {
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
         $model = $this->getModel();
         $table = $model->getTable();
         $checkin = property_exists($table, 'checked_out');
@@ -382,7 +384,7 @@ class TZ_Portfolio_Plus_AddOnControllerForm extends TZ_Portfolio_Plus_AddOnContr
      */
     public function edit($key = null, $urlVar = null)
     {
-        $app   = JFactory::getApplication();
+        $app   = Factory::getApplication();
         $model = $this->getModel();
         $table = $model->getTable();
         $cid   = $this->input->post->get('cid', array(), 'array');
@@ -524,7 +526,7 @@ class TZ_Portfolio_Plus_AddOnControllerForm extends TZ_Portfolio_Plus_AddOnContr
      */
     protected function getRedirectToListAppend()
     {
-        $tmpl = JFactory::getApplication()->input->get('tmpl');
+        $tmpl = Factory::getApplication()->input->get('tmpl');
         $append = '';
 
         // Setup redirect info.
@@ -560,12 +562,12 @@ class TZ_Portfolio_Plus_AddOnControllerForm extends TZ_Portfolio_Plus_AddOnContr
      */
     public function loadhistory()
     {
-        $app = JFactory::getApplication();
-        $lang  = JFactory::getLanguage();
-        $model = $this->getModel();
-        $table = $model->getTable();
-        $historyId = $app->input->get('version_id', null, 'integer');
-        $context = "$this->option.edit.$this->context";
+        $app        = Factory::getApplication();
+        $lang       = $app -> getLanguage();
+        $model      = $this->getModel();
+        $table      = $model->getTable();
+        $context    = "$this->option.edit.$this->context";
+        $historyId  = $app->input->get('version_id', null, 'integer');
 
         if (!$model->loadhistory($historyId, $table))
         {
@@ -638,8 +640,8 @@ class TZ_Portfolio_Plus_AddOnControllerForm extends TZ_Portfolio_Plus_AddOnContr
         // Check for request forgeries.
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-        $app   = JFactory::getApplication();
-        $lang  = JFactory::getLanguage();
+        $app   = Factory::getApplication();
+        $lang  = $app -> getLanguage();
         $model = $this->getModel();
         $table = $model->getTable();
         $data  = $this->input->post->get('jform', array(), 'array');

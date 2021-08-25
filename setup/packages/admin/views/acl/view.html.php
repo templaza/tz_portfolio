@@ -22,6 +22,8 @@
 // no direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 class TZ_Portfolio_PlusViewAcl extends JViewLegacy{
 
     protected $item     = null;
@@ -43,7 +45,7 @@ class TZ_Portfolio_PlusViewAcl extends JViewLegacy{
 
     protected function addToolbar(){
 
-        JFactory::getApplication()->input->set('hidemainmenu', true);
+        Factory::getApplication()->input->set('hidemainmenu', true);
 
         // Get the results for each action.
         $canDo      = TZ_Portfolio_PlusHelper::getActions('com_tz_portfolio_plus');

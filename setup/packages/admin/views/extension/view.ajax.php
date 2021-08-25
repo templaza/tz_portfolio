@@ -20,6 +20,8 @@
 // No direct access
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+
 JLoader::register('TZ_Portfolio_PlusHelperAddon_Datas', COM_TZ_PORTFOLIO_PLUS_ADMIN_HELPERS_PATH
     .DIRECTORY_SEPARATOR.'addon_datas.php');
 
@@ -30,7 +32,7 @@ class TZ_Portfolio_PlusViewExtension extends JViewLegacy
     
     public function display($tpl = null)
     {
-        $app    = JFactory::getApplication();
+        $app    = Factory::getApplication();
         $json   = new JResponseJson();
         $data   = new stdClass();
 

@@ -20,6 +20,8 @@
 // no direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 jimport('joomla.application.component.controllerform');
 
 class TZ_Portfolio_PlusControllerConfig extends JControllerForm
@@ -28,7 +30,7 @@ class TZ_Portfolio_PlusControllerConfig extends JControllerForm
 
     public function __construct($config = array())
     {
-        $this -> input  = JFactory::getApplication()->input;
+        $this -> input  = Factory::getApplication()->input;
 
         parent::__construct($config);
 
@@ -53,7 +55,7 @@ class TZ_Portfolio_PlusControllerConfig extends JControllerForm
         $model  = $this -> getModel();
         $model -> saveConfig($data);
 
-        $doc    = JFactory::getDocument();
+        $doc    = Factory::getApplication() -> getDocument();
         $doc -> addScriptDeclaration('window.parent.SqueezeBox.close();');
         return true;
     }

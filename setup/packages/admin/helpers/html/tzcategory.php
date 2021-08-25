@@ -19,6 +19,7 @@
 
 defined('JPATH_PLATFORM') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Utilities\ArrayHelper;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
@@ -98,7 +99,7 @@ abstract class JHtmlTZCategory
 
             // Let's get the id for the current item, either category or content item.
             $oldCat = null;
-            $jinput = JFactory::getApplication()->input;
+            $jinput = Factory::getApplication()->input;
 
             if(isset($config['filter.parent']) && $config['filter.parent']){
                 $oldCat = $jinput->get('id', 0);

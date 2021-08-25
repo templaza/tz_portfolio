@@ -20,6 +20,7 @@
 // No direct access
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
 use Joomla\Utilities\ArrayHelper;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
@@ -63,7 +64,7 @@ class TZ_Portfolio_PlusModelGroups extends JModelList{
 
     protected function populateState($ordering = 'g.id', $direction = 'DESC'){
 
-        $app        = JFactory::getApplication();
+        $app        = Factory::getApplication();
 
         $search  = $app -> getUserStateFromRequest($this->context.'.filter.search','filter_search',null,'string');
         $this -> setState('filter.search',$search);
@@ -81,7 +82,7 @@ class TZ_Portfolio_PlusModelGroups extends JModelList{
     protected function getListQuery(){
         $db         = $this -> getDbo();
         $query      = $db -> getQuery(true);
-        $user       = JFactory::getUser();
+        $user       = Factory::getUser();
 
         $subQuery   = $db -> getQuery(true);
         $subQuery -> select('COUNT(DISTINCT f.id)');

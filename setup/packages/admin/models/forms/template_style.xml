@@ -7,12 +7,13 @@
         <field type="text" name="title"
                required="true" label="JGLOBAL_TITLE"/>
         <field name="home" type="radio"
-                label="COM_TEMPLATES_FIELD_HOME_LABEL"
-                description="COM_TEMPLATES_FIELD_HOME_ADMINISTRATOR_DESC"
+                label="JDEFAULT"
+                description="COM_TZ_PORTFOLIO_PLUS_FIELD_HOME_ADMINISTRATOR_DESC"
                 class="switcher btn-group btn-group-yesno"
+               layout="joomla.form.field.radio.switcher"
                 default="0">
-            <option value="1">JYES</option>
             <option value="0">JNO</option>
+            <option value="1">JYES</option>
         </field>
         <field name="template" type="text"
                readonly="true"
@@ -38,10 +39,11 @@
                     description="COM_TZ_PORTFOLIO_PLUS_LAYOUT_DESC"/>
             <field type="radio" name="use_single_layout_builder"
                    class="switcher btn-group" default="1"
+                   layout="joomla.form.field.radio.switcher"
                    label="COM_TZ_PORTFOLIO_PLUS_USE_SINGLE_LAYOUT_BUILDER_LABEL"
                     description="COM_TZ_PORTFOLIO_PLUS_USE_SINGLE_LAYOUT_BUILDER_DESC">
-                <option value="1">JYES</option>
                 <option value="0">JNO</option>
+                <option value="1">JYES</option>
             </field>
             <field name="date_format" type="text"
                    default="l, d F Y H:i"

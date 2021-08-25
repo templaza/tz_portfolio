@@ -20,7 +20,8 @@
 // No direct access
 defined('_JEXEC') or die;
 
-use Joomla\Filesystem\File;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
 
 jimport('joomla.filesytem.file');
 JFormHelper::loadFieldClass('list');
@@ -35,7 +36,7 @@ class JFormFieldTZExtraFieldTypes extends JFormFieldList
 
         if(!$this -> onchange){
             $this -> onchange   = 'tppTypeHasChanged(this);';
-            JFactory::getDocument()->addScriptDeclaration('
+            Factory::getApplication() -> getDocument()->addScriptDeclaration('
                 (function($, window){
                     "use strict";
                     $( document ).ready(function() {
@@ -76,13 +77,13 @@ class JFormFieldTZExtraFieldTypes extends JFormFieldList
         $data       = array();
         $core_path  = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.DIRECTORY_SEPARATOR.'extrafields';
         if($plg_ex     = TZ_Portfolio_PlusPluginHelper::getPlugin('extrafields')){
-            $lang   = JFactory::getLanguage();
+            $lang   = Factory::getApplication() -> getLanguage();
 
             foreach($plg_ex as $i => $plg){
                 $folder             = $plg -> name;
                 $core_f_xml_path    = $core_path.DIRECTORY_SEPARATOR.$folder
                     .DIRECTORY_SEPARATOR.$folder.'.xml';
-                if(\JFile::exists($core_f_xml_path)){
+                if(File::exists($core_f_xml_path)){
                     $core_class         = 'TZ_Portfolio_PlusExtraField'.$folder;
                     if(!class_exists($core_class)){
                         JLoader::import('com_tz_portfolio_plus.addons.extrafields.'.$folder.'.'.$folder,

@@ -72,17 +72,17 @@ class TZ_Portfolio_PlusInstallerPluginAdapter extends PluginAdapter{
         // Remove old folder path
         if(is_dir($path)){
             // Copy language files
-            if(\JFolder::exists($nPath.'/language')){
-                $cFolders   = \JFolder::folders($nPath.'/language');
+            if(Folder::exists($nPath.'/language')){
+                $cFolders   = Folder::folders($nPath.'/language');
                 if(count($cFolders)){
                     foreach($cFolders as $cFolder){
-                        if(!\JFolder::exists($path.'/language/'.$cFolder)){
-                            \JFolder::copy($nPath.'/language/'.$cFolder, $path.'/language/'.$cFolder);
+                        if(!Folder::exists($path.'/language/'.$cFolder)){
+                            Folder::copy($nPath.'/language/'.$cFolder, $path.'/language/'.$cFolder);
                         }
                     }
                 }
             }
-            \JFolder::delete($nPath);
+            Folder::delete($nPath);
         }else{
             @rename($nPath, $path);
         }
@@ -429,7 +429,7 @@ class TZ_Portfolio_PlusInstallerPluginAdapter extends PluginAdapter{
         unset($row);
 
         // Remove the plugin's folder
-        \JFolder::delete($this->parent->getPath('extension_root'));
+        Folder::delete($this->parent->getPath('extension_root'));
 
         if ($msg != '')
         {

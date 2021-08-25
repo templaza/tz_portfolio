@@ -20,6 +20,7 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Utilities\ArrayHelper;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
@@ -191,7 +192,7 @@ class TZ_Portfolio_PlusModelGroup extends JModelAdmin
     {
         if (!empty($record->id))
         {
-            $user = JFactory::getUser();
+            $user = Factory::getUser();
 
             $state  = $user->authorise('core.delete', $this->option.'.group.' . (int) $record->id)
                 || ($user->authorise('core.delete.own', $this->option.'.group.' . (int) $record->id)
@@ -204,7 +205,7 @@ class TZ_Portfolio_PlusModelGroup extends JModelAdmin
 
     protected function canEditState($record)
     {
-        $user = JFactory::getUser();
+        $user = Factory::getUser();
 
         // Check for existing group.
         if (!empty($record->id))

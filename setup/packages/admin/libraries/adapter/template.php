@@ -22,6 +22,8 @@ namespace TZ_Portfolio_Plus\Installer\Adapter;
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Installer\Adapter\TemplateAdapter;
 
@@ -106,29 +108,29 @@ class TZ_Portfolio_PlusInstallerTemplateAdapter extends TemplateAdapter{
         // Remove old folder path
         if(is_dir($path)){
             // Copy config files
-            if(\JFolder::exists($nPath.'/config')){
-                $cfFiles    = \JFolder::files($nPath.'/config', '.json');
+            if(Folder::exists($nPath.'/config')){
+                $cfFiles    = Folder::files($nPath.'/config', '.json');
                 if(count($cfFiles)){
                     foreach($cfFiles as $cfFile){
-                        if(!\JFile::exists($path.'/config/'.$cfFile)){
-                            \JFile::copy($nPath.'/config/'.$cfFile, $path.'/config/'.$cfFile);
+                        if(!File::exists($path.'/config/'.$cfFile)){
+                            File::copy($nPath.'/config/'.$cfFile, $path.'/config/'.$cfFile);
                         }
                     }
                 }
             }
 
             // Copy language files
-            if(\JFolder::exists($nPath.'/language')){
-                $cFolders   = \JFolder::folders($nPath.'/language');
+            if(Folder::exists($nPath.'/language')){
+                $cFolders   = Folder::folders($nPath.'/language');
                 if(count($cFolders)){
                     foreach($cFolders as $cFolder){
-                        if(!\JFolder::exists($path.'/language/'.$cFolder)){
-                            \JFolder::copy($nPath.'/language/'.$cFolder, $path.'/language/'.$cFolder);
+                        if(!Folder::exists($path.'/language/'.$cFolder)){
+                            Folder::copy($nPath.'/language/'.$cFolder, $path.'/language/'.$cFolder);
                         }
                     }
                 }
             }
-            \JFolder::delete($nPath);
+            Folder::delete($nPath);
         }else{
             @rename($nPath, $path);
         }
@@ -221,7 +223,7 @@ class TZ_Portfolio_PlusInstallerTemplateAdapter extends TemplateAdapter{
         if (in_array($this->route, array('install', 'discover_install')))
         {
             $db    = $this->db;
-            $lang  = \JFactory::getLanguage();
+            $lang  = Factory::getApplication() -> getLanguage();
             $debug = $lang->setDebug(false);
 
             $columns = array($db->quoteName('template'),

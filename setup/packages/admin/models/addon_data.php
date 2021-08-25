@@ -20,6 +20,8 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 jimport('joomla.application.component.modeladmin');
 
 class TZ_Portfolio_PlusModelAddon_Data extends JModelAdmin{
@@ -46,7 +48,7 @@ class TZ_Portfolio_PlusModelAddon_Data extends JModelAdmin{
 
     protected function populateState(){
 
-        $addon_id   = JFactory::getApplication()->input->getInt('addon_id');
+        $addon_id   = Factory::getApplication()->input->getInt('addon_id');
         $this -> setState($this -> getName().'.addon_id',$addon_id);
 
         // List state information.
@@ -56,7 +58,7 @@ class TZ_Portfolio_PlusModelAddon_Data extends JModelAdmin{
     function getForm($data = array(), $loadData = true){
 
         // Load addon's form
-        if($addonId = JFactory::getApplication()->input->getInt('addon_id')){
+        if($addonId = Factory::getApplication()->input->getInt('addon_id')){
             // Get a row instance.
             $table = $this->getTable('Extensions','TZ_Portfolio_PlusTable');
 
@@ -95,7 +97,7 @@ class TZ_Portfolio_PlusModelAddon_Data extends JModelAdmin{
     protected function loadFormData()
     {
         // Check the session for previously entered form data.
-        $app    = JFactory::getApplication();
+        $app    = Factory::getApplication();
         $data   = $app->getUserState('com_tz_portfolio_plus.edit.'.$this -> getName().'.data', array());
 
         if (empty($data)) {
@@ -113,7 +115,7 @@ class TZ_Portfolio_PlusModelAddon_Data extends JModelAdmin{
 
         if(!isset($table -> extension_id)
             || (isset($table -> extension_id) && !$table -> extension_id)){
-            $input  = JFactory::getApplication() -> input;
+            $input  = Factory::getApplication() -> input;
             $table -> extension_id   = $input -> getInt('addon_id');
 
             if(!isset($table -> element)){

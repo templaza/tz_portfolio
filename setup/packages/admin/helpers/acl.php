@@ -20,6 +20,7 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 class TZ_Portfolio_PlusHelperACL
@@ -28,7 +29,7 @@ class TZ_Portfolio_PlusHelperACL
 
 	public static function allowApprove($article = null, $option = 'com_tz_portfolio_plus'){
 
-        $user       = JFactory::getUser();
+        $user       = Factory::getUser();
 
         if($user->authorise('core.approve', $option)){
             if($article && $article -> id && $article -> created_by != $user -> id){

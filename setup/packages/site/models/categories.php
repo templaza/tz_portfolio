@@ -114,7 +114,7 @@ class TZ_Portfolio_PlusModelCategories extends JModelList
 
             if ($active)
             {
-                $params->loadString($active->params);
+                $params->loadString($active->getParams());
             }
 
             $options = array();

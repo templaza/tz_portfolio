@@ -20,7 +20,9 @@
 // no direct access
 defined('_JEXEC') or die;
 
-$app    = JFactory::getApplication();
+use Joomla\CMS\Factory;
+
+$app    = Factory::getApplication();
 
 if ($app->isClient('site')) {
     JSession::checkToken('get') or jexit(JText::_('JINVALID_TOKEN'));
@@ -48,7 +50,7 @@ $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
 $isMultiple = $app -> input -> get('ismultiple', false, 'boolean');
 
-$doc    = JFactory::getDocument();
+$doc    = Factory::getApplication() -> getDocument();
 $doc -> addScriptDeclaration('
 function tzGetDatas(){
     if (window.parent){

@@ -28,10 +28,16 @@ $icon   = $displayData['icon'];
 if(!$icon){
     $icon   = 'question';
 }
-?>
 
-<button onclick="<?php echo $doTask; ?>" rel="help" class="btn btn-secondary btn-small btn-sm"<?php
-echo COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE?' id="toolbar-'.$displayData['id'].'"':'';?>>
-    <span class="tpb tp-<?php echo $icon; ?>" aria-hidden="true"></span>
-    <?php echo $text; ?>
-</button>
+if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE){
+?>
+<joomla-toolbar-button id="toolbar-<?php echo $displayData['id']; ?>">
+<?php } ?>
+
+    <button onclick="<?php echo $doTask; ?>" rel="help" class="btn btn-secondary btn-small btn-sm">
+        <span class="tpb tp-<?php echo $icon; ?>" aria-hidden="true"></span>
+        <?php echo $text; ?>
+    </button>
+<?php if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE){?>
+</joomla-toolbar-button>
+<?php } ?>

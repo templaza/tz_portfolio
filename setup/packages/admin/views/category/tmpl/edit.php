@@ -20,6 +20,8 @@
 // no direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 // Include the component HTML helpers.
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
 
@@ -43,7 +45,7 @@ $extensionassoc = array_key_exists('item_associations', $this->form->getFieldset
 
 <form method="post" name="adminForm" id="adminForm" class="form-validate form-horizontal tpArticle" enctype="multipart/form-data"
 	action="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&extension='
-        .JFactory::getApplication()->input->getCmd('extension', 'com_tz_portfolio_plus').'&layout=edit&id='
+        .Factory::getApplication()->input->getCmd('extension', 'com_tz_portfolio_plus').'&layout=edit&id='
         .(int) $this->item->id); ?>">
     <?php echo JHtml::_('tzbootstrap.addrow');?>
         <div class="span8 col-md-8">

@@ -24,6 +24,8 @@
 // no direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 class JHtmlTZPaddingMargin{
 
     protected static $loaded = array();
@@ -39,7 +41,7 @@ class JHtmlTZPaddingMargin{
     }
 
     public static function generation($type  =   'margin', $name, $id, $value) {
-        $document = JFactory::getDocument();
+        $document = Factory::getApplication() -> getDocument();
         $document->addStyleSheet(JUri::root().'/administrator/components/com_tz_portfolio_plus/css/addon-admin.css', array('version' => 'auto'));
         $document->addScript(JUri::root().'/administrator/components/com_tz_portfolio_plus/js/addon-admin.js', array('version' => 'auto'));
         $val      = (isset($value) && $value) ? json_decode($value): json_decode('{"md": {"top": "", "right": "", "bottom": "", "left": ""}, "sm": {"top":"", "right":"", "bottom":"", "left":""}, "xs": {"top":"", "right":"", "bottom":"", "left":""}}');

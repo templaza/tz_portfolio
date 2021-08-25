@@ -20,13 +20,20 @@
 //no direct access
 defined('_JEXEC') or die('Restricted access');
 
-JHtml::_('formbehavior.chosen', 'select');
+use Joomla\CMS\Factory;
+
+if(!COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+    JHtml::_('formbehavior.chosen', 'select');
+}
+else{
+    JHtml::_('formbehavior.chosen', 'select[multiple]');
+}
 
 // Include the component HTML helpers.
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
-$user		= JFactory::getUser();
-$lang       = JFactory::getLanguage();
+$user		= Factory::getApplication() -> getIdentity();
+$lang       = Factory::getApplication() -> getLanguage();
 $lang -> load('com_installer');
 
 $listOrder	= $this->escape($this->state->get('list.ordering'));
@@ -36,7 +43,7 @@ $this->document->addStyleSheet(TZ_Portfolio_PlusUri::base() . '/vendor/intro/int
 $this->document->addScript(TZ_Portfolio_PlusUri::base() . '/vendor/intro/intro.min.js', array('version' => 'v=2.9.3'));
 $this->document->addScript(TZ_Portfolio_PlusUri::base() . '/js/introguide.min.js', array('version' => 'v=2.9.3'));
 
-if(JFactory::getLanguage() -> isRtl()) {
+if($lang -> isRtl()) {
     $this->document->addStyleSheet(TZ_Portfolio_PlusUri::base() . '/vendor/intro/introjs-rtl.min.css', array('version' => 'v=2.9.3'));
 }
 
@@ -144,7 +151,6 @@ $this -> document -> addScriptDeclaration('
                             </td>
 
                             <td class="center text-center">
-                                <div class="btn-group">
                                 <?php
                                 $states	= array(
                                     2 => array(
@@ -176,13 +182,14 @@ $this -> document -> addScriptDeclaration('
                                     ),
                                 );
 
-                                echo JHtml::_('jgrid.state', $states, $item->published, $i, 'templates.', $canChange, true, 'cb');
                                 if($item ->protected) {
                                     echo JHtml::_('jgrid.state', $states, 2, $i, 'template.', false, true, 'cb');
+                                }else{
+                                    echo JHtml::_('jgrid.state', $states, $item->published, $i, 'templates.', $canChange, true, 'cb');
                                 }
                                 ?>
-                                </div>
                             </td>
+
                             <td class="center text-center hidden-phone">
                                 <?php echo @$item -> version != '' ? $item -> version : '&#160;';?>
                             </td>

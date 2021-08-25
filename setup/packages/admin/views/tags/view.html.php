@@ -43,7 +43,9 @@ class TZ_Portfolio_PlusViewTags extends JViewLegacy
             $this -> addToolbar();
         }
 
-        $this -> sidebar    = JHtmlSidebar::render();
+        if(!COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+            $this->sidebar = JHtmlSidebar::render();
+        }
 
         parent::display($tpl);
 

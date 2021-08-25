@@ -20,6 +20,7 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Utilities\ArrayHelper;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
@@ -278,7 +279,7 @@ class TZ_Portfolio_PlusHelperTags{
             $query -> columns('title, alias, published');
 
             foreach($titles as $title){
-                if (JFactory::getConfig()->get('unicodeslugs') == 1)
+                if (Factory::getConfig()->get('unicodeslugs') == 1)
                 {
                     $alias  = JFilterOutput::stringURLUnicodeSlug($title);
                 }

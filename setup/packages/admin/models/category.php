@@ -20,8 +20,9 @@
 // No direct access.
 defined('_JEXEC') or die;
 
-use Joomla\Filesystem\File;
+use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
+use Joomla\CMS\Filesystem\File;
 use Joomla\String\StringHelper;
 use Joomla\Utilities\ArrayHelper;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
@@ -72,7 +73,7 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 			{
 				return;
 			}
-			$user = JFactory::getUser();
+			$user = Factory::getUser();
 
 			$state  = $user->authorise('core.delete', $record->extension . '.category.' . (int) $record->id)
                 || ($user->authorise('core.delete.own', $record->extension . '.category.' . (int) $record->id)
@@ -93,7 +94,7 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 	 */
 	protected function canEditState($record)
 	{
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 
 		// Check for existing category.
 		if (!empty($record->id))
@@ -148,7 +149,7 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 	 */
 	protected function populateState()
 	{
-		$app = JFactory::getApplication('administrator');
+		$app = Factory::getApplication('administrator');
 
 		$parentId = $app -> input -> getInt('parent_id');
 		$this->setState('category.parent_id', $parentId);
@@ -200,7 +201,7 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 
 			// Convert the created and modified dates to local user time for display in the form.
 			jimport('joomla.utilities.date');
-			$tz = new DateTimeZone(JFactory::getApplication()->getCfg('offset'));
+			$tz = new DateTimeZone(Factory::getApplication()->getCfg('offset'));
 
 			if (intval($result->created_time))
 			{
@@ -258,7 +259,7 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 		// Initialise variables.
 		$extension = $this->getState('category.extension');
 
-		$jinput = JFactory::getApplication()->input;
+		$jinput = Factory::getApplication()->input;
 
 		// A workaround to get the extension into the model for save requests.
 		if (empty($extension) && isset($data['extension']))
@@ -297,6 +298,11 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 			$form->setFieldAttribute('published', 'filter', 'unset');
 		}
 
+		if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE){
+		    $form -> removeField('show_email_icon', 'params');
+		    $form -> removeField('show_cat_email_icon', 'params');
+        }
+
 		return $form;
 	}
 
@@ -325,7 +331,7 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
-		$data = JFactory::getApplication()->getUserState('com_tz_portfolio_plus.edit.' . $this->getName() . '.data', array());
+		$data = Factory::getApplication()->getUserState('com_tz_portfolio_plus.edit.' . $this->getName() . '.data', array());
 
 		if (empty($data))
 		{
@@ -362,7 +368,7 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 		jimport('joomla.filesystem.path');
 
 		// Initialise variables.
-		$lang = JFactory::getLanguage();
+		$lang = Factory::getApplication() -> getLanguage();
 		$extension = $this->getState('category.extension');
 		$component = $this->getState('category.component');
 		$section = $this->getState('category.section');
@@ -447,7 +453,7 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
             return $assoc;
         }
 
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
         $extension = $this->getState('category.extension');
 
         $assoc = JLanguageAssociations::isEnabled();
@@ -473,7 +479,7 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
     function deleteImages($fileName){
         if($fileName){
             $file   = JPATH_SITE.DIRECTORY_SEPARATOR.str_replace('/',DIRECTORY_SEPARATOR,$fileName);
-            if(!\JFile::exists($file)){
+            if(!File::exists($file)){
                 $this -> setError(JText::_('COM_TZ_PORTFOLIO_PLUS_INVALID_FILE'));
                 return false;
             }
@@ -494,7 +500,7 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 	public function save($data)
 	{
 
-	    $app    = JFactory::getApplication();
+	    $app    = Factory::getApplication();
 		$input	= $app -> input;
 
 		// Initialise variables;
@@ -676,7 +682,7 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 	{
 		if (parent::publish($pks, $value)) {
 			// Initialise variables.
-            $app        = JFactory::getApplication();
+            $app        = Factory::getApplication();
 			$extension	= $app -> input -> getCmd('extension');
 
 			// Include the content plugins for the change of category state event.
@@ -763,7 +769,7 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 		$parentId = (int) ArrayHelper::getValue($parts, 0, 1);
 
 		$db = $this->getDbo();
-		$extension = JFactory::getApplication()->input->get('extension', '', 'word');
+		$extension = Factory::getApplication()->input->get('extension', '', 'word');
 		$newIds = array();
 
 		// Check that the parent exists
@@ -974,8 +980,8 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 		$table = $this->getTable();
 		$db = $this->getDbo();
 		$query = $db->getQuery(true);
-		$user = JFactory::getUser();
-		$extension = JFactory::getApplication()->input->get('extension', '', 'word');
+		$user = Factory::getUser();
+		$extension = Factory::getApplication()->input->get('extension', '', 'word');
 
 		// Check that the parent exists.
 		if ($parentId)
@@ -1096,7 +1102,7 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 	 */
 	protected function cleanCache($group = null, $client_id = 0)
 	{
-		$extension = JFactory::getApplication() -> input -> getCmd('extension');
+		$extension = Factory::getApplication() -> input -> getCmd('extension');
 		switch ($extension)
 		{
 			case 'com_tz_portfolio_plus':

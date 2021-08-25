@@ -22,8 +22,7 @@ defined('_JEXEC') or die;
 
 tzportfolioplusimport('database.database');
 
-use Joomla\Filesystem\File;
-use Joomla\Filesystem\Folder;
+use Joomla\CMS\Filesystem\File;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
@@ -284,7 +283,7 @@ class TZ_Portfolio_PlusFrontHelperExtraFields{
             if($core_folders = \JFolder::folders($core_path)){
                 $core_f_xml_path    = $core_path.DIRECTORY_SEPARATOR.$name
                     .DIRECTORY_SEPARATOR.$name.'.xml';
-                if(\JFile::exists($core_f_xml_path)){
+                if(File::exists($core_f_xml_path)){
                     self::$cache[$storeId]  = true;
                     return self::$cache[$storeId];
                 }

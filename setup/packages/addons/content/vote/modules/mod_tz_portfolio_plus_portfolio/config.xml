@@ -5,6 +5,7 @@
             <field type="spacer" name="spacer_vote_addon_hr" hr="true"/>
             <field type="radio" name="show_cat_vote"
                    default="1" class="switcher btn-group"
+                   layout="joomla.form.field.radio.switcher"
                    label="JGLOBAL_SHOW_VOTE_LABEL"
                    description="JGLOBAL_SHOW_VOTE_DESC">
                 <option value="0">JHIDE</option>
@@ -12,6 +13,7 @@
             </field>
             <field name="show_counter" type="radio"
                    default="1" class="switcher btn-group"
+                   layout="joomla.form.field.radio.switcher"
                    label="PLG_CONTENT_VOTE_SHOW_COUNTER_LABEL"
                    description="PLG_CONTENT_VOTE_SHOW_COUNTER_DESC">
                 <option value="0">JHIDE</option>
@@ -19,6 +21,7 @@
             </field>
             <field name="unrated" type="radio"
                    class="switcher btn-group" default="1"
+                   layout="joomla.form.field.radio.switcher"
                    label="PLG_CONTENT_VOTE_UNRATED_LABEL"
                    description="PLG_CONTENT_VOTE_UNRATED_DESC">
                 <option value="0">JHIDE</option>

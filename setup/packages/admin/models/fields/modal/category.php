@@ -21,6 +21,7 @@
 
 defined('JPATH_BASE') or die;
 
+use Joomla\CMS\Factory;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 /**
@@ -54,7 +55,7 @@ class JFormFieldModal_Category extends JFormField
         }
         else
         {
-            $extension = (string) JFactory::getApplication()->input->get('extension', 'com_tz_portfolio_plus');
+            $extension = (string) Factory::getApplication()->input->get('extension', 'com_tz_portfolio_plus');
         }
 
         $allowNew    = ((string) $this->element['new'] == 'true');
@@ -63,7 +64,8 @@ class JFormFieldModal_Category extends JFormField
         $allowSelect = ((string) $this->element['select'] != 'false');
 
         // Load language.
-        JFactory::getLanguage()->load('com_categories', JPATH_ADMINISTRATOR);
+        Factory::getApplication() -> getLanguage()
+            ->load('com_categories', JPATH_ADMINISTRATOR);
 
         // The active category id field.
         $value = (int) $this->value > 0 ? (int) $this->value : '';
@@ -87,7 +89,7 @@ class JFormFieldModal_Category extends JFormField
 
             if (!isset($scriptSelect[$this->id]))
             {
-                JFactory::getDocument()->addScriptDeclaration("
+                Factory::getApplication() -> getDocument()->addScriptDeclaration("
 				function jSelectCategory_" . $this->id . "(id, title, object) {
 					window.processModalSelect('Category', '" . $this->id . "', id, title, '', object);
 				}
@@ -137,7 +139,7 @@ class JFormFieldModal_Category extends JFormField
         $title = empty($title) ? JText::_('COM_CATEGORIES_SELECT_A_CATEGORY') : htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
 
         // The current category display field.
-        $html  = '<span class="input-append">';
+        $html  = '<span class="input-append input-group">';
         $html .= '<input class="input-medium" id="' . $this->id . '_name" type="text" value="' . $title . '" disabled="disabled" size="35" />';
 
         // Select category button.
@@ -146,7 +148,7 @@ class JFormFieldModal_Category extends JFormField
             $html .= '<a'
                 . ' class="btn hasTooltip' . ($value ? ' hidden' : '') . '"'
                 . ' id="' . $this->id . '_select"'
-                . ' data-toggle="modal"'
+                . ' data-toggle="modal" data-bs-toggle="modal"'
                 . ' role="button"'
                 . ' href="#ModalSelect' . $modalId . '"'
                 . ' title="' . JHtml::tooltipText('COM_CATEGORIES_CHANGE_CATEGORY') . '">'
@@ -160,7 +162,7 @@ class JFormFieldModal_Category extends JFormField
             $html .= '<a'
                 . ' class="btn hasTooltip' . ($value ? ' hidden' : '') . '"'
                 . ' id="' . $this->id . '_new"'
-                . ' data-toggle="modal"'
+                . ' data-toggle="modal" data-bs-toggle="modal"'
                 . ' role="button"'
                 . ' href="#ModalNew' . $modalId . '"'
                 . ' title="' . JHtml::tooltipText('COM_CATEGORIES_NEW_CATEGORY') . '">'
@@ -174,7 +176,7 @@ class JFormFieldModal_Category extends JFormField
             $html .= '<a'
                 . ' class="btn hasTooltip' . ($value ? '' : ' hidden') . '"'
                 . ' id="' . $this->id . '_edit"'
-                . ' data-toggle="modal"'
+                . ' data-toggle="modal" data-bs-toggle="modal"'
                 . ' role="button"'
                 . ' href="#ModalEdit' . $modalId . '"'
                 . ' title="' . JHtml::tooltipText('COM_CATEGORIES_EDIT_CATEGORY') . '">'
@@ -209,7 +211,7 @@ class JFormFieldModal_Category extends JFormField
                     'width'       => '800px',
                     'bodyHeight'  => '70',
                     'modalWidth'  => '80',
-                    'footer'      => '<a role="button" class="btn" data-dismiss="modal" aria-hidden="true">' . JText::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</a>',
+                    'footer'      => '<a role="button" class="btn" data-dismiss="modal" data-bs-dismiss="modal" aria-hidden="true">' . JText::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</a>',
                 )
             );
         }

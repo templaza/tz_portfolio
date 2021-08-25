@@ -16,6 +16,10 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+25/08/2021 - 2.5.0
+	
+	- Compatible with joomla 4.
+
 22/02/2021 - 2.4.6
 	
 	- Fix error load add-on content data.

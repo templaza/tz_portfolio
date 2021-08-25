@@ -20,6 +20,8 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 jimport('joomla.application.component.view');
 
 /**
@@ -38,7 +40,7 @@ class TZ_Portfolio_PlusViewCategories extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-        JFactory::getLanguage()->load('com_categories');
+        Factory::getApplication() -> getLanguage()->load('com_categories');
 
 		$this -> state		    = $this->get('State');
 		$this -> items		    = $this->get('Items');
@@ -75,10 +77,12 @@ class TZ_Portfolio_PlusViewCategories extends JViewLegacy
 
         if($this->getLayout() !== 'modal') {
             $this->addToolbar();
-            $this->sidebar = JHtmlSidebar::render();
+            if(!COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+                $this->sidebar = JHtmlSidebar::render();
+            }
         }else{
             // In article associations modal we need to remove language filter if forcing a language.
-            if ($forcedLanguage = JFactory::getApplication()->input->get('forcedLanguage', '', 'CMD'))
+            if ($forcedLanguage = Factory::getApplication()->input->get('forcedLanguage', '', 'CMD'))
             {
                 // If the language is forced we can't allow to select the language, so transform the language selector filter into a hidden field.
                 $languageXml = new SimpleXMLElement('<field name="language" type="hidden" default="' . $forcedLanguage . '" />');
@@ -111,7 +115,7 @@ class TZ_Portfolio_PlusViewCategories extends JViewLegacy
 		$bar = JToolBar::getInstance('toolbar');
 
 		// Need to load the menu language file as mod_menu hasn't been loaded yet.
-		$lang = JFactory::getLanguage();
+		$lang = Factory::getApplication() -> getLanguage();
 
  		// Load the category helper.
 		require_once JPATH_COMPONENT.'/helpers/categories.php';
@@ -148,7 +152,7 @@ class TZ_Portfolio_PlusViewCategories extends JViewLegacy
 			JToolBarHelper::archiveList('categories.archive');
 		}
 
-		if (JFactory::getUser()->authorise('core.admin')) {
+		if (Factory::getUser()->authorise('core.admin')) {
 			JToolBarHelper::checkin('categories.checkin');
 		}
 

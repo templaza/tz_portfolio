@@ -20,12 +20,15 @@
 // no direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
+
 // Access check.
-if (!JFactory::getUser()->authorise('core.manage', 'com_tz_portfolio_plus')) {
+if (!Factory::getUser()->authorise('core.manage', 'com_tz_portfolio_plus')) {
     throw new JAccessExceptionNotallowed(JText::_('JERROR_ALERTNOAUTHOR'), 403);
 }
 
-$input			= JFactory::getApplication() -> input;
+$input			= Factory::getApplication() -> input;
 $option         = $input -> getCmd('option','com_tz_portfolio_plus');
 $view           = $input -> getCmd('view','dashboard');
 $task           = $input -> getCmd('task',null);
@@ -33,7 +36,7 @@ $task           = $input -> getCmd('task',null);
 /* Setup */
 $file   = dirname(__FILE__).'/setup/index.php';
 
-if(JFile::exists($file)){
+if(File::exists($file)){
     require_once($file);
 }else {
 

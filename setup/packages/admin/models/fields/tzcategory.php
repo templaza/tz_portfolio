@@ -19,6 +19,7 @@
 
 defined('JPATH_PLATFORM') or die;
 
+use Joomla\CMS\Factory;
 JFormHelper::loadFieldClass('list');
 JHtml::addIncludePath(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.DIRECTORY_SEPARATOR.'helpers'.DIRECTORY_SEPARATOR.'html');
 
@@ -100,7 +101,7 @@ class JFormFieldTZCategory extends JFormFieldList
             if ((string) $this->element['action'])
             {
                 // Get the current user object.
-                $user = JFactory::getUser();
+                $user = Factory::getUser();
 
                 foreach ($options as $i => $option)
                 {

@@ -45,8 +45,8 @@ $containerclass = isset($displayData['containerclass'])?$displayData['containerc
     } ?>">
 
     <?php
-    if($sidebar) {
+//    if($sidebar) {
         // Display message update to pro (it only use for free version)
         echo JLayoutHelper::render('message');
-    }
+//    }
     ?>

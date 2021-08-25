@@ -20,6 +20,7 @@
 // No direct access
 defined('JPATH_PLATFORM') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Application\ApplicationHelper;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
@@ -54,7 +55,7 @@ class TZ_Portfolio_PlusTableCategory extends JTableNested
             JTableObserverContenthistory::createObserver($this, array('typeAlias' => '{extension}.category'));
         }
 
-        $this->access = (int) JFactory::getConfig()->get('access');
+        $this->access = (int) Factory::getConfig()->get('access');
     }
 
     /**
@@ -174,7 +175,7 @@ class TZ_Portfolio_PlusTableCategory extends JTableNested
 
         if (trim(str_replace('-', '', $this->alias)) == '')
         {
-            $this->alias = JFactory::getDate()->format('Y-m-d-H-i-s');
+            $this->alias = Factory::getDate()->format('Y-m-d-H-i-s');
         }
 
         return true;
@@ -233,8 +234,8 @@ class TZ_Portfolio_PlusTableCategory extends JTableNested
      */
     public function store($updateNulls = false)
     {
-        $date = JFactory::getDate();
-        $user = JFactory::getUser();
+        $date = Factory::getDate();
+        $user = Factory::getUser();
 
         $this->modified_time = $date->toSql();
 

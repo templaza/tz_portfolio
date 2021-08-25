@@ -20,6 +20,8 @@
 // No direct access.
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 jimport('joomla.application.component.controllerform');
 
 class TZ_Portfolio_PlusControllerAcl extends JControllerForm
@@ -31,10 +33,11 @@ class TZ_Portfolio_PlusControllerAcl extends JControllerForm
 
         return $model;
     }
+
     public function edit($key = null, $urlVar = null)
     {
         // Do not cache the response to this, its a redirect, and mod_expires and google chrome browser bugs cache it forever!
-        \JFactory::getApplication()->allowCache(false);
+        Factory::getApplication()->allowCache(false);
 
         $model      = $this->getModel();
 //        $table      = $model->getTable();
@@ -73,7 +76,7 @@ class TZ_Portfolio_PlusControllerAcl extends JControllerForm
 
         // Check-out succeeded, push the new record id into the session.
         $this->holdEditSection($context, $recordSection);
-        \JFactory::getApplication()->setUserState($context . '.data', null);
+        Factory::getApplication()->setUserState($context . '.data', null);
 
         $this->setRedirect(
             \JRoute::_(
@@ -87,7 +90,7 @@ class TZ_Portfolio_PlusControllerAcl extends JControllerForm
 
     protected function holdEditSection($context, $section)
     {
-        $app = \JFactory::getApplication();
+        $app = Factory::getApplication();
         $values = (array) $app->getUserState($context . '.section');
 
         // Add the id to the list if non-zero.
@@ -111,5 +114,16 @@ class TZ_Portfolio_PlusControllerAcl extends JControllerForm
                 );
             }
         }
+    }
+
+    protected function getRedirectToItemAppend($recordId = null, $urlVar = 'id'){
+        $append = parent::getRedirectToItemAppend($recordId, $urlVar);
+        $section    = $this -> input -> get('section');
+
+        if($section){
+            $append .= '&section='.$section;
+        }
+
+        return $append;
     }
 }

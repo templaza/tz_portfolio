@@ -20,7 +20,7 @@
 defined('_JEXEC') or die;
 
 ?>
-<a class="btn btn-secondary" type="button" onclick="document.getElementById('batch-category-id').value='';document.getElementById('batch-access').value='';document.getElementById('batch-language-id').value=''" data-dismiss="modal">
+<a class="btn btn-secondary" type="button" onclick="document.getElementById('batch-category-id').value='';document.getElementById('batch-access').value='';document.getElementById('batch-language-id').value=''" data-dismiss="modal" data-bs-dismiss="modal">
 	<?php echo JText::_('JCANCEL'); ?>
 </a>
 <button class="btn btn-success" type="submit" onclick="Joomla.submitbutton('category.batch');">

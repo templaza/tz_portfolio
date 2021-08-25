@@ -28,7 +28,9 @@ defined('_JEXEC') or die;
 <script type="text/javascript">
 (function($){
     $(document).ready(function() {
-        $('[data-toggle="tooltip"]').tooltip({trigger: 'manual'}).tooltip('show');
+        if(typeof tooltip !== "undefined" || typeof $.fn.tooltip !== "undefined") {
+            $('[data-toggle="tooltip"]').tooltip({trigger: 'manual'}).tooltip('show');
+        }
         $(".progress.progress__tooltip .progress-bar").each(function(){
             var each_bar_width = $(this).attr('aria-valuenow');
             $(this).width(each_bar_width + '%');

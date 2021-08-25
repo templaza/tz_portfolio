@@ -19,6 +19,7 @@
 
 defined('JPATH_BASE') or die;
 
+use Joomla\CMS\Factory;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 /**
@@ -54,7 +55,7 @@ class JFormFieldModal_Tags extends JFormField
 		$script[] = '	}';
 
 		// Add the script to the document head.
-		JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
+		Factory::getApplication() -> getDocument()->addScriptDeclaration(implode("\n", $script));
 
 
 		// Setup variables for display.
@@ -78,7 +79,7 @@ class JFormFieldModal_Tags extends JFormField
 		}
 		$title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
 
-		$html[] = '<div class="input-append">';
+		$html[] = '<div class="input-append input-group">';
 
 		$html[] = '  <input type="text" id="'.$this->id.'_name" value="'.$title.'" disabled="disabled" size="35" />';
 

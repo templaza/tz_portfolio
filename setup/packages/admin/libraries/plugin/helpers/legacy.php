@@ -51,7 +51,11 @@ if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE){
                         }
 
                         // Instantiate and register the plugin.
-                        new $className($dispatcher, (array) ($plugin));
+                        $plg = new $className($dispatcher, (array) ($plugin));
+
+                        if(method_exists($plg, 'registerListeners')) {
+                            $plg -> registerListeners();
+                        }
                     }
                 }
             }

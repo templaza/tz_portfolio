@@ -19,7 +19,7 @@
 
 defined('JPATH_BASE') or die;
 
-use Joomla\Registry\Registry;
+use Joomla\CMS\Factory;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 JFormHelper::loadFieldClass('list');
@@ -50,7 +50,7 @@ class JFormFieldTZTemplates extends JFormFieldList
             }
         }
 
-        $lang   = JFactory::getLanguage();
+        $lang   = Factory::getApplication() -> getLanguage();
         $lang -> load('com_tz_portfolio_plus', JPATH_ADMINISTRATOR);
 
         return $return;

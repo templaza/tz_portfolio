@@ -47,8 +47,7 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
         $global_params    = JComponentHelper::getParams('com_tz_portfolio_plus');
 
         if($layout_type = $params -> get('layout_type',array())){
-
-            if(!count($layout_type)){
+            if(!empty($layout_type) || (is_array($layout_type) && !count($layout_type))){
                 $params -> set('layout_type',$global_params -> get('layout_type',array()));
             }
         }else{
@@ -365,6 +364,11 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
                     // Merge with article params
                     $item -> params -> merge($articleParams);
 
+                    // Disable email icon with joomla 4.x
+                    if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+                        $item->params->set('show_email_icon', 0);
+                    }
+
                     // Get all second categories
                     $item -> second_categories  = null;
                     if(isset($second_categories[$item -> id])) {
@@ -620,7 +624,7 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
     }
 
     public function getCategoriesByArticle(){
-        if($articles   = $this -> cache[$this->getStoreId()]){
+        if(isset($this -> cache[$this->getStoreId()]) && ($articles = $this -> cache[$this->getStoreId()])){
             $contentId  = $this -> __getArticleByKey($articles, 'id');
 
             $params     = $this -> getState('params');
@@ -685,7 +689,7 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
     }
 
     public function getTagsByArticle($filterAlias = null){
-        if($articles   = $this -> cache[$this->getStoreId()]){
+        if(isset($this -> cache[$this->getStoreId()]) && ($articles = $this -> cache[$this->getStoreId()])){
             $contentId  = $this -> __getArticleByKey($articles, 'id');
             $tags   = TZ_Portfolio_PlusFrontHelperTags::getTagsFilterByArticleId($contentId, $filterAlias);
             return $tags;

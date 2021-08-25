@@ -20,6 +20,8 @@
 // No direct access
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
 jimport('joomla.application.component.view');
@@ -66,7 +68,7 @@ class TZ_Portfolio_PlusViewField extends JViewLegacy
 
     protected function addToolbar(){
 
-        JFactory::getApplication()->input->set('hidemainmenu', true);
+        Factory::getApplication()->input->set('hidemainmenu', true);
 
         $user	    = TZ_Portfolio_PlusUser::getUser();
         $userId     = $user -> id;

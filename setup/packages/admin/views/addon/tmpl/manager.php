@@ -20,8 +20,10 @@
 //no direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 JHtml::_('behavior.formvalidator');
-JFactory::getDocument()->addScriptDeclaration('
+Factory::getApplication() -> getDocument()->addScriptDeclaration('
 	Joomla.submitbutton = function(task)
 	{
 		if (task == "addon.cancel" || document.formvalidator.isValid(document.getElementById("adminForm"))) {

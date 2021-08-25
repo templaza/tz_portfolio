@@ -20,6 +20,7 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Utilities\ArrayHelper;
 
 class TZ_Portfolio_PlusPluginModelAdmin extends JModelAdmin
@@ -55,7 +56,7 @@ class TZ_Portfolio_PlusPluginModelAdmin extends JModelAdmin
     protected function loadFormData()
     {
         // Check the session for previously entered form data.
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
         $data = $app->getUserState('com_tz_portfolio_plus.edit.article.data', array());
 
         if (empty($data)) {

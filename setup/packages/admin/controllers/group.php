@@ -19,6 +19,9 @@
 
 //no direct access
 defined('_JEXEC') or die('Restricted access');
+
+use Joomla\CMS\Factory;
+
 jimport('joomla.application.component.controllerform');
 
 class TZ_Portfolio_PlusControllerGroup extends JControllerForm
@@ -56,12 +59,12 @@ class TZ_Portfolio_PlusControllerGroup extends JControllerForm
                     $error = $this->getError();
                     if ($error)
                     {
-                        JFactory::getApplication() -> enqueueMessage($error, 'error');
+                        Factory::getApplication() -> enqueueMessage($error, 'error');
                         return false;
                     }
                     else
                     {
-                        JFactory::getApplication() -> enqueueMessage(JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), 'error');
+                        Factory::getApplication() -> enqueueMessage(JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), 'error');
                         return false;
                     }
                 }
@@ -89,7 +92,7 @@ class TZ_Portfolio_PlusControllerGroup extends JControllerForm
     protected function allowEdit($data = array(), $key = 'id')
     {
         $recordId = (int) isset($data[$key]) ? $data[$key] : 0;
-        $user = JFactory::getUser();
+        $user = Factory::getUser();
 
         // Zero record (id:0), return component edit permission by calling parent controller method
         if (!$recordId)

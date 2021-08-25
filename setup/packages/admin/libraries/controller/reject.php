@@ -20,6 +20,7 @@
 // no direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Utilities\ArrayHelper;
 
 jimport('joomla.application.component.controllerform');
@@ -29,7 +30,7 @@ class TZ_Portfolio_PlusControllerRejectBase extends JControllerForm
 {
     protected function allowReject($data = array())
     {
-        $user = \JFactory::getUser();
+        $user = Factory::getUser();
 
         return $user->authorise('core.approve', $this->option);
     }
@@ -61,7 +62,7 @@ class TZ_Portfolio_PlusControllerRejectBase extends JControllerForm
         // Check for request forgeries
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-        $app        = \JFactory::getApplication();
+        $app        = Factory::getApplication();
 
         // Require Reject model from front-end
         $model      = $this->getModel();

@@ -70,7 +70,7 @@ class JFormFieldTZFont extends JFormField
         jimport('joomla.filesystem.folder');
         jimport('joomla.filesystem.file');
         $plugin_path   = \JPATH_ADMINISTRATOR . '/components/com_tz_portfolio_plus/assets/webfonts.json';
-        $json = \JFile::read( $plugin_path );
+        $json = @file_get_contents( $plugin_path );
 
         $webfonts   = json_decode($json);
         $items      = $webfonts->items;
@@ -131,13 +131,13 @@ class JFormFieldTZFont extends JFormField
         $html .= '<div class="span6 col-sm-6">';
         $html .= '<label><small>'. \JText::_('TZPORTFOLIO_TYPO_FONT_FAMILY') .'</small></label>';
         // Font list
-        $html .= JHtml::_('select.genericlist', $font_list, '', 'class="' .$base_id.'_fontfamily"', 'value', 'text', $fontFamily);
+        $html .= JHtml::_('select.genericlist', $font_list, '', 'class="' .$base_id.'_fontfamily form-select"', 'value', 'text', $fontFamily);
 
         $html .= '</div>';
         //Font Weight
         $html .= '<div class="span6 col-sm-6">';
         $html .= '<label><small>'. \JText::_('TZPORTFOLIO_TYPO_FONT_WEIGHT') .'</small></label>';
-        $html .= '<select class="'.$base_id . '_fontweight'.'">';
+        $html .= '<select class="'.$base_id . '_fontweight'.' form-select">';
         $html .= '<option value="">'. \JText::_('JGLOBAL_USE_GLOBAL') .'</option>';
 
         foreach($fontWeights as $key=>$fontWeight)
@@ -160,13 +160,13 @@ class JFormFieldTZFont extends JFormField
         $fontSize = (isset($value->fontSize))?$value->fontSize:'';
         $html .= '<div class="span6 col-sm-6">';
         $html .= '<label><small>'. \JText::_('TZPORTFOLIO_TYPO_FONT_SIZE') .'</small></label>';
-        $html .= '<input class="'.$base_id . '_fontsize'.'" type="text" value="'. $fontSize .'" min="6">';
+        $html .= '<input class="'.$base_id . '_fontsize'.' form-control" type="text" value="'. $fontSize .'" min="6">';
         $html .= '</div>';
         //Font Height
         $lineHeight = (isset($value->lineHeight))?$value->lineHeight:'';
         $html .= '<div class="span6 col-sm-6">';
         $html .= '<label><small>'. \JText::_('TZPORTFOLIO_TYPO_FONT_HEIGHT') .'</small></label>';
-        $html .= '<input class="'.$base_id . '_lineheight'.'" type="text" value="'. $lineHeight .'" min="6">';
+        $html .= '<input class="'.$base_id . '_lineheight'.' form-control" type="text" value="'. $lineHeight .'" min="6">';
         $html .= '</div>';
         $html .= '</div>';
 
@@ -174,7 +174,7 @@ class JFormFieldTZFont extends JFormField
         //Font Style
         $html .= '<div class="span6 col-sm-6">';
         $html .= '<label><small>'. \JText::_('TZPORTFOLIO_TYPO_FONT_STYLE') .'</small></label>';
-        $html .= '<select class="'.$base_id . '_fontstyle'.'">';
+        $html .= '<select class="'.$base_id . '_fontstyle'.' form-select">';
         $html .= '<option value="">'. \JText::_('JGLOBAL_USE_GLOBAL') .'</option>';
 
         foreach($fontStyles as $key=>$fontStyle)
@@ -193,7 +193,7 @@ class JFormFieldTZFont extends JFormField
         //Letter Spacing
         $html .= '<div class="span6 col-sm-6">';
         $html .= '<label><small>'. \JText::_('TZPORTFOLIO_TYPO_LETTER_SPACING') .'</small></label>';
-        $html .= '<select class="'.$base_id . '_letterspacing'.'">';
+        $html .= '<select class="'.$base_id . '_letterspacing'.' form-select">';
         $html .= '<option value="">'. \JText::_('JGLOBAL_USE_GLOBAL') .'</option>';
         foreach($fontSpacings as $key=>$fontSpacing)
         {
@@ -214,7 +214,7 @@ class JFormFieldTZFont extends JFormField
         //Text transform
         $html .= '<div class="span6 col-sm-6">';
         $html .= '<label><small>'. \JText::_('TZPORTFOLIO_TYPO_TEXT_TRANSFORM') .'</small></label>';
-        $html .= '<select class="'.$base_id . '_text_transform'.'">';
+        $html .= '<select class="'.$base_id . '_text_transform'.' form-select">';
         $html .= '<option value="">'. \JText::_('JGLOBAL_USE_GLOBAL') .'</option>';
 
         foreach($textTransforms as $key=>$textTransform)
@@ -234,7 +234,7 @@ class JFormFieldTZFont extends JFormField
         //Letter Spacing
         $html .= '<div class="span6 col-sm-6">';
         $html .= '<label><small>'. \JText::_('TZPORTFOLIO_TYPO_TEXT_DECORATION') .'</small></label>';
-        $html .= '<select class="'.$base_id . '_text_decoration'.'">';
+        $html .= '<select class="'.$base_id . '_text_decoration'.' form-select">';
         $html .= '<option value="">'. \JText::_('JGLOBAL_USE_GLOBAL') .'</option>';
         foreach($textDecorations as $key=>$textDecoration)
         {

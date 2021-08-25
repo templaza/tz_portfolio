@@ -20,6 +20,7 @@
 // No direct access.
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Utilities\ArrayHelper;
 
 jimport('joomla.application.component.controlleradmin');
@@ -31,7 +32,7 @@ class TZ_Portfolio_PlusControllerFields extends JControllerAdmin
 
     public function __construct($config = array())
     {
-        $this -> input  = JFactory::getApplication()->input;
+        $this -> input  = Factory::getApplication()->input;
 
         parent::__construct($config);
 
@@ -57,7 +58,7 @@ class TZ_Portfolio_PlusControllerFields extends JControllerAdmin
 
         if (!is_array($cid) || count($cid) < 1)
         {
-            JFactory::getApplication() -> enqueueMessage(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), 'error');
+            Factory::getApplication() -> enqueueMessage(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), 'error');
 			
         }
         else
@@ -87,7 +88,7 @@ class TZ_Portfolio_PlusControllerFields extends JControllerAdmin
         // Check for request forgeries
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-        $cid    = JFactory::getApplication()->input->get('cid', array(), 'array');
+        $cid    = Factory::getApplication()->input->get('cid', array(), 'array');
         $data = array('listview' => 1, 'unlistview' => 0,
             'detailview' => 1, 'undetailview' => 0,
             'advsearch' => 1, 'unadvsearch' => 0);
@@ -116,7 +117,7 @@ class TZ_Portfolio_PlusControllerFields extends JControllerAdmin
                 {
                     if ($errors)
                     {
-                        $app = JFactory::getApplication();
+                        $app = Factory::getApplication();
                         $app->enqueueMessage(JText::plural($this->text_prefix . '_N_ITEMS_FAILED_PUBLISHING', count($cid)), 'error');
                     }
                     else
@@ -166,6 +167,6 @@ class TZ_Portfolio_PlusControllerFields extends JControllerAdmin
         }
 
         // Close the application
-        JFactory::getApplication()->close();
+        Factory::getApplication()->close();
     }
 }

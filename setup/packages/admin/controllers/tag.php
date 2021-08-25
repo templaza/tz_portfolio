@@ -19,6 +19,9 @@
 
 //no direct access
 defined('_JEXEC') or die('Restricted access');
+
+use Joomla\CMS\Factory;
+
 jimport('joomla.application.component.controllerform');
 
 class TZ_Portfolio_PlusControllerTag extends JControllerForm
@@ -28,7 +31,7 @@ class TZ_Portfolio_PlusControllerTag extends JControllerForm
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
         // Initialise variables.
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
         $model = $this->getModel();
         $table = $model->getTable();
         $context = "$this->option.edit.$this->context";
@@ -59,8 +62,8 @@ class TZ_Portfolio_PlusControllerTag extends JControllerForm
         // Check for request forgeries.
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-        $app   = JFactory::getApplication();
-        $lang  = JFactory::getLanguage();
+        $app   = Factory::getApplication();
+        $lang  = $app -> getLanguage();
         $model  = $this -> getModel();
         $table = $model->getTable();
         $context = "$this->option.edit.$this->context";
@@ -166,7 +169,7 @@ class TZ_Portfolio_PlusControllerTag extends JControllerForm
     protected function allowEdit($data = array(), $key = 'id')
     {
         $recordId = (int) isset($data[$key]) ? $data[$key] : 0;
-        $user = JFactory::getUser();
+        $user = Factory::getUser();
 
         // Zero record (id:0), return component edit permission by calling parent controller method
         if (!$recordId)

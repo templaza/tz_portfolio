@@ -24,8 +24,10 @@ defined('_JEXEC') or die;
 JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.formvalidator');
 JHtml::_('behavior.keepalive');
-JHtml::_('behavior.tabstate');
-JHtml::_('formbehavior.chosen', 'select');
+if(!COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+    JHtml::_('behavior.tabstate');
+    JHtml::_('formbehavior.chosen', 'select');
+}
 
 // Create shortcut to parameters.
 $params = $this->state->get('params');

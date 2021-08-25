@@ -18,8 +18,9 @@
 -------------------------------------------------------------------------*/
 
 // no direct access
-
 defined('JPATH_BASE') or die;
+
+use Joomla\CMS\Factory;
 
 JFormHelper::loadFieldClass('list');
 
@@ -39,14 +40,14 @@ class JFormFieldTZMultipleField extends JFormField
         if(!is_array($this -> value) && preg_match_all('/(\{.*?\})/',$this -> value,$match)) {
             $this -> setValue($match[1]);
         }
-        $doc    = JFactory::getDocument();
+        $doc    = Factory::getApplication() -> getDocument();
         if(!$this -> head) {
             $doc->addScript(TZ_Portfolio_PlusUri::root(true,null,true).'/js/jquery-ui.min.js', array('version' => 'v=1.11.4'));
             $doc->addStyleSheet(TZ_Portfolio_PlusUri::root(true,null,true). '/css/jquery-ui.min.css', array('version' => 'v=1.11.4'));
             $doc->addStyleDeclaration('.tz_pricing-table-table .ui-sortable-helper{
                 background: #fff;
             }');
-            $lang   = JFactory::getLanguage();
+            $lang   = Factory::getApplication() -> getLanguage();
             $lang -> load('com_tz_portfolio_plus');
             $this -> head   = true;
         }
@@ -242,7 +243,7 @@ class JFormFieldTZMultipleField extends JFormField
             $this -> id.'}"' . $class . $disabled . $onchange . ' />'
             .'</td>';
 
-        $config = JFactory::getConfig();
+        $config = Factory::getConfig();
 
         $addEditor      = '';
         $editEditor     = '';

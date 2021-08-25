@@ -19,6 +19,8 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 extract($displayData);
 
 $allowEdit  = false;
@@ -45,13 +47,13 @@ echo JHtml::_(
         'modalWidth' => '70',
         'bodyHeight' => '70',
         'closeButton' => true,
-        'footer'      => '<a class="btn" data-dismiss="modal" aria-hidden="true">' . JText::_('JCANCEL') . '</a>',
+        'footer'      => '<a class="btn" data-dismiss="modal" data-bs-dismiss="modal" aria-hidden="true">' . JText::_('JCANCEL') . '</a>',
     )
 );
 ?>
 <div class="btn-group control-group">
     <a class="btn btn-primary hasTooltip" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_CHANGE_ADDONS');
-        ?>" data-toggle="modal" href="#tppModalArticle_<?php echo $id;?>"><i class="icon-copy"></i> <?php
+        ?>" data-toggle="modal" data-bs-toggle="modal" href="#tppModalArticle_<?php echo $id;?>"><i class="icon-copy"></i> <?php
         echo JText::_('JSELECT');?></a>
     <a href="javascript:" id="<?php echo $id; ?>_clear" class="btn btn-danger<?php echo $value ? '' : ' disabled';?>" onclick="return tppClearAddOns('<?php
     echo $id; ?>')"><span class="icon-remove"></span> <?php echo JText::_('JCLEAR'); ?></a>
@@ -99,7 +101,7 @@ echo JHtml::_(
 </div>
 
 <?php
-$doc    = JFactory::getDocument();
+$doc    = Factory::getApplication() -> getDocument();
 $doc -> addScriptDeclaration('
     (function($, window){
         "use strict";

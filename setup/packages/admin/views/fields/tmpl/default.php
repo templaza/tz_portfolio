@@ -148,9 +148,7 @@ if ($saveOrder)
                             <?php echo JHtml::_('grid.id', $i, $item->id); ?>
                         </td>
                         <td class="center text-center">
-                            <div class="btn-group">
-                                <?php echo JHtml::_('jgrid.published', $item->published, $i, 'fields.', $canChange, 'cb'); ?>
-                            </div>
+                            <?php echo JHtml::_('jgrid.published', $item->published, $i, 'fields.', $canChange, 'cb'); ?>
                         </td>
                         <td class="nowrap has-context">
                             <?php if ($item -> checked_out){ ?>

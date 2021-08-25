@@ -32,8 +32,10 @@ class TZ_Portfolio_PlusViewDashboard extends JViewLegacy {
             $this->addToolbar();
         }
 
-        TZ_Portfolio_PlusHelper::addSubmenu('dashboard');
-        $this->sidebar = JHtmlSidebar::render();
+        if(!COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+            TZ_Portfolio_PlusHelper::addSubmenu('dashboard');
+            $this->sidebar = JHtmlSidebar::render();
+        }
 
         parent::display($tpl);
     }

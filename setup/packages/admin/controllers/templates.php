@@ -20,6 +20,8 @@
 // No direct access.
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 jimport('joomla.application.component.controlleradmin');
 
 class TZ_Portfolio_PlusControllerTemplates extends JControllerAdmin
@@ -33,7 +35,7 @@ class TZ_Portfolio_PlusControllerTemplates extends JControllerAdmin
 
     public function upload()
     {
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
         $context = "$this->option.edit.$this->context";
 
         // Redirect to the edit screen.

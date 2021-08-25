@@ -20,6 +20,7 @@
 //no direct access
 defined('JPATH_PLATFORM') or die;
 
+use Joomla\CMS\Factory;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 JFormHelper::loadFieldClass('checkboxes');
@@ -46,7 +47,7 @@ class JFormFieldCategoriesAssignment extends JFormFieldCheckboxes
                 $tmp = JHtml::_('select.option', (string) $option -> value, trim($option -> text), 'value', 'text');
 
                 $checked    = false;
-                $app    = JFactory::getApplication();
+                $app    = Factory::getApplication();
                 $input  = $app -> input;
                 $curTemplateId  = null;
 

@@ -19,7 +19,8 @@
 
 defined('JPATH_PLATFORM') or die;
 
-use Joomla\Filesystem\File;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
 
 jimport('joomla.filesystem.file');
 
@@ -93,13 +94,13 @@ class JFormFieldTZMedia extends JFormFieldMedia{
         $html[] = '<div style="padding-top: 5px;">'.parent::getInput();
         if($value && !empty($value) && is_string($value)){
             $html[] = '<a href="'.JUri::root().str_replace('.'
-                    .\JFile::getExt($value),($this -> element['img_prefix']?'_'.$this -> element['img_prefix']:'')
-                    .'.'.\JFile::getExt($value),$value).'?time='.time().'"'
+                    .File::getExt($value),($this -> element['img_prefix']?'_'.$this -> element['img_prefix']:'')
+                    .'.'.File::getExt($value),$value).'?time='.time().'"'
                 .' class="tp-image-preview tp-image-preview__modal" rel="{handler: \'image\'}" style="display: table; padding-top: 5px;">';
 
-            $urlImg = JUri::root() . str_replace('.' . \JFile::getExt($value),
+            $urlImg = JUri::root() . str_replace('.' . File::getExt($value),
                     ($this->element['img_prefix'] ? '_' . $this->element['img_prefix'] : '')
-                    . '.' . \JFile::getExt($value), $value) . '?time=' . time();
+                    . '.' . File::getExt($value), $value) . '?time=' . time();
             $img = '<img src="' . $urlImg. '" style="'
                 . ($this->element['img_max-width'] ? 'max-width: 200px; ' : '') . 'cursor: pointer;" title="">';
             $html[] = $img;
@@ -107,9 +108,9 @@ class JFormFieldTZMedia extends JFormFieldMedia{
 
 //            if(version_compare(JVERSION, '4.0', 'ge')) {
             $image = new JImage();
-            $image->loadFile(JPATH_SITE . '/' . str_replace('.' . \JFile::getExt($value),
+            $image->loadFile(JPATH_SITE . '/' . str_replace('.' . File::getExt($value),
                     ($this->element['img_prefix'] ? '_' . $this->element['img_prefix'] : '')
-                    . '.' . \JFile::getExt($value), $value));
+                    . '.' . File::getExt($value), $value));
 
             $imgHtml    = JHtml::_('image', $urlImg, JText::_('JLIB_FORM_MEDIA_PREVIEW_ALT'));
             $imgHtml    = '<div style="text-align:center; overflow-y: auto;">'.$imgHtml.'</div>';
@@ -127,12 +128,12 @@ class JFormFieldTZMedia extends JFormFieldMedia{
 //                    'width' => '100%',
 //                    'modalWidth' => '60',
 //                    'bodyHeight' => '60',
-                    'footer' => '<button type="button" class="btn" data-dismiss="modal">'
+                    'footer' => '<button type="button" class="btn" data-dismiss="modal" data-bs-dismiss="modal">'
                         . JText::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</button>',
                 ),
                 $imgHtml);
 
-            $doc = JFactory::getDocument();
+            $doc = Factory::getApplication() -> getDocument();
             if(version_compare(JVERSION, '4.0', 'ge')) {
                 $doc->addScriptDeclaration('
                     (function($, window){
@@ -244,13 +245,13 @@ class JFormFieldTZMedia extends JFormFieldMedia{
         $html[] = '<div style="padding-top: 5px;">'.parent::getInput();
         if($value && !empty($value) && is_string($value)){
             $html[] = '<a href="'.JUri::root().str_replace('.'
-                    .\JFile::getExt($value),($this -> element['img_prefix']?'_'.$this -> element['img_prefix']:'')
-                    .'.'.\JFile::getExt($value),$value).'?time='.time().'"'
+                    .File::getExt($value),($this -> element['img_prefix']?'_'.$this -> element['img_prefix']:'')
+                    .'.'.File::getExt($value),$value).'?time='.time().'"'
                 .' class="tp-image-preview tp-image-preview__modal" rel="{handler: \'image\'}" style="display: table; padding-top: 5px;">';
 
-            $urlImg = JUri::root() . str_replace('.' . \JFile::getExt($value),
+            $urlImg = JUri::root() . str_replace('.' . File::getExt($value),
                     ($this->element['img_prefix'] ? '_' . $this->element['img_prefix'] : '')
-                    . '.' . \JFile::getExt($value), $value) . '?time=' . time();
+                    . '.' . File::getExt($value), $value) . '?time=' . time();
             $img = '<img src="' . $urlImg. '" style="'
                 . ($this->element['img_max-width'] ? 'max-width: 200px; ' : '') . 'cursor: pointer;" title="">';
             $html[] = $img;
@@ -258,9 +259,9 @@ class JFormFieldTZMedia extends JFormFieldMedia{
 
 //            if(version_compare(JVERSION, '4.0', 'ge')) {
                 $image = new JImage();
-                $image->loadFile(JPATH_SITE . '/' . str_replace('.' . \JFile::getExt($value),
+                $image->loadFile(JPATH_SITE . '/' . str_replace('.' . File::getExt($value),
                         ($this->element['img_prefix'] ? '_' . $this->element['img_prefix'] : '')
-                        . '.' . \JFile::getExt($value), $value));
+                        . '.' . File::getExt($value), $value));
 
                 $imgHtml    = JHtml::_('image', $urlImg, JText::_('JLIB_FORM_MEDIA_PREVIEW_ALT'));
 
@@ -280,7 +281,7 @@ class JFormFieldTZMedia extends JFormFieldMedia{
                     ),
                     $imgHtml);
 
-                $doc = JFactory::getDocument();
+                $doc = Factory::getApplication() -> getDocument();
                 if(version_compare(JVERSION, '4.0', 'ge')) {
                     $doc->addScriptDeclaration('     
                     (function($, window){

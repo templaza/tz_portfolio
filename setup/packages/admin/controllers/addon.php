@@ -20,6 +20,7 @@
 // No direct access.
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Utilities\ArrayHelper;
 
 jimport('joomla.application.component.controllerform');
@@ -35,7 +36,7 @@ class TZ_Portfolio_PlusControllerAddon extends JControllerForm
     }
 
     public function manager(){
-        $app   = JFactory::getApplication();
+        $app   = Factory::getApplication();
         $model = $this->getModel();
         $table = $model->getTable();
         $cid    = array();
@@ -202,7 +203,7 @@ class TZ_Portfolio_PlusControllerAddon extends JControllerForm
 
         $cancel = parent::cancel($key);
 
-        $app    = JFactory::getApplication();
+        $app    = Factory::getApplication();
         $app -> setUserState($this->option . '.'.$this -> context.'.limitstart', 0);
 
         if($return = $this -> input -> get('return', null, 'base64')){
@@ -215,7 +216,7 @@ class TZ_Portfolio_PlusControllerAddon extends JControllerForm
 
     public function save($key = null, $urlVar = null)
     {
-        $user   = JFactory::getUser();
+        $user   = Factory::getUser();
 
         $data   = $this->input->get('jform', array(), 'array');
 
@@ -303,7 +304,7 @@ class TZ_Portfolio_PlusControllerAddon extends JControllerForm
     public function edit($key = null, $urlVar = null)
     {
         // Do not cache the response to this, its a redirect, and mod_expires and google chrome browser bugs cache it forever!
-        \JFactory::getApplication()->allowCache(false);
+        Factory::getApplication()->allowCache(false);
 
         $model = $this->getModel();
         $table = $model->getTable();
@@ -345,7 +346,7 @@ class TZ_Portfolio_PlusControllerAddon extends JControllerForm
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
         $result = null;
-        $app    = JFactory::getApplication();
+        $app    = Factory::getApplication();
 
 
         // Access check.

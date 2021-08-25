@@ -20,6 +20,7 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Utilities\ArrayHelper;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
@@ -44,7 +45,7 @@ class TZ_Portfolio_PlusModelAcl extends JModelAdmin
 
     protected function populateState()
     {
-        $app    = JFactory::getApplication();
+        $app    = Factory::getApplication();
         $input  = $app -> input;
 
         $this -> setState('acl.section', $input -> get('section'));
@@ -84,7 +85,7 @@ class TZ_Portfolio_PlusModelAcl extends JModelAdmin
                     $_data['name']   = 'com_tz_portfolio_plus.'.$section;
                 }
 
-                $lang   = JFactory::getApplication() -> getLanguage();
+                $lang   = Factory::getApplication() -> getLanguage();
                 switch ($section){
                     default:
                         $text   = 'COM_TZ_PORTFOLIO_PLUS_'.strtoupper($section).'S';
@@ -226,7 +227,8 @@ class TZ_Portfolio_PlusModelAcl extends JModelAdmin
         // Check next items with limit
         $start += $limit;
         $db->setQuery($query, $start, $limit);
-        $count = count($db->loadResult());
+        $result = $db -> loadResult();
+        $count = !empty($result)?count($db->loadResult()):0;
 
         if($count > 0){
             $this -> _storePermission($query, $groupSection, $section, $titleFieldName, $start);
@@ -254,7 +256,7 @@ class TZ_Portfolio_PlusModelAcl extends JModelAdmin
 
     protected function preprocessForm(JForm $form, $data, $group = 'content')
     {
-        $app        = JFactory::getApplication();
+        $app        = Factory::getApplication();
         $input      = $app -> input;
         $section    = $input -> get('section');
         $title      = $section;
@@ -285,7 +287,7 @@ class TZ_Portfolio_PlusModelAcl extends JModelAdmin
     protected function loadFormData()
     {
         // Check the session for previously entered form data.
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
         $data = $app->getUserState($this -> option. '.edit.'.$this -> getName().'.data', array());
 
         if($section = $this -> state -> get('acl.section')){

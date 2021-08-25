@@ -7,6 +7,7 @@
                     label="PLG_USER_PROFILE_YOUR_URL_LABEL"/>
             <field type="radio" name="tz_portfolio_plus_user_gender"
                    class="switcher btn-group" default="m"
+                   layout="joomla.form.field.radio.switcher"
                    label="PLG_USER_PROFILE_GENDER_LABEL">
                 <option value="m">PLG_USER_PROFILE_MALE</option>
                 <option value="f">PLG_USER_PROFILE_FEMALE</option>

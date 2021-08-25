@@ -24,6 +24,8 @@
 // no direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 $head               = $displayData['head'];
 $group              = $displayData['group'];
 $multiple           = $displayData['multiple'];
@@ -73,7 +75,7 @@ if($multiple_option){
         $htmlHead = ob_get_contents();
         ob_end_clean();
 
-        $doc = JFactory::getDocument();
+        $doc = Factory::getApplication() -> getDocument();
         $doc->addScript(TZ_Portfolio_PlusUri::base(true, true) . '/js/jquery-ui.min.js',
             array('version' => 'v=1.11.4'));
         $doc->addStyleDeclaration('#jform_' . $group . ' .table{

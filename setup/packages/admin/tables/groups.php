@@ -20,6 +20,8 @@
  //no direct access
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+
 class TZ_Portfolio_PlusTableGroups extends JTable
 {
     function __construct(&$db) {
@@ -72,8 +74,8 @@ class TZ_Portfolio_PlusTableGroups extends JTable
 
     public function store($updateNulls = false){
 
-        $date = JFactory::getDate();
-        $user = JFactory::getUser();
+        $date = Factory::getDate();
+        $user = Factory::getUser();
 
         if (!(int) $this -> created)
         {

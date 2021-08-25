@@ -20,6 +20,7 @@
 // no direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 
 // Include the component HTML helpers.
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
@@ -34,7 +35,7 @@ if(!$j4Compare) {
     JHtml::_('formbehavior.chosen', 'select[multiple]');
 }
 
-$user		= JFactory::getUser();
+$user		= Factory::getUser();
 $userId		= $user->get('id');
 $extension	= $this->escape($this->state->get('filter.extension'));
 $listOrder	= $this->escape($this->state->get('list.ordering'));
@@ -175,7 +176,9 @@ if ($saveOrder)
                                 <?php echo JHtml::_('grid.id', $i, $item->id); ?>
                             </td>
                             <td class="center text-center">
+                                <?php if(!$j4Compare){?>
                                 <div class="btn-group">
+                                <?php } ?>
                                     <?php echo JHtml::_('jgrid.published', $item->published, $i, 'categories.', $canChange);?>
                                     <?php
                                     if (!$j4Compare && $canChange)
@@ -188,7 +191,9 @@ if ($saveOrder)
                                         echo JHtml::_('actionsdropdown.render', $this->escape($item->title));
                                     }
                                     ?>
+                                <?php if(!$j4Compare){?>
                                 </div>
+                                <?php } ?>
                             </td>
                             <td>
                                 <?php echo JLayoutHelper::render('joomla.html.treeprefix', array('level' => $item->level)); ?>
@@ -196,14 +201,8 @@ if ($saveOrder)
                                     <?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'categories.', $canCheckin); ?>
                                 <?php endif; ?>
                                 <?php if ($canEdit || $canEditOwn) : ?>
-                                    <?php
-                                    $editIcon   = '';
-                                    if($j4Compare) {
-                                        $editIcon = $item->checked_out ? '' : '<span class="tps tp-pen-square mr-2" aria-hidden="true"></span>';
-                                    }
-                                    ?>
                                     <a href="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&task=category.edit&id='.$item->id.'&extension='.$extension);?>">
-                                        <?php echo $editIcon.$this->escape($item->title); ?></a>
+                                        <?php echo $this->escape($item->title); ?></a>
                                 <?php else : ?>
                                     <?php echo $this->escape($item->title); ?>
                                 <?php endif; ?>
@@ -251,7 +250,7 @@ if ($saveOrder)
 
             <input type="hidden" name="task" value="" />
             <input type="hidden" name="boxchecked" value="0" />
-            <input type="hidden" name="original_order_values" value="<?php echo implode($originalOrders, ','); ?>" />
+            <input type="hidden" name="original_order_values" value="<?php echo is_array($originalOrders)?implode(',', $originalOrders):''; ?>" />
             <?php echo JHtml::_('form.token'); ?>
         </div>
     <?php echo JHtml::_('tzbootstrap.endcontainer');?>

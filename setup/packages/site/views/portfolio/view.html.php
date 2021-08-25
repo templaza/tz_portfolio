@@ -308,7 +308,9 @@ class TZ_Portfolio_PlusViewPortfolio extends JViewLegacy
             $path       = array(array('title' => $mcategory -> title, 'link' => ''));
             $category   = $mcategory -> getParent();
 
-            while (($menu->query['option'] !== 'com_tz_portfolio_plus' || $menu->query['view'] === 'article' || $id != $category->id) && $category->id > 1)
+            while (!empty($category) &&
+                ($menu->query['option'] !== 'com_tz_portfolio_plus' || $menu->query['view'] === 'article' || $id != $category->id)
+                && $category->id > 1)
             {
                 $path[] = array('title' => $category->title, 'link' => TZ_Portfolio_PlusHelperRoute::getCategoryRoute($category->id));
                 $category = $category->getParent();

@@ -20,6 +20,7 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Filesystem\Folder;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
@@ -276,7 +277,7 @@ class TZ_Portfolio_PlusTemplate {
     protected static function getTemplateId($artId = null,$catId = null){
 
         $db         = TZ_Portfolio_PlusDatabase::getDbo();
-        $app        = JFactory::getApplication('site');
+        $app        = Factory::getApplication('site');
         $templateId = null;
         $_catId     = null;
         $_artId     = null;
@@ -335,7 +336,7 @@ class TZ_Portfolio_PlusTemplate {
 
     public static function loadLanguage($template){
 
-        $lang           = JFactory::getLanguage();
+        $lang           = Factory::getApplication() -> getLanguage();
         $tag            = $lang -> getTag();
         $basePath       = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH . '/' .$template;
 
@@ -343,9 +344,9 @@ class TZ_Portfolio_PlusTemplate {
 
         $__files    = array();
         if(is_dir($basePath.'/language/'.$tag)) {
-            $__files = \JFolder::files($basePath . '/language/'.$tag, 'tpl_.*.ini$', false);
+            $__files = Folder::files($basePath . '/language/'.$tag, 'tpl_.*.ini$', false);
         }elseif(is_dir($basePath.'/language/en-GB')) {
-            $__files = \JFolder::files($basePath . '/language/en-GB', 'tpl_.*.ini$', false);
+            $__files = Folder::files($basePath . '/language/en-GB', 'tpl_.*.ini$', false);
         }
 
         if($__files && count($__files)){
@@ -510,8 +511,8 @@ class TZ_Portfolio_PlusTemplate {
 
                 $content    = $scss -> compile($compileCode);
 
-                if(!\JFolder::exists($css_path)){
-                    \JFolder::create($css_path);
+                if(!Folder::exists($css_path)){
+                    Folder::create($css_path);
                 }
 
                 if($content) {
@@ -594,7 +595,7 @@ class TZ_Portfolio_PlusTemplate {
         $files      = array();
         $sassPath   = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH.'/'.$styleName.'/scss';
 
-        if(\JFolder::exists($sassPath) && $sFiles = \JFolder::files($sassPath, '.scss', true, true)){
+        if(Folder::exists($sassPath) && $sFiles = Folder::files($sassPath, '.scss', true, true)){
             if($cfiles = self::getSassDirCore()){
                 $files  = array_merge($files, $cfiles);
             }
@@ -621,7 +622,7 @@ class TZ_Portfolio_PlusTemplate {
 
         $sassPath  = COM_TZ_PORTFOLIO_PLUS_PATH_SITE.'/scss';
 
-        if(\JFolder::exists($sassPath) && $files = \JFolder::files($sassPath, '.scss', true, true)){
+        if(Folder::exists($sassPath) && $files = Folder::files($sassPath, '.scss', true, true)){
             self::$cache[$storeId]  = $files;
             return $files;
         }

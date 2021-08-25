@@ -19,11 +19,13 @@
 
 defined('_JEXEC') or die;
 
-use Joomla\Filesystem\File;
-use Joomla\Filesystem\Folder;
+use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
-use Joomla\CMS\MVC\Model\BaseModel;
+use Joomla\CMS\Filesystem\Path;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Filesystem\Folder;
 use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\MVC\Model\BaseModel;
 
 jimport('joomla.filesytem.file');
 JLoader::import('framework',JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/includes');
@@ -101,7 +103,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
     public function onAddContentType(){
         if($this -> _type == 'content') {
             $type = new stdClass();
-            $lang = JFactory::getLanguage();
+            $lang = Factory::getApplication() -> getLanguage();
             $lang_key = 'PLG_' . $this->_type . '_' . $this->_name . '_TITLE';
             $lang_key = strtoupper($lang_key);
 
@@ -120,7 +122,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
     public function onAddMediaType(){
         if($this -> _type == 'mediatype') {
             $type = new stdClass();
-            $lang = JFactory::getLanguage();
+            $lang = Factory::getApplication() -> getLanguage();
             $lang_key = 'PLG_' . $this->_type . '_' . $this->_name . '_TITLE';
             $lang_key = strtoupper($lang_key);
 
@@ -139,7 +141,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
 
     // Prepare form of the plugin ~ onContentPrepareForm of joomla
     public function onContentPrepareForm($form, $data){
-        $app            = JFactory::getApplication();
+        $app            = Factory::getApplication();
         $name           = $form -> getName();
         $extension      = null;
         $adminAllows    = array(
@@ -188,7 +190,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
 
     // Load xml form file for article view of the plugin (this trigger called in system tz_portfolio_plus plugin)
     protected function contentPrepareForm($form, $data){
-        $app        = JFactory::getApplication();
+        $app        = Factory::getApplication();
         $context    = $form -> getName();
 
         if($app -> isClient('administrator') || ($app -> isClient('site') && $context  == 'com_tz_portfolio_plus.form')){
@@ -212,11 +214,18 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
                 JForm::addFieldPath(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/' . $this->_type . '/' . $this->_name . '/models/fields');
             }
 
+            $file   = Path::clean(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.'/'.$this -> _type.'/'.$this -> _name.'/admin/models/forms/'.$viewName.'.xml');
+            if(!file_exists($file)){
+                $file   = Path::clean(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.'/'.$this -> _type.'/'.$this -> _name.'/admin/models/form/'.$viewName.'.xml');
+            }
+
             // Load xml form file from above path
             if($viewName == 'article' || $viewName == 'form') {
-                $form->loadFile($viewName, false, '/form/fields[@name="attribs"]');
+                if(file_exists($file)){
+                    $form->loadFile($file, false, '/form/fields[@name="attribs"]');
+                }
             }else{
-                $form->loadFile($viewName, false, '/form/fields[@name="params"]');
+                $form->loadFile($file, false, '/form/fields[@name="params"]');
             }
         }
         return true;
@@ -224,7 +233,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
 
     // Load xml form file for menu in back-end of the plugin (this trigger called in system tz_portfolio_plus plugin)
     protected function menuPrepareForm($form, $data){
-        $app            = JFactory::getApplication();
+        $app            = Factory::getApplication();
         if($app -> isClient('administrator')){
             $formFile       = false;
             $addonFormFile  = false;
@@ -325,7 +334,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
 
     // Load xml form file for menu in back-end of the plugin (this trigger called in system tz_portfolio_plus plugin)
     protected function modulePrepareForm($form, $data){
-        $app            = JFactory::getApplication();
+        $app            = Factory::getApplication();
         if($app -> isClient('administrator')){
             $formFile   = false;
             $link       = false;
@@ -377,7 +386,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
             // Load addon config for module from addon
             // Get the modules if this addon support.
             if (is_dir($base)) {
-                $folders = \JFolder::folders($base, '^module[s]?$', false, true);
+                $folders = Folder::folders($base, '^module[s]?$', false, true);
             }
 
             $path = '';
@@ -389,7 +398,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
 
             if (is_dir($path))
             {
-                $modules    = \JFolder::folders($path);
+                $modules    = Folder::folders($path);
             }
             else
             {
@@ -413,18 +422,18 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
                 $tpTemplate = TZ_Portfolio_PlusTemplate::getTemplate(true);
             }
             $tmpFolders         = array();
-            $tpTemplateFolders  = \JFolder::folders( COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH);
+            $tpTemplateFolders  = Folder::folders( COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH);
             if($tpTemplateFolders && count($tpTemplateFolders)){
                 foreach($tpTemplateFolders as $tmpFolder){
                     $htmlPath   = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH.'/'.$tmpFolder.'/html';
-                    $tmpLayouts = \JFolder::folders($htmlPath);
+                    $tmpLayouts = Folder::folders($htmlPath);
                     foreach ($tmpLayouts as $tmpLayout){
                         $tmpFolders[]   = $htmlPath.'/'.$tmpLayout.'/'.$module_name.'/plg_'.$this -> _type.'_'
                             .$this -> _name;
                     }
                 }
             }
-            if($jTemplate      = \JFactory::getApplication()->getTemplate()){
+            if($jTemplate      = Factory::getApplication()->getTemplate()){
                 $tmpFolders[]    = $tpTemplate -> base_path.'/' . $module_name . '/plg_'.$this -> _type.'_'
                     .$this -> _name;
             }
@@ -461,7 +470,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
                 $this -> item   = $data;
                 $path           = TZ_Portfolio_PlusPluginHelper::getLayoutPath($this -> _type, $this -> _name, 'admin');
 
-                if(\JFile::exists($path)) {
+                if(File::exists($path)) {
                     ob_start();
                     require_once($path);
                     $html = ob_get_contents();
@@ -554,7 +563,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
     protected function _getViewHtml($context, &$article, $params, $layout = null){
         list($extension, $vName)   = explode('.', $context);
 
-        $input      = JFactory::getApplication()->input;
+        $input      = Factory::getApplication()->input;
         if($addon = TZ_Portfolio_PlusPluginHelper::getPlugin($this -> _type, $this -> _name)){
 
             // Check task with format: addon_name.addon_view.addon_task (example image.default.display);
@@ -579,7 +588,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
                     ob_end_clean();
                 }catch (Exception $e){
                     if($e -> getMessage()) {
-    //                        JFactory::getApplication() ->enqueueMessage('Addon '.$this -> _name.': '.$e -> getMessage(), 'warning');
+    //                        Factory::getApplication() ->enqueueMessage('Addon '.$this -> _name.': '.$e -> getMessage(), 'warning');
                     }
                 }
 
@@ -677,7 +686,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
 
         tzportfolioplusimport('plugin.modelitem');
 
-        $input      = JFactory::getApplication() -> input;
+        $input      = Factory::getApplication() -> input;
 
         if($controller = TZ_Portfolio_PlusPluginHelper::getAddonController($input -> get('addon_id'))){
             $task       = $input->get('addon_task');
@@ -687,7 +696,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
     }
 
     public function onAfterGetMenuTypeOptions(&$data, $object){
-        $app    = JFactory::getApplication();
+        $app    = Factory::getApplication();
         if($app -> isClient('administrator')){
             $input  = $app -> input;
             if($input -> get('option') == 'com_menus' && ($input -> get('view') == 'menutypes'
@@ -735,7 +744,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
 
                     // Get the views of this addon.
                     if (is_dir($addonPath)) {
-                        $folders = \JFolder::folders($addonPath, '^view[s]?$', false, true);
+                        $folders = Folder::folders($addonPath, '^view[s]?$', false, true);
                     }
 
                     $path = '';
@@ -749,7 +758,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
                         $views[]    = $args['addon_view'];
                     }else {
                         if (is_dir($path)) {
-                            $views = \JFolder::folders($path);
+                            $views = Folder::folders($path);
                         } else {
                             return false;
                         }
@@ -768,7 +777,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
 
                         if (is_dir($lPath))
                         {
-                            $layouts = array_merge($layouts, \JFolder::files($lPath, '.xml$', false, true));
+                            $layouts = array_merge($layouts, Folder::files($lPath, '.xml$', false, true));
                         }
 
                         // Build list of standard layout names
@@ -881,7 +890,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
      * */
     protected function __addFormToPosition($article = null, $position = 'before_description'){
         $_position  = new stdClass();
-        $lang       = JFactory::getLanguage();
+        $lang       = Factory::getApplication() -> getLanguage();
         $lang_key   = 'PLG_' . $this->_type . '_' . $this->_name . '_TITLE';
         $lang_key   = strtoupper($lang_key);
         $model      = null;
@@ -931,7 +940,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
             }
 
             $this -> item   = $article;
-            if(\JFile::exists($path) && isset($this -> form) && $this -> form) {
+            if(File::exists($path) && isset($this -> form) && $this -> form) {
                 ob_start();
                 require $path;
                 $content = ob_get_contents();

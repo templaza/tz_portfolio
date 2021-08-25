@@ -9,6 +9,7 @@
 
 defined('JPATH_BASE') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Utilities\ArrayHelper;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
@@ -56,7 +57,7 @@ class JFormFieldCategoryEdit extends JFormFieldList
 		$name = (string) $this->element['name'];
 
 		// Let's get the id for the current item, either category or content item.
-		$jinput = JFactory::getApplication()->input;
+		$jinput = Factory::getApplication()->input;
 
 		// Load the category options for a given extension.
 
@@ -172,7 +173,7 @@ class JFormFieldCategoryEdit extends JFormFieldList
 		}
 
 		// Get the current user object.
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 
 		// For new items we want a list of categories you are allowed to create in.
 		if ($oldCat == 0)

@@ -100,7 +100,7 @@ abstract class JHtmlTZContentAdmin
      *
      * @return  string       HTML code
      */
-    public static function featured($value = 0, $i, $canChange = true)
+    public static function featured($value, $i, $canChange = true)
     {
         JHtml::_('bootstrap.tooltip');
 

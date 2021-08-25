@@ -20,12 +20,14 @@
 // No direct access
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+
 $defLayout = $this -> getLayout();
 ?>
 <div class="generator">
     <?php
     if($this -> tzlayout){
-        $input  = JFactory::getApplication() -> input;
+        $input  = Factory::getApplication() -> input;
         foreach($this -> tzlayout as $items )
         {
             $containerType  = '';

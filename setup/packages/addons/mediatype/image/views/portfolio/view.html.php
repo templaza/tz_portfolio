@@ -20,7 +20,7 @@
 // No direct access.
 defined('_JEXEC') or die;
 
-use Joomla\Filesystem\File;
+use Joomla\CMS\Filesystem\File;
 
 jimport('joomla.filesystem.file');
 
@@ -57,7 +57,7 @@ class PlgTZ_Portfolio_PlusMediaTypeImageViewPortfolio extends JViewLegacy{
 
                         if ($size = $params->get('mt_cat_image_size', 'o')) {
                             if (isset($image->url) && !empty($image->url)) {
-                                $image_url_ext = \JFile::getExt($image->url);
+                                $image_url_ext = File::getExt($image->url);
                                 if ($params->get('mt_show_original_gif',1) && $image_url_ext == 'gif') {
                                     $size = 'o';
                                 }

@@ -20,6 +20,8 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 jimport('joomla.application.component.view');
 
 /**
@@ -38,7 +40,7 @@ class TZ_Portfolio_PlusViewCategory extends JViewLegacy
 	public function display($tpl = null)
 	{
 
-        JFactory::getLanguage()->load('com_categories');
+        Factory::getApplication() -> getLanguage()->load('com_categories');
 
 		$this -> form	= $this->get('Form');
 		$this -> item	= $this->get('Item');
@@ -55,7 +57,7 @@ class TZ_Portfolio_PlusViewCategory extends JViewLegacy
 		}
 
         // If we are forcing a language in modal (used for associations).
-        if ($this->getLayout() === 'modal' && $forcedLanguage = JFactory::getApplication()->input->get('forcedLanguage', '', 'cmd'))
+        if ($this->getLayout() === 'modal' && $forcedLanguage = Factory::getApplication()->input->get('forcedLanguage', '', 'cmd'))
         {
             // Set the language field to the forcedLanguage and disable changing it.
             $this->form->setValue('language', null, $forcedLanguage);
@@ -67,7 +69,7 @@ class TZ_Portfolio_PlusViewCategory extends JViewLegacy
         }
 
 		parent::display($tpl);
-		JFactory::getApplication()->input->set('hidemainmenu', true);
+		Factory::getApplication()->input->set('hidemainmenu', true);
 		$this->addToolbar();
 	}
 
@@ -79,7 +81,7 @@ class TZ_Portfolio_PlusViewCategory extends JViewLegacy
 	protected function addToolbar()
 	{
 		// Initialise variables.
-		$extension	= JFactory::getApplication() -> input -> getCmd('extension');
+		$extension	= Factory::getApplication() -> input -> getCmd('extension');
 		$user		= TZ_Portfolio_PlusUser::getUser();
 		$userId		= $user->id;
 
@@ -97,7 +99,7 @@ class TZ_Portfolio_PlusViewCategory extends JViewLegacy
 		$section = (count($parts) > 1) ? $parts[1] : null;
 
 		// Need to load the menu language file as mod_menu hasn't been loaded yet.
-		$lang = JFactory::getLanguage();
+		$lang = Factory::getApplication() -> getLanguage();
 			$lang->load($component, JPATH_BASE, null, false, false)
 		||	$lang->load($component, JPATH_ADMINISTRATOR.'/components/'.$component, null, false, false)
 		||	$lang->load($component, JPATH_BASE, $lang->getDefault(), false, false)

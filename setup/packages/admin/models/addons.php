@@ -20,7 +20,8 @@
 //no direct access
 defined('_JEXEC') or die('Restricted access');
 
-use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Factory;
+
 jimport('joomla.application.component.modellist');
 jimport('joomla.filesystem.folder');
 
@@ -47,7 +48,7 @@ class TZ_Portfolio_PlusModelAddons extends JModelList
 
     protected function populateState($ordering = 'folder', $direction = 'asc'){
 
-        $app    = JFactory::getApplication();
+        $app    = Factory::getApplication();
         $input  = $app -> input;
 
         $search  = $this -> getUserStateFromRequest($this -> context.'.filter.search','filter_search',null,'string');
@@ -78,7 +79,7 @@ class TZ_Portfolio_PlusModelAddons extends JModelList
 
     function getListQuery(){
         $db     = $this -> getDbo();
-        $user   = JFactory::getUser();
+        $user   = Factory::getUser();
         $query  = $db -> getQuery(true);
         $query -> select('e.*');
         $query -> from($db -> quoteName('#__tz_portfolio_plus_extensions').' AS e');
@@ -167,7 +168,7 @@ class TZ_Portfolio_PlusModelAddons extends JModelList
 
     public function getItems(){
         if($items = parent::getItems()){
-            $language   = JFactory::getLanguage();
+            $language   = Factory::getApplication() -> getLanguage();
             foreach($items as &$item){
                 if (strlen($item -> manifest_cache))
                 {
@@ -188,11 +189,10 @@ class TZ_Portfolio_PlusModelAddons extends JModelList
                     }
                 }
 
-
                 $plugin = TZ_Portfolio_PlusPluginHelper::getInstance($item -> folder, $item -> element);
 
                 $item -> data_manager        = false;
-                if(method_exists($plugin, 'getDataManager')){
+                if(is_object($plugin) && method_exists($plugin, 'getDataManager')){
                     $item -> data_manager    = $plugin -> getDataManager();
                 }
 

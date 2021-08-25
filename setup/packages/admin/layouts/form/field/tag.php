@@ -9,6 +9,7 @@
 
 defined('JPATH_BASE') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
 
 /**
@@ -38,7 +39,7 @@ JHtml::_('formbehavior.ajaxchosen', $chosenAjaxSettings);
 
 // Allow custom values?
 if ($allowCustom) {
-    JFactory::getDocument()->addScriptDeclaration(
+    Factory::getApplication() -> getDocument()->addScriptDeclaration(
         "
     jQuery(document).ready(function ($) {
 

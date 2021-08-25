@@ -24,7 +24,9 @@
 // no direct access
 defined('_JEXEC') or die;
 
-$doc    = JFactory::getDocument();
+use Joomla\CMS\Factory;
+
+$doc    = Factory::getApplication() -> getDocument();
 $params = JComponentHelper::getParams('com_tz_portfolio_plus');
 
 $doc -> addScriptDeclaration('

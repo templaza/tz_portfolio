@@ -20,6 +20,8 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 class TZ_Portfolio_PlusTableContent_Rejected extends JTable
 {
     public function __construct(JDatabaseDriver $db)
@@ -29,8 +31,8 @@ class TZ_Portfolio_PlusTableContent_Rejected extends JTable
 
     public function store($updateNulls = false)
     {
-        $date = JFactory::getDate();
-        $user = JFactory::getUser();
+        $date = Factory::getDate();
+        $user = Factory::getUser();
 
 //        if (!$this->created)
 //        {

@@ -20,8 +20,10 @@
 //no direct access
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+
 $form   = $this -> form;
-$doc    = JFactory::getDocument();
+$doc    = Factory::getApplication() -> getDocument();
 
 JHtml::_('behavior.formvalidator');
 JHtml::_('bootstrap.tooltip');

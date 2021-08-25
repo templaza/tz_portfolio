@@ -41,12 +41,14 @@
                 </field>
                 <field name="show_title" type="radio"
                        class="switcher btn-group" default="1"
+                       layout="joomla.form.field.radio.switcher"
                        label="MOD_TZ_PORTFOLIO_PLUS_PORTFOLIO_SHOW_TITLE">
                     <option value="0">JHIDE</option>
                     <option value="1">JSHOW</option>
                 </field>
                 <field name="show_introtext" type="radio"
                        class="switcher btn-group" default="1"
+                       layout="joomla.form.field.radio.switcher"
                        label="MOD_TZ_PORTFOLIO_PLUS_PORTFOLIO_SHOW_INTROTEXT_LABEL">
                     <option value="0">JHIDE</option>
                     <option value="1">JSHOW</option>
@@ -56,36 +58,42 @@
                        label="MOD_TZ_PORTFOLIO_PLUS_PORTFOLIO_FIELD_INTROTEXT_LIMIT_LABEL"/>
                 <field type="radio" name="show_created_date"
                        class="switcher btn-group" default="1"
+                       layout="joomla.form.field.radio.switcher"
                        label="MOD_TZ_PORTFOLIO_PLUS_PORTFOLIO_SHOW_CREATED_DATE_LABEL">
                     <option value="0">JHIDE</option>
                     <option value="1">JSHOW</option>
                 </field>
                 <field type="radio" name="show_hit"
                        class="switcher btn-group" default="1"
+                       layout="joomla.form.field.radio.switcher"
                        label="MOD_TZ_PORTFOLIO_PLUS_PORTFOLIO_SHOW_HIT_LABEL">
                     <option value="0">JHIDE</option>
                     <option value="1">JSHOW</option>
                 </field>
                 <field type="radio" name="show_author"
                        class="switcher btn-group" default="1"
+                       layout="joomla.form.field.radio.switcher"
                        label="MOD_TZ_PORTFOLIO_PLUS_PORTFOLIO_SHOW_AUTHOR_LABEL">
                     <option value="0">JHIDE</option>
                     <option value="1">JSHOW</option>
                 </field>
                 <field type="radio" name="show_category"
                        class="switcher btn-group" default="1"
+                       layout="joomla.form.field.radio.switcher"
                        label="MOD_TZ_PORTFOLIO_PLUS_PORTFOLIO_SHOW_CATEGORY_LABEL">
                     <option value="0">JHIDE</option>
                     <option value="1">JSHOW</option>
                 </field>
                 <field type="radio" name="show_tag"
                        class="switcher btn-group" default="1"
+                       layout="joomla.form.field.radio.switcher"
                        label="MOD_TZ_PORTFOLIO_PLUS_PORTFOLIO_SHOW_TAG_LABEL">
                     <option value="0">JHIDE</option>
                     <option value="1">JSHOW</option>
                 </field>
                 <field type="radio" name="show_readmore"
                         class="switcher btn-group" default="1"
+                       layout="joomla.form.field.radio.switcher"
                         label="MOD_TZ_PORTFOLIO_PLUS_PORTFOLIO_SHOW_READMORE_LABEL">
                     <option value="0">JHIDE</option>
                     <option value="1">JSHOW</option>
@@ -96,6 +104,7 @@
                        label="MOD_TZ_PORTFOLIO_PLUS_PORTFOLIO_READMORE_TEXT_LABEL"/>
                 <field type="radio" name="show_view_all"
                         class="switcher btn-group" default="0"
+                       layout="joomla.form.field.radio.switcher"
                         label="MOD_TZ_PORTFOLIO_PLUS_PORTFOLIO_SHOW_VIEW_ALL_PORTFOLIOS_LABEL"
                         description="MOD_TZ_PORTFOLIO_PLUS_PORTFOLIO_SHOW_VIEW_ALL_PORTFOLIOS_DESC">
                     <option value="0">JHIDE</option>
@@ -128,6 +137,7 @@
                 </field>
                 <field type="radio" name="random_article"
                        class="switcher btn-group" default="0"
+                       layout="joomla.form.field.radio.switcher"
                        label="MOD_TZ_PORTFOLIO_PLUS_PORTFOLIO_RANDOM_ARTICLE_LABEL">
                     <option value="0">JHIDE</option>
                     <option value="1">JSHOW</option>
@@ -171,6 +181,7 @@
                 </field>
                 <field type="radio" name="load_style"
                        class="switcher btn-group" default="0"
+                       layout="joomla.form.field.radio.switcher"
                        label="MOD_TZ_PORTFOLIO_PLUS_PORTFOLIO_LOAD_STYLE_LABEL">
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
@@ -184,6 +195,7 @@
                        label="MOD_TZ_PORTFOLIO_PLUS_PORTFOLIO_HEIGHT_ELEMENT_LABEL"/>
                 <field type="radio" name="show_filter"
                        class="switcher btn-group" default="1"
+                       layout="joomla.form.field.radio.switcher"
                        label="MOD_TZ_PORTFOLIO_PLUS_PORTFOLIO_SHOW_FILTER_LABEL">
                     <option value="0">JHIDE</option>
                     <option value="1">JSHOW</option>
@@ -197,6 +209,7 @@
                 </field>
                 <field type="radio" name="enable_resize_image"
                        class="switcher btn-group" default="0"
+                       layout="joomla.form.field.radio.switcher"
                        label="MOD_TZ_PORTFOLIO_PLUS_PORTFOLIO_ENABLE_RESIZE_IMAGE_LABEL">
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
@@ -228,6 +241,7 @@
                 </field>
                 <field type="radio" name="enable_bootstrap"
                        default="0" class="switcher btn-group"
+                       layout="joomla.form.field.radio.switcher"
                        label="COM_TZ_PORTFOLIO_PLUS_ENABLE_BOOTSTRAP_LIBRARY_LABEL">
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
@@ -241,6 +255,7 @@
                 </field>
                 <field type="radio" name="enable_bootstrap_js"
                        default="1" class="switcher btn-group"
+                       layout="joomla.form.field.radio.switcher"
                        showon="enable_bootstrap:1"
                        label="COM_TZ_PORTFOLIO_PLUS_ENABLE_BOOTSTRAP_JS_LABEL">
                     <option value="0">JNO</option>
@@ -248,6 +263,7 @@
                 </field>
                 <field type="radio" name="enable_lazyload"
                        default="0" class="switcher btn-group"
+                       layout="joomla.form.field.radio.switcher"
                        label="COM_TZ_PORTFOLIO_PLUS_ENABLE_LAZYLOAD">
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>

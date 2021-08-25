@@ -20,8 +20,10 @@
 // no direct access
 defined('_JEXEC') or die;
 
-$app        = JFactory::getApplication();
-$user		= JFactory::getUser();
+use Joomla\CMS\Factory;
+
+$app        = Factory::getApplication();
+$user		= Factory::getUser();
 $userId     = $user -> id;
 $vName      = $this -> getName();
 $listOrder	= $this->escape($this->state->get('list.ordering'));

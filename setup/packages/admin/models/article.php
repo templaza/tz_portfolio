@@ -20,6 +20,7 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
 use Joomla\String\StringHelper;
 use Joomla\Utilities\ArrayHelper;
@@ -181,7 +182,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
             {
                 return false;
             }
-            $user = JFactory::getUser();
+            $user = Factory::getUser();
 
             $state  = $user->authorise('core.delete', 'com_tz_portfolio_plus.article.' . (int) $record->id)
                 || ($user->authorise('core.delete.own', 'com_tz_portfolio_plus.article.' . (int) $record->id)
@@ -254,7 +255,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
      */
     protected function canEditState($record)
     {
-        $user = JFactory::getUser();
+        $user = Factory::getUser();
 
         // Check for existing article.
         if (!empty($record->id))
@@ -304,7 +305,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
 
         if ($table->state == 1 && (int) $table->publish_up == 0)
         {
-            $table->publish_up = JFactory::getDate()->toSql();
+            $table->publish_up = Factory::getDate()->toSql();
         }
 
         if ($table->state == 1 && intval($table->publish_down) == 0)
@@ -434,13 +435,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
         {
             return false;
         }
-        $jinput = JFactory::getApplication()->input;
-
-//        if (isset($data['catid']))
-//        {
-//            // This is needed that the plugins can determine the type
-//            $this->setState('article.catid', $data['type']);
-//        }
+        $jinput = Factory::getApplication()->input;
 
         // The front end calls this model and uses a_id to avoid id clashes so we need to check for that first.
         if ($jinput->get('a_id'))
@@ -469,7 +464,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
             $form->setFieldAttribute('catid', 'action', 'core.create');
         }
 
-        $user = JFactory::getUser();
+        $user = Factory::getUser();
 
         // Check for existing article.
         // Modify the form based on Edit State access controls.
@@ -498,7 +493,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
         }
 
         // Prevent messing with article language and category when editing existing article with associations
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
         $assoc = JLanguageAssociations::isEnabled();
 
         // Check if article is associated
@@ -516,6 +511,11 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
             }
         }
 
+        if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE){
+            $form -> removeField('show_email_icon', 'attribs');
+            $form -> removeField('show_cat_email_icon', 'attribs');
+        }
+
         return $form;
     }
 
@@ -529,7 +529,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
     protected function loadFormData()
     {
         // Check the session for previously entered form data.
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
         $data = $app->getUserState($this -> option. '.edit.'.$this -> getName().'.data', array());
 
         if (empty($data))
@@ -561,7 +561,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
                 $data->set('state', $app->input->getInt('state', (!empty($filters['published']) ? $filters['published'] : null)));
                 $data->set('catid', $app->input->get('catid', (!empty($filters['category_id']) ? $filters['category_id'] : array())));
                 $data->set('language', $app->input->getString('language', (!empty($filters['language']) ? $filters['language'] : null)));
-                $data->set('access', $app->input->getInt('access', (!empty($filters['access']) ? $filters['access'] : JFactory::getConfig()->get('access'))));
+                $data->set('access', $app->input->getInt('access', (!empty($filters['access']) ? $filters['access'] : Factory::getConfig()->get('access'))));
             }
         }
 
@@ -581,8 +581,8 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
      */
     public function save($data)
     {
-        $user       = JFactory::getUser();
-        $input      = JFactory::getApplication()->input;
+        $user       = Factory::getUser();
+        $input      = Factory::getApplication()->input;
         $filter     = JFilterInput::getInstance();
 
         if (isset($data['metadata']) && isset($data['metadata']['author']))
@@ -638,7 +638,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
         {
             if ($data['alias'] == null)
             {
-                if (JFactory::getConfig()->get('unicodeslugs') == 1)
+                if (Factory::getConfig()->get('unicodeslugs') == 1)
                 {
                     $data['alias'] = JFilterOutput::stringURLUnicodeSlug($data['title']);
                 }
@@ -658,7 +658,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
 
                 if (isset($msg))
                 {
-                    JFactory::getApplication()->enqueueMessage($msg, 'warning');
+                    Factory::getApplication()->enqueueMessage($msg, 'warning');
                 }
             }
         }
@@ -738,7 +738,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
                     $associations[$item->language] = $item->id;
 
                     // Deleting old association for these items
-                    $db = JFactory::getDbo();
+                    $db = Factory::getDbo();
                     $query = $db->getQuery(true)
                         ->delete('#__associations')
                         ->where('context=' . $db->quote('com_tz_portfolio_plus.item'))
@@ -796,7 +796,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
 
 
                 // Trigger the addon after save event.
-                \JFactory::getApplication()->triggerEvent($this->event_addon_after_save, array($context, $table, $isNew, $data));
+                Factory::getApplication()->triggerEvent($this->event_addon_after_save, array($context, $table, $isNew, $data));
 
             }
             catch (\Exception $e)
@@ -1056,7 +1056,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
     protected function preprocessForm(JForm $form, $data, $group = 'content')
     {
         // Association content items
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
         $assoc = JLanguageAssociations::isEnabled();
 
         if ($assoc)
@@ -1094,7 +1094,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
 
         // Insert Mediatype from plugins
         TZ_Portfolio_PlusPluginHelper::importPlugin('mediatype');
-        if($mediaType  = \JFactory::getApplication()->triggerEvent('onAddMediaType')){
+        if($mediaType  = Factory::getApplication()->triggerEvent('onAddMediaType')){
             if(count($mediaType)){
                 $xml        = $form -> getXml();
                 $field_type = $xml -> xpath('//field[@name="type"]');
@@ -1114,14 +1114,13 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
         JLoader::import('extrafields', COM_TZ_PORTFOLIO_PLUS_ADMIN_HELPERS_PATH);
         TZ_Portfolio_PlusHelperExtraFields::prepareForm($form, $data);
 
-
         parent::preprocessForm($form, $data, $group);
     }
 
 
     public function getExtraFields()
     {
-        $app        = JFactory::getApplication();
+        $app        = Factory::getApplication();
         $jinput     = $app -> input;
 
         $articleId  = $jinput->get('a_id', $jinput->get('id', 0));
@@ -1148,7 +1147,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
                 $query->where("m.groupid = " . $fieldGroup->id);
 
                 // Implement View Level Access
-                $user       = JFactory::getUser();
+                $user       = Factory::getUser();
                 $viewlevels = ArrayHelper::toInteger($user->getAuthorisedViewLevels());
                 $viewlevels = implode(',', $viewlevels);
                 $subquery   = $db -> getQuery(true);

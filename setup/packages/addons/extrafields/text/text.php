@@ -68,6 +68,10 @@ class TZ_Portfolio_PlusExtraFieldText extends TZ_Portfolio_PlusExtraField{
             $class[] = 'autosuggest';
         }
 
+        if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE && !in_array('form-control', $class)){
+            $class[]    = 'form-control';
+        }
+
         if ($class)
         {
             return implode(' ', $class);

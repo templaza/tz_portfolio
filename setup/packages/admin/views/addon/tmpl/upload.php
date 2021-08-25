@@ -20,7 +20,8 @@
 //no direct access
 defined('_JEXEC') or die('Restricted access');
 
-JHtml::_('bootstrap.tooltip');
+use Joomla\CMS\Factory;
+
 JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.formvalidator');
 JHtml::_('behavior.keepalive');
@@ -29,7 +30,7 @@ $this->document->addStyleSheet(TZ_Portfolio_PlusUri::base() . '/vendor/intro/int
 $this->document->addScript(TZ_Portfolio_PlusUri::base() . '/vendor/intro/intro.min.js', array('version' => 'v=2.9.3'));
 $this->document->addScript(TZ_Portfolio_PlusUri::base() . '/js/introguide.min.js', array('version' => 'v=2.9.3'));
 
-if(JFactory::getLanguage() -> isRtl()) {
+if(Factory::getApplication() -> getLanguage() -> isRtl()) {
     $this->document->addStyleSheet(TZ_Portfolio_PlusUri::base() . '/vendor/intro/introjs-rtl.min.css', array('version' => 'v=2.9.3'));
 }
 

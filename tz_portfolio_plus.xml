@@ -47,6 +47,7 @@
             <menu link="option=com_tz_portfolio_plus&amp;view=dashboard">com_tz_portfolio_plus_dashboard</menu>
             <menu link="option=com_tz_portfolio_plus&amp;view=articles">com_tz_portfolio_plus_articles</menu>
             <menu link="option=com_tz_portfolio_plus&amp;view=categories">com_tz_portfolio_plus_categories</menu>
+            <menu link="option=com_tz_portfolio_plus&amp;view=featured">com_tz_portfolio_plus_featured_articles</menu>
             <menu link="option=com_tz_portfolio_plus&amp;view=fields">com_tz_portfolio_plus_fields</menu>
             <menu link="option=com_tz_portfolio_plus&amp;view=groups">com_tz_portfolio_plus_field_groups</menu>
             <menu link="option=com_tz_portfolio_plus&amp;view=tags">com_tz_portfolio_plus_tags</menu>

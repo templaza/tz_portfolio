@@ -20,6 +20,7 @@
 // No direct access.
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Utilities\ArrayHelper;
 
 jimport('joomla.application.component.controlleradmin');
@@ -46,7 +47,7 @@ class TZ_Portfolio_PlusControllerArticles extends JControllerAdmin
 	{
 		parent::__construct($config);
 		
-        JFactory::getLanguage() -> load('com_content');
+        Factory::getApplication() -> getLanguage() -> load('com_content');
 		// Articles default form can come from the articles or featured view.
 		// Adjust the redirect view on the value of 'view' in the request.
 		if ($this -> input -> getCmd('view') == 'featured') {
@@ -63,7 +64,7 @@ class TZ_Portfolio_PlusControllerArticles extends JControllerAdmin
 
     protected function allowApprove($data = array())
     {
-        $user = \JFactory::getUser();
+        $user = Factory::getUser();
 
         return $user->authorise('core.approve', $this->option);
     }
@@ -80,7 +81,7 @@ class TZ_Portfolio_PlusControllerArticles extends JControllerAdmin
 		// Check for request forgeries
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		// Get items to publish from the request.
 		$cid 	= $this -> input -> get('cid', array(), 'array');
 		$data 	= array('publish' => 1, 'approve' => 1, 'unpublish' => 0, 'archive' => 2, 'trash' => -2, 'report' => -3);
@@ -167,7 +168,7 @@ class TZ_Portfolio_PlusControllerArticles extends JControllerAdmin
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
 		// Initialise variables.
-		$user	= JFactory::getUser();
+		$user	= Factory::getUser();
 		$ids	= $this -> input -> get('cid', array(), 'array');
 		$values	= array('featured' => 1, 'unfeatured' => 0);
 		$task	= $this->getTask();
@@ -179,12 +180,12 @@ class TZ_Portfolio_PlusControllerArticles extends JControllerAdmin
 			if (!$user->authorise('core.edit.state', 'com_tz_portfolio_plus.article.'.(int) $id)) {
 				// Prune items that you can't change.
 				unset($ids[$i]);
-				JFactory::getApplication() -> enqueueMessage(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'), 'warning');
+				Factory::getApplication() -> enqueueMessage(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'), 'warning');
 			}
 		}
 
 		if (empty($ids)) {
-			JFactory::getApplication() -> enqueueMessage(JText::_('JERROR_NO_ITEMS_SELECTED'), 'error');
+			Factory::getApplication() -> enqueueMessage(JText::_('JERROR_NO_ITEMS_SELECTED'), 'error');
 		}
 		else {
 			// Get the model.
@@ -192,7 +193,7 @@ class TZ_Portfolio_PlusControllerArticles extends JControllerAdmin
 
 			// Publish the items.
 			if (!$model->featured($ids, $value)) {
-				JFactory::getApplication() -> enqueueMessage($model->getError(), 'error');
+				Factory::getApplication() -> enqueueMessage($model->getError(), 'error');
 			}
 		}
 
@@ -236,7 +237,7 @@ class TZ_Portfolio_PlusControllerArticles extends JControllerAdmin
         }
 
         // Close the application
-        JFactory::getApplication()->close();
+        Factory::getApplication()->close();
     }
 
     public function savepriority()

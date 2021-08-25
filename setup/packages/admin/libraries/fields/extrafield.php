@@ -20,9 +20,10 @@
 //no direct access
 defined('_JEXEC') or die('Restricted access');
 
-use Joomla\Filesystem\File;
-
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
 use Joomla\Registry\Registry;
+use Joomla\CMS\Filesystem\Path;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Layout\FileLayout;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
@@ -69,7 +70,7 @@ class TZ_Portfolio_PlusExtraField{
         }
 
         $this -> id = $field -> id;
-        $app        = JFactory::getApplication();
+        $app        = Factory::getApplication();
 
         if($field -> type) {
             if($plugin = TZ_Portfolio_PlusPluginHelper::getPlugin('extrafields', $field->type)) {
@@ -107,7 +108,7 @@ class TZ_Portfolio_PlusExtraField{
         $this->fieldvalue_column = "field_values_" . $this->id . ".value";
 
         // Create datasearch if it have
-        $app    = JFactory::getApplication();
+        $app    = Factory::getApplication();
         $input  = $app -> input;
         if($datasearch = $input -> get('fields', array(), 'array')){
             $this -> dataSearch = $datasearch;
@@ -128,16 +129,16 @@ class TZ_Portfolio_PlusExtraField{
             $fieldXmlPath = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.DIRECTORY_SEPARATOR.'extrafields'
                 .DIRECTORY_SEPARATOR . $fieldFolder . DIRECTORY_SEPARATOR . $fieldFolder . '.xml';
 
-            if (\JFile::exists($fieldXmlPath))
+            if (File::exists($fieldXmlPath))
             {
-                $lang           = JFactory::getLanguage();
+                $lang           = Factory::getApplication() -> getLanguage();
                 $tag            = $lang -> getTag();
 
                 $langPath   = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.DIRECTORY_SEPARATOR.'extrafields'
                     .DIRECTORY_SEPARATOR . $fieldFolder;
                 $prefix = 'tp_addon_extrafields_';
 
-                if(!\JFile::exists($langPath.'/language/'.$tag.'/'.$tag.'.'.$prefix.$fieldFolder.'.ini')){
+                if(!File::exists($langPath.'/language/'.$tag.'/'.$tag.'.'.$prefix.$fieldFolder.'.ini')){
                     $prefix = 'plg_extrafields_';
                 }
 
@@ -171,7 +172,7 @@ class TZ_Portfolio_PlusExtraField{
 
         $input_def_path = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.DIRECTORY_SEPARATOR.'extrafields'
             .DIRECTORY_SEPARATOR.$this -> fieldname.DIRECTORY_SEPARATOR.'tmpl'.DIRECTORY_SEPARATOR.'input_default.php';
-        if(\JFile::exists($input_def_path)){
+        if(File::exists($input_def_path)){
             ob_start();
             require_once $input_def_path;
             $html   = ob_get_contents();
@@ -672,7 +673,7 @@ class TZ_Portfolio_PlusExtraField{
             if(isset($template -> home_path) && $template -> home_path){
                 $_tmpPath    = $template -> home_path. DIRECTORY_SEPARATOR
                     . 'plg_'.$this -> group.'_'. $this -> type. DIRECTORY_SEPARATOR . $file;
-                if(\JFile::exists($_tmpPath)){
+                if(File::exists($_tmpPath)){
                     $tmpPath    = $_tmpPath;
                 }
             }
@@ -680,22 +681,22 @@ class TZ_Portfolio_PlusExtraField{
                 $_tmpPath    = $template -> base_path. DIRECTORY_SEPARATOR
                     .'plg_'.$this -> group.'_'.$this -> type. DIRECTORY_SEPARATOR . $file;
 
-                if(\JFile::exists($_tmpPath)){
+                if(File::exists($_tmpPath)){
                     $tmpPath    = $_tmpPath;
                 }
             }
 
             // Create template path from template site
             if ($tplparams->get('override_html_template_site', 0)) {
-                $_template = JFactory::getApplication()->getTemplate();
+                $_template = Factory::getApplication()->getTemplate();
                 $_tmpPath    = JPATH_SITE . '/templates/' . $_template . '/html/com_tz_portfolio_plus/plg_'
                     .$this -> group.'_' . $this -> type. DIRECTORY_SEPARATOR.$file;
-                if(\JFile::exists($_tmpPath)){
+                if(File::exists($_tmpPath)){
                     $tmpPath    = $_tmpPath;
                 }
             }
 
-            if (\JFile::exists($tmpPath))
+            if (File::exists($tmpPath))
             {
                 return $tmpPath;
             }
@@ -705,7 +706,7 @@ class TZ_Portfolio_PlusExtraField{
     protected function loadTmplFile($file = 'output', $class = null){
         $html   = null;
 
-        if(!\JFile::exists($file)){
+        if(!File::exists($file)){
             $file   = $this -> getTmplFile($file, $class);
         }
         unset($class);
@@ -717,7 +718,7 @@ class TZ_Portfolio_PlusExtraField{
 
         ob_start();
 
-        if (\JFile::exists($file))
+        if (File::exists($file))
         {
             include($file);
         }
@@ -1145,15 +1146,20 @@ class TZ_Portfolio_PlusExtraField{
     }
 
     public function prepareForm(&$form, $data){
-        $path   = JPath::clean(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.'/'.$this -> group.'/'.$this -> type );
-        $name   = $form -> getName();
+        $name       = $form -> getName();
+        $path       = JPath::clean(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.'/'.$this -> group.'/'.$this -> type );
+        $viewName   = str_replace('com_tz_portfolio_plus.', '', $name);
+
         JForm::addFormPath($path . '/admin/models/forms');
         JForm::addFormPath($path . '/admin/model/form');
-        if($name == 'com_tz_portfolio_plus.article') {
-            $form -> loadFile('article', false);
-        }
-        if($name == 'com_tz_portfolio_plus.category') {
-            $form -> loadFile('category', false);
+
+        if($name == 'com_tz_portfolio_plus.article' || $name == 'com_tz_portfolio_plus.category') {
+            $file   = Path::clean($path.'/admin/models/forms/'.$viewName.'.xml');
+            if(!file_exists($file)){
+                $file   = Path::clean($path.'/admin/models/form/'.$viewName.'.xml');
+            }
+            $form -> loadFile($file, false);
+//            $form -> loadFile('article', false);
         }
     }
 }

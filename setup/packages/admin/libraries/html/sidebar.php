@@ -19,12 +19,14 @@
 
 defined('JPATH_PLATFORM') or die;
 
+use Joomla\CMS\Factory;
+
 class TZ_Portfolio_PlusHtmlSidebar extends JHtmlSidebar{
 
     public static function addEntry($name, $link = '', $active = false, $cur_link = true)
     {
         if(!empty($link) && $cur_link) {
-            $input          = JFactory::getApplication() -> input;
+            $input          = Factory::getApplication() -> input;
             $component_link = array();
             if($option = $input -> getCmd('option')){
                 $component_link[]   = 'option='.$option;

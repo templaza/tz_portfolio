@@ -20,10 +20,9 @@
 // No direct access
 defined('_JEXEC') or die;
 
-use Joomla\Filesystem\File;
-use Joomla\Filesystem\Folder;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Language\LanguageHelper;
-//use TZ_Portfolio_Plus\Installer\TZ_Portfolio_PlusInstaller;
 
 jimport('joomla.filesytem.file');
 jimport('joomla.filesytem.folder');
@@ -42,11 +41,11 @@ class com_tz_portfolio_plusInstallerScript{
     public function uninstall($parent){
         $mediaFolder    = 'tz_portfolio_plus';
         $mediaFolderPath    = JPATH_SITE.'/'.'media'.'/'.$mediaFolder;
-        if(\JFolder::exists($mediaFolderPath)){
+        if(Folder::exists($mediaFolderPath)){
             Folder::delete($mediaFolderPath);
         }
         $imageFolderPath    = JPATH_SITE.'/'.'images'.'/'.$mediaFolder;
-        if(\JFolder::exists($imageFolderPath)){
+        if(Folder::exists($imageFolderPath)){
             Folder::delete($imageFolderPath);
         }
 
@@ -58,7 +57,7 @@ class com_tz_portfolio_plusInstallerScript{
         $modules = $_parent -> manifest -> xpath('modules/module');
         $plugins = $_parent -> manifest -> xpath('plugins/plugin');
 
-        $db = JFactory::getDBO();
+        $db = Factory::getDbo();
         $result = null;
         if($modules){
             foreach($modules as $module){
@@ -151,7 +150,7 @@ class com_tz_portfolio_plusInstallerScript{
             }
         </style>
         <?php
-        $lang = JFactory::getLanguage();
+        $lang = Factory::getApplication() -> getLanguage();
         $lang -> load('com_tz_portfolio_plus', JPATH_ADMINISTRATOR);
         ?>
         <div class="tpp-installation-status">
@@ -170,7 +169,7 @@ class com_tz_portfolio_plusInstallerScript{
     <?php
     }
     function uninstallationResult($status){
-        $lang   = JFactory::getLanguage();
+        $lang   = Factory::getApplication() -> getLanguage();
         $lang -> load('com_tz_portfolio_plus', JPATH_ADMINISTRATOR);
         $rows   = 0;
         ?>

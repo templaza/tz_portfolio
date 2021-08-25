@@ -19,6 +19,8 @@
 
 defined('JPATH_PLATFORM') or die;
 
+use Joomla\CMS\Factory;
+
 /**
  * Form Field class for the Joomla Platform.
  *
@@ -49,7 +51,7 @@ class JFormFieldTZIcon extends JFormField
      */
     protected function getInput()
     {
-        $document   =   JFactory::getDocument();
+        $document   =   Factory::getApplication() -> getDocument();
         $document->addStyleSheet(JUri::root().'/media/tz_portfolio_plus/fonticonpicker/css/base/jquery.fonticonpicker.min.css', array('version' => '3.1.1'));
         $document->addStyleSheet(JUri::root().'/media/tz_portfolio_plus/fonticonpicker/css/themes/grey-theme/jquery.fonticonpicker.grey.min.css', array('version' => '3.1.1'));
         $document->addStyleSheet(JUri::root().'/media/tz_portfolio_plus/icomoon/style.css', array('version' => '3.1.1'));
@@ -102,7 +104,9 @@ class JFormFieldTZIcon extends JFormField
                 'Other Icons' : [ 'Quill', 'Blog', 'Droplet', 'Images', 'Music', 'Pacman', 'Spades', 'Clubs', 'Diamonds', 'Pawn', 'Bullhorn', 'Connection', 'Podcast', 'Feed', 'Stack', 'Tags', 'Barcode', 'Qrcode', 'Ticket', 'Coin', 'Credit', 'Notebook', 'Pushpin', 'Compass', 'Alarm', 'Alarm 2', 'Bell', 'Print', 'Laptop', 'Mobile', 'Mobile 2', 'Tv', 'Disk', 'Storage', 'Reply', 'Bubbles', 'Bubbles 2', 'Bubbles 3', 'Bubbles 4', 'Users', 'Users 2', 'Quotes left', 'Spinner', 'Spinner 2', 'Spinner 3', 'Spinner 4', 'Spinner 5', 'Spinner 6', 'Binoculars', 'Search', 'Hammer', 'Wand', 'Aid', 'Bug', 'Stats', 'Bars', 'Bars 2', 'Gift', 'Trophy', 'Glass', 'Mug', 'Food', 'Leaf', 'Rocket', 'Meter', 'Meter 2', 'Dashboard', 'Hammer 2', 'Fire', 'Lab', 'Magnet', 'Remove', 'Remove 2', 'Briefcase', 'Airplane', 'Truck', 'Road', 'Accessibility', 'Target', 'Shield', 'Lightning', 'Switch', 'Powercord', 'Signup', 'Tree', 'Cloud', 'Earth', 'Bookmarks', 'Notification', 'Close', 'Checkmark', 'Checkmark 2', 'Minus', 'Plus', 'Stop', 'Backward', 'Stop 2', 'Backward 2', 'First', 'Last', 'Eject', 'Loop', 'Loop 2', 'Loop 3', 'Shuffle', 'Tab', 'Checkbox checked', 'Checkbox unchecked', 'Checkbox partial', 'Crop', 'Font', 'Text height', 'Text width', 'Omega', 'Sigma', 'Insert template', 'Pilcrow', 'Lefttoright', 'Righttoleft', 'Paragraph left', 'Paragraph center', 'Paragraph right', 'Paragraph justify', 'Paragraph left 2', 'Paragraph center 2', 'Paragraph right 2', 'Paragraph justify 2', 'Newtab', 'Mail', 'Mail 2', 'Mail 3', 'Mail 4', 'Google', 'Instagram', 'Feed 2', 'Feed 3', 'Feed 4', 'Youtube', 'Youtube 2', 'Lanyrd', 'Flickr', 'Flickr 2', 'Flickr 3', 'Flickr 4', 'Picassa', 'Picassa 2', 'Dribbble', 'Dribbble 2', 'Dribbble 3', 'Forrst', 'Forrst 2', 'Deviantart', 'Deviantart 2', 'Steam', 'Steam 2', 'Blogger', 'Blogger 2', 'Tux', 'Delicious', 'Xing', 'Xing 2', 'Flattr', 'Foursquare', 'Foursquare 2', 'Libreoffice', 'Css 3', 'IE', 'IcoMoon' ]
             };
             // Centered
-            $('.grey_theme').fontIconPicker( {
+            var tzPortfolioPlusAddonAdminFieldTZIcon = function(tzcontainer){            
+                tzcontainer   = typeof tzcontainer !== 'undefined'?tzcontainer:'body';
+                $(tzcontainer).find('.grey_theme').fontIconPicker( {
                     source: icomoonIcons,
                     searchSource: icomoonIconsSearch,
                     useAttribute: true,
@@ -111,23 +115,24 @@ class JFormFieldTZIcon extends JFormField
                     emptyIconValue: 'none',
                     appendTo: 'body'
                 } );
+            };
+            
+            tzPortfolioPlusAddonAdminFieldTZIcon();
+            
+            /*ES6+ js with joomla 4*/
+            document.addEventListener('subform-row-add', ({ detail: { row } }) => {
+                tzPortfolioPlusAddonAdminFieldTZIcon(row);
+            });
+            
             $(document).on('subform-row-add', function(event, row){
-                $(row).find('.grey_theme').fontIconPicker( {
-                    source: icomoonIcons,
-                    searchSource: icomoonIconsSearch,
-                    useAttribute: true,
-                    theme: 'fip-grey',
-                    attributeName: 'data-icomoon',
-                    emptyIconValue: 'none',
-                    appendTo: 'body'
-                } );
-            })
+                tzPortfolioPlusAddonAdminFieldTZIcon(row);
+            });
             
 	    } );
         ");
         $html = '<div class="tzicon-container">';
         // Data store
-        $html .= '<input type="text" class="grey_theme" name="'.$this->name.'" id="'.$this->id.'" value="'.$this->value.'" />';
+        $html .= '<input type="text" class="grey_theme form-control" name="'.$this->name.'" id="'.$this->id.'" value="'.$this->value.'" />';
         $html .= '</div>';
 
 

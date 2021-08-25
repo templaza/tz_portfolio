@@ -20,6 +20,8 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 class TZ_Portfolio_Plus_AddOnControllerLegacy extends JControllerLegacy{
 
     protected static $instance;
@@ -57,8 +59,8 @@ class TZ_Portfolio_Plus_AddOnControllerLegacy extends JControllerLegacy{
 
     public function display($cachable = false, $urlparams = array())
     {
-        $app        = JFactory::getApplication();
-        $document   = JFactory::getDocument();
+        $app        = Factory::getApplication();
+        $document   = Factory::getApplication() -> getDocument();
         $viewType   = $document->getType();
         $viewName   = $this->input->get('addon_view', $this->default_view);
         $viewLayout = $this->input->get('addon_layout', 'default', 'string');
@@ -96,17 +98,17 @@ class TZ_Portfolio_Plus_AddOnControllerLegacy extends JControllerLegacy{
 
         $view->document = $document;
 
-        $conf = JFactory::getConfig();
+        $conf = Factory::getConfig();
 
         // Display the view
         if ($cachable && $viewType != 'feed' && $conf->get('caching') >= 1)
         {
             $option = $this->input->get('option');
-            $cache = JFactory::getCache($option, 'addon_view');
+            $cache = Factory::getCache($option, 'addon_view');
 
             if (is_array($urlparams))
             {
-                $app = JFactory::getApplication();
+                $app = Factory::getApplication();
 
                 if (!empty($app->registeredurlparams))
                 {
@@ -178,7 +180,7 @@ class TZ_Portfolio_Plus_AddOnControllerLegacy extends JControllerLegacy{
                 }
 
                 // Create template path from template site
-                $_template = JFactory::getApplication()->getTemplate();
+                $_template = Factory::getApplication()->getTemplate();
                 $jPathSite = JPATH_SITE . '/templates/' . $_template . '/html/com_tz_portfolio_plus/'
                     . $name . '/plg_' . $addon -> type . '_' . $addon -> name;
 
@@ -259,7 +261,7 @@ class TZ_Portfolio_Plus_AddOnControllerLegacy extends JControllerLegacy{
             self::$instance[$prefix]    = false;
         }
 
-        $input = JFactory::getApplication()->input;
+        $input = Factory::getApplication()->input;
 
         // Get the environment configuration.
         $basePath = array_key_exists('base_path', $config) ? $config['base_path'] : COM_TZ_PORTFOLIO_PLUS_ADDON_PATH;

@@ -24,6 +24,8 @@
 // no direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 class TZ_Portfolio_PlusViewDialog extends JViewLegacy{
 
     protected $state;
@@ -45,6 +47,6 @@ class TZ_Portfolio_PlusViewDialog extends JViewLegacy{
 
         echo json_encode($json);
 
-        JFactory::getApplication()->close();
+        Factory::getApplication()->close();
     }
 }

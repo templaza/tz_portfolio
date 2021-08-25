@@ -20,9 +20,11 @@
 // No direct access
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+
 $group  = 'presets';
 
-$doc    = JFactory::getDocument();
+$doc    = Factory::getApplication() -> getDocument();
 $doc -> addScriptDeclaration('
     (function($){
         $(document).ready(function(){
@@ -87,7 +89,7 @@ $doc -> addScriptDeclaration('
     </div>
 </div>
 <div class="">
-    <button type="button" data-toggle="collapse" data-target="#collapseUpload" class="btn btn-success">
+    <button type="button" data-toggle="collapse" data-target="#collapseUpload" data-bs-toggle="collapse" data-bs-target="#collapseUpload" class="btn btn-success">
         <span class="tps tp-upload"></span> <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_UPLOAD_PRESET');?></button>
     <div id="collapseUpload" class="collapse">
 
@@ -122,7 +124,7 @@ if($presets = $this -> presets):
                 <div class="preset-bar">
                     <div class="preset-bar-table">
                         <div class="preset-bar-table-cell">
-                            <span data-preset="<?php echo $preset -> name;?>" data-target="#loadPreset" data-toggle="modal"
+                            <span data-preset="<?php echo $preset -> name;?>" data-target="#loadPreset" data-toggle="modal" data-bs-toggle="modal"
                                   class="load-preset btn btn-warning btn-small btn-sm"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_LOAD_PRESET');?></span>
                             <?php if(isset($preset -> doc_link) && $preset -> doc_link){ ?>
                                 <a target="_blank" class="btn btn-primary btn-small btn-sm"
@@ -144,6 +146,7 @@ if($presets = $this -> presets):
                        title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_DOWNLOAD_PRESET_DESCRIPTION');?>"
                        class="tps tp-download downloadpreset hasTooltip"></span>
                     <i data-preset="<?php echo $preset -> name;?>" data-target="#removePreset" data-toggle="modal"
+                       data-bs-toggle="modal" data-bs-target="#removePreset"
                        title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_REMOVE_PRESET_DESCRIPTION');?>"
                        class="tps tp-times removepreset hasTooltip"></i>
                 </div>

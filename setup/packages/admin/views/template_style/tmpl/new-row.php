@@ -45,7 +45,7 @@ if($rowInColumn = $this -> state -> get('template.rowincolumn', false)){
 
 <?php echo JHtml::_('tzbootstrap.addrow', array('class' => $rowClass.' tpp-sortable'));?>
     <div class="span12 col-md-12">
-        <div class="rowpropperties pull-left float-left">
+        <div class="rowpropperties pull-left float-left float-start">
             <span class="rowname"><?php echo $items?$items -> name:''; ?></span>
             <span class="rowdocs">
                 <input type="hidden" class="rownameinput" name="" value="<?php echo $this -> get_value($items,"name"); ?>">
@@ -60,9 +60,9 @@ if($rowInColumn = $this -> state -> get('template.rowincolumn', false)){
                 <input type="hidden" class="rowpaddinginput" name="" value="<?php echo $this -> get_value($items,'padding') ?>">
             </span>
         </div>
-        <div id="<?php echo $parentId; ?>" class="pull-right float-right row-tools row-container mt-1">
+        <div id="<?php echo $parentId; ?>" class="pull-right float-right float-end row-tools row-container mt-1">
             <?php if(!$rowInColumn){ ?>
-            <select class="containertype custom-select custom-select-sm" name="" aria-invalid="false">
+            <select class="containertype custom-select custom-select-sm d-inline-block form-select-sm" name="" aria-invalid="false">
                 <option<?php echo ($containerType == '')?' selected=""':''?> value=""><?php echo JText::_('JNONE');?></option>
                 <option<?php echo ($containerType == 'container')?' selected=""':''?> value="container"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_FIXED_WIDTH');?></option>
                 <option<?php echo ($containerType == 'container-fluid')?' selected=""':''?> value="container-fluid"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_FULL_WIDTH');?></option>
@@ -73,11 +73,14 @@ if($rowInColumn = $this -> state -> get('template.rowincolumn', false)){
             <a href="javascript:" class="accordion-toggle"
                title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_TOGGLE_THIS_ROW');?>"
                data-toggle="collapse" data-parent="#<?php echo $parentId;?>"
-               data-target="#<?php echo $id;?>">
+               data-target="#<?php echo $id;?>"
+               data-bs-toggle="collapse" data-bs-parent="#<?php echo $parentId;?>"
+               data-bs-target="#<?php echo $id;?>">
                 <span class="tps tp-chevron-up"></span><span class="tps tp-chevron-down"></span>
             </a>
             <a href="#rowsettingbox" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ROW_SETTINGS');
-            ?>" class="tps tp-cog rowsetting" rel="rowpopover" data-container="#<?php echo $parentId; ?>"></a>
+            ?>" class="tps tp-cog rowsetting" rel="rowpopover" data-container="#<?php echo $parentId;
+            ?>" data-bs-container="#<?php echo $parentId; ?>"></a>
             <a href="" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ADD_NEW_ROW');?>" class="tps tp-bars <?php echo $newRowClass; ?>"></a>
             <a href="" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ADD_NEW_COLUMN');?>" class="tps tp-columns add-column"></a>
             <a href="" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_DELETE_ROW');?>" class="tps tp-times rowdelete"></a>

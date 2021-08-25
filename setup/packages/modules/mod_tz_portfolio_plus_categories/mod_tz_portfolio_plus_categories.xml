@@ -7,7 +7,7 @@
     <license>GNU/GPL v2 or later http://www.gnu.org/licenses/gpl-2.0.html</license>
     <authorEmail>support@templaza.com</authorEmail>
     <authorUrl>www.templaza.com/</authorUrl>
-    <version>2.4.2</version>
+    <version>2.5.0</version>
     <description>MOD_TZ_PORTFOLIO_PLUS_CATEGORIES_XML_DESCRIPTION</description>
 
     <files>
@@ -34,25 +34,33 @@
                        label="COM_TZ_PORTFOLIO_PLUS_TEMPLATE_LABEL">
                     <option value="0">JOPTION_USE_DEFAULT</option>
                 </field>
-                <field type="radio" class=" switcher btn-group" name="show_total" default="1"
+                <field type="radio" name="show_total"
+                       class="switcher btn-group" default="1"
+                       layout="joomla.form.field.radio.switcher"
                        label="MOD_TZ_PORTFOLIO_PLUS_CATEGORIES_SHOW_TOTAL">
-                    <option value="1">JSHOW</option>
                     <option value="0">JHIDE</option>
+                    <option value="1">JSHOW</option>
                 </field>
-                <field type="radio" class="switcher btn-group" name="show_desc" default="1"
+                <field type="radio" name="show_desc"
+                       class="switcher btn-group" default="1"
+                       layout="joomla.form.field.radio.switcher"
                        label="MOD_TZ_PORTFOLIO_PLUS_CATEGORIES_SHOW_DESC">
-                    <option value="1">JSHOW</option>
                     <option value="0">JHIDE</option>
+                    <option value="1">JSHOW</option>
                 </field>
-                <field type="radio" class="switcher btn-group" name="show_image" default="1"
+                <field type="radio" name="show_image"
+                       class="switcher btn-group" default="1"
+                       layout="joomla.form.field.radio.switcher"
                        label="MOD_TZ_PORTFOLIO_PLUS_CATEGORIES_SHOW_IMAGE">
-                    <option value="1">JSHOW</option>
                     <option value="0">JHIDE</option>
+                    <option value="1">JSHOW</option>
                 </field>
-                <field type="radio" class="switcher btn-group" name="show_title" default="1"
+                <field type="radio" name="show_title"
+                       class="switcher btn-group" default="1"
+                       layout="joomla.form.field.radio.switcher"
                        label="MOD_TZ_PORTFOLIO_PLUS_CATEGORIES_SHOW_TITLE">
-                    <option value="1">JSHOW</option>
                     <option value="0">JHIDE</option>
+                    <option value="1">JSHOW</option>
                 </field>
             </fieldset>
             <fieldset name="advanced">
@@ -79,6 +87,7 @@
                 </field>
                 <field type="radio" name="enable_bootstrap"
                        default="0" class="switcher btn-group"
+                       layout="joomla.form.field.radio.switcher"
                        label="COM_TZ_PORTFOLIO_PLUS_ENABLE_BOOTSTRAP_LIBRARY_LABEL">
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
@@ -92,12 +101,14 @@
                 </field>
                 <field type="radio" name="enable_bootstrap_js"
                        default="1" class="switcher btn-group"
+                       layout="joomla.form.field.radio.switcher"
                        showon="enable_bootstrap:1"
                        label="COM_TZ_PORTFOLIO_PLUS_ENABLE_BOOTSTRAP_JS_LABEL">
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
                 </field>
                 <field type="radio" name="enable_lazyload"
+                       layout="joomla.form.field.radio.switcher"
                        default="0" class="switcher btn-group"
                        label="COM_TZ_PORTFOLIO_PLUS_ENABLE_LAZYLOAD">
                     <option value="0">JNO</option>

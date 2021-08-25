@@ -56,19 +56,40 @@ class JFormFieldTZExtraFields extends JFormFieldGroupedList
         if($this -> multiple && $sort) {
             if (!$this->tzscript) {
 
-                JHtml::_('jquery.ui', array('core', 'sortable'));
+                if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE){
+                    JHtmlDraggablelist::draggable();
+                }else {
+                    JHtml::_('jquery.ui', array('core', 'sortable'));
+                }
 
                 $doc = JFactory::getDocument();
                 $doc->addStyleSheet(JUri::root(true) . '/modules/mod_tz_portfolio_plus_filter/admin/css/style.css');
                 $doc->addScriptDeclaration('
                 (function($){            
-                    $(document).ready(function(){
+                    $(document).ready(function(){                    
                         var sfilterchosen = $("#' . $this->id . '").data("chosen"),
                             sfchosenitems = sfilterchosen.search_choices.children().not(sfilterchosen.search_container);
                             
-                            // Insert icon for items selected
-                            sfchosenitems.find("> span").prepend("<i class=\"icon-move s-filter-handle\"></i>");
-                            
+                        // Insert icon for items selected
+                        sfchosenitems.find("> span").prepend("<i class=\"icon-move s-filter-handle\"></i>");
+                        
+                        '.(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE?'
+                         var _schoiceDragula__'.$this -> id.' = dragula([sfilterchosen.search_choices[0]],{
+                            /*ignoreInputTextSelection: false,
+                            invalid: function (el, handle) {
+                                return el.classList.contains("search-field"); // don\'t prevent any drags from initiating by default
+                            },*/
+                            accepts: function (el, target) {
+                                return el.classList.contains("search-choice");
+                            },
+                            moves: function (el, container, handle) {
+                                return handle.classList.contains("s-filter-handle");
+                            }
+                        }).on(\'drop\', function (el, target, source, sibling) {
+                            if(sibling === null){
+                                _schoiceDragula__'.$this -> id.'.cancel(el);
+                            }
+                        });':'
                         sfilterchosen.search_choices.sortable({
                             cursor: "move",
                             handle: ".s-filter-handle",
@@ -83,7 +104,7 @@ class JFormFieldTZExtraFields extends JFormFieldGroupedList
                                     $("#' . $this->id . '_selected input[value=\"" + option.value + "\"]").insertBefore($("#' . $this->id . '_selected input[value=\"" + nextOption.value + "\"]"));                               
     
                             }
-                        });
+                        });').'
                         
                         $("#' . $this->id . '").bind("change",function(evt, params){
                             if(params.selected !=  undefined){

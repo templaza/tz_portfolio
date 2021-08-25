@@ -19,8 +19,10 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Filesystem\Folder;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 tzportfolioplusimport('template');
@@ -92,7 +94,7 @@ class TZ_Portfolio_PlusPluginHelper extends TZ_Portfolio_PlusPluginHelperLegacy 
                 .'/views'.'/'.$viewName.'/tmpl'
                 .'/default.php';
         }elseif($client == 'admin'){
-            $template = JFactory::getApplication()->getTemplate();
+            $template = Factory::getApplication()->getTemplate();
 
             if (strpos($layout, ':') !== false)
             {
@@ -150,7 +152,7 @@ class TZ_Portfolio_PlusPluginHelper extends TZ_Portfolio_PlusPluginHelperLegacy 
             if($plugins){
                 foreach ($plugins as &$p)
                 {
-                    JFactory::getApplication() -> triggerEvent('onTPAddOnProcess', array(&$p));
+                    Factory::getApplication() -> triggerEvent('onTPAddOnProcess', array(&$p));
                     // Is this plugin in the right group?
                     if ($p && $p->type == $type && $p->name == $plugin)
                     {
@@ -226,7 +228,7 @@ class TZ_Portfolio_PlusPluginHelper extends TZ_Portfolio_PlusPluginHelperLegacy 
             $types          = ArrayHelper::getColumn($core_types, 'value');
 
             if ($contentPlugins = self::importPlugin('content')) {
-                if ($pluginTypes = \JFactory::getApplication()->triggerEvent('onAddContentType')) {
+                if ($pluginTypes = Factory::getApplication()->triggerEvent('onAddContentType')) {
                     if(count($pluginTypes)){
                         $pluginTypes    = array_filter($pluginTypes);
                     }
@@ -259,8 +261,8 @@ class TZ_Portfolio_PlusPluginHelper extends TZ_Portfolio_PlusPluginHelperLegacy 
             return static::$plugins;
         }
 
-        $user = JFactory::getUser();
-        $cache = JFactory::getCache('com_tz_portfolio_plus', '');
+        $user = Factory::getUser();
+        $cache = Factory::getCache('com_tz_portfolio_plus', '');
 
         $levels = implode(',', $user->getAuthorisedViewLevels());
 
@@ -284,7 +286,7 @@ class TZ_Portfolio_PlusPluginHelper extends TZ_Portfolio_PlusPluginHelperLegacy 
                     $item -> manifest_cache = json_decode($item -> manifest_cache);
                 }
 
-                JFactory::getApplication() -> triggerEvent('onTPAddOnIsLoaded', array(&$plugins));
+                Factory::getApplication() -> triggerEvent('onTPAddOnIsLoaded', array(&$plugins));
 
                 static::$plugins = $plugins;
             }else{
@@ -304,7 +306,7 @@ class TZ_Portfolio_PlusPluginHelper extends TZ_Portfolio_PlusPluginHelperLegacy 
 
                 tzportfolioplusimport('controller.legacy');
 
-                $app    = JFactory::getApplication();
+                $app    = Factory::getApplication();
                 $input  = $app -> input;
                 $result = true;
 
@@ -339,7 +341,7 @@ class TZ_Portfolio_PlusPluginHelper extends TZ_Portfolio_PlusPluginHelperLegacy 
 
     public static function loadLanguage($element, $type){
 
-        $lang           = JFactory::getLanguage();
+        $lang           = Factory::getApplication() -> getLanguage();
         $tag            = $lang -> getTag();
         $prefix         = 'tp_addon_';
         $basePath       = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/' . $type . '/' . $element;
@@ -347,9 +349,9 @@ class TZ_Portfolio_PlusPluginHelper extends TZ_Portfolio_PlusPluginHelperLegacy 
 
         $__files    = array();
         if(is_dir($basePath.'/language/'.$tag)) {
-            $__files = \JFolder::files($basePath . '/language/'.$tag, 'plg_.*.ini$', false);
+            $__files = Folder::files($basePath . '/language/'.$tag, 'plg_.*.ini$', false);
         }elseif(is_dir($basePath.'/language/en-GB')) {
-            $__files = \JFolder::files($basePath . '/language/en-GB', 'plg_.*.ini$', false);
+            $__files = Folder::files($basePath . '/language/en-GB', 'plg_.*.ini$', false);
         }
 
         if($__files && count($__files)){
@@ -376,7 +378,7 @@ class TZ_Portfolio_PlusPluginHelper extends TZ_Portfolio_PlusPluginHelperLegacy 
     public static function importAllAddOns(){
         $imported   = false;
         // Get
-        $folders = JFolder::folders(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH);
+        $folders = Folder::folders(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH);
         if(count($folders)){
             foreach ($folders as $group){
                 $imported   = self::importPlugin($group);

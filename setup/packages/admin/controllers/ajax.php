@@ -19,6 +19,10 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Filesystem\Folder;
+
 jimport('joomla.application.component.controllerform');
 
 /**
@@ -37,7 +41,7 @@ class TZ_Portfolio_PlusControllerAjax extends JControllerForm
     public function gallery_upload() {
         header('Content-Type: application/json');
         try {
-            $japp   = JFactory::getApplication();
+            $japp   = Factory::getApplication();
             $input  = $japp -> input;
 
             if(!$japp->isClient('administrator')){
@@ -70,18 +74,18 @@ class TZ_Portfolio_PlusControllerAjax extends JControllerForm
             // Build the appropriate paths.
             jimport('joomla.filesystem.file');
             jimport('joomla.filesystem.folder');
-            $filename           =   \JApplicationHelper::stringURLSafe(JFile::stripExt($userfile['name'])).'.'.JFile::getExt($userfile['name']);
+            $filename           =   \JApplicationHelper::stringURLSafe(File::stripExt($userfile['name'])).'.'.File::getExt($userfile['name']);
 
-            $config             =   JFactory::getConfig();
+            $config             =   Factory::getConfig();
             $tmp_dest           =   $config->get('tmp_path') . '/' .$folder . '/' . $filename;
             $tmp_resize_folder  =   $config->get('tmp_path') . '/' .$folder . '/resize';
             $tmp_src            =   $userfile['tmp_name'];
-            if (!JFile::upload($tmp_src, $tmp_dest)) {
+            if (!File::upload($tmp_src, $tmp_dest)) {
                 throw new RuntimeException('Failed to move uploaded file.');
             }
 
             // Resize image
-            if (JFolder::create($tmp_resize_folder)) {
+            if (Folder::create($tmp_resize_folder)) {
                 $addon      =   TZ_Portfolio_PlusPluginHelper::getPlugin('content','gallery');
                 $params     =   new JRegistry($addon->params);
                 if ($params && $image_size = $params->get('gallery_size')) {
@@ -97,8 +101,8 @@ class TZ_Portfolio_PlusControllerAjax extends JControllerForm
                         $size = json_decode($_size);
 
                         $newPath = $tmp_resize_folder . DIRECTORY_SEPARATOR
-                            . JFile::stripExt($filename)
-                            . '_' . $size->image_name_prefix . '.' . JFile::getExt($filename);
+                            . File::stripExt($filename)
+                            . '_' . $size->image_name_prefix . '.' . File::getExt($filename);
 
                         // Create new ratio from new with of image size param
                         $imageProperties   = $gallery->getImageFileProperties($tmp_dest);
@@ -106,9 +110,9 @@ class TZ_Portfolio_PlusControllerAjax extends JControllerForm
                         $newImage          = $gallery->resize($size->width, $newH);
 
                         // Before upload image to file must delete original file
-                        if (JFile::exists($newPath)) {
+                        if (File::exists($newPath)) {
                             // Execute delete image
-                            JFile::delete($newPath);
+                            File::delete($newPath);
                         }
 
                         // Generate image to file

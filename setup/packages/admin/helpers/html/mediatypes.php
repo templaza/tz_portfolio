@@ -19,6 +19,7 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 
 class JHtmlMediaTypes
 {
@@ -27,7 +28,7 @@ class JHtmlMediaTypes
         $options    = array();
         TZ_Portfolio_PlusPluginHelper::importPlugin($group);
 
-        if($results	= \JFactory::getApplication()->triggerEvent('onAddMediaType')){
+        if($results	= Factory::getApplication()->triggerEvent('onAddMediaType')){
             if(count($results)){
                 foreach($results as $item) {
                     $options[]  = JHtml::_('select.option', $item->value, $item->text);

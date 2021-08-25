@@ -20,6 +20,7 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Utilities\ArrayHelper;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
@@ -39,7 +40,7 @@ class TZ_Portfolio_PlusHelperGroups{
 
         if(!isset(self::$cache[$storeId])){
 
-            $user       = JFactory::getUser();
+            $user       = Factory::getUser();
             $viewlevels = ArrayHelper::toInteger($user->getAuthorisedViewLevels());
             $db         = TZ_Portfolio_PlusDatabase::getDbo();
             $query      = $db -> getQuery(true);

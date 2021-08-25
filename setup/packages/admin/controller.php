@@ -20,9 +20,9 @@
 // No direct access
 defined('_JEXEC') or die;
 
-use Joomla\Filesystem\File;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Path;
-use Joomla\Utilities\ArrayHelper;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 class TZ_Portfolio_PlusController extends JControllerLegacy
@@ -68,8 +68,8 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
 	{
 
         // Get the document object.
-        $document = JFactory::getDocument();
-        $app    = JFactory::getApplication();
+        $app        = Factory::getApplication();
+        $document   = $app -> getDocument();
 
 		$document -> addStyleSheet(JURI::base(true).'/components/com_tz_portfolio_plus/css/style.min.css', array('version' => 'auto'));
 
@@ -140,7 +140,7 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
 
             // Check for edit form of addon
             if($view == 'addon'){
-                $user   = JFactory::getUser();
+                $user   = Factory::getUser();
                 if(!$user -> authorise('core.admin', 'com_tz_portfolio_plus.addon.'.$id)
                     && !$user -> authorise('core.options', 'com_tz_portfolio_plus.addon.'.$id)) {
 
@@ -164,7 +164,7 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
 	}
 
 	protected function _checkAccess($view){
-	    $user   = JFactory::getUser();
+	    $user   = Factory::getUser();
 	    $error  = false;
 
 	    switch ($view){
@@ -243,7 +243,7 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
 
         $this->checkToken();
 
-        $app    = JFactory::getApplication();
+        $app    = Factory::getApplication();
 	    $input  = $this -> input;
         $view   = $input -> get('v');
 
@@ -257,7 +257,7 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
 
         $config     = new stdClass();
 
-        if(\JFile::exists($filePath)) {
+        if(File::exists($filePath)) {
             $config = file_get_contents($filePath);
             $config = json_decode($config);
         }
@@ -269,7 +269,7 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
             echo File::write($filePath, $config);
         }catch (Exception $e){
         }
-        JFactory::getApplication() -> close();
+        Factory::getApplication() -> close();
     }
 
     public function installdemo(){
@@ -278,8 +278,8 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
 
         $result     = false;
         $message    = null;
-        $app        = JFactory::getApplication();
-        $db         = JFactory::getDbo();
+        $app        = Factory::getApplication();
+        $db         = Factory::getDbo();
         $query      = $db -> getQuery(true);
 
         $query -> select('COUNT(*)');
@@ -293,7 +293,7 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
             $file       = Path::clean(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/install/demo.sql');
             $buffer     = file_get_contents($file);
             $queries    = TZ_Portfolio_PlusDatabase::splitQueries($buffer);
-            $db     = JFactory::getDbo();
+            $db     = Factory::getDbo();
 
             foreach ($queries as $sql) {
                 // Trim any whitespace.
@@ -303,7 +303,7 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
             }
 
             /* Update created_by with current user */
-            $user   = JFactory::getUser();
+            $user   = Factory::getUser();
 
             $query  -> clear();
             $query -> update('#__tz_portfolio_plus_content');

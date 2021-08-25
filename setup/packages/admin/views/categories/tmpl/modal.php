@@ -9,7 +9,9 @@
 
 defined('_JEXEC') or die;
 
-$app = JFactory::getApplication();
+use Joomla\CMS\Factory;
+
+$app = Factory::getApplication();
 JHtml::_('formbehavior.chosen', 'select');
 
 if ($app-> isClient('site'))

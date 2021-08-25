@@ -131,7 +131,7 @@ abstract class TZ_Portfolio_PlusHelperRoute
                 $app		= JFactory::getApplication();
                 $menus		= $app->getMenu('site');
                 $menu       = $menus -> getItem($itemId);
-                if($m_catids   = $menu -> params -> get('catid')){
+                if($m_catids   = $menu -> getParams() -> get('catid')){
                     $m_catids   = array_filter($m_catids);
                     if(count($m_catids) != 1 || (count($m_catids) == 1 && !in_array($catid, $m_catids))){
                         $link   .= '&amp;id='.$id;
@@ -348,7 +348,7 @@ abstract class TZ_Portfolio_PlusHelperRoute
                         return $item -> id;
                     }
                 } else {
-                    $catids = $item->params->get('catid');
+                    $catids = $item->getParams()->get('catid');
                     if ($view == 'tags' && $catids) {
                         if (is_array($catids)) {
                             for ($i = 0; $i < count($catids); $i++) {
@@ -496,9 +496,10 @@ abstract class TZ_Portfolio_PlusHelperRoute
 
                     if (!isset($sItem->query['id'])) {
                         if($needles){
-                            $sCatids		=	$sItem->params->get('tz_catid');
-                            if($sItem -> params -> get('catid')){
-                                $sCatids  = $sItem -> params -> get('catid');
+                            $sParams        = $sItem -> getParams();
+                            $sCatids		= $sParams->get('tz_catid');
+                            if($sParams -> get('catid')){
+                                $sCatids  = $sParams -> get('catid');
                             }
                             if ($sCatids) {
                                 if (is_array($sCatids)) {
@@ -532,8 +533,8 @@ abstract class TZ_Portfolio_PlusHelperRoute
                         }
                     } else {
                         $catids = null;
-                        if($item -> params -> get('catid')){
-                            $catids  = $item -> params -> get('catid');
+                        if($item -> getParams() -> get('catid')){
+                            $catids  = $item -> getParams() -> get('catid');
                         }
 
                         if ($catids) {

@@ -19,6 +19,9 @@
 
 //no direct access
 defined('_JEXEC') or die('Restricted access');
+
+use Joomla\CMS\Factory;
+
 jimport('joomla.application.component.view');
 JHtml::addIncludePath(COM_TZ_PORTFOLIO_PLUS_ADMIN_HELPERS_PATH.DIRECTORY_SEPARATOR.'html');
 JLoader::import('templates', COM_TZ_PORTFOLIO_PLUS_ADMIN_HELPERS_PATH);
@@ -38,7 +41,7 @@ class TZ_Portfolio_PlusViewTemplate_Styles extends JViewLegacy
         $this -> filterForm     = $this -> get('FilterForm');
         $this -> activeFilters  = $this -> get('ActiveFilters');
 
-        JFactory::getLanguage() -> load('com_templates');
+        Factory::getApplication() -> getLanguage() -> load('com_templates');
 
         TZ_Portfolio_PlusHelper::addSubmenu('template_styles');
         // We don't need toolbar in the modal window.
@@ -46,7 +49,9 @@ class TZ_Portfolio_PlusViewTemplate_Styles extends JViewLegacy
             $this -> addToolbar();
         }
 
-        $this -> sidebar    = JHtmlSidebar::render();
+        if(!COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+            $this->sidebar = JHtmlSidebar::render();
+        }
 
         parent::display($tpl);
     }

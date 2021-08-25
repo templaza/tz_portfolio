@@ -20,6 +20,8 @@
 // No direct access
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+
 JLoader::register('TZ_Portfolio_PlusHelperAddon_Datas', COM_TZ_PORTFOLIO_PLUS_ADMIN_HELPERS_PATH
     .DIRECTORY_SEPARATOR.'addon_datas.php');
 
@@ -55,9 +57,11 @@ class TZ_Portfolio_PlusViewExtension extends JViewLegacy
             $this -> document -> addScript(TZ_Portfolio_PlusUri::base(true, true).'/js/libs.min.js',
                 array('version' => 'auto'));
             $this -> filterForm   = $this -> get('FilterForm');
-			
-            TZ_Portfolio_PlusHelper::addSubmenu('extension');
-            $this->sidebar = JHtmlSidebar::render();
+
+            if(!COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+                TZ_Portfolio_PlusHelper::addSubmenu('extension');
+                $this->sidebar = JHtmlSidebar::render();
+            }
         }
 
         $this->addToolbar();
@@ -67,7 +71,7 @@ class TZ_Portfolio_PlusViewExtension extends JViewLegacy
 
     protected function addToolbar(){
 
-        $user		= JFactory::getUser();
+        $user		= Factory::getUser();
         $userId		= $user->get('id');
 
         $canDo = JHelperContent::getActions('com_tz_portfolio_plus');

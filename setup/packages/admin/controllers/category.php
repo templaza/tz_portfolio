@@ -19,6 +19,8 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 jimport('joomla.application.component.controllerform');
 
 /**
@@ -46,7 +48,7 @@ class TZ_Portfolio_PlusControllerCategory extends JControllerForm
 	{
 		parent::__construct($config);
 
-        JFactory::getLanguage() -> load('com_categories');
+        Factory::getApplication() -> getLanguage() -> load('com_categories');
         
 		// Guess the JText message prefix. Defaults to the option.
 		if (empty($this->extension))
@@ -84,7 +86,7 @@ class TZ_Portfolio_PlusControllerCategory extends JControllerForm
 	{
 		// Initialise variables.
 		$recordId = (int) isset($data[$key]) ? $data[$key] : 0;
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 		$userId = $user->get('id');
 
 		// Check general edit permission first.

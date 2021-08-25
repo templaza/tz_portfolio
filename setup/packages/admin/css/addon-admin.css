@@ -31,7 +31,7 @@
     display: none;
 }
 .tzportfolio-box.active {
-    display: block;
+    display: flex;
 }
 .tzportfolio-lock span {
     display: none;

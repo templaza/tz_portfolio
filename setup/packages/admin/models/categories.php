@@ -20,6 +20,8 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 jimport('joomla.application.component.modellist');
@@ -89,7 +91,7 @@ class TZ_Portfolio_PlusModelCategories extends JModelList
         parent::populateState($ordering, $direction);
 
 		// Initialise variables.
-		$app		= JFactory::getApplication();
+		$app		= Factory::getApplication();
 		$context	= $this->context;
 
 		$extension = $app->getUserStateFromRequest('com_tz_portfolio_plus.categories.filter.extension',
@@ -194,7 +196,7 @@ class TZ_Portfolio_PlusModelCategories extends JModelList
 		// Create a new query object.
 		$db		= $this->getDbo();
 		$query	= $db->getQuery(true);
-		$user	= JFactory::getUser();
+		$user	= Factory::getUser();
 
 		// Select the required fields from the table.
 		$query->select(

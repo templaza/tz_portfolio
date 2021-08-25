@@ -19,6 +19,10 @@
 
 // No direct access.
 defined('_JEXEC') or die;
+
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
+
 jimport('joomla.application.component.controllerform');
 
 class TZ_Portfolio_PlusControllerTemplate_Style extends JControllerForm
@@ -30,7 +34,7 @@ class TZ_Portfolio_PlusControllerTemplate_Style extends JControllerForm
         // Check for request forgeries.
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-        $app        = JFactory::getApplication();
+        $app        = Factory::getApplication();
         $model      = $this->getModel();
         $table      = $model->getTable();
         $data       = $this->input->post->get('jform', array(), 'array');
@@ -135,7 +139,7 @@ class TZ_Portfolio_PlusControllerTemplate_Style extends JControllerForm
         // Check for request forgeries.
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-        $app        = JFactory::getApplication();
+        $app        = Factory::getApplication();
         $model      = $this->getModel();
         $table      = $model->getTable();
         $data       = $this->input->post->get('jform', array(), 'array');
@@ -240,7 +244,7 @@ class TZ_Portfolio_PlusControllerTemplate_Style extends JControllerForm
         // Check for request forgeries.
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-        $app        = JFactory::getApplication();
+        $app        = Factory::getApplication();
         $model      = $this->getModel();
         $table      = $model->getTable();
         $data       = $this->input->post->get('jform', array(), 'array');
@@ -276,7 +280,7 @@ class TZ_Portfolio_PlusControllerTemplate_Style extends JControllerForm
         foreach ($filePreset as $file){
 
             $fileError  = false;
-            $fileType   = JFile::getExt($file["name"]);
+            $fileType   = File::getExt($file["name"]);
 
             //-- Check image information --//
             // Check MIME Type
@@ -304,7 +308,7 @@ class TZ_Portfolio_PlusControllerTemplate_Style extends JControllerForm
                 continue;
             }
 
-            if(!JFile::upload($file['tmp_name'], $folderPath.'/'.$file['name'])){
+            if(!File::upload($file['tmp_name'], $folderPath.'/'.$file['name'])){
                 $fileError  = true;
                 $app->enqueueMessage(JText::sprintf('COM_TZ_PORTFOLIO_PLUS_ERROR_UNABLE_TO_UPLOAD_FILE', $file['name']), 'notice');
             }
@@ -332,7 +336,7 @@ class TZ_Portfolio_PlusControllerTemplate_Style extends JControllerForm
         // Check for request forgeries.
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-        $app        = JFactory::getApplication();
+        $app        = Factory::getApplication();
         $model      = $this->getModel();
         $table      = $model->getTable();
         $data       = $this->input->post->get('jform', array(), 'array');
@@ -401,7 +405,7 @@ class TZ_Portfolio_PlusControllerTemplate_Style extends JControllerForm
 
         $file   = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH.'/'.$validData['template'].'/config/'.$validData['preset'].'.json';
 
-        if(!JFile::exists($file)){
+        if(!File::exists($file)){
             $this -> setMessage(JText::_('COM_TZ_PORTFOLIO_PLUS_FILE_NOT_FOUND'), 'error');
             // Redirect back to the edit screen.
             $this->setRedirect(
@@ -414,19 +418,20 @@ class TZ_Portfolio_PlusControllerTemplate_Style extends JControllerForm
             return false;
         }
 
+
         $app -> clearHeaders();
         $app -> setHeader('Pragma', 'public', true);
         $app -> setHeader('Expires', '0', true);
         $app -> setHeader('Cache-Control', 'must-revalidate, post-check=0, pre-check=0', true);
         $app -> setHeader('Content-Type', 'application/json', true);
-        $app -> setHeader('Content-Disposition', 'attachment; filename=' . JFile::getName($file) . ';', true);
+        $app -> setHeader('Content-Disposition', 'attachment; filename=' .basename($file) . ';', true);
         $app -> setHeader('Content-Transfer-Encoding', 'binary', true);
         $app -> setHeader('Content-Length', filesize($file), true);
 
 
         $app -> sendHeaders();
 
-        echo JFile::read($file);
+        echo @file_get_contents($file);
 
         $app -> close();
     }
@@ -434,7 +439,7 @@ class TZ_Portfolio_PlusControllerTemplate_Style extends JControllerForm
     protected function allowEdit($data = array(), $key = 'id')
     {
         $recordId = (int) isset($data[$key]) ? $data[$key] : 0;
-        $user = JFactory::getUser();
+        $user = Factory::getUser();
 
         // Zero record (id:0), return component edit permission by calling parent controller method
         if (!$recordId)

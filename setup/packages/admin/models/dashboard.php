@@ -20,6 +20,8 @@
 // no direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Filesystem\File;
+
 require_once dirname(__FILE__) . '/articles.php';
 
 /**
@@ -182,7 +184,7 @@ class TZ_Portfolio_PlusModelDashboard extends TZ_Portfolio_PlusModelArticles
 
         $file   = COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/tz_portfolio_plus.xml';
 
-        if(!JFile::exists($file)){
+        if(!File::exists($file)){
             return false;
         }
 

@@ -19,6 +19,9 @@
 
 // No direct access
 defined('_JEXEC') or die;
+
+use Joomla\CMS\Filesystem\File;
+
 if(!defined('COM_TZ_PORTFOLIO_PLUS_JVERSION_COMPARE')) {
     define('COM_TZ_PORTFOLIO_PLUS_JVERSION_COMPARE', version_compare(JVERSION, '3.0', 'ge'));
 }
@@ -74,7 +77,7 @@ if(!defined('COM_TZ_PORTFOLIO_PLUS_ACL_SECTIONS')) {
 if(!defined('COM_TZ_PORTFOLIO_PLUS_EDITION')) {
     JLoader::register('TZ_Portfolio_PlusHelper', COM_TZ_PORTFOLIO_PLUS_ADMIN_HELPERS_PATH . '/tz_portfolio_plus.php');
     $license    = TZ_Portfolio_PlusHelper::getLicense();
-    if(JFile::exists(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/includes/license.php')
+    if(File::exists(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/includes/license.php')
         && $license && isset($license -> reference) && $license -> reference) {
         define('COM_TZ_PORTFOLIO_PLUS_EDITION', 'commercial');
     }else{

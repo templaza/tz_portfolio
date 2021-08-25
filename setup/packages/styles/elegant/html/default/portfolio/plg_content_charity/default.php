@@ -12,7 +12,7 @@
 // No direct access
 defined('_JEXEC') or die;
 
-use Joomla\Filesystem\File;
+use Joomla\CMS\Filesystem\File;
 
 jimport('joomla.filesystem.file');
 
@@ -221,7 +221,7 @@ if($params->get('show_cat_donate',0)):
                                     $imgUrl = $media -> image -> url;
                                     if(isset($imgUrl) && $imgUrl != '') {
                                         if ($size = $params->get('mt_image_size', 'o')) {
-                                            $image_url_ext = \JFile::getExt($imgUrl);
+                                            $image_url_ext = File::getExt($imgUrl);
                                             $image_url = str_replace('.' . $image_url_ext, '_' . $size . '.'
                                                 . $image_url_ext, $imgUrl);
                                             $imgUrl = JURI::root() . $image_url;

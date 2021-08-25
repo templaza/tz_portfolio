@@ -20,11 +20,15 @@
 // no direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Button\FeaturedButton;
+use Joomla\Component\Content\Administrator\Helper\ContentHelper;
+
 $j4Compare  = COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE;
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
-
-JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.multiselect');
 
 JHtml::_('formbehavior.chosen', '.multipleMediaType', null,
     array('placeholder_text_multiple' => JText::_('COM_TZ_PORTFOLIO_PLUS_OPTION_SELECT_MEDIA_TYPE')));
@@ -38,13 +42,15 @@ JHtml::_('formbehavior.chosen', '#filter_category_id_sec', null,
     array('placeholder_text_multiple' => JText::_('COM_TZ_PORTFOLIO_PLUS_OPTION_SELECT_SECONDARY_CATEGORY')));
 
 if(!$j4Compare) {
+    JHtml::_('behavior.multiselect');
+    JHtml::_('bootstrap.tooltip');
     JHtml::_('dropdown.init');
     JHtml::_('formbehavior.chosen', 'select');
 }else{
     JHtml::_('formbehavior.chosen', 'select[multiple]');
 }
 
-$user		    = JFactory::getUser();
+$user		    = Factory::getUser();
 $userId		    = $user->get('id');
 $listOrder	    = $this->escape($this->state->get('list.ordering'));
 $listDirn	    = $this->escape($this->state->get('list.direction'));
@@ -104,6 +110,11 @@ $this -> document -> addScriptDeclaration('(function($, TZ_Portfolio_Plus){
                         <th width="1%" class="hidden-phone">
                             <?php echo JHtml::_('grid.checkall'); ?>
                         </th>
+                        <?php if($j4Compare){ ?>
+                        <th scope="col" class="w-1 text-center d-none d-md-table-cell">
+                            <?php echo HTMLHelper::_('searchtools.sort', 'JFEATURED', 'a.featured', $listDirn, $listOrder); ?>
+                        </th>
+                        <?php } ?>
                         <th width="1%" style="min-width:55px" class="nowrap center text-center">
                             <?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
                         </th>
@@ -198,12 +209,30 @@ $this -> document -> addScriptDeclaration('(function($, TZ_Portfolio_Plus){
                             <td class="center text-center">
                                 <?php echo JHtml::_('grid.id', $i, $item->id); ?>
                             </td>
+                            <?php if($j4Compare){ ?>
+                            <td class="center text-center">
+                                <?php
+                                $workflow_featured = false;
+                                $options = [
+                                    'task_prefix' => 'articles.',
+                                    'disabled' => $workflow_featured || !$canChange,
+                                    'id' => 'featured-' . $item->id
+                                ];
+
+                                echo (new FeaturedButton)
+                                    ->render((int) $item->featured, $i, $options);
+                                ?>
+                            </td>
+                            <?php } ?>
                             <td class="center text-center">
                                 <?php
                                 $filterPublished    = $this -> state -> get('filter.published');
+
+                                if(!$j4Compare){
                                 ?>
                                 <div class="btn-group">
                                     <?php
+                                    }
                                     if($canApprove && ($item -> state == 3 || $item -> state == 4) ){
                                         echo JHtml::_('tppgrid.approve', $i, $this->getName() . '.', $canChange, 'cb');
                                         echo JHtml::_('tppgrid.reject', $i, $this->getName() . '.', $canChange, 'cb');
@@ -212,9 +241,11 @@ $this -> document -> addScriptDeclaration('(function($, TZ_Portfolio_Plus){
                                             echo JHtml::_('jgrid.action', $i, 'trash',
                                                 $this -> getName().'.', 'JTOOLBAR_TRASH', 'JTOOLBAR_TRASH', '', true, 'trash', $canChange);
                                         }else{
-                                            echo JHtml::_('tppgrid.status', $item->state, $item -> status, $i,
+                                            echo JHtml::_('tppgrid.status', $item->state, $i, $item -> status,
                                                 $this -> getName().'.', $canChange, 'cb', $item->publish_up, $item->publish_down);
-                                            echo JHtml::_('tzcontentadmin.featured', $item->featured, $i, $canChange);
+                                            if(!$j4Compare) {
+                                                echo JHtml::_('tzcontentadmin.featured', $item->featured, $i, $canChange);
+                                            }
                                         }
                                     }
                                     // Create dropdown items and render the dropdown list.
@@ -231,8 +262,11 @@ $this -> document -> addScriptDeclaration('(function($, TZ_Portfolio_Plus){
                                             echo JHtml::_('actionsdropdown.render', $this->escape($item->title));
                                         }
                                     }
+
+                                    if(!$j4Compare){
                                     ?>
                                 </div>
+                                <?php } ?>
                             </td>
                             <td class="has-context">
                                 <?php if ($item->checked_out) : ?>
@@ -242,14 +276,8 @@ $this -> document -> addScriptDeclaration('(function($, TZ_Portfolio_Plus){
                                 if(($canApprove && ($canEdit || $canEditOwn || $item -> state == 3 || $item -> state == 4)) ||
                                     (!$canApprove && ($canEditOwn || $item -> state == 3 || $item -> state == -3) && $item -> state != 4)){
                                     ?>
-                                    <?php
-                                    $editIcon   = '';
-                                    if($j4Compare){
-                                        $editIcon = $item->checked_out ? '' : '<span class="tps tp-pen-square mr-2" aria-hidden="true"></span>';
-                                    }
-                                    ?>
                                     <a href="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&task=article.edit&id='.$item->id);?>">
-                                        <?php echo $editIcon.$this->escape($item->title); ?></a>
+                                        <?php echo $this->escape($item->title); ?></a>
                                 <?php }else{ ?>
                                     <?php echo $this->escape($item->title); ?>
                                 <?php } ?>

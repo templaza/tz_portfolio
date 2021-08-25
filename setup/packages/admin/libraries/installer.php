@@ -22,7 +22,9 @@ namespace TZ_Portfolio_Plus\Installer;
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\String\StringHelper;
+use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Installer\Installer;
 
 \JLoader::import('com_tz_portfolio_plus.includes.framework',JPATH_ADMINISTRATOR.'/components');
@@ -67,7 +69,7 @@ class TZ_Portfolio_PlusInstaller extends Installer
 
     public function install($path = null)
     {
-        if ($path && \JFolder::exists($path))
+        if ($path && Folder::exists($path))
         {
             $this->setPath('source', $path);
         }
@@ -121,7 +123,7 @@ class TZ_Portfolio_PlusInstaller extends Installer
         if ($result !== false)
         {
             // Refresh versionable assets cache
-            \JFactory::getApplication()->flushAssets();
+            Factory::getApplication()->flushAssets();
 
             return true;
         }

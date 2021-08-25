@@ -20,6 +20,7 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Utilities\ArrayHelper;
 
 jimport('joomla.application.component.controllerform');
@@ -72,7 +73,7 @@ class TZ_Portfolio_PlusControllerArticleBase extends JControllerForm
 	protected function allowAdd($data = array())
 	{
 		// Initialise variables.
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 		$categoryId = ArrayHelper::getValue($data, 'catid', $this -> input -> getInt('filter_category_id'), 'int');
 		$allow = null;
 
@@ -107,7 +108,7 @@ class TZ_Portfolio_PlusControllerArticleBase extends JControllerForm
     protected function allowEdit($data = array(), $key = 'id')
     {
         $recordId = (int) isset($data[$key]) ? $data[$key] : 0;
-        $user = JFactory::getUser();
+        $user = Factory::getUser();
 
         // Zero record (id:0), return component edit permission by calling parent controller method
         if (!$recordId)
@@ -215,7 +216,7 @@ class TZ_Portfolio_PlusControllerArticleBase extends JControllerForm
         if($edit && $this -> allowApprove()){
             // Set state is under review (state = 4) if the article is pending (state = 3).
             if($table -> load($recordId) && $table -> state == 3){
-                $db     = JFactory::getDbo();
+                $db     = Factory::getDbo();
                 $query  = $db -> getQuery(true);
                 $query -> update($table -> getTableName());
                 $query -> set('state = 4');

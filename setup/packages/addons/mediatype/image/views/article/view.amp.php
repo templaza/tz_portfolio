@@ -20,7 +20,7 @@
 // No direct access.
 defined('_JEXEC') or die;
 
-use Joomla\Filesystem\File;
+use Joomla\CMS\Filesystem\File;
 
 jimport('joomla.filesystem.file');
 
@@ -48,7 +48,7 @@ class PlgTZ_Portfolio_PlusMediaTypeImageViewArticle extends JViewLegacy{
                     if(isset($image -> url) && $image -> url) {
                         if ($size = $params->get('mt_image_related_size', 'o')) {
                             if (isset($image->url) && !empty($image->url)) {
-                                $image_url_ext = \JFile::getExt($image->url);
+                                $image_url_ext = File::getExt($image->url);
                                 if ($params->get('mt_show_original_gif',1) && $image_url_ext == 'gif') {
                                     $size = 'o';
                                 }
@@ -61,7 +61,7 @@ class PlgTZ_Portfolio_PlusMediaTypeImageViewArticle extends JViewLegacy{
 
                         if ($size = $params->get('mt_image_size', 'o')) {
                             if (isset($image->url) && !empty($image->url)) {
-                                $image_url_ext = \JFile::getExt($image->url);
+                                $image_url_ext = File::getExt($image->url);
                                 if ($params->get('mt_show_original_gif',1) && $image_url_ext == 'gif') {
                                     $size = 'o';
                                 }
@@ -78,7 +78,7 @@ class PlgTZ_Portfolio_PlusMediaTypeImageViewArticle extends JViewLegacy{
                             }
 
                             if (isset($image->url_detail) && !empty($image->url_detail)) {
-                                $image_url_ext = \JFile::getExt($image->url_detail);
+                                $image_url_ext = File::getExt($image->url_detail);
                                 $image_url = str_replace('.' . $image_url_ext, '_' . $size . '.'
                                     . $image_url_ext, $image->url_detail);
                                 $image->url_detail = JURI::root() . $image_url;

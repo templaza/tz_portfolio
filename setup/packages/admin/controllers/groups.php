@@ -20,6 +20,7 @@
 // No direct access.
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Utilities\ArrayHelper;
 
 jimport('joomla.application.component.controlleradmin');
@@ -44,7 +45,7 @@ class TZ_Portfolio_PlusControllerGroups extends JControllerAdmin
 
         if (!is_array($cid) || count($cid) < 1)
         {
-            JFactory::getApplication() -> enqueueMessage(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), 'error');
+            Factory::getApplication() -> enqueueMessage(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), 'error');
         }
         else
         {

@@ -32,7 +32,10 @@ class TZ_Portfolio_PlusViewAcls extends JViewLegacy{
         TZ_Portfolio_PlusHelper::addSubmenu('acls');
 
         $this -> addToolbar();
-        $this -> sidebar    = JHtmlSidebar::render();
+
+        if(!COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+            $this->sidebar = JHtmlSidebar::render();
+        }
 
         $this -> items  = $this -> get('Items');
 

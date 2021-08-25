@@ -20,6 +20,9 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\Folder;
+
 jimport('joomla.plugin.plugin');
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.file');
@@ -40,19 +43,21 @@ class PlgSystemTZ_Portfolio_Plus extends JPlugin {
     }
 
     public function onAfterRoute(){
-        $app    = JFactory::getApplication();
+        $app    = Factory::getApplication();
+        $option = $app -> input -> get('option');
+        $task   = $app -> input -> get('task');
         if(class_exists('TZ_Portfolio_PlusPluginHelper') && $this -> _tppAllowImport()) {
-            if(JFolder::exists(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH)){
-                $plgGroups  = JFolder::folders(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH);
+            if(Folder::exists(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH)){
+                $plgGroups  = Folder::folders(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH);
                 if(count($plgGroups)){
-                    $app    = JFactory::getApplication();
-                    $option = $app -> input -> get('option');
 
                     foreach($plgGroups as $group){
                         if($group != 'extrafields') {
-//                            if($group != 'user' || ($group == 'user' && $option == 'com_users')){
+                            if($app ->isClient('administrator')  || ($app ->isClient('site') && ($group == 'user'
+                                    && $option == 'com_users' && $task != 'user.login'
+                                    && $task != 'user.logout'))) {
                                 TZ_Portfolio_PlusPluginHelper::importPlugin($group);
-//                            }
+                            }
                         }
                     }
                 }
@@ -84,9 +89,6 @@ class PlgSystemTZ_Portfolio_Plus extends JPlugin {
             elseif($option == 'com_menus' && ($view == 'menus' || $view == 'items')){
                 return false;
             }
-//            elseif($option == 'com_modules' && !$view){
-//                return false;
-//            }
             elseif($option == 'com_users' && (!in_array($view, array('user')) && !$task)){
                 return false;
             }

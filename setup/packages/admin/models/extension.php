@@ -20,6 +20,7 @@
 //no direct access
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
 use Joomla\Filesystem\Folder;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
@@ -52,7 +53,7 @@ class TZ_Portfolio_PlusModelExtension extends TZ_Portfolio_PlusModelAddon
     protected function populateState(){
         parent::populateState();
 
-        $this -> setState($this -> getName().'.id',JFactory::getApplication() -> input -> getInt('id'));
+        $this -> setState($this -> getName().'.id',Factory::getApplication() -> input -> getInt('id'));
 
 //        $this -> setState('cache.filename', $this -> getName().'_list');
     }
@@ -64,7 +65,7 @@ class TZ_Portfolio_PlusModelExtension extends TZ_Portfolio_PlusModelAddon
 
     public function install()
     {
-        $app = \JFactory::getApplication();
+        $app = Factory::getApplication();
         $input = $app->input;
 
         // Load installer plugins for assistance if required:
@@ -152,7 +153,7 @@ class TZ_Portfolio_PlusModelExtension extends TZ_Portfolio_PlusModelAddon
     {
         if (!empty($record->id))
         {
-            $user = JFactory::getUser();
+            $user = Factory::getUser();
 
             if(isset($record -> asset_id) && !empty($record -> asset_id)) {
                 $state = $user->authorise('core.delete', $this->option . '.template.' . (int)$record->id);
@@ -167,7 +168,7 @@ class TZ_Portfolio_PlusModelExtension extends TZ_Portfolio_PlusModelAddon
 
     protected function canEditState($record)
     {
-        $user = JFactory::getUser();
+        $user = Factory::getUser();
 
         // Check for existing group.
         if (!empty($record->id))

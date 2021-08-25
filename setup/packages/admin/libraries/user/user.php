@@ -20,8 +20,9 @@
 //no direct access
 defined('_JEXEC') or die('Restricted access');
 
-use Joomla\Registry\Registry;
+use Joomla\CMS\Factory;
 use Joomla\CMS\User\User;
+use Joomla\Registry\Registry;
 use Joomla\CMS\User\UserWrapper;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
@@ -33,7 +34,7 @@ class TZ_Portfolio_PlusUser extends \JUser{
 
     public static function getUser($id = null)
     {
-        $instance = JFactory::getUser();
+        $instance = Factory::getUser();
 
         if (is_null($id))
         {
@@ -93,8 +94,9 @@ class TZ_Portfolio_PlusUser extends \JUser{
         return self::$instances[$id];
     }
 
-    public function getAuthorisedCategories($component = 'com_tz_portfolio_plus', $action)
+    public function getAuthorisedCategories($component, $action)
     {
+        $component  = !empty($component)?$component:'com_tz_portfolio_plus';
         // Brute force method: get all published category rows for the component and check each one
         // TODO: Modify the way permissions are stored in the db to allow for faster implementation and better scaling
         $db     = TZ_Portfolio_PlusDatabase::getDbo();

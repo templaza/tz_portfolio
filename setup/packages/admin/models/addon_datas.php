@@ -20,6 +20,7 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
@@ -45,7 +46,7 @@ class TZ_Portfolio_PlusModelAddon_Datas extends JModelList{
 
     protected function populateState($ordering = 'id', $direction = 'desc'){
 
-        $addon_id   = JFactory::getApplication()->input->getInt('addon_id');
+        $addon_id   = Factory::getApplication()->input->getInt('addon_id');
         $this -> setState($this -> getName().'.addon_id',$addon_id);
 
         if($addon_id) {

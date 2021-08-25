@@ -20,6 +20,7 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 
@@ -29,7 +30,7 @@ class TZ_Portfolio_PlusModelRejectBase extends JModelAdmin
     {
         parent::populateState();
 
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
 
         $cid = $app->input->get('cid', array(), 'array');
         $this -> setState('article.id', $cid);
@@ -60,7 +61,7 @@ class TZ_Portfolio_PlusModelRejectBase extends JModelAdmin
     protected function loadFormData()
     {
         // Check the session for previously entered form data.
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
         $data = $app->getUserState('com_tz_portfolio_plus.edit.'.$this -> getName().'.data', array());
 
         if (empty($data))

@@ -20,6 +20,7 @@
 // No direct access.
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Utilities\ArrayHelper;
 
 jimport('joomla.application.component.controlleradmin');
@@ -37,7 +38,8 @@ class TZ_Portfolio_PlusControllerTemplate_Styles extends JControllerAdmin
     {
         // Check for request forgeries
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-        JFactory::getLanguage() -> load('com_templates');
+        Factory::getApplication() -> getLanguage()
+            -> load('com_templates');
 
         $pks = $this->input->post->get('cid', array(), 'array');
 
@@ -56,7 +58,7 @@ class TZ_Portfolio_PlusControllerTemplate_Styles extends JControllerAdmin
         }
         catch (Exception $e)
         {
-            JFactory::getApplication() -> enqueueMessage($e->getMessage(), 'error');
+            Factory::getApplication() -> enqueueMessage($e->getMessage(), 'error');
         }
 
         $this->setRedirect('index.php?option=com_tz_portfolio_plus&view=template_styles');
@@ -67,7 +69,8 @@ class TZ_Portfolio_PlusControllerTemplate_Styles extends JControllerAdmin
         // Check for request forgeries
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-        JFactory::getLanguage() -> load('com_templates');
+        Factory::getApplication() -> getLanguage()
+            -> load('com_templates');
 
         $pks = $this->input->post->get('cid', array(), 'array');
 
@@ -88,7 +91,7 @@ class TZ_Portfolio_PlusControllerTemplate_Styles extends JControllerAdmin
         }
         catch (Exception $e)
         {
-            JFactory::getApplication() -> enqueueMessage($e->getMessage(), 'error');
+            Factory::getApplication() -> enqueueMessage($e->getMessage(), 'error');
         }
 
         $this->setRedirect('index.php?option=com_tz_portfolio_plus&view=template_styles');
@@ -99,7 +102,8 @@ class TZ_Portfolio_PlusControllerTemplate_Styles extends JControllerAdmin
         // Check for request forgeries
         JSession::checkToken('request') or jexit(JText::_('JINVALID_TOKEN'));
 
-        JFactory::getLanguage() -> load('com_templates');
+        Factory::getApplication() -> getLanguage()
+            -> load('com_templates');
 
         $pks    = $this->input->get->get('cid', array(), 'array');
         $pks    = ArrayHelper::toInteger($pks);
@@ -119,7 +123,7 @@ class TZ_Portfolio_PlusControllerTemplate_Styles extends JControllerAdmin
         }
         catch (Exception $e)
         {
-            JFactory::getApplication() -> enqueueMessage($e->getMessage(), 'error');
+            Factory::getApplication() -> enqueueMessage($e->getMessage(), 'error');
         }
 
         $this->setRedirect('index.php?option=com_tz_portfolio_plus&view=template_styles');

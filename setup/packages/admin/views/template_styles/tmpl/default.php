@@ -20,9 +20,15 @@
 //no direct access
 defined('_JEXEC') or die('Restricted access');
 
-JHtml::_('formbehavior.chosen', 'select');
+use Joomla\CMS\Factory;
 
-$user		= JFactory::getUser();
+if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE){
+    JHtml::_('formbehavior.chosen', 'select[multiple]');
+}else {
+    JHtml::_('formbehavior.chosen', 'select');
+}
+
+$user		= Factory::getApplication() -> getIdentity();
 
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));

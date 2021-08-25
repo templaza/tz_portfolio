@@ -20,8 +20,9 @@
 // No direct access
 defined('_JEXEC') or die;
 
-use Joomla\Filesystem\File;
+use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
+use Joomla\CMS\Filesystem\File;
 use Joomla\Utilities\ArrayHelper;
 
 jimport('joomla.filesytem.file');
@@ -71,7 +72,7 @@ class TZ_Portfolio_PlusModelField extends JModelAdmin
 
     protected function loadFormData()
     {
-        $app  = JFactory::getApplication();
+        $app  = Factory::getApplication();
         $data = $app->getUserState('com_tz_portfolio_plus.edit.field.data', array());
 
         if (empty($data)) {
@@ -178,7 +179,7 @@ class TZ_Portfolio_PlusModelField extends JModelAdmin
             $core_path  = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.DIRECTORY_SEPARATOR.'extrafields';
             $core_f_xml_path    = $core_path.DIRECTORY_SEPARATOR.$type.DIRECTORY_SEPARATOR
                 .'admin'.DIRECTORY_SEPARATOR.'models'.DIRECTORY_SEPARATOR.'forms'.DIRECTORY_SEPARATOR.'field.xml';
-            if(\JFile::exists($core_f_xml_path)){
+            if(File::exists($core_f_xml_path)){
                 $form -> loadFile($core_f_xml_path, false, '/form/fields[@name="params"]');
             }
 
@@ -327,7 +328,7 @@ class TZ_Portfolio_PlusModelField extends JModelAdmin
     {
         if (!empty($record->id))
         {
-            $user = JFactory::getUser();
+            $user = Factory::getUser();
 
             $state  = $user->authorise('core.delete', $this->option.'.field.' . (int) $record->id)
                 || ($user->authorise('core.delete.own', $this->option.'.field.' . (int) $record->id)
@@ -340,7 +341,7 @@ class TZ_Portfolio_PlusModelField extends JModelAdmin
 
     protected function canEditState($record)
     {
-        $user = JFactory::getUser();
+        $user = Factory::getUser();
 
         // Check for existing category.
         if (!empty($record->id))

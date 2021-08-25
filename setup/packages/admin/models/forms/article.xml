@@ -233,7 +233,7 @@
 
 			<field type="list" name="cat_link_author"
 					label="JGLOBAL_LINK_AUTHOR_LABEL"
-					description="JGLOBAL_LINK_AUTHOR_DESC">
+					description="COM_TZ_PORTFOLIO_PLUS_LINK_AUTHOR_DESC">
 				<option	value="">COM_TZ_PORTFOLIO_PLUS_OPTION_INHERIT_FROM_CATEGORY</option>
 				<option	value="0">JNO</option>
 				<option	value="1">JYES</option>
@@ -264,8 +264,8 @@
 			</field>
 
 			<field type="list" name="show_cat_icons"
-					label="JGLOBAL_SHOW_ICONS_LABEL"
-					description="JGLOBAL_SHOW_ICONS_DESC">
+					label="COM_TZ_PORTFOLIO_PLUS_SHOW_ICONS_LABEL"
+					description="COM_TZ_PORTFOLIO_PLUS_SHOW_ICONS_DESC">
 				<option value="">COM_TZ_PORTFOLIO_PLUS_OPTION_INHERIT_FROM_CATEGORY</option>
 				<option	value="0">JHIDE</option>
 				<option	value="1">JSHOW</option>
@@ -288,8 +288,8 @@
 			</field>
 
 			<field type="list" name="show_cat_hits"
-					label="JGLOBAL_SHOW_HITS_LABEL"
-					description="JGLOBAL_SHOW_HITS_DESC">
+					label="COM_TZ_PORTFOLIO_PLUS_SHOW_HITS_LABEL"
+					description="COM_TZ_PORTFOLIO_PLUS_SHOW_HITS_DESC">
 				<option	value="">COM_TZ_PORTFOLIO_PLUS_OPTION_INHERIT_FROM_CATEGORY</option>
 				<option	value="0">JHIDE</option>
 				<option	value="1">JSHOW</option>
@@ -370,7 +370,7 @@
 
 			<field type="list" name="link_author"
 				   label="JGLOBAL_LINK_AUTHOR_LABEL"
-				   description="JGLOBAL_LINK_AUTHOR_DESC">
+				   description="COM_TZ_PORTFOLIO_PLUS_LINK_AUTHOR_DESC">
 				<option	value="">COM_TZ_PORTFOLIO_PLUS_OPTION_INHERIT_FROM_CATEGORY</option>
 				<option	value="0">JNO</option>
 				<option	value="1">JYES</option>
@@ -403,8 +403,8 @@
 			<field type="spacer" name="spacer_hr-2" hr="true"/>
 			<field name="show_icons"
 				   type="list"
-				   label="JGLOBAL_SHOW_ICONS_LABEL"
-				   description="JGLOBAL_SHOW_ICONS_DESC">
+				   label="COM_TZ_PORTFOLIO_PLUS_SHOW_ICONS_LABEL"
+				   description="COM_TZ_PORTFOLIO_PLUS_SHOW_ICONS_DESC">
 				<option value="">COM_TZ_PORTFOLIO_PLUS_OPTION_INHERIT_FROM_CATEGORY</option>
 				<option	value="0">JHIDE</option>
 				<option	value="1">JSHOW</option>

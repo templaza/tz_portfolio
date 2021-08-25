@@ -118,7 +118,9 @@ class JHtmlIcon
             return;
         }
 
-        JHtml::_('behavior.tooltip');
+        if(!COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+            JHtml::_('behavior.tooltip');
+        }
 
         // Show checked_out icon if the article is checked out by a different user
         if (property_exists($article, 'checked_out') && property_exists($article, 'checked_out_time') && $article->checked_out > 0 && $article->checked_out != $user->get('id')) {
@@ -232,7 +234,7 @@ class JHtmlIcon
 
     public static function getIcon($code) {
         jimport('joomla.filesytem.file');
-        $json   =   JFile::read(JPATH_ROOT.DIRECTORY_SEPARATOR.'media'.DIRECTORY_SEPARATOR.'tz_portfolio_plus'.DIRECTORY_SEPARATOR.'icomoon'.DIRECTORY_SEPARATOR.'selection.json');
+        $json   =   file_get_contents(JPATH_ROOT.DIRECTORY_SEPARATOR.'media'.DIRECTORY_SEPARATOR.'tz_portfolio_plus'.DIRECTORY_SEPARATOR.'icomoon'.DIRECTORY_SEPARATOR.'selection.json');
         $data   =   json_decode($json);
         $icons  =   $data->icons;
         foreach ($icons as $icon) {

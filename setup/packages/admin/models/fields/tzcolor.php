@@ -20,6 +20,8 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 class JFormFieldTZColor extends JFormField
 {
     /**
@@ -167,8 +169,8 @@ class JFormFieldTZColor extends JFormField
         // Add Script
         if (!self::$initialised)
         {
-            JFactory::getDocument() -> addStyleSheet(JUri::root().'/administrator/components/com_tz_portfolio_plus/css/spectrum.min.css', array('version' => 'auto'));
-            JFactory::getDocument() -> addScript(JUri::root().'/administrator/components/com_tz_portfolio_plus/js/spectrum.min.js', array('version' => 'auto'));
+            Factory::getApplication() -> getDocument() -> addStyleSheet(JUri::root().'/administrator/components/com_tz_portfolio_plus/css/spectrum.min.css', array('version' => 'auto'));
+            Factory::getApplication() -> getDocument() -> addScript(JUri::root().'/administrator/components/com_tz_portfolio_plus/js/spectrum.min.js', array('version' => 'auto'));
 
             self::$initialised = true;
         }
@@ -219,7 +221,7 @@ class JFormFieldTZColor extends JFormField
         });';
 
         // Add the script to the document head.
-        JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
+        Factory::getApplication() -> getDocument()->addScriptDeclaration(implode("\n", $script));
 
         // Translate placeholder text
         $hint = $this->translateHint ? JText::_($this->hint) : $this->hint;

@@ -20,6 +20,7 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 class TZ_Portfolio_Plus_AddonModelList extends JModelList
@@ -47,7 +48,7 @@ class TZ_Portfolio_Plus_AddonModelList extends JModelList
         parent::populateState('id', 'asc');
 
         // Get the pk of the record from the request.
-        $pk = JFactory::getApplication()->input->getInt('addon_id');
+        $pk = Factory::getApplication()->input->getInt('addon_id');
         $this->setState($this -> getName().'.addon_id', $pk);
     }
 

@@ -19,6 +19,8 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 jimport('joomla.application.component.controlleradmin');
 
 /**
@@ -29,7 +31,7 @@ class TZ_Portfolio_PlusControllerCategories extends JControllerAdmin
     protected $input    = null;
 
     public function __construct($config = array()){
-        $this -> input  = JFactory::getApplication() -> input;
+        $this -> input  = Factory::getApplication() -> input;
         parent::__construct($config);
     }
 	/**
@@ -126,7 +128,7 @@ class TZ_Portfolio_PlusControllerCategories extends JControllerAdmin
 			}
 		}
 		// Close the application
-		JFactory::getApplication()->close();
+		Factory::getApplication()->close();
 
 	}
 

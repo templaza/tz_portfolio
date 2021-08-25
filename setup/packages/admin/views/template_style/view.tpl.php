@@ -20,6 +20,7 @@
 //no direct access
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
 
 class TZ_Portfolio_PlusViewTemplate_Style extends JViewLegacy
 {
@@ -34,7 +35,7 @@ class TZ_Portfolio_PlusViewTemplate_Style extends JViewLegacy
         $this -> state  = $this -> get('State');
 
         parent::display($tpl);
-        $app    = JFactory::getApplication();
+        $app    = Factory::getApplication();
         $app -> close();
     }
     protected function get_value($item, $method){

@@ -20,6 +20,7 @@
 // No direct access
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
 use Joomla\Utilities\ArrayHelper;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
@@ -58,7 +59,7 @@ class TZ_Portfolio_PlusModelFields extends JModelList{
     public function populateState($ordering = 'f.id', $direction = 'desc'){
 
         parent::populateState($ordering, $direction);
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
 
 
         $group  = $this -> getUserStateFromRequest($this->context.'.filter.group','filter_group',0);

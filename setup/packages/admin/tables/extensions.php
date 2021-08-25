@@ -20,6 +20,9 @@
 //no direct access
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
+
 class TZ_Portfolio_PlusTableExtensions extends JTable
 {
     function __construct(&$db)
@@ -54,7 +57,7 @@ class TZ_Portfolio_PlusTableExtensions extends JTable
     protected function _getAssetTitle()
     {
         $text   = null;
-        $lang   = JFactory::getLanguage();
+        $lang   = Factory::getApplication() -> getLanguage();
 
         if(isset($this -> folder) && isset($this -> element) && $this -> folder && $this -> element) {
             $text = 'PLG_' . strtoupper($this->folder . '_' . $this->element);
@@ -67,7 +70,7 @@ class TZ_Portfolio_PlusTableExtensions extends JTable
                 $_filename      = $this->folder . '_' . $this->element;
 
                 $prefix      = 'tp_addon_';
-                if(!\JFile::exists($basePath.'/language/'.$tag.'/'.$tag.'.'.$prefix.$_filename.'.ini')){
+                if(!File::exists($basePath.'/language/'.$tag.'/'.$tag.'.'.$prefix.$_filename.'.ini')){
                     $prefix = 'plg_';
                 }
                 $extension = $prefix . $_filename;

@@ -20,11 +20,10 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 jimport('joomla.application.component.view');
-//JHtml::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/helpers');
 JHtml::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/helpers/html');
-//JLoader::register('TZ_Portfolio_PlusContentHelper',
-//    JPATH_SITE.'/components/com_tz_portfolio_plus/helpers/article.php');
 
 /**
  * View class for a list of articles.
@@ -77,13 +76,15 @@ class TZ_Portfolio_PlusViewArticles extends JViewLegacy
         if ($this->getLayout() !== 'modal')
         {
             $this->addToolbar();
-            $this->sidebar = JHtmlSidebar::render();
+            if(!COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+                $this->sidebar = JHtmlSidebar::render();
+            }
         }
         else
         {
             // In article associations modal we need to remove language filter if forcing a language.
             // We also need to change the category filter to show show categories with All or the forced language.
-            if ($forcedLanguage = JFactory::getApplication()->input->get('forcedLanguage', '', 'CMD'))
+            if ($forcedLanguage = Factory::getApplication()->input->get('forcedLanguage', '', 'CMD'))
             {
                 // If the language is forced we can't allow to select the language, so transform the language selector filter into a hidden field.
                 $languageXml = new SimpleXMLElement('<field name="language" type="hidden" default="' . $forcedLanguage . '" />');

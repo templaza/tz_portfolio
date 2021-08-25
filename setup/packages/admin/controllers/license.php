@@ -20,6 +20,9 @@
 // No direct access.
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
+
 jimport('joomla.application.component.controllerform');
 
 class TZ_Portfolio_PlusControllerLicense extends JControllerForm
@@ -71,7 +74,7 @@ class TZ_Portfolio_PlusControllerLicense extends JControllerForm
     public function activePro(){
         $uri        = JUri::getInstance();
         $license    = $this -> input -> get('license');
-        $lang       = JFactory::getApplication('administrator') -> getLanguage();
+        $lang       = Factory::getApplication('administrator') -> getLanguage();
 
         $response = \JHttpFactory::getHttp()->post(COM_TZ_PORTFOLIO_PLUS_ACTIVE_LICENSE,
             array(
@@ -96,18 +99,18 @@ class TZ_Portfolio_PlusControllerLicense extends JControllerForm
 
                 $licPath    = COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/includes/license.php';
 
-                if(JFile::exists($licPath)){
-                    JFile::delete($licPath);
+                if(File::exists($licPath)){
+                    File::delete($licPath);
                 }
 
-                JFile::write($licPath, $data);
+                File::write($licPath, $data);
 
                 $_result -> state   = 200;
                 $_result -> success   = true;
                 $_result -> message = JText::_('COM_TZ_PORTFOLIO_PLUS_SETUP_ACTIVE_PRO_VERSION_SUCCESS');
                 $_result -> license = $license;
 
-                $app    = JFactory::getApplication();
+                $app    = Factory::getApplication();
                 $app -> enqueueMessage(JText::_('COM_TZ_PORTFOLIO_PLUS_SETUP_ACTIVE_PRO_VERSION_SUCCESS'));
                 $app->getSession()->set('application.queue', $app->getMessageQueue());
 
@@ -145,15 +148,15 @@ class TZ_Portfolio_PlusControllerLicense extends JControllerForm
         $result = new stdClass();
         $file   = COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/includes/license.php';
 
-        if(JFile::exists($file)){
-            JFile::delete($file);
+        if(File::exists($file)){
+            File::delete($file);
         }
 
         $result -> state    = 200;
         $result -> success  = true;
         $result -> message  = JText::_('COM_TZ_PORTFOLIO_PLUS_DELETED_LICENSE');
 
-        $app    = JFactory::getApplication();
+        $app    = Factory::getApplication();
         $app -> enqueueMessage(JText::_('COM_TZ_PORTFOLIO_PLUS_DELETED_LICENSE'));
         $app->getSession()->set('application.queue', $app->getMessageQueue());
 

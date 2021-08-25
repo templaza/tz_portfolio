@@ -24,13 +24,15 @@
 // no direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
+
 if($itemsServer = $this -> itemsServer){
     $loading    = '<span class="loading"><span class="tps tp-sync-alt text-update tp-spin"></span> '
         .JText::_('COM_TZ_PORTFOLIO_PLUS_INSTALLING').'</span>';
     $installed  = '<span class="installed"><span class="tps tp-check"></span> '
         .JText::_('COM_TZ_PORTFOLIO_PLUS_INSTALLED').'</span>';
     ?>
-        <?php
+    <?php
     foreach ($itemsServer as $i => $item) {
         $detailUrl  = $item -> link;
         if(strpos($detailUrl,'?')){
@@ -39,6 +41,7 @@ if($itemsServer = $this -> itemsServer){
             $detailUrl  .= '?tmpl=component';
         }
 
+        $modal_id   = 'tpp-addon__modal-detail-'.$i;
         $addon      = null;
         $version    = $item -> installedVersion;
         ?>
@@ -46,7 +49,7 @@ if($itemsServer = $this -> itemsServer){
             <div class="tpp-extension__item">
                 <div class="top">
                     <h3 class="title">
-                        <a data-toggle="modal" href="#tpp-addon__modal-detail-<?php echo $i; ?>">
+                        <a data-toggle="modal" data-bs-toggle="modal" href="#<?php echo $modal_id; ?>">
                             <?php echo $item -> title; ?>
                             <?php if(isset($item -> imageUrl) && $item -> imageUrl){ ?>
                                 <img src="<?php echo $item -> imageUrl;?>" alt="<?php echo $item -> title; ?>">
@@ -54,7 +57,7 @@ if($itemsServer = $this -> itemsServer){
                         </a>
                     </h3>
                     <div class="action-links">
-                        <ul class="pl-0">
+                        <ul class="pl-0 ps-0">
                             <?php
                         $addOnButton    = null;
                         if($item -> pProduce && $item -> pProduce -> pCommercial == true && !$item -> pProduce -> pHasPurchased) {
@@ -116,7 +119,7 @@ if($itemsServer = $this -> itemsServer){
                                 </li>
                             <?php } ?>
                             <li>
-                                <a data-toggle="modal" href="#tpp-addon__modal-detail-<?php echo $i;
+                                <a data-toggle="modal" data-bs-toggle="modal" href="#<?php echo $modal_id;
                                 ?>" data-url="<?php echo $detailUrl; ?>"><?php
                                 echo JText::_('COM_TZ_PORTFOLIO_PLUS_MORE_DETAIL');?></a>
                             </li>
@@ -132,20 +135,22 @@ if($itemsServer = $this -> itemsServer){
                         </p>
                     </div>
                     <?php
-                echo JHtml::_(
-                    'bootstrap.renderModal',
-                    'tpp-addon__modal-detail-'.$i,
-                    array(
-                        'url'        => $detailUrl,
+                    $modalData  = array(
                         'title'      => $item -> title,
+                        'url'        => $detailUrl,
                         'width'      => '400px',
                         'height'     => '800px',
                         'modalWidth' => '70',
                         'bodyHeight' => '70',
                         'closeButton' => true,
-                        'footer'      => '<a class="btn" data-dismiss="modal" aria-hidden="true">' . JText::_('JCANCEL') . '</a>',
-                    )
-                );
+                        'modal-dialog-scrollable' => true,
+                        'footer'      => '<a class="btn" data-dismiss="modal" data-bs-dismiss="modal" aria-hidden="true">' . JText::_('JCANCEL') . '</a>',
+                    );
+                    echo HTMLHelper::_(
+                        'bootstrap.renderModal',
+                        $modal_id,
+                        $modalData
+                    );
                 ?>
                 </div>
                 <div class="bottom">

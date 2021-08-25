@@ -246,7 +246,7 @@ class TZ_Portfolio_PlusRouter extends RouterBase
                 if (isset($menuItem->query['id'])) {
                     $mCatid = $menuItem->query['id'];
                 } else {
-                    $catids = $menuItem->params->get('catid');
+                    $catids = $menuItem->getParams()->get('catid');
                     if ($catids) {
                         $mCatid = $catids;
                     } else {
@@ -627,7 +627,7 @@ class TZ_Portfolio_PlusRouter extends RouterBase
                 if (isset($menuItem->query['id'])) {
                     $mCatid = $menuItem->query['id'];
                 } else {
-                    $catids = $menuItem->params->get('catid');
+                    $catids = $menuItem->getParams()->get('catid');
                     if ($catids) {
                         $mCatid = $catids;
                     } else {
@@ -1072,7 +1072,7 @@ class TZ_Portfolio_PlusRouter extends RouterBase
                 return $vars;
             }
 
-            $temp = ($item && isset($item -> params))?$item->params:(new Registry());
+            $temp = ($item && !empty($item -> getParams()))?$item->getParams():(new Registry());
             $menuParams = clone($params);
             $menuParams->merge($temp);
 
@@ -1415,7 +1415,7 @@ class TZ_Portfolio_PlusRouter extends RouterBase
                 return $vars;
             }
 
-            $temp = $item->params;
+            $temp = $item->getParams();
             $menuParams = clone($params);
             $menuParams->merge($temp);
 

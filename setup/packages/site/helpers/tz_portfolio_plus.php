@@ -24,7 +24,7 @@
 // no direct access
 defined('_JEXEC') or die;
 
-use Joomla\Filesystem\File;
+use Joomla\CMS\Filesystem\File;
 
 jimport('joomla.filesystem.file');
 
@@ -38,7 +38,7 @@ class TZ_Portfolio_PlusFrontHelper{
         }
         $newUrl     = $url;
         if($size) {
-            $newUrlExt  = \JFile::getExt($url);
+            $newUrlExt  = File::getExt($url);
             $newUrl     = str_replace('.' . $newUrlExt, '_' . $size . '.' . $newUrlExt, $newUrl);
         }
 
@@ -56,9 +56,24 @@ class TZ_Portfolio_PlusFrontHelper{
             return self::$cache[$storeId];
         }
 
-        $doc    = JFactory::getDocument();
-        if(preg_match($funcRegex, $doc -> _script["text/javascript"], $match, $flags)){
-            return true;
+//        if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE){
+//            return false;
+////            var_dump(\Joomla\CMS\Factory::getApplication() -> getDocument() -> getWebAssetManager() -> getAssets('text/javascript')); die();
+//        }else {
+            $doc = JFactory::getDocument();
+//        }
+
+        $script = $doc -> _script['text/javascript'];
+        if(is_array($script)){
+            foreach($script as $sstr){
+                if(preg_match($funcRegex, $sstr, $match, $flags)){
+                    return true;
+                }
+            }
+        }else{
+            if(preg_match($funcRegex, $doc -> _script["text/javascript"], $match, $flags)){
+                return true;
+            }
         }
         return false;
     }

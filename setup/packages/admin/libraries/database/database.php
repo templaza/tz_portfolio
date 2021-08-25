@@ -26,6 +26,7 @@ namespace TZ_Portfolio_Plus\Database;
 // no direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 
 class TZ_Portfolio_PlusDatabase{
 
@@ -43,7 +44,7 @@ class TZ_Portfolio_PlusDatabase{
             $query = self::$cache[$storeId];
         }
 
-        $db    = \JFactory::getDbo();
+        $db    = Factory::getDbo();
         if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE && !$fullGroup && !$query){
             $db->setQuery("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
             self::$cache[$storeId]  = $db->execute();

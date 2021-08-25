@@ -41,7 +41,10 @@ class TZ_Portfolio_PlusViewFields extends JViewLegacy
         TZ_Portfolio_PlusHelper::addSubmenu('fields');
 
         $this -> addToolbar();
-        $this -> sidebar    = JHtmlSidebar::render();
+
+        if(!COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+            $this->sidebar = JHtmlSidebar::render();
+        }
 
         parent::display($tpl);
     }

@@ -32,7 +32,7 @@ $extension	= $this->escape($this->state->get('filter.extension'));
 ?>
 <div class="modal hide fade" id="collapseModal">
 	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal">x</button>
+		<button type="button" class="close" data-dismiss="modal" data-bs-dismiss="modal">x</button>
 		<h3><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_CATEGORIES_BATCH_OPTIONS');?></h3>
 	</div>
 	<div class="modal-body">
@@ -65,7 +65,7 @@ $extension	= $this->escape($this->state->get('filter.extension'));
 		<?php endif; ?>
 	</div>
 	<div class="modal-footer">
-		<button class="btn" type="button" onclick="document.id('batch-category-id').value='';document.id('batch-access').value='';document.id('batch-language-id').value=''" data-dismiss="modal">
+		<button class="btn" type="button" onclick="document.id('batch-category-id').value='';document.id('batch-access').value='';document.id('batch-language-id').value=''" data-dismiss="modal" data-bs-dismiss="modal">
 			<?php echo JText::_('JCANCEL'); ?>
 		</button>
 		<button class="btn btn-primary" type="submit" onclick="Joomla.submitbutton('category.batch');">

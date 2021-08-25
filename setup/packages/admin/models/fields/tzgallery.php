@@ -19,6 +19,8 @@
 
 defined('JPATH_PLATFORM') or die;
 
+use Joomla\CMS\Factory;
+
 /**
  * Form Field class for the Joomla Platform.
  *
@@ -51,7 +53,7 @@ class JFormFieldTZGallery extends JFormField
     {
         $this -> value  = (object) $this -> value;
         $class = !empty($this->class) ? ' class="' . $this->class . '"' : '';
-        $app            =   JFactory::getApplication();
+        $app            =   Factory::getApplication();
         $input          =   $app -> input;
         $gallery_tmp       =   uniqid('gallery_');
         $gallery_file_type =   'bmp,gif,jpg,jpeg,png';
@@ -60,7 +62,7 @@ class JFormFieldTZGallery extends JFormField
             $gallery_file_type[$i]  =   '"'.trim($gallery_file_type[$i]).'"';
         }
         $gallery_file_type=   is_array($gallery_file_type) ? implode(',', $gallery_file_type) : '';
-        $doc            = \JFactory::getDocument();
+        $doc            = Factory::getApplication() -> getDocument();
         $doc->addStyleSheet(JUri::root().'media/tz_portfolio_plus/dm_uploader/css/jquery.dm-uploader.min.css');
         $doc->addStyleSheet(JUri::root().'media/tz_portfolio_plus/gallery_upload/css/style.css');
         $doc->addScript(JUri::root().'media/tz_portfolio_plus/dm_uploader/js/jquery.dm-uploader.min.js');

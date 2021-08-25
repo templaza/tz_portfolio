@@ -57,7 +57,7 @@ echo JHtml::_(
         'modalWidth' => '40',
         'closeButton' => true,
         'class'       => 'tpp-dialog-modal',
-        'footer'      => '<a class="btn btn-default" data-dismiss="modal" href="javascript:void(0);">'
+        'footer'      => '<a class="btn btn-default" data-dismiss="modal" data-bs-dismiss="modal" href="javascript:void(0);">'
             . JText::_('JCANCEL') . '</a><a class="btn btn-primary" href="javascript:void(0);" data-submit-button>'
             . JText::_('COM_TZ_PORTFOLIO_PLUS_REJECT') . '</a>',
     ),

@@ -7,7 +7,7 @@
     <license>GNU/GPL v2 or later http://www.gnu.org/licenses/gpl-2.0.html</license>
     <authorEmail>support@templaza.com</authorEmail>
     <authorUrl>www.tzportfolio.com/</authorUrl>
-    <version>2.4.2</version>
+    <version>2.5.0</version>
     <description>MOD_TZ_PORTFOLIO_PLUS_FILTER_XML_DESCRIPTION</description>
     <files>
         <filename module="mod_tz_portfolio_plus_filter">mod_tz_portfolio_plus_filter.php</filename>
@@ -32,17 +32,19 @@
                 </field>
                 <field type="radio" name="show_search_word"
                        default="1" class="switcher btn-group btn-group-yesno"
+                       layout="joomla.form.field.radio.switcher"
                        label="MOD_TZ_PORTFOLIO_PLUS_FIELDS_SHOW_SEARCH_WORD_LABEL">
-                    <option value="1">JYES</option>
                     <option value="0">JNO</option>
+                    <option value="1">JYES</option>
                 </field>
 
                 <field type="radio" name="show_box_label"
                        default="1" class="switcher btn-group"
+                       layout="joomla.form.field.radio.switcher"
                        showon="show_search_word:1"
                        label="MOD_TZ_PORTFOLIO_PLUS_FIELDS_SHOW_BOX_LABEL">
-                    <option value="1">JYES</option>
                     <option value="0">JNO</option>
+                    <option value="1">JYES</option>
                 </field>
 
                 <field type="label" name="label"
@@ -61,22 +63,24 @@
                         description="MOD_TZ_PORTFOLIO_PLUS_FILTER_FIELD_TEXT_DESC"/>
 
                 <field type="radio" name="button"
+                       layout="joomla.form.field.radio.switcher"
                         label="MOD_TZ_PORTFOLIO_PLUS_FILTER_FIELD_BUTTON_LABEL"
                         description="MOD_TZ_PORTFOLIO_PLUS_FILTER_FIELD_BUTTON_DESC"
                         default="1"
                         class="switcher btn-group btn-group-yesno">
-                    <option value="1">JYES</option>
                     <option value="0">JNO</option>
+                    <option value="1">JYES</option>
                 </field>
 
                 <field type="radio" name="imagebutton"
+                       layout="joomla.form.field.radio.switcher"
                         label="MOD_TZ_PORTFOLIO_PLUS_FILTER_FIELD_IMAGEBUTTON_LABEL"
                         description="MOD_TZ_PORTFOLIO_PLUS_FILTER_FIELD_IMAGEBUTTON_DESC"
                         default="0"
                         class="switcher btn-group btn-group-yesno"
                         showon="button:1">
-                    <option value="1">JYES</option>
                     <option value="0">JNO</option>
+                    <option value="1">JYES</option>
                 </field>
                 <field type="media" name="icon"
                        label="MOD_TZ_PORTFOLIO_PLUS_FIELD_ICON_LABEL"
@@ -90,20 +94,22 @@
                         description="MOD_TZ_PORTFOLIO_PLUS_FILTER_FIELD_BUTTONTEXT_DESC"
                         showon="button:1"/>
                 <field type="radio" name="show_category"
+                       layout="joomla.form.field.radio.switcher"
                        default="0" class="switcher btn-group btn-group-yesno"
                        label="JGLOBAL_SHOW_CATEGORY_LABEL">
-                    <option value="1">JYES</option>
                     <option value="0">JNO</option>
+                    <option value="1">JYES</option>
                 </field>
                 <field type="text" name="category_text"
                        showon="show_category:1"
                        label="MOD_TZ_PORTFOLIO_PLUS_FILTER_CATEGORY_TEXT_LABEL"/>
                 <field type="radio" name="show_category_text"
                        default="1" class="switcher btn-group"
+                       layout="joomla.form.field.radio.switcher"
                        showon="show_category:1"
                        label="MOD_TZ_PORTFOLIO_PLUS_FILTER_SHOW_CATEGORY_TEXT_LABEL">
-                    <option value="1">JYES</option>
                     <option value="0">JNO</option>
+                    <option value="1">JYES</option>
                 </field>
                 <field type="tzcategory" name="parent_cat"
                        show_root="true"
@@ -112,17 +118,19 @@
                        description="MOD_TZ_PORTFOLIO_PLUS_FILTER_PARENT_CAT_DESC"/>
                 <field type="radio" name="show_parent_root"
                        default="1" class="switcher btn-group"
+                       layout="joomla.form.field.radio.switcher"
                        showon="show_category:1"
                        label="MOD_TZ_PORTFOLIO_PLUS_SHOW_PARENT_ROOT_LABEL">
-                    <option value="1">JYES</option>
                     <option value="0">JNO</option>
+                    <option value="1">JYES</option>
                 </field>
 
                 <field type="radio" name="show_fields"
+                       layout="joomla.form.field.radio.switcher"
                        default="1" class="switcher btn-group btn-group-yesno"
                        label="MOD_TZ_PORTFOLIO_PLUS_FIELDS_SHOW_FIELDS_LABEL">
-                    <option value="1">JYES</option>
                     <option value="0">JNO</option>
+                    <option value="1">JYES</option>
                 </field>
                 <field type="tzextrafields" name="fields"
                        multiple="true"
@@ -132,10 +140,11 @@
                     <option value="">MOD_TZ_PORTFOLIO_PLUS_SELECT_FIELDS</option>
                 </field>
                 <field type="radio" name="show_group_title"
+                       layout="joomla.form.field.radio.switcher"
                        default="0" class="switcher btn-group"
                        label="MOD_TZ_PORTFOLIO_PLUS_SHOW_GROUP_TITLE_LABEL">
-                    <option value="1">JYES</option>
                     <option value="0">JNO</option>
+                    <option value="1">JYES</option>
                 </field>
 
                 <field type="menuitem" name="set_itemid"
@@ -171,6 +180,7 @@
                 </field>
                 <field type="radio" name="enable_bootstrap"
                        default="0" class="switcher btn-group"
+                       layout="joomla.form.field.radio.switcher"
                        label="COM_TZ_PORTFOLIO_PLUS_ENABLE_BOOTSTRAP_LIBRARY_LABEL">
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
@@ -184,6 +194,7 @@
                 </field>
                 <field type="radio" name="enable_bootstrap_js"
                        default="1" class="switcher btn-group"
+                       layout="joomla.form.field.radio.switcher"
                        showon="enable_bootstrap:1"
                        label="COM_TZ_PORTFOLIO_PLUS_ENABLE_BOOTSTRAP_JS_LABEL">
                     <option value="0">JNO</option>

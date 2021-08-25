@@ -19,6 +19,7 @@
 
 defined('JPATH_BASE') or die;
 
+use Joomla\CMS\Factory;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 JLoader::import('framework',JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/includes');
@@ -56,7 +57,7 @@ class JFormFieldModal_Users extends JFormField
 		$script[] = '	}';
 
 		// Add the script to the document head.
-		JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
+		Factory::getApplication() -> getDocument()->addScriptDeclaration(implode("\n", $script));
 
 
 		// Setup variables for display.
@@ -86,7 +87,7 @@ class JFormFieldModal_Users extends JFormField
             $size   = ' size ="'.$this -> element['size'].'"';
         }
 
-		$html[] = '<div class="input-append">';
+		$html[] = '<div class="input-append input-group">';
 
 		$html[] = '  <input type="text" id="'.$this->id.'_name" value="'.$title.'" disabled="disabled"'.$size.'/>';
 

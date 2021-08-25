@@ -19,6 +19,8 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 $script  = 'function insertPagebreak() {'."\n\t";
 // Get the pagebreak title
 $script .= 'var title = document.getElementById("title").value;'."\n\t";
@@ -37,7 +39,7 @@ $script .= 'window.parent.SqueezeBox.close();'."\n\t";
 $script .= 'return false;'."\n";
 $script .= '}'."\n";
 
-JFactory::getDocument()->addScriptDeclaration($script);
+Factory::getApplication() -> getDocument()->addScriptDeclaration($script);
 ?>
 		<form>
 		<table width="100%" align="center">

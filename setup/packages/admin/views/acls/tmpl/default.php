@@ -22,7 +22,9 @@
 // no direct access
 defined('_JEXEC') or die;
 
-$user		= JFactory::getUser();
+use Joomla\CMS\Factory;
+
+$user		= Factory::getUser();
 ?>
 <form name="adminForm" id="adminForm" method="post" action="index.php?option=com_tz_portfolio_plus&view=acls">
 

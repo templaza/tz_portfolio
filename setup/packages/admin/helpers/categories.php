@@ -20,6 +20,7 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
@@ -51,7 +52,7 @@ class TZ_Portfolio_PlusHelperCategories
         // Check for a database error.
         if ($error = $db->getErrorMsg())
         {
-            JFactory::getApplication()  -> enqueueMessage($error, 'error');
+            Factory::getApplication()  -> enqueueMessage($error, 'error');
 
             return false;
         }

@@ -20,8 +20,9 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die;
 
-use Joomla\Filesystem\File;
+use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
+use Joomla\CMS\Filesystem\File;
 use Joomla\Utilities\ArrayHelper;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
@@ -61,7 +62,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
     {
         parent::populateState();
 
-        $app    = JFactory::getApplication();
+        $app    = Factory::getApplication();
 
         $filters = $app->getUserStateFromRequest($this->option . '.'.$this -> getName().'.filter', 'filter', array(), 'array');
         $this -> setState('filters', $filters);
@@ -110,7 +111,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
     }
 
     public function getForm($data = array(), $loadData = true){
-        $input  = JFactory::getApplication() -> input;
+        $input  = Factory::getApplication() -> input;
         // The folder and element vars are passed when saving the form.
         if (empty($data))
         {
@@ -144,9 +145,9 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
     }
     protected function loadFormData()
     {
-        $input  = JFactory::getApplication() -> input;
+        $input  = Factory::getApplication() -> input;
         // Check the session for previously entered form data.
-        $data = JFactory::getApplication()->getUserState('com_tz_portfolio_plus.edit.addon.data', array());
+        $data = Factory::getApplication()->getUserState('com_tz_portfolio_plus.edit.addon.data', array());
 
         if (empty($data))
         {
@@ -169,7 +170,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
 
     protected function preprocessForm(JForm $form, $data, $group = 'content')
     {
-        $input  = JFactory::getApplication() -> input;
+        $input  = Factory::getApplication() -> input;
 
         if($input -> getCmd('layout') != 'upload'){
             jimport('joomla.filesystem.path');
@@ -177,7 +178,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
 
             $folder		= $this->getState('item.folder');
             $element	= $this->getState('item.element');
-            $lang		= JFactory::getLanguage();
+            $lang		= Factory::getApplication() -> getLanguage();
 
             // Load the core and/or local language sys file(s) for the ordering field.
             $db     = $this -> getDbo();
@@ -190,7 +191,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
 
             if (empty($folder) || empty($element))
             {
-                $app = JFactory::getApplication();
+                $app = Factory::getApplication();
                 $app->redirect(JRoute::_('index.php?option=com_tz_portfolio_plus&view=addons', false));
             }
 
@@ -282,7 +283,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
 
     public function install()
     {
-        $app = \JFactory::getApplication();
+        $app = Factory::getApplication();
         $input = $app->input;
 
         // Load installer plugins for assistance if required:
@@ -395,7 +396,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
     public function uninstall($eid = array())
     {
         $user   = TZ_Portfolio_PlusUser::getUser();
-        $app    = JFactory::getApplication();
+        $app    = Factory::getApplication();
         $view   = $app -> input -> getCmd('view');
 
         if (!$user->authorise('core.delete', 'com_tz_portfolio_plus.addon'))
@@ -483,7 +484,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
     protected function _getPackageFromUpload()
     {
         // Get the uploaded file information.
-        $input    = JFactory::getApplication()->input;
+        $input    = Factory::getApplication()->input;
         // Do not change the filter type 'raw'. We need this to let files containing PHP code to upload. See JInputFiles::get.
         $userfile = $input->files->get('install_package', null, 'raw');
 
@@ -539,7 +540,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
         $tmp_dest	= JPATH_ROOT . '/tmp/tz_portfolio_plus_install/' . $userfile['name'];
         $tmp_src	= $userfile['tmp_name'];
 
-        if(!\JFile::exists(JPATH_ROOT . '/tmp/tz_portfolio_plus_install/index.html')){
+        if(!File::exists(JPATH_ROOT . '/tmp/tz_portfolio_plus_install/index.html')){
             File::write(JPATH_ROOT . '/tmp/tz_portfolio_plus_install/index.html',
                 htmlspecialchars_decode('<!DOCTYPE html><title></title>'));
         }
@@ -590,7 +591,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
             $plugin = TZ_Portfolio_PlusPluginHelper::getInstance($this->_cache[$pk] -> folder, $this->_cache[$pk] -> element);
 
             $this->_cache[$pk] -> data_manager        = false;
-            if(method_exists($plugin, 'getDataManager')){
+            if(is_object($plugin) && method_exists($plugin, 'getDataManager')){
                 $this->_cache[$pk] -> data_manager    = $plugin -> getDataManager();
             }
 
@@ -655,7 +656,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
     }
 
     public function getReturnLink(){
-        $input  = JFactory::getApplication() -> input;
+        $input  = Factory::getApplication() -> input;
         if($return = $input -> get('return', null, 'base64')){
             return $return;
         }
@@ -689,7 +690,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
     {
         if (!empty($record->id))
         {
-            $user = JFactory::getUser();
+            $user = Factory::getUser();
 
             if(isset($record -> asset_id) && !empty($record -> asset_id)) {
                 $state = $user->authorise('core.delete', $this->option . '.addon.' . (int)$record->id);
@@ -704,7 +705,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
 
     protected function canEditState($record)
     {
-        $user = JFactory::getUser();
+        $user = Factory::getUser();
 
         // Check for existing group.
         if (!empty($record->id))
@@ -750,7 +751,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
             $form = $this->loadForm($this->option . '.'.$this -> getName().'.filter', $this->filterFormName, array('control' => '', 'load_data' => $loadData));
 
             // Check the session for previously entered form data.
-            $filters = \JFactory::getApplication()->getUserState($this -> option.'.'.$this -> getName().'.filter', new \stdClass);
+            $filters = Factory::getApplication()->getUserState($this -> option.'.'.$this -> getName().'.filter', new \stdClass);
 
             $data   = new stdClass();
             $data -> filter = $filters;
@@ -783,7 +784,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
 
 
         // Get data from cache
-        if(\JFile::exists($cacheFile) && (filemtime($cacheFile) > (time() - $cacheTime ))){
+        if(File::exists($cacheFile) && (filemtime($cacheFile) > (time() - $cacheTime ))){
             $items  = file_get_contents($cacheFile);
             $items  = trim($items);
             if(!empty($items)){
@@ -1038,7 +1039,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
         // Load installer plugins, and allow URL and headers modification
         $headers = array();
         \JPluginHelper::importPlugin('installer');
-        \JFactory::getApplication() -> triggerEvent('onInstallerBeforePackageDownload', array(&$url, &$headers));
+        Factory::getApplication() -> triggerEvent('onInstallerBeforePackageDownload', array(&$url, &$headers));
 
         $response   = TZ_Portfolio_PlusHelper::getDataFromServer($url);
 
@@ -1078,7 +1079,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
 
         $tmp_dest	= JPATH_ROOT . '/tmp/tz_portfolio_plus_install/' . $target;
 
-        if(!\JFile::exists(JPATH_ROOT . '/tmp/tz_portfolio_plus_install/index.html')){
+        if(!File::exists(JPATH_ROOT . '/tmp/tz_portfolio_plus_install/index.html')){
             $html   = htmlspecialchars_decode('<!DOCTYPE html><title></title>');
             File::write(JPATH_ROOT . '/tmp/tz_portfolio_plus_install/index.html', $html);
         }

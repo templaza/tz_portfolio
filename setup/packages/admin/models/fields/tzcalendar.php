@@ -19,6 +19,8 @@
 
 defined('JPATH_PLATFORM') or die;
 
+use Joomla\CMS\Factory;
+
 /**
  * Form Field class for the Joomla Platform.
  *
@@ -91,8 +93,8 @@ class JFormFieldCalendar extends JFormField
 		}
 
 		// Get some system objects.
-		$config = JFactory::getConfig();
-		$user = JFactory::getUser();
+		$config = Factory::getConfig();
+		$user = Factory::getUser();
 
 		// If a known filter is given use it.
 		switch (strtoupper((string) $this->element['filter']))
@@ -102,7 +104,7 @@ class JFormFieldCalendar extends JFormField
 				if ((int) $this->value)
 				{
 					// Get a date object based on the correct timezone.
-					$date = JFactory::getDate($this->value, 'UTC');
+					$date = Factory::getDate($this->value, 'UTC');
 					$date->setTimezone(new DateTimeZone($config->get('offset')));
 
 					// Transform the date string.
@@ -115,7 +117,7 @@ class JFormFieldCalendar extends JFormField
 				if ((int) $this->value)
 				{
 					// Get a date object based on the correct timezone.
-					$date = JFactory::getDate($this->value, 'UTC');
+					$date = Factory::getDate($this->value, 'UTC');
 					$date->setTimezone(new DateTimeZone($user->getParam('timezone', $config->get('offset'))));
 
 					// Transform the date string.

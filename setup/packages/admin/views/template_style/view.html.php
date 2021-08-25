@@ -20,6 +20,7 @@
 //no direct access
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
 
 class TZ_Portfolio_PlusViewTemplate_Style extends JViewLegacy
 {
@@ -36,8 +37,8 @@ class TZ_Portfolio_PlusViewTemplate_Style extends JViewLegacy
 
     public function display($tpl=null)
     {
-        JFactory::getLanguage() -> load('com_templates');
-        $document   = JFactory::getDocument();
+        Factory::getApplication() -> getLanguage() -> load('com_templates');
+        $document   = Factory::getApplication() -> getDocument();
         $this -> document -> addCustomTag('<link rel="stylesheet" href="'.JUri::base(true).'/components/com_tz_portfolio_plus/css/admin-layout.min.css" type="text/css"/>');
         $this -> document -> addCustomTag('<link rel="stylesheet" href="'.JUri::base(true).'/components/com_tz_portfolio_plus/css/spectrum.min.css" type="text/css"/>');
 
@@ -82,9 +83,9 @@ class TZ_Portfolio_PlusViewTemplate_Style extends JViewLegacy
 
     protected function addToolbar(){
 
-        JFactory::getApplication()->input->set('hidemainmenu', true);
+        Factory::getApplication()->input->set('hidemainmenu', true);
 
-        $user   = JFactory::getUser();
+        $user   = Factory::getUser();
         $isNew  = ($this -> item -> id == 0);
         $canDo  = JHelperContent::getActions('com_tz_portfolio_plus');
 

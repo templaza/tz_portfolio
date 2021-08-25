@@ -20,6 +20,8 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 JFormHelper::loadFieldClass('list');
 
 class JFormFieldTZMediaTypes extends JFormFieldList
@@ -44,7 +46,7 @@ class JFormFieldTZMediaTypes extends JFormFieldList
         $_plugin_group  = $element['plugin_group']?$element['plugin_group']:'mediatype';
 
         if($plugins = TZ_Portfolio_PlusPluginHelper::getPlugin($_plugin_group)){
-            $lang   = JFactory::getLanguage();
+            $lang   = Factory::getApplication() -> getLanguage();
             foreach($plugins as $plugin){
                 $std    = new stdClass();
                 $std -> value   = $plugin -> name;

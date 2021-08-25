@@ -20,6 +20,7 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\String\StringHelper;
 use Joomla\Utilities\ArrayHelper;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
@@ -127,7 +128,7 @@ class TZ_Portfolio_PlusModelTag extends JModelAdmin
     }
 
     public function save($data){
-        $app    = JFactory::getApplication();
+        $app    = Factory::getApplication();
         $input = $app->input;
         $articlesAssignment = null;
 
@@ -141,7 +142,7 @@ class TZ_Portfolio_PlusModelTag extends JModelAdmin
             if((!isset($data['id']) || (int) $data['id'] == 0)){
                 if ($data['alias'] == null)
                 {
-                    if (JFactory::getConfig()->get('unicodeslugs') == 1)
+                    if (Factory::getConfig()->get('unicodeslugs') == 1)
                     {
                         $data['alias'] = JFilterOutput::stringURLUnicodeSlug($data['title']);
                     }
@@ -284,7 +285,7 @@ class TZ_Portfolio_PlusModelTag extends JModelAdmin
     {
         if (!empty($record->id))
         {
-            $user = JFactory::getUser();
+            $user = Factory::getUser();
 
             if(isset($record -> asset_id) && !empty($record -> asset_id)) {
                 $state = $user->authorise('core.delete', $this->option . '.tag.' . (int)$record->id);
@@ -299,7 +300,7 @@ class TZ_Portfolio_PlusModelTag extends JModelAdmin
 
     protected function canEditState($record)
     {
-        $user = JFactory::getUser();
+        $user = Factory::getUser();
 
         // Check for existing tag.
         if (!empty($record->id))

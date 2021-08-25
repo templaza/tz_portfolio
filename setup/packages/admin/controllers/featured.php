@@ -20,7 +20,7 @@
 // no direct access
 defined('_JEXEC') or die;
 
-
+use Joomla\CMS\Factory;
 
 require_once dirname(__FILE__).'/articles.php';
 
@@ -34,10 +34,10 @@ class TZ_Portfolio_PlusControllerFeatured extends TZ_Portfolio_PlusControllerArt
 		// Check for request forgeries
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
 		
 		// Initialise variables.
-		$user	= JFactory::getUser();
+		$user	= Factory::getUser();
 		$ids	= $this -> input -> get('cid', array(), 'array');
 
 		// Access checks.

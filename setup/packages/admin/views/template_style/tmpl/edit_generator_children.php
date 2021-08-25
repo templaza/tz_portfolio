@@ -62,14 +62,14 @@ if($children   = $this -> childrens){
 
                         <div class="<?php echo ($this -> get_value($children,"type")=='component' or $this -> get_value($children,"type")=='message') ? 'type-'.$this -> get_value($children,"type"):'' ?>  span<?php echo $this -> get_value($children,"col-lg"); ?> column <?php echo ( empty($children -> {"col-lg-offset"})?'':'offset'.$children->{"col-lg-offset"})?>">
 
-                                                                                                                        <span class="position-name"><?php echo $children ->type;
-                                                                                                                            ?></span>
-                                                                                                                        <span class="columntools">
-                                                                                                                            <a href="#columnsettingbox" rel="popover" data-placement="bottom" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_COLUMN_SETTINGS');?>" class="tps tp-cog rowcolumnspop"></a>
-                                                                                                                            <a href="" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ADD_NEW_ROW');?>" class="tps tp-bars add-rowin-column"></a>
-                                                                                                                            <a href="" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_REMOVE_COLUMN');?>" class="tps tp-times columndelete"></a>
-                                                                                                                            <a href="" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_MOVE_COLUMN');?>" class="tps tp-arrows-alt columnmove"></a>
-                                                                                                                        </span>
+                            <span class="position-name"><?php echo $children ->type;
+                                ?></span>
+                            <span class="columntools">
+                                <a href="#columnsettingbox" rel="popover" data-placement="bottom" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_COLUMN_SETTINGS');?>" class="tps tp-cog rowcolumnspop"></a>
+                                <a href="" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ADD_NEW_ROW');?>" class="tps tp-bars add-rowin-column"></a>
+                                <a href="" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_REMOVE_COLUMN');?>" class="tps tp-times columndelete"></a>
+                                <a href="" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_MOVE_COLUMN');?>" class="tps tp-arrows-alt columnmove"></a>
+                            </span>
 
                             <input type="hidden" class="widthinput-xs" name="" value="<?php echo $this -> get_value($children,"col-xs") ?>">
                             <input type="hidden" class="widthinput-sm" name="" value="<?php echo $this -> get_value($children,"col-sm") ?>">

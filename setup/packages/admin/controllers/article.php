@@ -20,7 +20,7 @@
 // No direct access
 defined('_JEXEC') or die;
 
-use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Factory;
 
 jimport('joomla.application.component.controllerform');
 
@@ -53,7 +53,7 @@ class TZ_Portfolio_PlusControllerArticle extends TZ_Portfolio_PlusControllerArti
             $total          = $model->getTotal();
 
             if($total >= $maxArticles){
-                JFactory::getApplication() -> enqueueMessage(JText::sprintf('COM_TZ_PORTFOLIO_PLUS_ARTICLE_LIMIT_ERROR',
+                Factory::getApplication() -> enqueueMessage(JText::sprintf('COM_TZ_PORTFOLIO_PLUS_ARTICLE_LIMIT_ERROR',
                     $maxArticles), 'error');
                 $allow  = false;
             }

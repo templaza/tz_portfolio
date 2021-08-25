@@ -22,16 +22,17 @@ defined('_JEXEC') or die;
 extract($displayData);
 
 JHtml::_('jquery.framework');
+
 ?>
 <fieldset id="<?php echo $id; ?>" class="checkboxes <?php echo $class; ?>"<?php echo $required?' required aria-required="true"':'';
-    echo $autofocus?' autofocus':'' ; ?>>
+echo $autofocus?' autofocus':'' ; ?>>
     <div class="btn-toolbar">
-        <button class="btn btn-sm btn-secondary jform-rightbtn" type="button" onclick="jQuery('.chk-category').attr('checked', !jQuery('.chk-category').attr('checked'));">
+        <button class="btn btn-sm btn-secondary jform-rightbtn mb-2" type="button" onclick="jQuery('.chk-category').attr('checked', !jQuery('.chk-category').attr('checked'));">
             <i class="icon-checkbox-partial"></i> <?php echo JText::_('JGLOBAL_SELECTION_INVERT_ALL'); ?>
         </button>
     </div>
 
-    <ul class="menu-links">
+    <ul class="menu-links list-unstyled">
         <?php
         $colItems   = 10;
         foreach ($options as $i => $option)
@@ -54,23 +55,23 @@ JHtml::_('jquery.framework');
             // Initialize some JavaScript option attributes.
             $onclick = !empty($option->onclick) ? ' onclick="' . $option->onclick . '"' : '';
             $onchange = !empty($option->onchange) ? ' onchange="' . $option->onchange . '"' : '';
-        ?>
+            ?>
             <?php if($i % $colItems == 0){ ?>
             <li>
-                <div class="menu-links-block">
-            <?php } ?>
-                    <label for="<?php echo $id . $i; ?>" class="chk-category small <?php
-                    if(isset($option ->class)){echo $option->class; } ?>">
-                        <input type="checkbox" id="<?php echo $id . $i; ?>" name="<?php echo $name; ?>" value="<?php
-                        echo htmlspecialchars($option->value, ENT_COMPAT, 'UTF-8'); ?>"<?php
-                        echo $checked . $onclick . $onchange . $optDisabled; ?> class="chk-category"/>
-                        <?php echo JLayoutHelper::render('joomla.html.treeprefix',
-                                array('level' => $option->level)) . $option->text; ?>
-                    </label>
+            <div class="menu-links-block">
+        <?php } ?>
+            <label for="<?php echo $id . $i; ?>" class="chk-category small d-block pt-1 pb-1 <?php
+            if(isset($option ->class)){echo $option->class; } ?>">
+                <input type="checkbox" id="<?php echo $id . $i; ?>" name="<?php echo $name; ?>" value="<?php
+                echo htmlspecialchars($option->value, ENT_COMPAT, 'UTF-8'); ?>"<?php
+                echo $checked . $onclick . $onchange . $optDisabled; ?> class="chk-category"/>
+                <?php echo JLayoutHelper::render('joomla.html.treeprefix',
+                        array('level' => $option->level)) . $option->text; ?>
+            </label>
             <?php if($i % $colItems == ($colItems -1) || $i == (count($options) - 1)){ ?>
-                </div>
+            </div>
             </li>
-            <?php } ?>
+        <?php } ?>
         <?php } ?>
     </ul>
 </fieldset>

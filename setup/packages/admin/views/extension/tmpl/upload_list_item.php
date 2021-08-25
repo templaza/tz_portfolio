@@ -50,7 +50,7 @@ if($itemsServer = $this -> itemsServer){
         <div class="tpp-extension__item">
             <div class="top">
                 <h3 class="title">
-                    <a data-toggle="modal" href="#tpp-addon__modal-detail-<?php echo $i; ?>">
+                    <a data-toggle="modal" data-bs-toggle="modal" data-bs-toggle="modal" href="#tpp-addon__modal-detail-<?php echo $i; ?>">
                         <?php echo $item -> title; ?>
                         <?php if(isset($item -> imageUrl) && $item -> imageUrl){ ?>
                             <img src="<?php echo $item -> imageUrl;?>" alt="<?php echo $item -> title; ?>">
@@ -58,7 +58,7 @@ if($itemsServer = $this -> itemsServer){
                     </a>
                 </h3>
                 <div class="action-links">
-                    <ul class="pl-0">
+                    <ul class="pl-0 ps-0">
                         <?php
                         $addOnButton    = null;
                         if($item -> pProduce && $item -> pProduce -> pCommercial == true && !$item -> pProduce -> pHasPurchased) {
@@ -100,7 +100,7 @@ if($itemsServer = $this -> itemsServer){
                                         echo JText::_('COM_TZ_PORTFOLIO_PLUS_UPDATE_NOW'); ?></a>
                                 <?php } ?>
                                 <button type="button" class="btn btn-default btn-outline-secondary dropdown-toggle hasTooltip" title="<?php
-                                echo JText::_('Actions');?>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                echo JText::_('Actions');?>" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <?php if(version_compare(JVERSION, '4.0', '<')){ ?>
                                     <span class="tps tp-angle-down"></span>
                                     <?php } ?>
@@ -131,7 +131,7 @@ if($itemsServer = $this -> itemsServer){
                             </li>
                         <?php } ?>
                         <li>
-                            <a data-toggle="modal" href="#tpp-addon__modal-detail-<?php echo $i;
+                            <a data-toggle="modal" data-bs-toggle="modal" href="#tpp-addon__modal-detail-<?php echo $i;
                             ?>" data-url="<?php echo $detailUrl; ?>"><?php
                                 echo JText::_('COM_TZ_PORTFOLIO_PLUS_MORE_DETAIL');?></a>
                         </li>
@@ -158,7 +158,7 @@ if($itemsServer = $this -> itemsServer){
                         'modalWidth' => '70',
                         'bodyHeight' => '70',
                         'closeButton' => true,
-                        'footer'      => '<a class="btn" data-dismiss="modal" aria-hidden="true">' . JText::_('JCANCEL') . '</a>',
+                        'footer'      => '<a class="btn" data-dismiss="modal" data-bs-dismiss="modal" aria-hidden="true">' . JText::_('JCANCEL') . '</a>',
                     )
                 );
                 ?>

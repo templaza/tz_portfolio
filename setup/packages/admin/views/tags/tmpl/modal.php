@@ -20,7 +20,9 @@
 // no direct access
 defined('_JEXEC') or die;
 
-if (JFactory::getApplication()-> isClient('site')) {
+use Joomla\CMS\Factory;
+
+if (Factory::getApplication()-> isClient('site')) {
 	JSession::checkToken('get') or jexit(JText::_('JINVALID_TOKEN'));
 }
 
@@ -31,7 +33,7 @@ JHtml::_('behavior.framework');
 JHtml::_('bootstrap.tooltip');
 JHtml::_('formbehavior.chosen', 'select');
 
-$function	= JFactory::getApplication() -> input -> getCmd('function', 'jSelectTag');
+$function	= Factory::getApplication() -> input -> getCmd('function', 'jSelectTag');
 
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));

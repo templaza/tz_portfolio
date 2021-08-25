@@ -20,7 +20,7 @@
 // No direct access
 defined('_JEXEC') or die;
 
-use Joomla\Filesystem\File;
+use Joomla\CMS\Filesystem\File;
 
 jimport('joomla.filesytem.file');
 
@@ -39,7 +39,7 @@ class PlgTZ_Portfolio_PlusMediaTypeImage extends TZ_Portfolio_PlusPlugin
                     if(isset($image -> url) && $image -> url) {
                         if ($size = $params->get('mt_image_size', 'o')) {
                             if (isset($image->url) && !empty($image->url)) {
-                                $image_url_ext = \JFile::getExt($image->url);
+                                $image_url_ext = File::getExt($image->url);
                                 $image_url = str_replace('.' . $image_url_ext, '_' . $size . '.'
                                     . $image_url_ext, $image->url);
                                 if (file_exists(JPATH_BASE.'/'.$image_url)) {
@@ -49,7 +49,7 @@ class PlgTZ_Portfolio_PlusMediaTypeImage extends TZ_Portfolio_PlusPlugin
                             }
 
                             if (isset($image->url_detail) && !empty($image->url_detail)) {
-                                $image_url_ext = \JFile::getExt($image->url_detail);
+                                $image_url_ext = File::getExt($image->url_detail);
                                 $image_url = str_replace('.' . $image_url_ext, '_' . $size . '.'
                                     . $image_url_ext, $image->url_detail);
                                 $image->url_detail = JURI::base(true) . '/' . $image_url;

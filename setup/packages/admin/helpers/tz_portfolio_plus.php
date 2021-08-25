@@ -20,6 +20,7 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Path;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
@@ -40,7 +41,7 @@ class TZ_Portfolio_PlusHelper
 	 */
 	public static function addSubmenu($vName)
 	{
-	    $user   = JFactory::getUser();
+	    $user   = Factory::getUser();
         $class  = 'JHtmlSidebar';
 
         call_user_func_array($class.'::addEntry',array(JText::_('COM_TZ_PORTFOLIO_PLUS_DASHBOARD'),
@@ -124,7 +125,7 @@ class TZ_Portfolio_PlusHelper
 		JLog::add(__METHOD__ . '() is deprecated, use JHelperContent::getActions() with new arguments order instead.', JLog::WARNING, 'deprecated');
 
 		// Reverted a change for version 2.5.6
-		$user	= JFactory::getUser();
+		$user	= Factory::getUser();
 		$result	= new JObject;
 
 		$path = JPATH_ADMINISTRATOR . '/components/com_tz_portfolio_plus/access.xml';
@@ -165,7 +166,7 @@ class TZ_Portfolio_PlusHelper
 			return $result;
 		}
 
-		$user	= JFactory::getUser();
+		$user	= Factory::getUser();
 		$result	= new JObject;
 
 		$path = JPATH_ADMINISTRATOR . '/components/com_tz_portfolio_plus/access.xml';
@@ -204,7 +205,7 @@ class TZ_Portfolio_PlusHelper
 	{
 		// Filter settings
 		$config		= JComponentHelper::getParams('com_config');
-		$user		= JFactory::getUser();
+		$user		= Factory::getUser();
 		$userGroups	= JAccess::getGroupsByUser($user->get('id'));
 
 		$filters = $config->get('filters');
@@ -414,7 +415,7 @@ class TZ_Portfolio_PlusHelper
 		}
 		catch (RuntimeException $e)
 		{
-			JFactory::getApplication() -> enqueueMessage($e->getMessage(), 'error');
+			Factory::getApplication() -> enqueueMessage($e->getMessage(), 'error');
 
 			return false;
 		}
@@ -435,7 +436,7 @@ class TZ_Portfolio_PlusHelper
 			}
 			catch (RuntimeException $e)
 			{
-				JFactory::getApplication() -> enqueueMessage($e->getMessage(), 'error');
+				Factory::getApplication() -> enqueueMessage($e->getMessage(), 'error');
 
 				return false;
 			}
@@ -543,7 +544,7 @@ class TZ_Portfolio_PlusHelper
             return self::$cache[$storeId];
         }
 
-        if(!$file || ($file && !\JFile::exists($file))){
+        if(!$file || ($file && !File::exists($file))){
             return false;
         }
         $xml	= simplexml_load_file($file, $class_name, $options, $ns, $is_prefix);
@@ -575,7 +576,7 @@ class TZ_Portfolio_PlusHelper
 
         $filePath   = \JPath::clean(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/cache'.'/introguide.json');
 
-        if(!\JFile::exists($filePath)){
+        if(!File::exists($filePath)){
             return false;
         }
 
@@ -605,8 +606,8 @@ class TZ_Portfolio_PlusHelper
             return self::$cache[$storeId];
         }
 
-        if(JFile::exists($file)){
-            $license    = JFile::read($file);
+        if(File::exists($file)){
+            $license    = @file_get_contents($file);
             $license    = str_replace('<?php die("Access Denied"); ?>#x#', '', $license);
             $license    = unserialize(trim($license));
 
@@ -636,7 +637,7 @@ class TZ_Portfolio_PlusHelper
         }
 
         if($license){
-            $nowDate    = JFactory::getDate() -> toSql();
+            $nowDate    = Factory::getDate() -> toSql();
             if($license -> $type < $nowDate){
                 return true;
             }

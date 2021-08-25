@@ -20,6 +20,8 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 jimport('joomla.application.component.view');
 
 /**
@@ -41,13 +43,13 @@ class TZ_Portfolio_PlusViewArticle extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-	    $app    = JFactory::getApplication();
+	    $app    = Factory::getApplication();
 	    $input  = $app -> input;
         if($input->get('task')!='lists'){
             if ($this->getLayout() == 'pagebreak') {
-                $eName		= JFactory::getApplication()->input->get('e_name');
+                $eName		= Factory::getApplication()->input->get('e_name');
                 $eName		= preg_replace( '#[^A-Z0-9\-\_\[\]]#i', '', $eName );
-                $document	= JFactory::getDocument();
+                $document	= Factory::getApplication() -> getDocument();
                 $document->setTitle(JText::_('COM_CONTENT_PAGEBREAK_DOC_TITLE'));
                 $this-> eName    = $eName;
                 parent::display($tpl);
@@ -118,7 +120,7 @@ class TZ_Portfolio_PlusViewArticle extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-		JFactory::getApplication()->input->set('hidemainmenu', true);
+		Factory::getApplication()->input->set('hidemainmenu', true);
 		$user		= TZ_Portfolio_PlusUser::getUser();
 		$userId		= $user->get('id');
 		$isNew		= ($this->item->id == 0);

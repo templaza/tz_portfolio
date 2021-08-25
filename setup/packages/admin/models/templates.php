@@ -20,8 +20,8 @@
 //no direct access
 defined('_JEXEC') or die('Restricted access');
 
-use Joomla\Filesystem\File;
-use Joomla\Filesystem\Folder;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Filesystem\Folder;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 jimport('joomla.filesytem.file');
@@ -83,15 +83,15 @@ class TZ_Portfolio_PlusModelTemplates extends JModelList
     public function getTemplates(){
         $items  = array();
         $tpl_path   = COM_TZ_PORTFOLIO_PLUS_PATH_SITE.DIRECTORY_SEPARATOR.'templates';
-        if(!\JFolder::exists($tpl_path)){
+        if(!Folder::exists($tpl_path)){
             return false;
         }
 
-        if($folders    = \JFolder::folders($tpl_path)){
+        if($folders    = Folder::folders($tpl_path)){
             if(count($folders)){
                 foreach($folders as $i => $folder){
                     $xmlFile    = $tpl_path.DIRECTORY_SEPARATOR.$folder.DIRECTORY_SEPARATOR.'template.xml';
-                    if(\JFile::exists($xmlFile)){
+                    if(File::exists($xmlFile)){
                         $installer  = JInstaller::getInstance($tpl_path.DIRECTORY_SEPARATOR.$folder);
                         if($manifest = $installer ->isManifest($xmlFile)){
 

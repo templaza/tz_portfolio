@@ -20,6 +20,8 @@
 //no direct access
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+
 if(!COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
     JHtml::_('formbehavior.chosen', 'select');
 }
@@ -30,7 +32,7 @@ else{
 // Include the component HTML helpers.
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
-$user		= JFactory::getUser();
+$user		= Factory::getUser();
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
 $canOrder	= $user->authorise('core.edit.state', 'com_tz_portfolio_plus.addons');
@@ -52,7 +54,7 @@ $this->document->addStyleSheet(TZ_Portfolio_PlusUri::base() . '/vendor/intro/int
 $this->document->addScript(TZ_Portfolio_PlusUri::base() . '/vendor/intro/intro.min.js', array('version' => 'v=2.9.3'));
 $this->document->addScript(TZ_Portfolio_PlusUri::base() . '/js/introguide.min.js', array('version' => 'v=2.9.3'));
 
-if(JFactory::getLanguage() -> isRtl()) {
+if(Factory::getApplication() -> getLanguage() -> isRtl()) {
     $this->document->addStyleSheet(TZ_Portfolio_PlusUri::base() . '/vendor/intro/introjs-rtl.min.css', array('version' => 'v=2.9.3'));
 }
 
@@ -192,7 +194,6 @@ $this -> document -> addScriptDeclaration('
                             <?php echo JHtml::_('grid.id', $i, $item->id); ?>
                         </td>
                         <td class="center text-center">
-                            <div class="btn-group">
                             <?php
                             $states	= array(
                                 2 => array(
@@ -224,12 +225,12 @@ $this -> document -> addScriptDeclaration('
                                 ),
                             );
 
-                            echo JHtml::_('jgrid.state', $states, $item->published, $i, 'addons.', $canChange, true, 'cb');
                             if($item ->protected) {
                                 echo JHtml::_('jgrid.state', $states, 2, $i, 'addon.', false, true, 'cb');
+                            }else{
+                                echo JHtml::_('jgrid.state', $states, $item->published, $i, 'addons.', $canChange, true, 'cb');
                             }
                             ?>
-                            </div>
                         </td>
                         <td class="nowrap has-context">
                             <div class="pull-left float-left">
@@ -251,7 +252,7 @@ $this -> document -> addScriptDeclaration('
                                     <a href="<?php echo JRoute::_(TZ_Portfolio_PlusHelperAddon_Datas::getRootURL($item -> id));?>"
                                        class="btn btn-secondary btn-small btn-sm hasTooltip js-tpp-data-manage"
                                        title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ADDON_DATA_MANAGER')?>">
-                                        <span class="icon-book"></span><span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ADDON_DATA_MANAGER')?></span>
+                                        <span class="icon-book me-1"></span><span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ADDON_DATA_MANAGER')?></span>
                                     </a>
                                 <?php
                                 }

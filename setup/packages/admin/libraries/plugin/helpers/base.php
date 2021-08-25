@@ -24,6 +24,8 @@
 // no direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 abstract class TZ_Portfolio_PlusPluginHelperBase{
 
     protected static $cache         = array();
@@ -32,7 +34,7 @@ abstract class TZ_Portfolio_PlusPluginHelperBase{
     {
         static $paths = array();
 
-        $app    = JFactory::getApplication();
+        $app    = Factory::getApplication();
 
         // Since v2.3.5
         $app -> triggerEvent('onTPAddOnPrepareImport', array(&$plugin));
@@ -81,7 +83,7 @@ abstract class TZ_Portfolio_PlusPluginHelperBase{
         }
 
         if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE){
-            $dispatcher = \JFactory::getApplication()->getDispatcher();
+            $dispatcher = Factory::getApplication()->getDispatcher();
         }else{
             $dispatcher = \JEventDispatcher::getInstance();
         }

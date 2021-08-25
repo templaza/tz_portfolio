@@ -20,6 +20,7 @@
 // No direct access.
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Utilities\ArrayHelper;
 
 jimport('joomla.application.component.controllerform');
@@ -117,7 +118,7 @@ class TZ_Portfolio_PlusControllerExtension extends TZ_Portfolio_PlusControllerAd
     protected function allowEdit($data = array(), $key = 'id')
     {
         $recordId = (int) isset($data[$key]) ? $data[$key] : 0;
-        $user = JFactory::getUser();
+        $user = Factory::getUser();
 
         // Zero record (id:0), return component edit permission by calling parent controller method
         if (!$recordId)
@@ -146,7 +147,7 @@ class TZ_Portfolio_PlusControllerExtension extends TZ_Portfolio_PlusControllerAd
 ////        JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 ////
 ////        $result = null;
-////        $app    = JFactory::getApplication();
+////        $app    = Factory::getApplication();
 ////
 ////
 ////        // Access check.

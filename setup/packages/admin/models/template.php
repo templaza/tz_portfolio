@@ -20,7 +20,8 @@
 //no direct access
 defined('_JEXEC') or die('Restricted access');
 
-use Joomla\Filesystem\Folder;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\Folder;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 jimport('joomla.filesytem.folder');
@@ -50,7 +51,7 @@ class TZ_Portfolio_PlusModelTemplate extends TZ_Portfolio_PlusModelAddon
     protected function populateState(){
         parent::populateState();
 
-        $this -> setState('template.id',JFactory::getApplication() -> input -> getInt('id'));
+        $this -> setState('template.id',Factory::getApplication() -> input -> getInt('id'));
 
         $this -> setState('cache.filename', 'template_list');
     }
@@ -73,10 +74,10 @@ class TZ_Portfolio_PlusModelTemplate extends TZ_Portfolio_PlusModelAddon
         $tpl_data   = null;
         if(!$this -> getTemplateStyle($data['element'])){
 
-            $lang   = JFactory::getLanguage();
+            $lang   = Factory::getApplication() -> getLanguage();
             $tpl_data['title']      = $data['element'].' - '.JText::_('JDEFAULT');
             if(TZ_Portfolio_PlusTemplate::loadLanguage($data['element'])){
-                if($lang ->hasKey('TZ_PORTFOLIO_PLUS_TPL_'.$data['element'])){
+                if($lang -> hasKey('TZ_PORTFOLIO_PLUS_TPL_'.$data['element'])){
                     $tpl_data['title']      = JText::_('TZ_PORTFOLIO_PLUS_TPL_'.$data['element']).' - '.JText::_('JDEFAULT');
                 }
             }
@@ -153,7 +154,7 @@ class TZ_Portfolio_PlusModelTemplate extends TZ_Portfolio_PlusModelAddon
     public function uninstall($eid = array())
     {
         $user   = TZ_Portfolio_PlusUser::getUser();
-        $app    = JFactory::getApplication();
+        $app    = Factory::getApplication();
         $view   = $app -> input -> getCmd('view');
 
         if (!$user->authorise('core.delete', 'com_tz_portfolio_plus.template'))
@@ -211,12 +212,12 @@ class TZ_Portfolio_PlusModelTemplate extends TZ_Portfolio_PlusModelAddon
                     $tpl_path   = COM_TZ_PORTFOLIO_PLUS_PATH_SITE.DIRECTORY_SEPARATOR.'templates'
                         .DIRECTORY_SEPARATOR.$table -> element;
 
-                    if(\JFolder::exists($tpl_path)){
+                    if(Folder::exists($tpl_path)){
                         if(!$template_style -> deleteTemplate($table -> name)){
                             $app -> enqueueMessage($template_style -> getError(),'warning');
                             return false;
                         }
-                        if(\JFolder::delete($tpl_path)){
+                        if(Folder::delete($tpl_path)){
                             $result = $this->delete($id);
                         }
                     }
@@ -253,7 +254,7 @@ class TZ_Portfolio_PlusModelTemplate extends TZ_Portfolio_PlusModelAddon
     {
         if (!empty($record->id))
         {
-            $user = JFactory::getUser();
+            $user = Factory::getUser();
 
             if(isset($record -> asset_id) && !empty($record -> asset_id)) {
                 $state = $user->authorise('core.delete', $this->option . '.template.' . (int)$record->id);
@@ -268,7 +269,7 @@ class TZ_Portfolio_PlusModelTemplate extends TZ_Portfolio_PlusModelAddon
 
     protected function canEditState($record)
     {
-        $user = JFactory::getUser();
+        $user = Factory::getUser();
 
         // Check for existing group.
         if (!empty($record->id))

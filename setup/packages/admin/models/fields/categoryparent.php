@@ -19,6 +19,7 @@
 
 defined('JPATH_BASE') or die;
 
+use Joomla\CMS\Factory;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 JFormHelper::loadFieldClass('list');
@@ -57,7 +58,7 @@ class JFormFieldCategoryParent extends JFormFieldList
 		$name = (string) $this->element['name'];
 
 		// Let's get the id for the current item, either category or content item.
-		$jinput = JFactory::getApplication()->input;
+		$jinput = Factory::getApplication()->input;
 		// For categories the old category is the category id 0 for new category.
 		if ($this->element['parent'])
 		{
@@ -125,7 +126,7 @@ class JFormFieldCategoryParent extends JFormFieldList
 		// Initialise variables.
 
 				// Get the current user object.
-				$user = JFactory::getUser();
+				$user = Factory::getUser();
 
 				// For new items we want a list of categories you are allowed to create in.
 				if ($oldCat == 0)

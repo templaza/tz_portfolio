@@ -20,8 +20,9 @@
 // No direct access
 defined('_JEXEC') or die;
 
-use Joomla\Filesystem\File;
-use Joomla\Filesystem\Folder;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Filesystem\Folder;
 
 jimport('joomla.filesytem.file');
 jimport('joomla.filesytem.folder');
@@ -32,7 +33,7 @@ class TZ_Portfolio_PlusControllerLegacy  extends JControllerLegacy{
     public function display($cachable = false, $urlparams = array())
     {
 
-        $document = JFactory::getDocument();
+        $document = Factory::getApplication() -> getDocument();
         $viewType = $document->getType();
         $viewName = $this->input->get('view', $this->default_view);
         $viewLayout = $this->input->get('layout', 'default', 'string');
@@ -50,14 +51,14 @@ class TZ_Portfolio_PlusControllerLegacy  extends JControllerLegacy{
     {
         $view   = parent::getView($name,$type,$prefix,$config);
         if($view) {
-            $view -> document   = JFactory::getDocument();
+            $view -> document   = Factory::getApplication() -> getDocument();
             if($template   = TZ_Portfolio_PlusTemplate::getTemplate(true)){
                 if($template -> id){
 //                    $tplparams  = $template -> params;
                     $path       = $view -> get('_path');
 
                     $bool_tpl   = false;
-                    if(\JFolder::exists(COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH.DIRECTORY_SEPARATOR.$template -> template)) {
+                    if(Folder::exists(COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH.DIRECTORY_SEPARATOR.$template -> template)) {
                         $bool_tpl   = true;
                     }
                     if($bool_tpl) {
@@ -88,9 +89,9 @@ class TZ_Portfolio_PlusControllerLegacy  extends JControllerLegacy{
         if($view){
             if(isset($view -> document)){
                 if($template = TZ_Portfolio_PlusTemplate::getTemplate(true)) {
-                    if(\JFolder::exists(COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH.DIRECTORY_SEPARATOR.$template -> template)) {
+                    if(Folder::exists(COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH.DIRECTORY_SEPARATOR.$template -> template)) {
 
-                        $app		= JFactory::getApplication('site');
+                        $app		= Factory::getApplication('site');
                         $params     = $app -> getParams();
 
                         $docOptions['template']     = $template->template;
@@ -108,12 +109,12 @@ class TZ_Portfolio_PlusControllerLegacy  extends JControllerLegacy{
                             . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'template.css';
                         if((TZ_Portfolio_PlusTemplate::getSassDirByStyle($template -> template)
                                 || (!TZ_Portfolio_PlusTemplate::getSassDirByStyle($template -> template) && TZ_Portfolio_PlusTemplate::getSassDirCore()))
-                            && !JFile::exists($legacyPath)
+                            && !File::exists($legacyPath)
                             && $cssRelativePath = TZ_Portfolio_PlusTemplate::getCssStyleName($template -> template,
                                 $params, $docOptions['params'] -> get('colors', array()), $view -> document)){
                             $view->document->addStyleSheet(TZ_Portfolio_PlusUri::base(true)
                                 . '/css/'.$cssRelativePath, array('version' => 'auto'));
-                        }elseif (\JFile::exists($legacyPath)) {
+                        }elseif (File::exists($legacyPath)) {
                             $view->document->addStyleSheet(TZ_Portfolio_PlusUri::base(true) . '/templates/'
                                 . $template -> template . '/css/template.css', array('version' => 'auto'));
                         }

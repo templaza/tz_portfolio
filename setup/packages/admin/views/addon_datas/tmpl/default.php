@@ -20,9 +20,11 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 JHtml::_('formbehavior.chosen', 'select');
 
-JFactory::getDocument()->addScriptDeclaration('
+Factory::getApplication() -> getDocument()->addScriptDeclaration('
 	if(typeof Joomla !== "undefined"){
 		Joomla.submitform = function(task, form, validate) {
 			if (!form) {

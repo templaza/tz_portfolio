@@ -20,6 +20,7 @@
 // no direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Utilities\ArrayHelper;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
@@ -91,7 +92,7 @@ class TZ_Portfolio_PlusModelArticles extends JModelList
         parent::populateState($ordering, $direction);
 
 		// Initialise variables.
-		$app    = JFactory::getApplication();
+		$app    = Factory::getApplication();
 		$input  = $app -> input;
 
 //        $this-> context = 'com_tz_portfolio_plus.articles';
@@ -189,7 +190,7 @@ class TZ_Portfolio_PlusModelArticles extends JModelList
 		// Create a new query object.
 		$db		= $this->getDbo();
 		$query	= $db->getQuery(true);
-		$user	= JFactory::getUser();
+		$user	= Factory::getUser();
 
 		// Select the required fields from the table.
 		$query->select(
@@ -437,10 +438,18 @@ class TZ_Portfolio_PlusModelArticles extends JModelList
         return $this -> _getList($query);
     }
 
-//    public function getFilterForm($data = array(), $loadData = true)
-//    {
-//        $user   = JFactory::getUser();
-//        $form   = parent::getFilterForm($data, $loadData);
+    public function getFilterForm($data = array(), $loadData = true)
+    {
+//        $user   = Factory::getUser();
+        $form   = parent::getFilterForm($data, $loadData);
+
+        if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE){
+
+            $field  = $form -> getFieldXml('fullordering', 'list');
+            $field -> addChild('option', 'JFEATURED_ASC') -> addAttribute('value', 'a.featured ASC');
+            $field -> addChild('option', 'JFEATURED_DESC') -> addAttribute('value', 'a.featured DESC');
+        }
+
 //        if(!$user -> authorise('core.approve', 'com_tz_portfolio_plus')){
 //            $filterDefault  = $form -> getFieldAttribute('published', 'filter','','filter');
 //            $filterDefault  = explode(',', $filterDefault);
@@ -451,8 +460,8 @@ class TZ_Portfolio_PlusModelArticles extends JModelList
 //            $form -> setFieldAttribute('published', 'filter',
 //                implode(',', $filterDefault), 'filter');
 //        }
-//        return $form;
-//    }
+        return $form;
+    }
 
     /**
 	 * Method to get a list of articles.
@@ -464,12 +473,12 @@ class TZ_Portfolio_PlusModelArticles extends JModelList
 	public function getItems()
 	{
 		$items	= parent::getItems();
-		$app	= JFactory::getApplication();
+		$app	= Factory::getApplication();
         // Get fields group
         $data   = array();
 
 		if ($app->isClient('site')) {
-			$user	= JFactory::getUser();
+			$user	= Factory::getUser();
 			$groups	= $user->getAuthorisedViewLevels();
 
 			for ($x = 0, $count = count($items); $x < $count; $x++) {
@@ -484,7 +493,7 @@ class TZ_Portfolio_PlusModelArticles extends JModelList
 			$texts		= array();
 			$values		= array();
 			TZ_Portfolio_PlusPluginHelper::importPlugin('mediatype');
-			$results	= \JFactory::getApplication() -> triggerEvent('onAddMediaType');
+			$results	= Factory::getApplication() -> triggerEvent('onAddMediaType');
 			if(count($results)) {
 				$texts = ArrayHelper::getColumn($results, 'text');
 				$values = ArrayHelper::getColumn($results, 'value');

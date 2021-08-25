@@ -20,6 +20,7 @@
 // No direct access
 defined('JPATH_PLATFORM') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
 
 class TZ_Portfolio_PlusTableAddon_Data extends JTable
@@ -91,8 +92,8 @@ class TZ_Portfolio_PlusTableAddon_Data extends JTable
 
     public function store($updateNulls = false)
     {
-        $user = JFactory::getUser();
-        $date = JFactory::getDate();
+        $user = Factory::getUser();
+        $date = Factory::getDate();
 
         if (empty($this->modified_by))
         {

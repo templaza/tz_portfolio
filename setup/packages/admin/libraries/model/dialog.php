@@ -20,6 +20,7 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 
@@ -39,7 +40,7 @@ class TZ_Portfolio_PlusModelDialogBase extends JModelAdmin
     protected function populateState()
     {
 
-        $app = JFactory::getApplication();
+        $app = Factory::getApplication();
 
         // Load state from the request.
         $cid = $app->input->get('cid', array(), 'array');

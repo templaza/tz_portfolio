@@ -43,6 +43,7 @@ if($item){
     <span class="position-name"><?php echo $item?$this -> get_value($item,"type"):JText::_('JNONE'); ?></span>
     <div id="<?php echo $columnToolId; ?>" class="columntools">
         <a href="#columnsettingbox" rel="popover" data-placement="bottom" data-container="#<?php
+        echo $columnToolId; ?>" data-bs-placement="bottom" data-bs-container="#<?php
         echo $columnToolId; ?>"
            title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_COLUMN_SETTINGS');?>" class="tps tp-cog rowcolumnspop"></a>
         <a href="" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ADD_NEW_ROW');?>" class="tps tp-bars add-rowin-column"></a>

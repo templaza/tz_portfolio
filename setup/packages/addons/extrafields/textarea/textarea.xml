@@ -7,7 +7,7 @@
     <license>GNU/GPL v2 or later http://www.gnu.org/licenses/gpl-2.0.html</license>
     <authorEmail>support@templaza.com</authorEmail>
     <authorUrl>www.templaza.com/</authorUrl>
-    <version>2.4.2</version>
+    <version>2.5.0</version>
     <description>PLG_EXTRAFIELDS_TEXTAREA_XML_DESCRIPTION</description>
 
     <files>
@@ -37,6 +37,7 @@
                        description="PLG_EXTRAFIELDS_TEXTAREA_ROWS_DESC"/>
                 <field type="radio" name="use_editor_back_end"
                        default="0" class="switcher btn-group"
+                       layout="joomla.form.field.radio.switcher"
                        label="PLG_EXTRAFIELDS_TEXTAREA_USE_EDITOR_BACKEND_LABEL">
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
@@ -49,6 +50,7 @@
                 </field>
                 <field type="radio" name="use_editor_front_end"
                        default="0" class="switcher btn-group"
+                       layout="joomla.form.field.radio.switcher"
                        label="PLG_EXTRAFIELDS_TEXTAREA_USE_EDITOR_FRONTEND_LABEL">
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>

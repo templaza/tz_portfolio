@@ -32,7 +32,9 @@ $(document).ready(function(){
         });
     });
 
-    $('.hasTooltip').tooltip();
+    if(typeof tooltip !== "undefined" || typeof $.fn.tooltip !== "undefined") {
+        $('.hasTooltip').tooltip();
+    }
 
     loading = $('[data-installation-loading]'),
         submit = $('[data-installation-submit]'),

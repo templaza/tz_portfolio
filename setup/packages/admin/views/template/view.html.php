@@ -20,6 +20,7 @@
 //no direct access
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
 
 class TZ_Portfolio_PlusViewTemplate extends JViewLegacy
 {
@@ -42,8 +43,10 @@ class TZ_Portfolio_PlusViewTemplate extends JViewLegacy
             array('version' => 'auto'));
         $this -> filterForm   = $this -> get('FilterForm');
 
-        TZ_Portfolio_PlusHelper::addSubmenu('templates');
-        $this -> sidebar    = JHtmlSidebar::render();
+        if(!COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+            TZ_Portfolio_PlusHelper::addSubmenu('templates');
+            $this->sidebar = JHtmlSidebar::render();
+        }
 
         $this -> addToolbar();
 
@@ -52,7 +55,7 @@ class TZ_Portfolio_PlusViewTemplate extends JViewLegacy
 
     protected function addToolbar(){
 
-        JFactory::getApplication()->input->set('hidemainmenu', true);
+        Factory::getApplication()->input->set('hidemainmenu', true);
 
         JToolBarHelper::title(JText::sprintf('COM_TZ_PORTFOLIO_PLUS_TEMPLATES_MANAGER_TASK',JText::_('COM_TZ_PORTFOLIO_PLUS_TEMPLATE_INSTALL_TEMPLATE')),'eye');
         JToolBarHelper::cancel('template.cancel',JText::_('JTOOLBAR_CLOSE'));

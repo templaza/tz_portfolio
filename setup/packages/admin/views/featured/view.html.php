@@ -20,6 +20,8 @@
 // no direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 jimport('joomla.application.component.view');
 
 /**
@@ -76,8 +78,10 @@ class TZ_Portfolio_PlusViewFeatured extends JViewLegacy
 			$this->addToolbar();
 		}
 
-         TZ_Portfolio_PlusHelper::addSubmenu('featured');
-        $this->sidebar = JHtmlSidebar::render();
+        if(!COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+            TZ_Portfolio_PlusHelper::addSubmenu('featured');
+            $this->sidebar = JHtmlSidebar::render();
+        }
         
 		parent::display($tpl);
 	}
@@ -89,7 +93,7 @@ class TZ_Portfolio_PlusViewFeatured extends JViewLegacy
 	 */
 	protected function addToolbar()
 	{
-        JFactory::getLanguage() -> load('com_content');
+        Factory::getApplication() -> getLanguage() -> load('com_content');
 		$state	= $this->get('State');
         $canDo	= TZ_Portfolio_PlusHelper::getActions($this->state->get('filter.category_id'));
 

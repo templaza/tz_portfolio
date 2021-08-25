@@ -20,12 +20,15 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\Path;
+
 class PlgTZ_Portfolio_PlusUserProfile extends TZ_Portfolio_PlusPlugin
 {
     protected $autoloadLanguage = true;
 
     public function onContentPrepareForm($form, $data){
-        $app    = JFactory::getApplication();
+        $app    = Factory::getApplication();
         $name   = $form->getName();
 
         if($app -> isClient('administrator')){
@@ -33,14 +36,22 @@ class PlgTZ_Portfolio_PlusUserProfile extends TZ_Portfolio_PlusPlugin
                 JForm::addFieldPath(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.DIRECTORY_SEPARATOR
                     .'models'.DIRECTORY_SEPARATOR.'fields');
                 JForm::addFormPath(__DIR__.'/forms');
-                $form->loadFile('profile', false);
+
+                $file   = Path::clean(__DIR__.'/forms/profile.xml');
+                if(file_exists($file)){
+                    $form -> loadFile($file, false);
+                }
             }
         }else{
             if($name == 'com_users.profile') {
                 JForm::addFieldPath(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.DIRECTORY_SEPARATOR
                     .'models'.DIRECTORY_SEPARATOR.'fields');
                 JForm::addFormPath(__DIR__.'/forms');
-                $form->loadFile('profile', false);
+
+                $file   = Path::clean(__DIR__.'/forms/profile.xml');
+                if(file_exists($file)){
+                    $form -> loadFile($file, false);
+                }
             }
         }
         return parent::onContentPrepareForm($form, $data);
@@ -51,6 +62,7 @@ class PlgTZ_Portfolio_PlusUserProfile extends TZ_Portfolio_PlusPlugin
     public function onContentDisplayListView($context, &$article, $params, $page = 0, $layout = 'default'){}
     public function onContentDisplayArticleView($context, &$article, $params, $page = 0, $layout = 'default'){}
     public function onBeforeDisplayAdditionInfo($context, &$article, $params, $page = 0, $layout = 'default'){}
+    public function onContentAfterSave($context, $data, $isnew){}
 
     /** Display author about for listing or article view.
      * @param string $context
@@ -83,7 +95,7 @@ class PlgTZ_Portfolio_PlusUserProfile extends TZ_Portfolio_PlusPlugin
                 'authorId' => $authorId,
                 'trigger_params' => $params
             ))){
-                $input      = JFactory::getApplication()->input;
+                $input      = Factory::getApplication()->input;
                 $task   = $input->get('addon_task');
                 $input->set('addon_view', $vName);
                 $input->set('addon_layout', 'default');

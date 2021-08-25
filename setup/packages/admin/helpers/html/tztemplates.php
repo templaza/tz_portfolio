@@ -37,11 +37,11 @@ class JHtmlTZTemplates
 
             $html = JHtml::_('image', 'components/com_tz_portfolio_plus/templates/' . $template . '/template_preview.png'
                 , JText::_('COM_TEMPLATES_PREVIEW'));
-            $html = '<a href="#' . $template . '-Modal" role="button" class="thumbnail float-left hasTooltip" data-toggle="modal" title="' .
+            $html = '<a href="#' . $template . '-Modal" role="button" class="thumbnail float-left hasTooltip" data-bs-toggle="modal" data-toggle="modal" title="' .
                 JHtml::_('tooltipText', 'COM_TEMPLATES_CLICK_TO_ENLARGE') . '">' . $html . '</a>';
 
 
-            $footer = '<button type="button" class="btn btn-secondary" data-dismiss="modal" aria-hidden="true">'
+            $footer = '<button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal" aria-hidden="true">'
                 . JText::_('JTOOLBAR_CLOSE') . '</button>';
 
             $html .= JHtml::_(

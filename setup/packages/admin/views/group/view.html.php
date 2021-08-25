@@ -20,6 +20,8 @@
 // No direct access
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+
 jimport('joomla.application.components.view');
 
 class TZ_Portfolio_PlusViewGroup extends JViewLegacy
@@ -40,7 +42,7 @@ class TZ_Portfolio_PlusViewGroup extends JViewLegacy
     }
 
     protected function addToolbar(){
-        JFactory::getApplication()->input->set('hidemainmenu', true);
+        Factory::getApplication()->input->set('hidemainmenu', true);
 
         $user	    = TZ_Portfolio_PlusUser::getUser();
         $canDo      = $this -> canDo;

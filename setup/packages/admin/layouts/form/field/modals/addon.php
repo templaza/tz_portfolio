@@ -19,6 +19,7 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 extract($displayData);
 
 $allowEdit  = false;
@@ -45,15 +46,21 @@ echo JHtml::_(
         'modalWidth' => '70',
         'bodyHeight' => '70',
         'closeButton' => true,
-        'footer'      => '<a class="btn" data-dismiss="modal" aria-hidden="true">' . JText::_('JCANCEL') . '</a>',
+        'footer'      => '<a class="btn" data-dismiss="modal" data-bs-dismiss="modal" aria-hidden="true">' . JText::_('JCANCEL') . '</a>',
     )
 );
+if(strpos('form-control', $class) == false){
+    $class  .= ' form-control';
+}
+if(strpos('class=', $class) == false){
+    $class  = 'class="'.$class.'"';
+}
 ?>
-<div class="input-append">
+<div class="input-append input-group">
     <input type="text" <?php echo $required; ?> readonly="readonly" id="<?php echo $id; ?>_name" value="<?php
-            echo $title; ?>" <?php echo $size . $class; ?>  placeholder="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SELECT_AN_ADDON');?>" />
+            echo $title; ?>" <?php echo (!empty($size)?$size:''). $class; ?>  placeholder="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SELECT_AN_ADDON');?>" />
     <a id="<?php echo $id; ?>_select" class="btn btn-primary hasTooltip" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_CHANGE_ADDON');
-        ?>" data-toggle="modal" href="#<?php echo $modalId;?>"><i class="icon-file"></i><?php
+        ?>" data-toggle="modal" data-bs-toggle="modal" href="#<?php echo $modalId;?>"><i class="icon-file me-1"></i><?php
         echo JText::_('JSELECT');?></a>
     <?php if($allowEdit){?>
         <a id="<?php echo $id; ?>_edit" class="btn<?php echo $value ? '' : ' hidden';?>" target="_blank"
@@ -67,7 +74,7 @@ echo JHtml::_(
     <input class="input-small" id="<?php echo $id; ?>" type="hidden" name="<?php echo $name; ?>" value="<?php
     echo htmlspecialchars($value, ENT_COMPAT, 'UTF-8') ?>"/>
 <?php
-$doc    = JFactory::getDocument();
+$doc    = Factory::getApplication() -> getDocument();
 $doc -> addScriptDeclaration('
     (function($, window){
         "use strict";

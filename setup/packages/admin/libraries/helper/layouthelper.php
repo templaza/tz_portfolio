@@ -26,6 +26,7 @@ namespace TZ_Portfolio_Plus\Helper;
 // no direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Application\ApplicationHelper;
@@ -119,7 +120,7 @@ class LayoutHelper{
             $theme  = $template;
             $html   = null;
 
-            $doc        = (self::isView($object) && isset($object -> document))?$object -> document:\JFactory::getDocument();
+            $doc        = (self::isView($object) && isset($object -> document))?$object -> document:Factory::getApplication() -> getDocument();
             $dispatcher = $dispatcher?$dispatcher:\TZ_Portfolio_PlusPluginHelper::getDispatcher();
 
             if(!$context && self::isView($object) && method_exists($object, 'getName')){
@@ -293,7 +294,7 @@ class LayoutHelper{
         return false;
     }
     protected static function _childrenLayout(&$rows,$children,&$article,&$params,$dispatcher = null, $object = null, $offset = 0, $context = null){
-        $doc    = (self::isView($object) && isset($object -> document))?$object -> document:\JFactory::getDocument();
+        $doc    = (self::isView($object) && isset($object -> document))?$object -> document:Factory::getApplication() -> getDocument();
 
         if(!$context && self::isView($object) && method_exists($object, 'getName')){
             $context    = 'com_tz_portfolio_plus.'.$object -> getName();

@@ -49,6 +49,17 @@ class TZ_Portfolio_PlusExtraFieldTextArea extends TZ_Portfolio_PlusExtraField
         return $this -> loadTmplFile('input', __CLASS__);
     }
 
+    public function getInputClass()
+    {
+        $class = parent::getInputClass();
+
+        if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE && strpos($class, 'form-control') == false){
+            $class  .= ' form-control';
+        }
+
+        return $class;
+    }
+
     public function getTextArea($value, $class = '')
     {
         $placeholder = $this->params->get("placeholder", "") ? "placeholder=\"" . htmlspecialchars($this->params->get("placeholder", ""), ENT_COMPAT, 'UTF-8') . "\"" : "";

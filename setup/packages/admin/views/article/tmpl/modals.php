@@ -20,7 +20,9 @@
 // no direct access
 defined('_JEXEC') or die;
 
-if (JFactory::getApplication()-> isClient('site')) {
+use Joomla\CMS\Factory;
+
+if (Factory::getApplication()-> isClient('site')) {
     JSession::checkToken('get') or jexit(JText::_('JINVALID_TOKEN'));
 }
 
@@ -32,11 +34,11 @@ JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('formbehavior.chosen', 'select');
 
-$function	= JFactory::getApplication()->input->getCmd('function', 'jSelectArticle');
+$function	= Factory::getApplication()->input->getCmd('function', 'jSelectArticle');
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
 
-$doc    = JFactory::getDocument();
+$doc    = Factory::getApplication() -> getDocument();
 $doc -> addScriptDeclaration('
 function tzGetDatas(){
     if (window.parent){

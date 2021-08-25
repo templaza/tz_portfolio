@@ -20,6 +20,8 @@
 //no direct access
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+
 //JHtml::_('bootstrap.tooltip');
 JHtml::_('bootstrap.tooltip');
 JHtml::_('dropdown.init');
@@ -31,7 +33,7 @@ if(!$j4Compare) {
     JHtml::_('formbehavior.chosen', 'select[multiple]');
 }
 
-$user		= JFactory::getUser();
+$user		= Factory::getUser();
 $userId		= $user->get('id');
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
@@ -145,9 +147,7 @@ if ($saveOrder)
                             <?php echo JHtml::_('grid.id', $i, $item->id); ?>
                         </td>
                         <td class="center text-center">
-                            <div class="btn-group">
-                                <?php echo JHtml::_('jgrid.published', $item->published, $i, 'groups.', $canChange, 'cb'); ?>
-                            </div>
+                            <?php echo JHtml::_('jgrid.published', $item->published, $i, 'groups.', $canChange, 'cb'); ?>
                         </td>
                         <td class="has-context">
                             <?php if ($item -> checked_out){ ?>

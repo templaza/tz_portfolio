@@ -20,7 +20,7 @@
 // No direct access.
 defined('_JEXEC') or die;
 
-use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Factory;
 
 jimport('joomla.application.component.controllerform');
 
@@ -28,8 +28,8 @@ class TZ_Portfolio_PlusControllerDashboard extends JControllerForm
 {
     public function feedBlog(){
 
-        $app        = JFactory::getApplication();
-        $document   = JFactory::getDocument();
+        $app        = Factory::getApplication();
+        $document   = Factory::getApplication() -> getDocument();
         $vType      = $document->getType();
         $vType      = 'ajax';
         $vName      = $this -> view_item;
@@ -104,7 +104,7 @@ class TZ_Portfolio_PlusControllerDashboard extends JControllerForm
             $json -> message    = $exception -> getMessage();
         }
         echo json_encode($json);
-        JFactory::getApplication() -> close();
+        Factory::getApplication() -> close();
     }
 
     public function statistics(){
@@ -156,7 +156,7 @@ class TZ_Portfolio_PlusControllerDashboard extends JControllerForm
             $json -> data   = $data;
         }
         echo json_encode($json);
-        JFactory::getApplication() -> close();
+        Factory::getApplication() -> close();
 //        die('43243');
     }
 }

@@ -24,13 +24,15 @@
 // no direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 if(COM_TZ_PORTFOLIO_PLUS_EDITION == 'free'){
 
     $modalId    = 'tpp-modal__licenses';
     $params     = JComponentHelper::getParams('com_tz_portfolio_plus');
     $xml        = simplexml_load_file(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/tz_portfolio_plus.xml');
 
-    $doc        = JFactory::getDocument();
+    $doc        = Factory::getApplication() -> getDocument();
 
     $doc -> addScriptDeclaration('(function($, Joomla){
             $(document).ready(function(){
@@ -113,7 +115,7 @@ if(COM_TZ_PORTFOLIO_PLUS_EDITION == 'free'){
 ?>
 
 <div class="alert tp-widget tpp-upgrade-pro">
-    <div class="content">
+    <div class="content ps-0">
         <span class="tps tp-flag-checkered tpp-upgrade-pro__icon"></span>
         <div class="content__inner">
             <h4><?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_IS_VERSION', JText::_('COM_TZ_PORTFOLIO_PLUS_FREE')); ?></h4>

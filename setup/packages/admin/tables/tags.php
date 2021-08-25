@@ -20,6 +20,8 @@
 //no direct access
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+
 class TZ_Portfolio_PlusTableTags extends JTable
 {
     /** @var int Primary key */
@@ -81,7 +83,7 @@ class TZ_Portfolio_PlusTableTags extends JTable
 
         if (trim(str_replace('-', '', $this->alias)) == '')
         {
-            $this->alias = JFactory::getDate()->format('Y-m-d-H-i-s');
+            $this->alias = Factory::getDate()->format('Y-m-d-H-i-s');
         }
 
         return true;

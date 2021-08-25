@@ -20,6 +20,8 @@
 //no direct access
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Factory;
+
 JHtml::_('dropdown.init');
 JHtml::_('bootstrap.tooltip');
 
@@ -29,7 +31,7 @@ if(!COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
     JHtml::_('formbehavior.chosen', 'select[multiple]');
 }
 
-$user		= JFactory::getUser();
+$user		= Factory::getApplication() -> getIdentity();
 $userId		= $user->get('id');
 
 $listOrder	= $this->escape($this->state->get('list.ordering'));
@@ -92,9 +94,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
                         <?php echo JHtml::_('grid.id', $i, $item->id); ?>
                     </td>
                     <td class="center text-center">
-                        <div class="btn-group">
-                            <?php echo JHtml::_('jgrid.published', $item->published, $i, 'tags.', $canChange, 'cb'); ?>
-                        </div>
+                        <?php echo JHtml::_('jgrid.published', $item->published, $i, 'tags.', $canChange, 'cb'); ?>
                     </td>
                     <td class="nowrap has-context">
                         <div class="pull-left float-left">

@@ -20,6 +20,7 @@
 // No direct access
 defined('JPATH_PLATFORM') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Utilities\ArrayHelper;
 
 jimport('joomla.application.component.controlleradmin');
@@ -81,7 +82,7 @@ class TZ_Portfolio_Plus_AddOnControllerAdmin extends TZ_Portfolio_Plus_AddOnCont
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
         // Get items to remove from the request.
-        $cid = JFactory::getApplication()->input->get('cid', array(), 'array');
+        $cid = Factory::getApplication()->input->get('cid', array(), 'array');
 
         if (!is_array($cid) || count($cid) < 1)
         {
@@ -124,7 +125,7 @@ class TZ_Portfolio_Plus_AddOnControllerAdmin extends TZ_Portfolio_Plus_AddOnCont
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
         // Get items to publish from the request.
-        $cid = JFactory::getApplication()->input->get('cid', array(), 'array');
+        $cid = Factory::getApplication()->input->get('cid', array(), 'array');
         $data = array('publish' => 1, 'unpublish' => 0, 'archive' => 2, 'trash' => -2, 'report' => -3);
         $task = $this->getTask();
         $value = ArrayHelper::getValue($data, $task, 0, 'int');
@@ -182,7 +183,7 @@ class TZ_Portfolio_Plus_AddOnControllerAdmin extends TZ_Portfolio_Plus_AddOnCont
         // Check for request forgeries.
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-        $ids = JFactory::getApplication()->input->post->get('cid', array(), 'array');
+        $ids = Factory::getApplication()->input->post->get('cid', array(), 'array');
         $inc = ($this->getTask() == 'orderup') ? -1 : 1;
 
         $model = $this->getModel();
@@ -256,7 +257,7 @@ class TZ_Portfolio_Plus_AddOnControllerAdmin extends TZ_Portfolio_Plus_AddOnCont
         // Check for request forgeries.
         JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-        $ids = JFactory::getApplication()->input->post->get('cid', array(), 'array');
+        $ids = Factory::getApplication()->input->post->get('cid', array(), 'array');
 
         $model = $this->getModel();
         $return = $model->checkin($ids);
@@ -308,7 +309,7 @@ class TZ_Portfolio_Plus_AddOnControllerAdmin extends TZ_Portfolio_Plus_AddOnCont
         }
 
         // Close the application
-        JFactory::getApplication()->close();
+        Factory::getApplication()->close();
     }
 
     protected function postDeleteHook(JModelLegacy $model, $id = null)

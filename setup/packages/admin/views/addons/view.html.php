@@ -19,6 +19,9 @@
 
 //no direct access
 defined('_JEXEC') or die('Restricted access');
+
+use Joomla\CMS\Factory;
+
 jimport('joomla.application.component.view');
 
 JLoader::register('TZ_Portfolio_PlusHelperAddon_Datas', COM_TZ_PORTFOLIO_PLUS_ADMIN_HELPERS_PATH
@@ -41,7 +44,7 @@ class TZ_Portfolio_PlusViewAddons extends JViewLegacy
         $this->pagination       = $this->get('pagination');
         $this -> filterForm     = $this->get('FilterForm');
         $this -> activeFilters  = $this->get('ActiveFilters');
-        $input                  = JFactory::getApplication() -> input;
+        $input                  = Factory::getApplication() -> input;
 
         TZ_Portfolio_PlusHelper::addSubmenu($this -> getName());
 
@@ -54,7 +57,9 @@ class TZ_Portfolio_PlusViewAddons extends JViewLegacy
 //        }
 
         if ($this->getLayout() !== 'modal') {
-            $this -> sidebar = JHtmlSidebar::render();
+            if(!COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+                $this->sidebar = JHtmlSidebar::render();
+            }
         }
 
         parent::display($tpl);

@@ -24,9 +24,11 @@
 // no direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 class JHtmlTppGrid extends JHtmlJGrid {
 
-    public static function status($value, $status = '', $i, $prefix = '', $enabled = true, $checkbox = 'cb', $publish_up = null, $publish_down = null)
+    public static function status($value, $i, $status = '', $prefix = '', $enabled = true, $checkbox = 'cb', $publish_up = null, $publish_down = null)
     {
         if (is_array($prefix))
         {
@@ -58,13 +60,13 @@ class JHtmlTppGrid extends JHtmlJGrid {
         // Special state for dates
         if ($publish_up || $publish_down)
         {
-            $nullDate = JFactory::getDbo()->getNullDate();
-            $nowDate = JFactory::getDate()->toUnix();
+            $nullDate = Factory::getDbo()->getNullDate();
+            $nowDate = Factory::getDate()->toUnix();
 
-            $tz = JFactory::getUser()->getTimezone();
+            $tz = Factory::getUser()->getTimezone();
 
-            $publish_up = ($publish_up != $nullDate) ? JFactory::getDate($publish_up, 'UTC')->setTimeZone($tz) : false;
-            $publish_down = ($publish_down != $nullDate) ? JFactory::getDate($publish_down, 'UTC')->setTimeZone($tz) : false;
+            $publish_up = ($publish_up != $nullDate) ? Factory::getDate($publish_up, 'UTC')->setTimeZone($tz) : false;
+            $publish_down = ($publish_down != $nullDate) ? Factory::getDate($publish_down, 'UTC')->setTimeZone($tz) : false;
 
             // Create tip text, only we have publish up or down settings
             $tips = array();

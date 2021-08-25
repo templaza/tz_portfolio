@@ -20,10 +20,11 @@
 //no direct access
 defined('_JEXEC') or die('Restricted access');
 
-use Joomla\Filesystem\File;
-use Joomla\Filesystem\Folder;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
 use Joomla\String\StringHelper;
 use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Filesystem\Folder;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 jimport('joomla.filesytem.file');
@@ -51,7 +52,7 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
     protected function populateState(){
         parent::populateState();
 
-        $input  = JFactory::getApplication() -> input;
+        $input  = Factory::getApplication() -> input;
         $this -> setState('template.id',$input -> getInt('id'));
         $this -> setState('content.id',null);
         $this -> setState('category.id',null);
@@ -102,7 +103,7 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
     protected function preprocessForm(JForm $form, $data, $group = 'content')
     {
         $template       = $this->getState('template.template');
-        $lang           = JFactory::getLanguage();
+        $lang           = Factory::getApplication() -> getLanguage();
 
         $template_path  = COM_TZ_PORTFOLIO_PLUS_PATH_SITE.DIRECTORY_SEPARATOR.'templates'
             .DIRECTORY_SEPARATOR.$template;
@@ -116,7 +117,7 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
 
         $default_directory  = 'components'.DIRECTORY_SEPARATOR.'com_tz_portfolio_plus'.DIRECTORY_SEPARATOR.'templates';
         $directory          = $default_directory.DIRECTORY_SEPARATOR.$template.DIRECTORY_SEPARATOR.'html';
-        if(\JFolder::exists(JPATH_SITE.DIRECTORY_SEPARATOR.$directory)) {
+        if(Folder::exists(JPATH_SITE.DIRECTORY_SEPARATOR.$directory)) {
             $form->setFieldAttribute('layout', 'directory', $directory, 'params');
         }elseif ((is_array($data) && array_key_exists('protected', $data) && $data['protected'] == 1)
             || ((is_object($data) && isset($data->protected) && $data->protected == 1)))
@@ -231,7 +232,7 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
         // Set default for preset if the style has layout default
         if(!isset($item -> layout) || (isset($item -> layout) && !$item -> layout)){
             $defaultLayout  = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH.'/'.$item -> template.'/config/default.json';
-            if(JFile::exists($defaultLayout)){
+            if(File::exists($defaultLayout)){
                 $config = file_get_contents($defaultLayout);
                 $config = json_decode($config);
                 if($config){
@@ -268,7 +269,7 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
 
     public function save($data)
     {
-        $app        = JFactory::getApplication();
+        $app        = Factory::getApplication();
 
         $table 		= $this->getTable();
         $post   	= $app -> input -> post;
@@ -291,7 +292,7 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
             $data['layout'] = json_encode($attrib);
         }else{
             $pathfile   = JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/views/template_style/tmpl/default.json';
-            if(\JFile::exists($pathfile)){
+            if(File::exists($pathfile)){
                 $data['layout'] = file_get_contents($pathfile);
             }
         }
@@ -364,7 +365,7 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
             }
 
             // Trigger the onContentBeforeSave event.
-            $result = \JFactory::getApplication() -> triggerEvent($this->event_before_save, array($this->option . '.' . $this->name, $table, $isNew, $data));
+            $result = Factory::getApplication() -> triggerEvent($this->event_before_save, array($this->option . '.' . $this->name, $table, $isNew, $data));
 
             if (in_array(false, $result, true))
             {
@@ -385,14 +386,14 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
 
             $db     = $this -> getDbo();
 
-            $user = JFactory::getUser();
+            $user = Factory::getUser();
 
             // Assign template style for menu
             if ($user->authorise('core.edit', 'com_menus'))
             {
                 $n    = 0;
                 $db   = $this -> getDbo();
-                $user = JFactory::getUser();
+                $user = Factory::getUser();
 
                 // Assign menu items with this template;
                 if(!empty($post['jform']['menus_assignment_old']) && count($post['jform']['menus_assignment_old'])){
@@ -567,20 +568,20 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
                             $tpl_base_path          = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH
                                 .DIRECTORY_SEPARATOR. $table -> template;
 
-                            while(\JFile::exists($tpl_base_path.DIRECTORY_SEPARATOR.'config'
+                            while(File::exists($tpl_base_path.DIRECTORY_SEPARATOR.'config'
                                 .DIRECTORY_SEPARATOR.$preset_name.'.json')){
                                 $preset_name    = StringHelper::increment($preset_name,'dash');
                             }
 
                             if(isset($presets['image']) && $presets['image']){
                                 $image_path = JPATH_ROOT.DIRECTORY_SEPARATOR.$presets['image'];
-                                if(\JFile::exists($image_path)){
-                                    $image_name = $preset_name.'.'.\JFile::getExt($image_path);
+                                if(File::exists($image_path)){
+                                    $image_name = $preset_name.'.'.File::getExt($image_path);
                                     $folder     = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH
                                         .DIRECTORY_SEPARATOR. $table -> template.DIRECTORY_SEPARATOR
                                         .'images'.DIRECTORY_SEPARATOR.'presets';
-                                    if(!\JFolder::exists($folder)){
-                                        \JFolder::create($folder);
+                                    if(!Folder::exists($folder)){
+                                        Folder::create($folder);
                                     }
                                     if(File::copy($image_path, $folder.DIRECTORY_SEPARATOR.$image_name)){
                                         $presets['image']   = 'templates/'.$table -> template
@@ -615,7 +616,7 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
             $this->cleanCache();
 
             // Trigger the onContentAfterSave event.
-            \JFactory::getApplication() -> triggerEvent($this->event_after_save, array($this->option . '.' . $this->name, $table, $isNew));
+            Factory::getApplication() -> triggerEvent($this->event_after_save, array($this->option . '.' . $this->name, $table, $isNew));
         }
         catch (Exception $e)
         {
@@ -643,11 +644,11 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
 
             // If the default.json config file exists in style
             $defaultLayout  = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH.'/'.$item -> template.'/config/default.json';
-            if(JFile::exists($defaultLayout)){
+            if(File::exists($defaultLayout)){
 //                $pathfile   = $defaultLayout;
             }
 
-            if(\JFile::exists($pathfile)){
+            if(File::exists($pathfile)){
                 $configLayout   = file_get_contents($pathfile);
                 $configLayout   = json_decode($configLayout);
 
@@ -667,7 +668,7 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
 
     public function setHome($id = 0)
     {
-        $user = JFactory::getUser();
+        $user = Factory::getUser();
         $db   = $this->getDbo();
 
         // Access checks.
@@ -707,7 +708,7 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
 
     public function unsetHome($id = 0)
     {
-        $user = JFactory::getUser();
+        $user = Factory::getUser();
         $db   = $this->getDbo();
 
         // Access checks.
@@ -746,7 +747,7 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
     public function delete(&$pks)
     {
         $pks	= (array) $pks;
-        $user	= JFactory::getUser();
+        $user	= Factory::getUser();
         $table	= $this->getTable();
 
         // Iterate the items to delete each one.
@@ -792,7 +793,7 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
 
     public function deleteTemplate(&$template)
     {
-        $user	= JFactory::getUser();
+        $user	= Factory::getUser();
         $table	= $this->getTable();
 
         // Access checks.
@@ -820,7 +821,7 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
 
     public function duplicate(&$pks)
     {
-        $user	= JFactory::getUser();
+        $user	= Factory::getUser();
 
         // Access checks.
         if (!$user->authorise('core.create', 'com_tz_portfolio_plus.style'))
@@ -899,8 +900,8 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
         if($item   = $this -> getItem()){
             $path   = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH.DIRECTORY_SEPARATOR.$item -> template
                 .DIRECTORY_SEPARATOR.'config';
-            if(\JFolder::exists($path)){
-                $files  = \JFolder::files($path,'.json',true,false,array('.json'));
+            if(Folder::exists($path)){
+                $files  = Folder::files($path,'.json',true,false,array('.json'));
                 if(count($files)){
                     $items  = array();
                     foreach($files as $i => $file){
@@ -923,7 +924,7 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
             $preset_name    = $data['preset'];
             $path           = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH.DIRECTORY_SEPARATOR.$data['template']
                 .DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.$preset_name.'.json';
-            if(\JFile::exists($path)){
+            if(File::exists($path)){
                 $table      = $this->getTable();
                 $config     = file_get_contents($path);
                 $config     = json_decode($config);
@@ -962,7 +963,7 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
                     }
 
                     // Trigger the onContentBeforeSave event.
-                    $result = \JFactory::getApplication() -> triggerEvent($this->event_before_save,
+                    $result = Factory::getApplication() -> triggerEvent($this->event_before_save,
                         array($this->option . '.' . $this->name, $table, $isNew));
 
                     if (in_array(false, $result, true))
@@ -994,7 +995,7 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
             $preset_name    = $data['preset'];
             $path           = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH.DIRECTORY_SEPARATOR.$data['template']
                 .DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.$preset_name.'.json';
-            if(\JFile::exists($path)){
+            if(File::exists($path)){
                 // Remove file
                 if(File::delete($path)){
                     $table      = $this->getTable();
@@ -1034,7 +1035,7 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
                         }
 
                         // Trigger the onContentBeforeSave event.
-                        $result = \JFactory::getApplication() -> triggerEvent($this->event_before_save,
+                        $result = Factory::getApplication() -> triggerEvent($this->event_before_save,
                             array($this->option . '.' . $this->name, $table, $isNew));
 
                         if (in_array(false, $result, true))
@@ -1066,7 +1067,7 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
     {
         if (!empty($record->id))
         {
-            $user = JFactory::getUser();
+            $user = Factory::getUser();
 
             if(isset($record -> asset_id) && !empty($record -> asset_id)) {
                 $state = $user->authorise('core.delete', $this->option . '.style.' . (int)$record->id);
@@ -1081,7 +1082,7 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
 
     protected function canEditState($record)
     {
-        $user = JFactory::getUser();
+        $user = Factory::getUser();
 
         // Check for existing group.
         if (!empty($record->id))

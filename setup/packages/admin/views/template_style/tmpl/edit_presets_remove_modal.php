@@ -21,14 +21,16 @@
 defined('_JEXEC') or die('Restricted access');
 
 ?>
-<div aria-hidden="true" aria-labelledby="myRemovePresetTitle" role="dialog" tabindex="-1" id="removePreset" class="modal modal-sm fade">
+<div aria-hidden="true" aria-labelledby="myRemovePresetTitle" role="dialog" tabindex="-1" id="removePreset" class="modal<?php
+echo !COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE?' tz-modal-sm':''; ?> fade">
     <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content modal-sm">
             <div class="modal-header">
-                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
-                <h4 id="myRemovePresetTitle" class="modal-title"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_REMOVE_PRESET');?></h4>
+                <h3 id="myRemovePresetTitle" class="modal-title"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_REMOVE_PRESET');?></h3>
+                <button aria-hidden="true" data-dismiss="modal" data-bs-dismiss="modal" class="btn-close close order-2" type="button"><?php
+                    echo !COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE?'×':'';?></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body p-3">
                 <p>
                     <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_CLICK_TO_REMOVE_PRESET','<font color="red">"<strong>'
                         .JText::_('JTOOLBAR_REMOVE').'</strong>"</font>')?>
@@ -36,7 +38,7 @@ defined('_JEXEC') or die('Restricted access');
                 <p><em class="text-warning"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_REMOVE_PRESET_BOX_DESC');?></em></p>
             </div>
             <div class="modal-footer">
-                <button data-dismiss="modal" class="btn btn-default" type="button"><?php echo JText::_('JTOOLBAR_CLOSE');?></button>
+                <button data-dismiss="modal" data-bs-dismiss="modal" class="btn btn-default" type="button"><?php echo JText::_('JTOOLBAR_CLOSE');?></button>
                 <button id="removePresetAccept" class="btn btn-danger" type="button"><?php echo JText::_('JTOOLBAR_REMOVE');?></button>
             </div>
         </div>

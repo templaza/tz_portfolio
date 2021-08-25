@@ -105,6 +105,12 @@ class TZ_Portfolio_PlusController extends TZ_Portfolio_PlusControllerLegacy
             }
 		}
 
+        if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+            $wa = $doc->getWebAssetManager();
+            $wa->useScript('core')
+                ->useScript('jquery');
+        }
+
         //Add Script to the header
         JHtml::_('bootstrap.framework');
 

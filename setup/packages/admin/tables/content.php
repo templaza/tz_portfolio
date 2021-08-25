@@ -20,6 +20,7 @@
 // No direct access
 defined('JPATH_PLATFORM') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Access\Rules;
 use Joomla\Registry\Registry;
 use Joomla\String\StringHelper;
@@ -219,7 +220,7 @@ class TZ_Portfolio_PlusTableContent extends JTable
 
         if (trim(str_replace('-', '', $this->alias)) == '')
         {
-            $this->alias = JFactory::getDate()->format('Y-m-d-H-i-s');
+            $this->alias = Factory::getDate()->format('Y-m-d-H-i-s');
         }
 
         if (trim(str_replace('&nbsp;', '', $this->fulltext)) == '')
@@ -542,8 +543,8 @@ class TZ_Portfolio_PlusTableContent extends JTable
      */
     public function store($updateNulls = false)
     {
-        $date = JFactory::getDate();
-        $user = JFactory::getUser();
+        $date = Factory::getDate();
+        $user = Factory::getUser();
 
         // Set publish_up to null date if not set
         if (!$this->publish_up)

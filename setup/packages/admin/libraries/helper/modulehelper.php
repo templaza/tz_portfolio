@@ -20,8 +20,9 @@
 // No direct access
 defined('_JEXEC') or die;
 
-use Joomla\Filesystem\File;
-use Joomla\Filesystem\Folder;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Filesystem\Folder;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Helper\ModuleHelper;
 
@@ -39,7 +40,7 @@ class TZ_Portfolio_PlusModuleHelper extends JModuleHelper{
 
     public static function getTZLayoutPath($module, $layout = 'default')
     {
-        $_template      = \JFactory::getApplication()->getTemplate(true);
+        $_template      = Factory::getApplication()->getTemplate(true);
         $template       = $_template -> template;
         $defaultLayout  = $layout;
         $moduleName     = '';
@@ -95,8 +96,8 @@ class TZ_Portfolio_PlusModuleHelper extends JModuleHelper{
             }
 
             // Add template.css file if it has have in template
-            if(\JFolder::exists(COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH.DIRECTORY_SEPARATOR.$tpTemplate -> template)) {
-//            if (\JFile::exists(COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH . '/' . $tpTemplate -> template
+            if(Folder::exists(COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH.DIRECTORY_SEPARATOR.$tpTemplate -> template)) {
+//            if (File::exists(COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH . '/' . $tpTemplate -> template
 //                . '/css/template.css')) {
 
                 $docOptions = array();
@@ -105,7 +106,7 @@ class TZ_Portfolio_PlusModuleHelper extends JModuleHelper{
                 $docOptions['params']       = $tplParams;
                 $docOptions['directory']    = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH;
 
-                $doc    = JFactory::getDocument();
+                $doc    = Factory::getApplication() -> getDocument();
 
                 $docClone   = clone($doc);
                 // Add template.css file if it has have in template
@@ -113,13 +114,13 @@ class TZ_Portfolio_PlusModuleHelper extends JModuleHelper{
                     . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'template.css';
                 if((TZ_Portfolio_PlusTemplate::getSassDirByStyle($tpTemplate -> template)
                         || (!TZ_Portfolio_PlusTemplate::getSassDirByStyle($tpTemplate -> template) && TZ_Portfolio_PlusTemplate::getSassDirCore()))
-                    && !JFile::exists($legacyPath) &&
+                    && !File::exists($legacyPath) &&
                     $cssRelativePath = TZ_Portfolio_PlusTemplate::getCssStyleName($tpTemplate -> template,
                         $modParams, $docOptions['params'] -> get('colors', array()), $docClone)){
                     $docClone->addStyleSheet(TZ_Portfolio_PlusUri::base(true)
                         . '/css/'.$cssRelativePath, array('version' => 'auto'));
                 }else
-                    if (\JFile::exists($legacyPath)) {
+                    if (File::exists($legacyPath)) {
                         $docClone->addStyleSheet(TZ_Portfolio_PlusUri::base(true) . '/templates/'
                             . $tpTemplate -> template . '/css/template.css', array('version' => 'auto'));
                     }
@@ -180,7 +181,7 @@ class TZ_Portfolio_PlusModuleHelper extends JModuleHelper{
 
     public static function getAddOnModuleLayout($group, $name, $module, $layout='default', $folder = 'modules', Registry $params = null){
 
-        $template   = JFactory::getApplication()->getTemplate();
+        $template   = Factory::getApplication()->getTemplate();
 
         if(!$layout){
             $layout = 'default';
@@ -250,7 +251,7 @@ class TZ_Portfolio_PlusModuleHelper extends JModuleHelper{
             .'/'. $cfglayout . '.php';
 
 
-        if($files = \JFolder::files(COM_TZ_PORTFOLIO_PLUS_SITE_HELPERS_PATH,'.php')){
+        if($files = Folder::files(COM_TZ_PORTFOLIO_PLUS_SITE_HELPERS_PATH,'.php')){
             foreach ($files as $file){
                 JLoader::import('com_tz_portfolio_plus.helpers.'.File::stripExt($file), JPATH_SITE.'/components');
             }

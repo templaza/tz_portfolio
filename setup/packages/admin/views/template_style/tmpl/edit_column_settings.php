@@ -23,13 +23,13 @@ defined('_JEXEC') or die('Restricted access');
 ?>
 <!-- Column setting popbox -->
 <div id="columnsettingbox" style="display: none;">
-    <ul class="nav nav-tab" id="columnsettings">
-        <li class="active"><a href="#basic" data-toggle="tab" class="active"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_BASIC');?></a></li>
-        <li><a href="#responsive" data-toggle="tab"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_RESPONSIVE');?></a></li>
+    <ul class="nav nav-tab<?php echo (COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE)?' nav-tabs':'';?>" id="columnsettings">
+        <li class="nav-item active"><a href="#basic" data-toggle="tab" data-bs-toggle="tab" class="active"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_BASIC');?></a></li>
+        <li class="nav-item"><a href="#responsive" data-toggle="tab" data-bs-toggle="tab"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_RESPONSIVE');?></a></li>
 <!--        <li><a href="#animation" data-toggle="tab">--><?php //echo JText::_('COM_TZ_PORTFOLIO_PLUS_ANIMATION');?><!--</a></li>-->
     </ul>
 
-    <div class="tab-content">
+    <div class="tab-content border-0 p-3">
         <div class="tab-pane active" id="basic">
             <div id="includetypes">
                 <label><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_TYPE');?>: </label>
@@ -135,35 +135,35 @@ defined('_JEXEC') or die('Restricted access');
 
         <?php echo JHtml::_('tzbootstrap.addrow');?>
             <div class="span6 col-md-6 rowcolorOuter">
-                <label><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_BACKGROUND');?> </label>
+                <label class="fs-6"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_BACKGROUND');?> </label>
                 <input type="text" class="form-control form-control-sm small rowbackgroundcolor" id="">
             </div>
 
             <div class="span6 col-md-6 rowcolorOuter">
-                <label><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_TEXT');?>: </label>
+                <label class="fs-6"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_TEXT');?>: </label>
                 <input type="text" class="form-control form-control-sm small rowtextcolor" id="">
             </div>
         <?php echo JHtml::_('tzbootstrap.endrow');?>
 
         <?php echo JHtml::_('tzbootstrap.addrow');?>
             <div class="span6 col-md-6 rowcolorOuter">
-                <label><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_LINK');?>: </label>
+                <label class="fs-6"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_LINK');?>: </label>
                 <input type="text" class="form-control form-control-sm small rowlinkcolor" id="">
             </div>
 
             <div class="span6 col-md-6 rowcolorOuter">
-                <label><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_LINK_HOVER');?>: </label>
+                <label class="fs-6"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_LINK_HOVER');?>: </label>
                 <input type="text" class="form-control form-control-sm small rowlinkhovercolor" id="">
             </div>
         <?php echo JHtml::_('tzbootstrap.endrow');?>
 
         <?php echo JHtml::_('tzbootstrap.addrow');?>
-            <div class="span6 col-md-6 rownameOuter">
+            <div class="span6 col-md-6 rownameOuter mt-2">
                 <label><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_MARGIN');?>: </label>
                 <input type="text" class="form-control form-control-sm small rowmargin" id="">
             </div>
 
-            <div class="span6 col-md-6 rowclassOuter">
+            <div class="span6 col-md-6 rowclassOuter mt-2">
                 <label><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_PADDING');?>: </label>
                 <input type="text" class="form-control form-control-sm small rowpadding" id="">
             </div>

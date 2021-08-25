@@ -20,14 +20,16 @@
 // No direct access.
 defined('_JEXEC') or die;
 
-$date           = JFactory::getDate();
+use Joomla\CMS\Factory;
+
+$date           = Factory::getDate();
 $xml	        = simplexml_load_file(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/tz_portfolio_plus.xml');
 
 $this->document->addStyleSheet(TZ_Portfolio_PlusUri::base() . '/vendor/intro/introjs.min.css', array('version' => 'v=2.9.3'));
 $this->document->addScript(TZ_Portfolio_PlusUri::base() . '/vendor/intro/intro.min.js', array('version' => 'v=2.9.3'));
 $this->document->addScript(TZ_Portfolio_PlusUri::base() . '/js/introguide.min.js', array('version' => 'v=2.9.3'));
 
-if(JFactory::getLanguage() -> isRtl()) {
+if(Factory::getApplication() -> getLanguage() -> isRtl()) {
     $this->document->addStyleSheet(TZ_Portfolio_PlusUri::base() . '/vendor/intro/introjs-rtl.min.css', array('version' => 'v=2.9.3'));
 }
 

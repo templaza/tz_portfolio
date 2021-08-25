@@ -24,10 +24,17 @@
 // no direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 if (!COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
     JHtml::_('formbehavior.chosen', 'select');
 } else {
     JHtml::_('formbehavior.chosen', 'select[multiple]');
+    // Include the Bootstrap component
+    Factory::getApplication()
+        ->getDocument()
+        ->getWebAssetManager()
+        ->useScript('bootstrap.modal');
 }
 
 $layoutData = array(
@@ -41,7 +48,7 @@ $listOrder	    = $this->escape($this->state->get('list.ordering'));
 $xml        = simplexml_load_file(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/tz_portfolio_plus.xml');
 $iframeHtml = JLayoutHelper::render('joomla.modal.iframe', $layoutData);
 
-$doc    = JFactory::getDocument();
+$doc    = Factory::getApplication() -> getDocument();
 $doc -> addScript(TZ_Portfolio_PlusUri::base(true, true).'/js/server-list.min.js', array('version' => 'auto'));
 $doc -> addScriptDeclaration('(function($){
     "use strict";
@@ -73,8 +80,8 @@ $doc -> addScriptDeclaration('(function($){
 $dataServer = $this -> state -> get('list.dataserver');
 ?>
 <div class="tpContainer">
-    <button type="button" data-toggle="collapse" data-target="#tpp-template__upload"
-            class="btn btn-success pull-left float-left hasTooltip tpp-extension__btn-collapse" title="<?php echo JText::_('JTOOLBAR_UPLOAD');
+    <button type="button" data-toggle="collapse" data-target="#tpp-template__upload" data-bs-toggle="collapse" data-bs-target="#tpp-template__upload"
+            class="btn btn-success pull-left float-left hasTooltip float-start tpp-extension__btn-collapse" title="<?php echo JText::_('JTOOLBAR_UPLOAD');
             ?>"><span class="icon-upload"></span> <?php echo JText::_('JTOOLBAR_UPLOAD'); ?></button>
     <?php
         // Search tools bar

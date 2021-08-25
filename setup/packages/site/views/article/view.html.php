@@ -164,6 +164,11 @@ class TZ_Portfolio_PlusViewArticle extends TZ_Portfolio_PlusViewLegacy
 
         $item -> params -> set('show_cat_icons', $item -> params -> get('show_icons'));
 
+		// Disable email icon with joomla 4.x
+        if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+            $item->params->set('show_email_icon', 0);
+        }
+
         // Create "link" and "fullLink" for article object
         $tmpl   = null;
         if($item -> params -> get('tz_use_lightbox',0)){

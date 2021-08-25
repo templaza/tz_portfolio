@@ -20,6 +20,7 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 class TZ_Portfolio_PlusHelperAddons{
@@ -51,7 +52,7 @@ class TZ_Portfolio_PlusHelperAddons{
         }
         catch (RuntimeException $e)
         {
-            JFactory::getApplication()  -> enqueueMessage($e->getMessage(), 'error');
+            Factory::getApplication()  -> enqueueMessage($e->getMessage(), 'error');
         }
 
         return $options;

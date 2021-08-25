@@ -20,6 +20,7 @@
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
 
 class TZ_Portfolio_PlusPluginModelItem extends JModelItem{
@@ -30,7 +31,7 @@ class TZ_Portfolio_PlusPluginModelItem extends JModelItem{
 
     protected function populateState()
     {
-        $input  = JFactory::getApplication() -> input;
+        $input  = Factory::getApplication() -> input;
         $return = $input -> get('return', null, 'default', 'base64');
         $this->setState('return_page', base64_decode($return));
 
