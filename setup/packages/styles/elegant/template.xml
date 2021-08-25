@@ -2,7 +2,7 @@
 <!DOCTYPE install PUBLIC "-//Joomla! 2.5//DTD template 1.0//EN" "http://www.joomla.org/xml/dtd/2.5/template-install.dtd">
 <extension version="3.1" type="tz_portfolio_plus-template" method="upgrade">
     <name>elegant</name>
-    <version>3.0</version>
+    <version>2.9</version>
     <creationDate>September 5th 2019</creationDate>
     <author>Sonny</author>
     <authorEmail>sonlv@templaza.com</authorEmail>
