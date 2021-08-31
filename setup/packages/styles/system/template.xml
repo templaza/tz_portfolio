@@ -2,7 +2,7 @@
 <!DOCTYPE install PUBLIC "-//Joomla! 2.5//DTD template 1.0//EN" "http://www.joomla.org/xml/dtd/2.5/template-install.dtd">
 <extension version="3.1" type="tz_portfolio_plus-template" method="upgrade">
     <name>system</name>
-    <version>1.2</version>
+    <version>1.3</version>
     <creationDate>July 17th 2015</creationDate>
     <author>DuongTVTemplaza</author>
     <authorEmail>info@templaza.com</authorEmail>

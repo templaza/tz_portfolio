@@ -16,6 +16,10 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+31/08/2021 - 2.5.1
+	
+	- Fix error Form::loadForm could not load file.
+
 25/08/2021 - 2.5.0
 	
 	- Compatible with joomla 4.
