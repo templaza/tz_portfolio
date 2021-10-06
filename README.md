@@ -16,6 +16,12 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+06/10/2021 - 2.5.1
+	
+	- Fix error Form::loadForm could not load file with Joomla 4.
+	- Fix issue module's parameters with joomla 3.9.x 
+	- Fix issue save tag's title.
+
 25/08/2021 - 2.5.0
 	
 	- Compatible with joomla 4.
