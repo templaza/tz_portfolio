@@ -84,8 +84,14 @@ if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE){
                         <?php } ?>
                         <?php echo HTMLHelper::_($jTab.'.startTabSet', 'myTab', array('active' => 'layout')); ?>
 
+                            <?php
+                            $use_single_lb  = true;
+                            if(isset($this -> item -> params) && !empty($this -> item -> params) && isset($this -> item -> params -> use_single_layout_builder)) {
+                                $use_single_lb = filter_var($this -> item -> params -> use_single_layout_builder, FILTER_VALIDATE_BOOLEAN);
+                            }
+                            ?>
                         <?php echo HTMLHelper::_($jTab.'.addTab', 'myTab', 'layout', JText::_('COM_TZ_PORTFOLIO_PLUS_LAYOUT', true)); ?>
-                        <div id="layout_params" style="<?php echo intval($this->item->params->use_single_layout_builder) ? 'display: block;' : 'display: none;'; ?>">
+                        <div id="layout_params" style="<?php echo $use_single_lb ? 'display: block;' : 'display: none;'; ?>">
                             <div id="plazart-admin-device">
                                 <div class="pull-left float-left float-start plazart-admin-layout-header"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_LAYOUTBUIDER_HEADER')?></div>
                                 <div class="pull-right float-right float-end btn-group-sm mt-3">
@@ -157,6 +163,10 @@ if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE){
                             <?php endif; ?>
                             <fieldset>
                                 <?php foreach ($fields as $field){
+                                    if(version_compare(JVERSION, '3.10', '<')
+                                        && $field -> __get('fieldname') == 'use_single_layout_builder') {
+                                        $field->__set('layout', 'joomla.form.field.radio');
+                                    }
                                     echo $field -> renderField();
                                 } ?>
                             </fieldset>

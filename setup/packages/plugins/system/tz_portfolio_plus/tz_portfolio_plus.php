@@ -66,6 +66,39 @@ class PlgSystemTZ_Portfolio_Plus extends JPlugin {
 
     }
 
+    public function onContentPrepareForm($form, $data){
+        if(version_compare(JVERSION, '3.10', '<')) {
+            $form_name = $form->getName();
+            list($options, $view) = explode('.', $form_name);
+            $is_my_module  = false;
+            if($form_name == 'com_modules.module'){
+                $module     	= (!empty($data) && isset($data -> module) && !empty($data -> module))?$data -> module:false;
+                $is_my_module  	= ($module && preg_match('/^mod_tz_portfolio_plus/i', $module))?true:$is_my_module;
+            }
+
+            if ($options == 'com_tz_portfolio_plus' || $is_my_module) {
+                $fieldsets   = $form -> getFieldsets();
+                if($fieldsets && count($fieldsets)){
+                    foreach($fieldsets as $fsname => $fieldset){
+                        $fields = $form -> getFieldset($fsname);
+                        if($fields && count($fields)){
+                            foreach($fields as &$field){
+                                $f_type = strtolower($field -> __get('type'));
+                                if($f_type != 'radio'){
+                                    continue;
+                                }
+                                if($field -> __get('layout') == 'joomla.form.field.radio.switcher') {
+                                    $form->setFieldAttribute($field->__get('fieldname'), 'layout', '', $field->__get('group'));
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     protected function _tppAllowImport(){
 
         $app    = JFactory::getApplication();

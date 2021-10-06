@@ -179,6 +179,7 @@ class TZ_Portfolio_PlusModelTag extends JModelAdmin
             // Check tag's title
             $title_check    = TZ_Portfolio_PlusHelperTags::getTagByKey(array('title' => $data['title'], 'id' => (int) $data['id']),
                 array('id' => true));
+
             if($title_check && count($title_check)){
                 $msg    = JText::sprintf('COM_TZ_PORTFOLIO_PLUS_TITLE_SAVE_WARNING', $input -> get('view'));
                 $this -> setError($msg);
@@ -257,8 +258,8 @@ class TZ_Portfolio_PlusModelTag extends JModelAdmin
 
     protected function prepareTable($table){
         if(isset($table -> title) && $table -> title){
-            $table -> title   = str_replace(array(',',';','\'','"','.','?'
-            ,'/','\\','<','>','(',')','*','&','^','%','$','#','@','!','-','+','|','`','~'),' ',$table -> title);
+//            $table -> title   = str_replace(array(',',';','\'','"','.','?'
+//            ,'/','\\','<','>','(',')','*','&','^','%','$','#','@','!','-','+','|','`','~'),' ',$table -> title);
             $table -> title  = trim($table -> title);
         }
         if(is_array($table -> params)){
