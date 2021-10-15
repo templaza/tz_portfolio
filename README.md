@@ -16,6 +16,11 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+15/10/2021 - 2.5.2
+	
+	- Fix error email icon in elegant's portfolio view with joomla 4.
+	- Fix issue the image file does not exist of image add-on.
+
 06/10/2021 - 2.5.1
 	
 	- Fix error Form::loadForm could not load file with Joomla 4.
