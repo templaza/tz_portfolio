@@ -74,6 +74,10 @@ class TZ_Portfolio_PlusViewPortfolio extends JViewLegacy
         $this -> state  = $state;
         $params         = $state -> get('params');
 
+        if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE){
+            $params -> set('show_cat_email_icon', 0);
+        }
+
         // Get filter tag information
         if($tagId = $state -> get('filter.tagId')) {
             $this -> tagAbout   = TZ_Portfolio_PlusFrontHelperTags::getTagById($tagId);

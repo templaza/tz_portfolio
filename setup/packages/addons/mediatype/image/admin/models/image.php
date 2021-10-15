@@ -21,6 +21,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Filesystem\Folder;
 use Joomla\Registry\Registry;
 use TZ_Portfolio_Plus\Image\TppImageWaterMark;
 
@@ -207,6 +208,11 @@ class PlgTZ_Portfolio_PlusMediaTypeModelImage extends TZ_Portfolio_PlusPluginMod
         $image_hoverMimeType    = null;
         $image_hoverSize        = null;
 
+        // Create dir if not exists
+        if(!is_dir(COM_TZ_PORTFOLIO_PLUS_MEDIA_ARTICLE_ROOT)){
+            Folder::create(COM_TZ_PORTFOLIO_PLUS_MEDIA_ARTICLE_ROOT);
+        }
+
         // Create original image with new name (upload from client)
         if(count($images) && !empty($images['tmp_name'])) {
 
@@ -230,13 +236,19 @@ class PlgTZ_Portfolio_PlusMediaTypeModelImage extends TZ_Portfolio_PlusPluginMod
         }elseif(isset($image_data['url_server'])
             && !empty($image_data['url_server'])){ // Create original image with new name (upload from server)
 
+            $url_server = $image_data['url_server'];
+            if(strpos($url_server, '#') != false) {
+                list($url_server, $other) = explode('#', $url_server);
+            }
+
             // Get image file type
-            $imageType  = File::getExt($image_data['url_server']);
+            $imageType  = File::getExt($url_server);
             $imageType  = strtolower($imageType);
+
 
             // Get image's mime type
             $imageObj -> loadFile(JPATH_ROOT . DIRECTORY_SEPARATOR
-                . $image_data['url_server']);
+                . $url_server);
             $imageProperty  = $imageObj->getImageFileProperties($imageObj->getPath());
             $imageMimeType  = $imageProperty -> mime;
 
@@ -245,7 +257,7 @@ class PlgTZ_Portfolio_PlusMediaTypeModelImage extends TZ_Portfolio_PlusPluginMod
 
             $path   = COM_TZ_PORTFOLIO_PLUS_MEDIA_ARTICLE_ROOT.DIRECTORY_SEPARATOR;
             $path  .=  $data -> alias . '-' . $data -> id . '_o';
-            $path  .= '.' . File::getExt($image_data['url_server']);
+            $path  .= '.' . File::getExt($url_server);
         }
 
         // Create original image hover with new name (upload from client)
@@ -271,13 +283,18 @@ class PlgTZ_Portfolio_PlusMediaTypeModelImage extends TZ_Portfolio_PlusPluginMod
         }elseif(isset($image_data['url_detail_server'])
             && !empty($image_data['url_detail_server'])){ // Create original image with new name (upload from server)
 
+            $url_detail_server = $image_data['url_detail_server'];
+            if(strpos($url_detail_server, '#') != false) {
+                list($url_detail_server, $other) = explode('#', $url_detail_server);
+            }
+
             // Get image hover file type
-            $image_hoverType  = File::getExt($image_data['url_detail_server']);
+            $image_hoverType  = File::getExt($url_detail_server);
             $image_hoverType  = strtolower($image_hoverType);
 
             // Get image hover's mime type
             $imageObj -> loadFile(JPATH_ROOT . DIRECTORY_SEPARATOR
-                . $image_data['url_detail_server']);
+                . $url_detail_server);
 
             $image_hoverProperty    = $imageObj->getImageFileProperties($imageObj->getPath());
             $image_hoverMimeType    = $image_hoverProperty -> mime;
@@ -287,7 +304,7 @@ class PlgTZ_Portfolio_PlusMediaTypeModelImage extends TZ_Portfolio_PlusPluginMod
 
             $path_hover     = COM_TZ_PORTFOLIO_PLUS_MEDIA_ARTICLE_ROOT.DIRECTORY_SEPARATOR;
             $path_hover    .=  $data -> alias . '-' . $data -> id . '-h_o';
-            $path_hover    .= '.' . File::getExt($image_data['url_detail_server']);
+            $path_hover    .= '.' . File::getExt($url_detail_server);
         }
 
         // Upload original image
@@ -328,8 +345,8 @@ class PlgTZ_Portfolio_PlusMediaTypeModelImage extends TZ_Portfolio_PlusPluginMod
             if(isset($images['tmp_name']) && !empty($images['tmp_name'])
                 && !File::upload($images['tmp_name'],$path)){
                 $path       = '';
-            }elseif(isset($image_data['url_server']) && !empty($image_data['url_server'])
-                && !File::copy(JPATH_ROOT.DIRECTORY_SEPARATOR.$image_data['url_server'],$path)){
+            }elseif(isset($url_server) && !empty($url_server)
+                && !File::copy(JPATH_ROOT.DIRECTORY_SEPARATOR.$url_server,$path)){
                 $path       = '';
             }
         }
@@ -372,8 +389,8 @@ class PlgTZ_Portfolio_PlusMediaTypeModelImage extends TZ_Portfolio_PlusPluginMod
             if(isset($images_hover['tmp_name']) && !empty($images_hover['tmp_name'])
                 && !File::upload($images_hover['tmp_name'],$path_hover)){
                 $path_hover = '';
-            }elseif(isset($image_data['url_detail_server']) && !empty($image_data['url_detail_server'])
-                && !File::copy(JPATH_ROOT.DIRECTORY_SEPARATOR.$image_data['url_detail_server'],$path_hover)){
+            }elseif(isset($url_detail_server) && !empty($url_detail_server)
+                && !File::copy(JPATH_ROOT.DIRECTORY_SEPARATOR.$url_detail_server,$path_hover)){
                 $path_hover = '';
             }
         }
