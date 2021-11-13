@@ -736,19 +736,21 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
                     }
 
                     $associations[$item->language] = $item->id;
-
-                    // Deleting old association for these items
-                    $db = Factory::getDbo();
-                    $query = $db->getQuery(true)
-                        ->delete('#__associations')
-                        ->where('context=' . $db->quote('com_tz_portfolio_plus.item'))
-                        ->where('id IN (' . implode(',', $associations) . ')');
-                    $db->setQuery($query);
-                    $db->execute();
-
-                    if ($error = $db->getErrorMsg()) {
-                        $this->setError($error);
-
+                    
+                    try 
+                    {
+                         // Deleting old association for these items
+                        $db = Factory::getDbo();
+                        $query = $db->getQuery(true)
+                            ->delete('#__associations')
+                            ->where('context=' . $db->quote('com_tz_portfolio_plus.item'))
+                            ->where('id IN (' . implode(',', $associations) . ')');
+                        $db->setQuery($query);
+                        $db->execute();
+                    } 
+                    catch (\InvalidArgumentException $e)
+                    {
+                        $this->setError($e->getMessage());
                         return false;
                     }
 
@@ -762,11 +764,13 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
                             $query->values($id . ',' . $db->quote('com_tz_portfolio_plus.item') . ',' . $db->quote($key));
                         }
 
-                        $db->setQuery($query);
-                        $db->execute();
-
-                        if ($error = $db->getErrorMsg()) {
-                            $this->setError($error);
+                        try {
+                            $db->setQuery($query);
+                            $db->execute();
+                        } 
+                        catch (\InvalidArgumentException $e)
+                        {
+                            $this->setError($e->getMessage());
                             return false;
                         }
                     }
@@ -868,10 +872,14 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
         $query -> delete('#__tz_portfolio_plus_content_category_map');
         $query -> where('contentid = '.$artId);
         $query -> where('catid NOT IN('.implode(',', $catIds).')');
-        $db -> setQuery($query);
 
-        if(!$db -> execute()){
-            $this -> setError($db -> getErrorMsg());
+        try {
+            $db->setQuery($query);
+            $db->execute();
+        } 
+        catch (\InvalidArgumentException $e)
+        {
+            $this->setError($e->getMessage());
             return false;
         }
 
