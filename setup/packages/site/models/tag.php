@@ -35,33 +35,35 @@ class TZ_Portfolio_PlusModelTag extends JModelLegacy
     }
 
     function getTag(){
-        $db     = JFactory::getDbo();
-        $query  = $db -> getQuery(true);
-        $query -> select('t.*,x.contentid');
-        $query -> from($db -> quoteName('#__tz_portfolio_plus_tags').' AS t');
-        $query -> join('INNER',$db -> quoteName('#__tz_portfolio_plus_tag_content_map').' AS x ON t.id=x.tagsid');
-        $query -> where('t.published = 1');
-        if($pk  = $this -> getState('article.id')){
-            if(is_array($pk)){
-                $query -> where('x.contentid IN('.implode(',',$pk).')');
-            }else{
-                $query -> where('x.contentid = '.$pk);
+        try{
+            $db     = JFactory::getDbo();
+            $query  = $db -> getQuery(true);
+            $query -> select('t.*,x.contentid');
+            $query -> from($db -> quoteName('#__tz_portfolio_plus_tags').' AS t');
+            $query -> join('INNER',$db -> quoteName('#__tz_portfolio_plus_tag_content_map').' AS x ON t.id=x.tagsid');
+            $query -> where('t.published = 1');
+            if($pk  = $this -> getState('article.id')){
+                if(is_array($pk)){
+                    $query -> where('x.contentid IN('.implode(',',$pk).')');
+                }else{
+                    $query -> where('x.contentid = '.$pk);
+                }
             }
-        }
-        if($order   = $this -> getState('list.ordering')){
-            $query -> order($order,$this -> getState('list.direction','ASC'));
-        }
-        $db -> setQuery($query);
+            if($order   = $this -> getState('list.ordering')){
+                $query -> order($order,$this -> getState('list.direction','ASC'));
+            }
+            $db -> setQuery($query);
+            $db -> execute();
 
-        if(!$db -> query()){
-            var_dump($db -> getErrorMsg());
+            $rows   = $db -> loadObjectList();
+
+            if(count($rows)>0){
+                return $rows;
+            }
+        }catch (\InvalidArgumentException $e)
+        {
+            var_dump($e->getMessage());
             return false;
-        }
-
-        $rows   = $db -> loadObjectList();
-
-        if(count($rows)>0){
-            return $rows;
         }
         return false;
     }

@@ -272,30 +272,31 @@ class TZ_Portfolio_PlusHelperTags{
 
     protected static function _insertTagsByTitle($titles){
         if($titles && is_array($titles) && count($titles)>0){
-            $db     = TZ_Portfolio_PlusDatabase::getDbo();
-            $query  = $db -> getQuery(true);
+            try {
+                $db = TZ_Portfolio_PlusDatabase::getDbo();
+                $query = $db->getQuery(true);
 
-            $query -> insert('#__tz_portfolio_plus_tags');
-            $query -> columns('title, alias, published');
+                $query->insert('#__tz_portfolio_plus_tags');
+                $query->columns('title, alias, published');
 
-            foreach($titles as $title){
-                if (Factory::getConfig()->get('unicodeslugs') == 1)
-                {
-                    $alias  = JFilterOutput::stringURLUnicodeSlug($title);
+                foreach ($titles as $title) {
+                    if (Factory::getConfig()->get('unicodeslugs') == 1) {
+                        $alias = JFilterOutput::stringURLUnicodeSlug($title);
+                    } else {
+                        $alias = JFilterOutput::stringURLSafe($title);
+                    }
+                    $query->values($db->quote($title) . ',' . $db->quote($alias) . ', 1');
                 }
-                else
-                {
-                    $alias  = JFilterOutput::stringURLSafe($title);
-                }
-                $query -> values($db -> quote($title) .',' . $db -> quote($alias).', 1');
-            }
-            $db -> setQuery($query);
+                $db->setQuery($query);
 
-            if(!$db -> execute()){
-                self::_setError($db -> getErrorMsg());
+                $db->execute();
+
+                return $db->insertid();
+            }catch (\InvalidArgumentException $e)
+            {
+                self::_setError($e->getMessage());
                 return false;
             }
-            return $db -> insertid();
         }
         return false;
     }

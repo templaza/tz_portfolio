@@ -72,45 +72,47 @@ class JFormFieldCategoryParent extends JFormFieldList
 			$oldCat = $this->form->getValue($name);
 		}
 
-		$db		= TZ_Portfolio_PlusDatabase::getDbo();
-		$query	= $db->getQuery(true);
+		try{
+            $db		= TZ_Portfolio_PlusDatabase::getDbo();
+            $query	= $db->getQuery(true);
 
-		$query->select('a.id AS value, a.title AS text, a.level');
-		$query->from('#__tz_portfolio_plus_categories AS a');
-		$query->join('LEFT', $db->quoteName('#__tz_portfolio_plus_categories').' AS b ON a.lft > b.lft AND a.rgt < b.rgt');
+            $query->select('a.id AS value, a.title AS text, a.level');
+            $query->from('#__tz_portfolio_plus_categories AS a');
+            $query->join('LEFT', $db->quoteName('#__tz_portfolio_plus_categories').' AS b ON a.lft > b.lft AND a.rgt < b.rgt');
 
-		// Filter by the type
-		if ($extension = $this->form->getValue('extension')) {
-			$query->where('(a.extension = '.$db->quote($extension).' OR a.parent_id = 0)');
-		}
-		if ($this->element['parent'])
-		{
-		// Prevent parenting to children of this item.
-			if ($id = $this->form->getValue('id')) {
-				$query->join('LEFT', $db->quoteName('#__tz_portfolio_plus_categories').' AS p ON p.id = '.(int) $id);
-				$query->where('NOT(a.lft >= p.lft AND a.rgt <= p.rgt)');
+            // Filter by the type
+            if ($extension = $this->form->getValue('extension')) {
+                $query->where('(a.extension = '.$db->quote($extension).' OR a.parent_id = 0)');
+            }
+            if ($this->element['parent'])
+            {
+            // Prevent parenting to children of this item.
+                if ($id = $this->form->getValue('id')) {
+                    $query->join('LEFT', $db->quoteName('#__tz_portfolio_plus_categories').' AS p ON p.id = '.(int) $id);
+                    $query->where('NOT(a.lft >= p.lft AND a.rgt <= p.rgt)');
 
-				$rowQuery	= $db->getQuery(true);
-				$rowQuery->select('a.id AS value, a.title AS text, a.level, a.parent_id');
-				$rowQuery->from('#__tz_portfolio_plus_categories AS a');
-				$rowQuery->where('a.id = ' . (int) $id);
-				$db->setQuery($rowQuery);
-				$row = $db->loadObject();
-			}
-		}
-		$query->where('a.published IN (0,1)');
-		$query->group('a.id, a.title, a.level, a.lft, a.rgt, a.extension, a.parent_id');
-		$query->order('a.lft ASC');
+                    $rowQuery	= $db->getQuery(true);
+                    $rowQuery->select('a.id AS value, a.title AS text, a.level, a.parent_id');
+                    $rowQuery->from('#__tz_portfolio_plus_categories AS a');
+                    $rowQuery->where('a.id = ' . (int) $id);
+                    $db->setQuery($rowQuery);
+                    $row = $db->loadObject();
+                }
+            }
+            $query->where('a.published IN (0,1)');
+            $query->group('a.id, a.title, a.level, a.lft, a.rgt, a.extension, a.parent_id');
+            $query->order('a.lft ASC');
 
-		// Get the options.
-		$db->setQuery($query);
+            // Get the options.
+            $db->setQuery($query);
 
-		$options = $db->loadObjectList();
+            $options = $db->loadObjectList();
 
-		// Check for a database error.
-		if ($db->getErrorNum()) {
-			JError::raiseWarning(500, $db->getErrorMsg());
-		}
+		}catch (\InvalidArgumentException $e)
+        {
+            Factory::getApplication()  -> enqueueMessage($e->getMessage(), 'error');
+            return false;
+        }
 
 		// Pad the option text with spaces using depth level as a multiplier.
 		for ($i = 0, $n = count($options); $i < $n; $i++)

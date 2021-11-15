@@ -606,40 +606,41 @@ class TZ_Portfolio_PlusModelCategory extends JModelAdmin
 			$associations[$table->language] = $table->id;
 
 			// Deleting old association for these items
-			$db = $this -> getDbo();
-			$query = $db->getQuery(true)
-				->delete('#__associations')
-				->where($db->quoteName('context') . ' = ' . $db->quote('com_tz_portfolio_plus.categories.item'))
-				->where($db->quoteName('id') . ' IN (' . implode(',', $associations) . ')');
-			$db->setQuery($query);
-			$db->execute();
-
-			if ($error = $db->getErrorMsg())
-			{
-				$this->setError($error);
-				return false;
-			}
+            try{
+                $db = $this -> getDbo();
+                $query = $db->getQuery(true)
+                    ->delete('#__associations')
+                    ->where($db->quoteName('context') . ' = ' . $db->quote('com_tz_portfolio_plus.categories.item'))
+                    ->where($db->quoteName('id') . ' IN (' . implode(',', $associations) . ')');
+                $db->setQuery($query);
+                $db->execute();
+			}catch (\InvalidArgumentException $e)
+            {
+                $this->setError($e->getMessage());
+                return false;
+            }
 
 			if (!$all_language && count($associations))
 			{
-				// Adding new association for these items
-				$key = md5(json_encode($associations));
-				$query->clear()
-					->insert('#__associations');
+			    try{
+                    // Adding new association for these items
+                    $key = md5(json_encode($associations));
+                    $query->clear()
+                        ->insert('#__associations');
 
-				foreach ($associations as $id)
-				{
-					$query->values($id . ',' . $db->quote('com_tz_portfolio_plus.categories.item') . ',' . $db->quote($key));
-				}
+                    foreach ($associations as $id)
+                    {
+                        $query->values($id . ',' . $db->quote('com_tz_portfolio_plus.categories.item') . ',' . $db->quote($key));
+                    }
 
-				$db->setQuery($query);
-				$db->execute();
+                    $db->setQuery($query);
+                    $db->execute();
 
-				if ($error = $db->getErrorMsg())
-				{
-					$this->setError($error);
-					return false;
-				}
+				}catch (\InvalidArgumentException $e)
+                {
+                    $this->setError($e->getMessage());
+                    return false;
+                }
 			}
 		}
 

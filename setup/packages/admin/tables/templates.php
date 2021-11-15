@@ -56,19 +56,22 @@ class TZ_Portfolio_PlusTableTemplates extends JTable
     }
     public function getHome(){
 //        if($this -> _hasHome()){
+        try{
             $query  = $this -> _db -> getQuery(true)
                 -> select('*')
                 -> from($this -> _tbl)
                 -> where($this -> _db -> quoteName('home').'= 1');
             $this -> _db -> setQuery($query);
-            if(!$data = $this -> _db -> loadObject()){
-                $this->setError($this -> _db -> getErrorMsg());
-                return false;
-            }
+            $data = $this -> _db -> loadObject();
             foreach($data as $key => $val){
                 $this -> set($key,$val);
             }
             return $data;
+        }catch (\InvalidArgumentException $e)
+        {
+            $this->setError(JText::sprintf('JLIB_DATABASE_ERROR_DELETE_FAILED', get_class($this), $e -> getMessage()));
+            return false;
+        }
 //        }
 //        return null;
     }

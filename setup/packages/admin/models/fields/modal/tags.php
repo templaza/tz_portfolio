@@ -62,17 +62,20 @@ class JFormFieldModal_Tags extends JFormField
 		$html	= array();
 		$link	= 'index.php?option=com_tz_portfolio_plus&amp;view=tags&amp;layout=modal&amp;tmpl=component&amp;function=jSelectTag_'.$this->id;
 
-		$db	= TZ_Portfolio_PlusDatabase::getDbo();
-		$db->setQuery(
-			'SELECT title' .
-			' FROM #__tz_portfolio_plus_tags' .
-			' WHERE id = '.(int) $this->value
-		);
-		$title = $db->loadResult();
+		try{
+            $db	= TZ_Portfolio_PlusDatabase::getDbo();
+            $db->setQuery(
+                'SELECT title' .
+                ' FROM #__tz_portfolio_plus_tags' .
+                ' WHERE id = '.(int) $this->value
+            );
+            $title = $db->loadResult();
 
-		if ($error = $db->getErrorMsg()) {
-			JError::raiseWarning(500, $error);
-		}
+		}catch (\InvalidArgumentException $e)
+        {
+            Factory::getApplication()  -> enqueueMessage($e->getMessage(), 'error');
+            return false;
+        }
 
 		if (empty($title)) {
 			$title = JText::_('COM_TZ_PORTFOLIO_PLUS_SELECT_AN_TAG');

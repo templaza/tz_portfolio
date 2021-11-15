@@ -65,30 +65,31 @@ if ( $params->get('access') == 1 && !$user->get('id') ) {
 		$query -> where('content_id = '.$cid);
 		$db -> setQuery( $query );
 		$votesdb = $db->loadObject();
-		if ( !$votesdb ) {
-			$query -> clear();
-			$query -> insert('#__tz_portfolio_plus_content_rating');
-			$query -> columns('content_id, lastip, rating_sum, rating_count');
-			$query -> values($cid.','. $db -> quote($currip).','.$user_rating.',1');
-			$db->setQuery( $query );
-			if(!$db -> execute()){
-				die($db -> getErrorMsg());
-			}
-		} else {
-			if ($currip != ($votesdb->lastip)) {
-				$query -> clear();
-				$query -> update('#__tz_portfolio_plus_content_rating');
-				$query -> set('rating_count = rating_count + 1')
-					-> set('rating_sum = rating_sum + ' .   $user_rating);
-				$query -> where('content_id = '. $cid);
-				if(!$db -> execute()){
-					die($db -> getErrorMsg());
-				}
-			} else {
-				echo 'voted';
-				exit();
-			}
-		}
+		try{
+            if ( !$votesdb ) {
+                $query -> clear();
+                $query -> insert('#__tz_portfolio_plus_content_rating');
+                $query -> columns('content_id, lastip, rating_sum, rating_count');
+                $query -> values($cid.','. $db -> quote($currip).','.$user_rating.',1');
+                $db->setQuery( $query );
+                $db -> execute();
+            } else {
+                if ($currip != ($votesdb->lastip)) {
+                    $query -> clear();
+                    $query -> update('#__tz_portfolio_plus_content_rating');
+                    $query -> set('rating_count = rating_count + 1')
+                        -> set('rating_sum = rating_sum + ' .   $user_rating);
+                    $query -> where('content_id = '. $cid);
+                    $db -> execute();
+                } else {
+                    echo 'voted';
+                    exit();
+                }
+            }
+		}catch (\InvalidArgumentException $e)
+        {
+            die($e->getMessage());
+        }
 
 		echo 'thanks';
 	}

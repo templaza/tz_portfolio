@@ -24,16 +24,16 @@ use Joomla\CMS\Factory;
 
 class TZ_Portfolio_PlusTableTags extends JTable
 {
-    /** @var int Primary key */
-    var $id 				= 0;
-    /** @var string */
-    var $title 				= null;
-    /** @var int */
-    var $published  		= null;
-    /** @var string*/
-    var $attribs		    = null;
-    /** @var string*/
-    var $description		= null;
+//    /** @var int Primary key */
+//    var $id 				= 0;
+//    /** @var string */
+//    var $title 				= null;
+//    /** @var int */
+//    var $published  		= null;
+//    /** @var string*/
+//    var $attribs		    = null;
+//    /** @var string*/
+//    var $description		= null;
 
     function __construct(&$db) {
         parent::__construct('#__tz_portfolio_plus_tags','id',$db);
@@ -126,17 +126,18 @@ class TZ_Portfolio_PlusTableTags extends JTable
             }
         }
 
-        // Delete the row by primary key from tags_xref table
-        $query = $this->_db->getQuery(true);
-        $query->delete();
-        $query->from($this -> _db -> quoteName('#__tz_portfolio_plus_tag_content_map')) ;
-        $query->where($this->_tbl_key . ' = ' . $this->_db->quote($pk));
-        $this ->_db->setQuery($query);
-        // Check for a database error.
-        if (!$this->_db->execute())
+        try{
+            // Delete the row by primary key from tags_xref table
+            $query = $this->_db->getQuery(true);
+            $query->delete();
+            $query->from($this -> _db -> quoteName('#__tz_portfolio_plus_tag_content_map')) ;
+            $query->where($this->_tbl_key . ' = ' . $this->_db->quote($pk));
+            $this ->_db->setQuery($query);
+
+            $this -> _db -> execute();
+        }catch (\InvalidArgumentException $e)
         {
-            $e = new JException(JText::sprintf('JLIB_DATABASE_ERROR_DELETE_FAILED', get_class($this), $this->_db->getErrorMsg()));
-            $this->setError($e);
+            $this->setError(JText::sprintf('JLIB_DATABASE_ERROR_DELETE_FAILED', get_class($this), $e -> getMessage()));
             return false;
         }
 
