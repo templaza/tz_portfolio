@@ -51,7 +51,10 @@ class TZ_Portfolio_PlusViewArticles extends JViewLegacy
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
-			JError::raiseError(500, implode("\n", $errors));
+		    $app    = Factory::getApplication();
+		    $app -> enqueueMessage(implode("\n", $errors), 'error');
+//		    var_dump($errors); die();
+//			JError::raiseError(500, implode("\n", $errors));
 			return false;
 		}
 

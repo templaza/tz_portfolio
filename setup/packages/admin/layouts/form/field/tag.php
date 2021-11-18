@@ -23,6 +23,14 @@ use Joomla\Registry\Registry;
 
 extract($displayData);
 
+if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+    $doc    	= JFactory::getDocument();
+    $wa = $doc->getWebAssetManager();
+    $wa ->useScript('jquery');
+}else{
+    JHtml::_('jquery.framework');
+}
+
 // Tags field ajax
 $chosenAjaxSettings = new Registry(
     array(

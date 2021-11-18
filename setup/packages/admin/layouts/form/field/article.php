@@ -30,6 +30,14 @@ if(isset($field) && $field) {
         $allowEdit  = $edit;
     }
 }
+
+if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+    $doc    	= JFactory::getDocument();
+    $wa = $doc->getWebAssetManager();
+    $wa ->useScript('jquery');
+}else{
+    JHtml::_('jquery.framework');
+}
 ?>
 
 <?php

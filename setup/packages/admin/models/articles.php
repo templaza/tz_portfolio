@@ -277,8 +277,9 @@ class TZ_Portfolio_PlusModelArticles extends JModelList
         }
 
         // Filter by fields group
-        if($this -> state -> get('filter.group')!=0)
-            $query -> where('g.id ='.$this -> getState('filter.group'));
+        if($group_id = $this -> state -> get('filter.group')) {
+            $query->where('g.id =' .$group_id);
+        }
 
 		// Implement View Level Access
 		if (!$user->authorise('core.admin'))

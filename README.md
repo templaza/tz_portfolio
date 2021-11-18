@@ -16,6 +16,12 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+18/11/2021 - 2.5.3
+	
+	- Fix 'getErrorMsg' is deprecated in Joomla 4.
+	- Fix issue choose category in create article menu with Joomla 4.0.4
+	- Fix issue and update color spectrum js v1.8.1.
+
 15/10/2021 - 2.5.2
 	
 	- Fix error email icon in elegant's portfolio view with joomla 4.

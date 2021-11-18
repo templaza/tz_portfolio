@@ -21,7 +21,14 @@ defined('_JEXEC') or die;
 
 extract($displayData);
 
-JHtml::_('jquery.framework');
+
+if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+    $doc    	= JFactory::getDocument();
+    $wa = $doc->getWebAssetManager();
+    $wa ->useScript('jquery');
+}else{
+    JHtml::_('jquery.framework');
+}
 
 ?>
 <fieldset id="<?php echo $id; ?>" class="checkboxes <?php echo $class; ?>"<?php echo $required?' required aria-required="true"':'';

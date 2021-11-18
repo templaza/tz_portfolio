@@ -31,8 +31,9 @@ if ($app->isClient('site')) {
 require_once JPATH_ROOT . '/components/com_tz_portfolio_plus/helpers/route.php';
 
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
-JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.multiselect');
+
+$j4Compare  = COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE;
+
 JHtml::_('formbehavior.chosen', '.multipleMediaType', null,
     array('placeholder_text_multiple' => JText::_('COM_TZ_PORTFOLIO_PLUS_OPTION_SELECT_MEDIA_TYPE')));
 JHtml::_('formbehavior.chosen', '.multipleAuthors', null,
@@ -43,7 +44,13 @@ JHtml::_('formbehavior.chosen', '.multipleCategories', null,
     array('placeholder_text_multiple' => JText::_('JOPTION_SELECT_CATEGORY')));
 JHtml::_('formbehavior.chosen', '#filter_category_id_sec', null,
     array('placeholder_text_multiple' => JText::_('COM_TZ_PORTFOLIO_PLUS_OPTION_SELECT_SECONDARY_CATEGORY')));
-JHtml::_('formbehavior.chosen', 'select');
+
+if(!$j4Compare) {
+    JHtml::_('bootstrap.tooltip');
+    JHtml::_('behavior.multiselect');
+}else{
+    JHtml::_('formbehavior.chosen', 'select[multiple]');
+}
 
 $function	= $app->input->getCmd('function', 'tppSelectArticle');
 $listOrder	= $this->escape($this->state->get('list.ordering'));
@@ -75,7 +82,7 @@ function tzGetDatas(){
 
 <form action="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&view=articles&layout=modal&tmpl=component&function='
     .$function.($isMultiple?'&ismultiple=true':'').'&'.JSession::getFormToken().'=1');?>"
-      method="post" name="adminForm" id="adminForm" class="form-inline tpContainer">
+      method="post" name="adminForm" id="adminForm" class="tpContainer">
     <?php if($isMultiple){?>
     <div class="btn-toolbar">
         <button type="button" class="btn btn-primary" onclick="tzGetDatas();">
