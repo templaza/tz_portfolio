@@ -53,9 +53,8 @@ class PlgSystemTZ_Portfolio_Plus extends JPlugin {
 
                     foreach($plgGroups as $group){
                         if($group != 'extrafields') {
-                            if($app ->isClient('administrator')  || ($app ->isClient('site') && ($group == 'user'
-                                    && $option == 'com_users' && $task != 'user.login'
-                                    && $task != 'user.logout'))) {
+                            if($group == 'user' && $option == 'com_users' && $task != 'user.login'
+                                    && $task != 'user.logout') {										
                                 TZ_Portfolio_PlusPluginHelper::importPlugin($group);
                             }
                         }
