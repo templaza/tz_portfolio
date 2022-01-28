@@ -63,16 +63,18 @@ class TZ_Portfolio_PlusFrontHelper{
             $doc = JFactory::getDocument();
 //        }
 
-        $script = $doc -> _script['text/javascript'];
-        if(is_array($script)){
-            foreach($script as $sstr){
-                if(preg_match($funcRegex, $sstr, $match, $flags)){
+        if(isset($doc -> _script) && count($doc -> _script) && isset($doc -> _script['text/javascript'])){
+            $script = $doc -> _script['text/javascript'];
+            if(is_array($script)){
+                foreach($script as $sstr){
+                    if(preg_match($funcRegex, $sstr, $match, $flags)){
+                        return true;
+                    }
+                }
+            }else{
+                if(preg_match($funcRegex, $script, $match, $flags)){
                     return true;
                 }
-            }
-        }else{
-            if(preg_match($funcRegex, $doc -> _script["text/javascript"], $match, $flags)){
-                return true;
             }
         }
         return false;
