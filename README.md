@@ -16,6 +16,11 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+28/01/2022 - 2.5.4
+	
+	- Fix issue array key "text/javascript" in tz_portfolio_plus.php helper file in joomla 4.
+	- Fix issue email icon of portfolio view with Joomla 4.
+
 18/11/2021 - 2.5.3
 	
 	- Fix 'getErrorMsg' is deprecated in Joomla 4.
