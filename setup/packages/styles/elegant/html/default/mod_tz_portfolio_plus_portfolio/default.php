@@ -137,7 +137,7 @@ if ($list):
                 </div>
             </div>
         <?php endif?>
-        <div id="portfolio<?php echo $module->id; ?>" class="masonry row ">
+        <div id="portfolio<?php echo $module->id; ?>" class="masonry module-portfolio-masonry">
             <?php foreach ($list as $i => $item) : ?>
                 <?php
                 $item_filter    = array();
