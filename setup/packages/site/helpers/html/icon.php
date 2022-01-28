@@ -51,7 +51,16 @@ class JHtmlIcon
 
     public static function email($article, $params, $attribs = array())
     {
-        require_once JPATH_SITE . '/components/com_mailto/helpers/mailto.php';
+        $mailto_file    = JPATH_SITE . '/components/com_mailto/helpers/mailto.php';
+        if(!file_exists($mailto_file)) {
+            return '';
+        }
+        require_once $mailto_file;
+
+        if(!function_exists('MailToHelper')){
+            return '';
+        }
+
         $uri	= JURI::getInstance();
         $base	= $uri->toString(array('scheme', 'host', 'port'));
         $template = JFactory::getApplication()->getTemplate();

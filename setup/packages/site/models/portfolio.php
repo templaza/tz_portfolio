@@ -365,7 +365,7 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
                     $item -> params -> merge($articleParams);
 
                     // Disable email icon with joomla 4.x
-                    if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+                    if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE && !empty($item -> params)) {
                         $item->params->set('show_email_icon', 0);
                     }
 
