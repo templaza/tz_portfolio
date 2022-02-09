@@ -16,6 +16,10 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+09/02/2022 - 2.5.5
+	
+	- Fix issue "Call to a member function loadFile()" when add/edit article.
+
 28/01/2022 - 2.5.4
 	
 	- Fix issue email icon of portfolio view with Joomla 4.
