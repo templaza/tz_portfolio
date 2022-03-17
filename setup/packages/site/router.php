@@ -182,7 +182,7 @@ class TZ_Portfolio_PlusRouter extends RouterBase
         }
 
         // are we dealing with an article or category that is attached to a menu item?
-        if (($menuItem instanceof stdClass && isset($menuItem->query['view']))
+        if ((is_object($menuItem) && isset($menuItem->query['view']))
             && $menuItem->query['view'] == $query['view'] && isset($query['id']) && isset($menuItem->query['id'])
             && $menuItem->query['id'] == intval($query['id'])) {
             unset($query['view']);
@@ -567,7 +567,7 @@ class TZ_Portfolio_PlusRouter extends RouterBase
         }
 
         // are we dealing with an article or category that is attached to a menu item?
-        if (($menuItem instanceof stdClass && isset($menuItem->query['view'])) && $menuItem->query['view'] == $query['view'] && isset($query['id']) && isset($menuItem->query['id']) && $menuItem->query['id'] == intval($query['id'])) {
+        if ((is_object($menuItem) && isset($menuItem->query['view'])) && $menuItem->query['view'] == $query['view'] && isset($query['id']) && isset($menuItem->query['id']) && $menuItem->query['id'] == intval($query['id'])) {
             if (isset($query['char'])) {
                 $segments[] = $query['char'];
                 unset($query['char']);
@@ -1146,8 +1146,8 @@ class TZ_Portfolio_PlusRouter extends RouterBase
                 $query -> join('INNER', '#__tz_portfolio_plus_content_category_map AS m ON m.contentid = c.id');
                 $query -> join('INNER', '#__tz_portfolio_plus_categories AS cc ON cc.id = m.catid AND m.main = 1');
                 $query -> where('c.alias='.$db -> quote($lastAlias));
-				
-				
+
+
                 /* Filter by catid
                 * added from v2.4.8
                 */
