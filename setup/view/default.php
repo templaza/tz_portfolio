@@ -40,8 +40,16 @@ defined('_JEXEC') or die;
         <link type="text/css" href="<?php echo JURI::root(true);?>/media/jui/css/icomoon.css" rel="stylesheet" />
     <?php } else { ?>
         <link type="text/css" href="<?php echo JURI::root(true);?>/media/system/css/fields/switcher.css" rel="stylesheet" />
-        <link type="text/css" href="<?php echo JURI::base(true);?>/templates/atum/css/vendor/fontawesome-free/fontawesome.min.css" rel="stylesheet" />
-        <link type="text/css" href="<?php echo JURI::base(true);?>/templates/atum/css/template.min.css" rel="stylesheet" />
+        <?php
+        $template_css_file  = JPATH_ADMINISTRATOR.'/templates/atum/css/template.min.css';
+        if(file_exists($template_css_file)){
+            ?>
+            <link type="text/css" href="<?php echo JURI::base(true);?>/templates/atum/css/vendor/fontawesome-free/fontawesome.min.css" rel="stylesheet" />
+            <link type="text/css" href="<?php echo JURI::base(true);?>/templates/atum/css/template.min.css" rel="stylesheet" />
+        <?php }else{ ?>
+            <link type="text/css" href="<?php echo JURI::root(true);?>/media/templates/administrator/atum/css/vendor/fontawesome-free/fontawesome.min.css" rel="stylesheet" />
+            <link type="text/css" href="<?php echo JURI::root(true);?>/media/templates/administrator/atum/css/template.min.css" rel="stylesheet" />
+        <?php } ?>
     <?php } ?>
 
     <?php if($active == 'complete'){ ?>

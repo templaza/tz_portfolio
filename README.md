@@ -16,6 +16,14 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+19/03/2022 - 2.5.6
+	
+	- Fix issue font, css when setup.
+    - Fix issue require add-ons on front-end (Don't use JSearch add-on)
+    - Fix issue introguide with Joomla 4
+    - Fix issue sef url of Single article menu item with Joomla 4
+    - Update permission for each items in admin dashboard
+
 09/02/2022 - 2.5.5
 	
 	- Fix issue "Call to a member function loadFile()" when add/edit article.
