@@ -173,4 +173,17 @@ class TZ_Portfolio_PlusExtraFieldTextArea extends TZ_Portfolio_PlusExtraField
         return parent::getSearchInput($defaultValue);
     }
 
+    public function prepareFieldValue($value = '')
+    {
+        $result = parent::prepareFieldValue($value);
+
+        $filter = $this -> params -> get('filter');
+        $filter = !empty($filter)?$filter:$this -> plugin_params -> get('filter', 'none');
+
+        if($filter == 'none'){
+            $result = strip_tags($result);
+        }
+        return $result;
+    }
+
 }
