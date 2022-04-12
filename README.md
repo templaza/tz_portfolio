@@ -15,8 +15,8 @@ Demo: http://demo.tzportfolio.com/
 	
 	- Fix issue save html of textarea custom field.
 	- Fix issue load module and load position.
-	- Fix issue search add-on, style to install/update in back-end
-	- Update order add-ons, styles need update first in install/update list
+	- Fix issue search add-on, style, extension to install/update in back-end
+	- Update order add-ons, styles and extensions need update first in install/update list
 
 17/03/2022 - 2.5.6
 	

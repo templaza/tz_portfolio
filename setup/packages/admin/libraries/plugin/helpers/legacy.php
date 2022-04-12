@@ -24,6 +24,7 @@
 // no direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\Event\DispatcherInterface;
 
 tzportfolioplusimport('plugin.helpers.base');

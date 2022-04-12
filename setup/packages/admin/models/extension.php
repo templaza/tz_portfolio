@@ -191,4 +191,9 @@ class TZ_Portfolio_PlusModelExtension extends TZ_Portfolio_PlusModelAddon
     protected function getManifest_Cache($element, $folder = null, $type = 'module', $key = null){
         return parent::getManifest_Cache($element, $folder, $type, $key);
     }
+
+    protected function __get_extensions_installed(&$update = array(), $model_type = 'Extensions',
+                                                  $model_prefix = 'TZ_Portfolio_PlusModel', &$limit_start = 0){
+        return parent::__get_extensions_installed($update, $model_type, $model_prefix, $limit_start);
+    }
 }

@@ -100,6 +100,8 @@
                     $tppServer.find(settings.loadingSelector).hide();
                 }else{
                     $tppServer.find(settings.errorSelector).show();
+                    $tppServer.find(settings.loadingSelector).hide();
+                    $tppServer.find(settings.filterSelector).show();
                 }
             };
 

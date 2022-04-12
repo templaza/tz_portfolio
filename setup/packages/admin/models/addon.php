@@ -883,7 +883,6 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
 
 
         if($data -> items){
-            $order_list = array();
             foreach($data -> items as &$item){
                 $item -> pProduce           = null;
                 $item -> installedVersion   = null;
@@ -895,15 +894,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
                         if(isset($extension -> edition) && $extension -> edition) {
                             $editionName = $extension->edition;
                         }
-
-                        $version                    = $extension -> version;
                         $item -> installedVersion   = $extension -> version;
-//                        if(!isset($item -> pVersion)){
-//                            var_dump($item); die(__FILE__);
-//                        }
-//                        if(version_compare($version, $item -> pVersion, '>=')){
-//                            $order_list[]   = $item -> id;
-//                        }
                     }
                 }
 
@@ -913,12 +904,6 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
                     }
                 }
             }
-
-//            var_dump(json_encode(array(
-//                'grid_gallery;mediatype',
-//                'grid_gallery;content'
-//            )));
-//            var_dump($order_list); die(__FILE__);
         }
 
         $this -> setState('list.dataserver', true);
@@ -1131,18 +1116,47 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
 
     protected function __get_extensions_installed(&$update = array(), $model_type = 'AddOns',
                                                   $model_prefix = 'TZ_Portfolio_PlusModel', &$limit_start = 0){
-        $limit          = 9;
-//        $limit_start    = 0;
+        $limit  = 9;
+        $total  = 0;
+        $items  = false;
 
-        $model  = JModelLegacy::getInstance($model_type, $model_prefix, array('ignore_request' => true));
+        if(strtolower($model_type) == 'extensions'){
+            // Get update data
+            $xmlPath    = COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/tz_portfolio_plus.xml';
 
-        $model -> setState('filter.status', 3);
-        $model -> setState('list.start', $limit_start);
-        $model -> setState('list.limit', $limit);
+            $xml        = simplexml_load_file($xmlPath, 'SimpleXMLElement', LIBXML_NOCDATA);
+            $modules_core   = $xml -> xpath('modules/module/@module');
 
-        if($items = $model -> getItems()){
+            $db = Factory::getDbo();
+            $query = $db->getQuery(true)
+                ->select('*')
+                ->from('#__extensions')
+                ->where('state = 0')
+                ->where('type='.$db -> quote('module'))
+                -> where('element LIKE '.$db -> quote('%mod_tz%'));
+            if(!empty($modules_core)){
+                $query -> where('element NOT IN('.$db -> quote(implode($db -> quote(','),$modules_core), false).')');
+            }
+            $db -> setQuery($query);
+
+            $items  = $db -> loadObjectList();
+
+            $query -> clear('select');
+            $query -> select('COUNT(extension_id)');
+            $db -> setQuery($query);
+            $total  = $db -> loadResult();
+        }else {
+            $model = JModelLegacy::getInstance($model_type, $model_prefix, array('ignore_request' => true));
+
+            $model->setState('filter.status', 3);
+            $model->setState('list.start', $limit_start);
+            $model->setState('list.limit', $limit);
+            $items = $model -> getItems();
 
             $total  = $model -> getTotal();
+        }
+
+        if(!empty($items)){
 
             $url    = $this -> getUrlFromServer();
 
@@ -1187,8 +1201,21 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
                     $pProduct = $sitem -> pProduces -> pProduce;
                 }
 
+                $version    = '';
+                if(isset($item -> version) && !empty($item -> version)){
+                    $version    = $item -> version;
+                }else{
+                    if (strlen($item -> manifest_cache))
+                    {
+                        $manifest = json_decode($item -> manifest_cache);
+                        if(!empty($manifest) && isset($manifest -> version) && !empty($manifest -> version)) {
+                            $version = $manifest->version;
+                        }
+                    }
+                }
+
                 // Extension has update
-                if(!empty($pProduct) && version_compare( $pProduct -> pVersion, $item -> version, '>')){
+                if(!empty($pProduct) && version_compare( $pProduct -> pVersion, $version, '>')){
                     $update[]   = $sitem -> id;
                 }
 
