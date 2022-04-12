@@ -60,6 +60,59 @@ if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE){
                 }
             }
         }
+
+
+        public static function importPlugin($type, $plugin = null, $autocreate = true, DispatcherInterface $dispatcher = null)
+        {
+            static $loaded = [];
+
+            // Check for the default args, if so we can optimise cheaply
+            $defaults = false;
+
+            if ($plugin === null && $autocreate === true && $dispatcher === null)
+            {
+                $defaults = true;
+            }
+
+            // Ensure we have a dispatcher now so we can correctly track the loaded plugins
+            $dispatcher = $dispatcher ?: Factory::getApplication()->getDispatcher();
+
+            // Get the dispatcher's hash to allow plugins to be registered to unique dispatchers
+            $dispatcherHash = spl_object_hash($dispatcher);
+
+            if (!isset($loaded[$dispatcherHash]))
+            {
+                $loaded[$dispatcherHash] = [];
+            }
+
+            if (!$defaults || !isset($loaded[$dispatcherHash][$type]))
+            {
+                $results = null;
+
+                // Load the plugins from the database.
+                $plugins = static::load();
+
+                // Get the specified plugin(s).
+                for ($i = 0, $t = \count($plugins); $i < $t; $i++)
+                {
+                    if ($plugins[$i]->type === $type && ($plugin === null || $plugins[$i]->name === $plugin))
+                    {
+                        static::import($plugins[$i], $autocreate, $dispatcher);
+                        $results = true;
+                    }
+                }
+
+                // Bail out early if we're not using default args
+                if (!$defaults)
+                {
+                    return $results;
+                }
+
+                $loaded[$dispatcherHash][$type] = $results;
+            }
+
+            return $loaded[$dispatcherHash][$type];
+        }
     }
 }else{
     class TZ_Portfolio_PlusPluginHelperLegacy extends JPluginHelper{

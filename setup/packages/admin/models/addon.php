@@ -819,6 +819,12 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
             $hasCache = false;
         }
 
+        $needUpdate = $this -> __get_extensions_installed();
+
+        if(!empty($needUpdate)){
+            $hasCache   = false;
+        }
+
         if(!$hasCache) {
 
             $url    = $this -> getUrlFromServer();
@@ -840,7 +846,14 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
                 $url    .= '&order='.$ordering;
             }
 
-            $response = TZ_Portfolio_PlusHelper::getDataFromServer($url);
+            if(!empty($needUpdate)){
+//                $needUpdate[]   = 43;
+                $order_list = http_build_query(array('order_list'=>$needUpdate));
+                $order_list = preg_replace('/%5B[0-9]+%5D/simU', '%5B%5D', $order_list);
+                $url    .= '&'.$order_list;
+            }
+
+            $response = TZ_Portfolio_PlusHelper::getDataFromServer($url, 'post');
 
             if(!$response){
                 return false;
@@ -870,6 +883,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
 
 
         if($data -> items){
+            $order_list = array();
             foreach($data -> items as &$item){
                 $item -> pProduce           = null;
                 $item -> installedVersion   = null;
@@ -881,7 +895,15 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
                         if(isset($extension -> edition) && $extension -> edition) {
                             $editionName = $extension->edition;
                         }
+
+                        $version                    = $extension -> version;
                         $item -> installedVersion   = $extension -> version;
+//                        if(!isset($item -> pVersion)){
+//                            var_dump($item); die(__FILE__);
+//                        }
+//                        if(version_compare($version, $item -> pVersion, '>=')){
+//                            $order_list[]   = $item -> id;
+//                        }
                     }
                 }
 
@@ -891,6 +913,12 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
                     }
                 }
             }
+
+//            var_dump(json_encode(array(
+//                'grid_gallery;mediatype',
+//                'grid_gallery;content'
+//            )));
+//            var_dump($order_list); die(__FILE__);
         }
 
         $this -> setState('list.dataserver', true);
@@ -1099,6 +1127,83 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
         $package = JInstallerHelper::unpack($tmp_dest, true);
 
         return $package;
+    }
+
+    protected function __get_extensions_installed(&$update = array(), $model_type = 'AddOns',
+                                                  $model_prefix = 'TZ_Portfolio_PlusModel', &$limit_start = 0){
+        $limit          = 9;
+//        $limit_start    = 0;
+
+        $model  = JModelLegacy::getInstance($model_type, $model_prefix, array('ignore_request' => true));
+
+        $model -> setState('filter.status', 3);
+        $model -> setState('list.start', $limit_start);
+        $model -> setState('list.limit', $limit);
+
+        if($items = $model -> getItems()){
+
+            $total  = $model -> getTotal();
+
+            $url    = $this -> getUrlFromServer();
+
+            if(!$url){
+                return false;
+            }
+
+            $params         = $this -> getState('params');
+
+            // Get data from server
+            $edition = '';
+            if (COM_TZ_PORTFOLIO_PLUS_EDITION == 'commercial' && $apiKey = $params->get('token_key')) {
+                $edition = '&token_key=' . $apiKey;
+            }
+            $url .= $edition;
+
+            $url    = str_replace('format=list', 'format=item', $url);
+
+            foreach($items as $item){
+
+                $_url   = $url;
+                if(isset($item -> folder) && !empty($item -> folder)) {
+                    $_url .= '&type=' . $item->folder;
+                }
+                $_url  .= '&element='.$item -> element;
+                $response = TZ_Portfolio_PlusHelper::getDataFromServer($_url);
+
+                if(!$response){
+                    continue;
+                }
+
+                $data   = json_decode($response -> body);
+
+                if(!$data){
+                    continue;
+                }
+
+                $sitem  = $data -> item;
+
+                $pProduct   = '';
+                if(isset($sitem -> pProduces) && !empty($sitem -> pProduces) && isset($sitem -> pProduces -> pProduce)) {
+                    $pProduct = $sitem -> pProduces -> pProduce;
+                }
+
+                // Extension has update
+                if(!empty($pProduct) && version_compare( $pProduct -> pVersion, $item -> version, '>')){
+                    $update[]   = $sitem -> id;
+                }
+
+            }
+
+            $limit_start    += $limit;
+            if($limit_start < $total){
+                $this -> __get_extensions_installed($update, $model_type, $model_prefix, $limit_start);
+            }
+
+            return $update;
+        }
+
+        return array();
+
     }
 
 }

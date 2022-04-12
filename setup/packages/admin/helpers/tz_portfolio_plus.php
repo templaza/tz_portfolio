@@ -481,7 +481,7 @@ class TZ_Portfolio_PlusHelper
 		}
 	}
 
-	public static function checkConnectServer($url){
+	public static function checkConnectServer($url, $method = 'get'){
 
         $url    = trim($url);
 
@@ -493,7 +493,11 @@ class TZ_Portfolio_PlusHelper
         }
 
         try {
-            $response = \JHttpFactory::getHttp()->get($url, array());
+	        if($method == 'post'){
+                $response = \JHttpFactory::getHttp()->post($url, array());
+            }else {
+                $response = \JHttpFactory::getHttp()->get($url, array());
+            }
             self::$cache[$store2]   = $response;
         }
         catch (\RuntimeException $exception){
@@ -512,7 +516,7 @@ class TZ_Portfolio_PlusHelper
         return self::$cache[$store];
     }
 
-    public static function getDataFromServer($url = null){
+    public static function getDataFromServer($url = null, $method = 'get'){
 
         $url    = trim($url);
 	    $storeId    = __METHOD__.'::'.$url;
@@ -522,7 +526,7 @@ class TZ_Portfolio_PlusHelper
         }
 
 	    if($url){
-	        if(!$check = self::checkConnectServer($url)){
+	        if(!$check = self::checkConnectServer($url, $method)){
 	            return $check;
             }
         }
