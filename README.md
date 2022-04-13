@@ -16,6 +16,13 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+13/04/2022 - 2.5.7
+	
+	- Fix issue save html of textarea custom field.
+	- Fix issue load module and load position.
+	- Fix issue search add-on, style to install/update in back-end
+	- Update order add-ons, styles need update first in install/update list
+
 19/03/2022 - 2.5.6
 	
 	- Fix issue font, css when setup.
