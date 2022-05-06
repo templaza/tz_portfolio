@@ -609,6 +609,38 @@ class TZ_Portfolio_PlusTableContent extends JTable
             unset($this -> catid);
         }
 
+        // Verify that the alias is unique
+        $table  = JTable::getInstance('Content', 'TZ_Portfolio_PlusTable', array('dbo' => $this->getDbo()));
+        $tblMap = JTable::getInstance('Content_Category_Map', 'TZ_Portfolio_PlusTable', array('dbo' => $this->getDbo()));
+
+        $catid  = 0;
+        if($tblMap -> load(array('contentid' => $this -> id, 'main' => 1))){
+            $catid  = $tblMap -> catid;
+        }
+
+        if($catid){
+            // Check alias exists
+            $query  = $this -> _db -> getQuery(true);
+
+            $query -> select('COUNT(DISTINCT c.id)');
+            $query -> from($table -> getTableName().' AS c');
+            // Join to content category map
+            $query -> join('LEFT',$tblMap -> getTableName().' AS ccm ON ccm.contentid = c.id AND ccm.main = 1');
+            $query -> where('c.alias = '.$this -> _db -> quote($this -> alias));
+            $query -> where('ccm.catid ='.$catid);
+            if($this -> id != 0) {
+                $query->where('c.id <>' . $this->id);
+            }
+
+            $this -> _db -> setQuery($query);
+
+            if ($this -> _db -> loadResult()){
+                $this->setError(JText::_('JLIB_DATABASE_ERROR_ARTICLE_UNIQUE_ALIAS'));
+
+                return false;
+            }
+        }
+
         return parent::store($updateNulls);
     }
 

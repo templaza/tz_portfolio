@@ -22,12 +22,13 @@ defined('_JEXEC') or die;
 
 $params = $this -> item -> params;
 if($params -> get('show_title',1)) {
+    $htag    = $this->params->get('show_page_heading', 1) ? 'h2' : 'h1';
     ?>
-    <h2 class="tpp-item-title" itemprop="name">
-        <?php echo $this->escape($this->item->title); ?>
-    </h2>
+    <<?php echo $htag; ?> class="tpp-item-title" itemprop="name">
+    <?php echo $this->escape($this->item->title); ?>
+    </<?php echo $htag; ?>>
     <?php
 }
 //Call event onContentAfterTitle on plugin
-    echo $this->item->event->afterDisplayTitle;
+echo $this->item->event->afterDisplayTitle;
 ?>

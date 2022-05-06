@@ -649,8 +649,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
 
                 // Verify that the alias is unique
                 if(!$this -> verifyAlias($data['id'], $data['alias'], $data['catid'])){
-                    $msg    = JText::_('JLIB_DATABASE_ERROR_ARTICLE_UNIQUE_ALIAS');
-                    return false;
+                    $msg    = JText::sprintf('COM_TZ_PORTFOLIO_PLUS_ALIAS_SAVE_WARNING', $input -> get('view'));
                 }
 
                 list($title, $alias) = $this->generateNewTitle($data['catid'], $data['alias'], $data['title']);
@@ -661,12 +660,6 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
                     Factory::getApplication()->enqueueMessage($msg, 'warning');
                 }
             }
-        }
-
-        // Verify that the alias is unique
-        if(!$this -> verifyAlias($data['id'], $data['alias'], $data['catid'])){
-            $this->setError(JText::_('JLIB_DATABASE_ERROR_ARTICLE_UNIQUE_ALIAS'));
-            return false;
         }
 
         $tags   = null;
@@ -736,10 +729,10 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
                     }
 
                     $associations[$item->language] = $item->id;
-                    
-                    try 
+
+                    try
                     {
-                         // Deleting old association for these items
+                        // Deleting old association for these items
                         $db = Factory::getDbo();
                         $query = $db->getQuery(true)
                             ->delete('#__associations')
@@ -747,7 +740,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
                             ->where('id IN (' . implode(',', $associations) . ')');
                         $db->setQuery($query);
                         $db->execute();
-                    } 
+                    }
                     catch (\InvalidArgumentException $e)
                     {
                         $this->setError($e->getMessage());
@@ -767,7 +760,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
                         try {
                             $db->setQuery($query);
                             $db->execute();
-                        } 
+                        }
                         catch (\InvalidArgumentException $e)
                         {
                             $this->setError($e->getMessage());
@@ -876,7 +869,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
         try {
             $db->setQuery($query);
             $db->execute();
-        } 
+        }
         catch (\InvalidArgumentException $e)
         {
             $this->setError($e->getMessage());
@@ -888,20 +881,20 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
 
     public function saveArticleFields($fieldsData, $table, $isNew = true){
 //        if($fieldsData){
-            if($fields = TZ_Portfolio_PlusFrontHelperExtraFields::getExtraFields($table, null, true)){
-                if(count($fields) >= count($fieldsData)){
-                    foreach($fields as $field){
-                        $fieldObj   = TZ_Portfolio_PlusFrontHelperExtraFields::getExtraField($field, $table);
-                        $defValue   = $field -> getDefaultValues();
-                        $fieldValue = isset($fieldsData[$field->id]) ? $fieldsData[$field->id] : "";
-                        if((!$fieldValue || empty($fieldValue)) && isset($defValue) && !empty($defValue)){
-                            $fieldValue = $defValue;
-                        }
-                        $fieldObj -> onSaveArticleFieldValue($fieldValue);
+        if($fields = TZ_Portfolio_PlusFrontHelperExtraFields::getExtraFields($table, null, true)){
+            if(count($fields) >= count($fieldsData)){
+                foreach($fields as $field){
+                    $fieldObj   = TZ_Portfolio_PlusFrontHelperExtraFields::getExtraField($field, $table);
+                    $defValue   = $field -> getDefaultValues();
+                    $fieldValue = isset($fieldsData[$field->id]) ? $fieldsData[$field->id] : "";
+                    if((!$fieldValue || empty($fieldValue)) && isset($defValue) && !empty($defValue)){
+                        $fieldValue = $defValue;
                     }
-                    return true;
+                    $fieldObj -> onSaveArticleFieldValue($fieldValue);
                 }
+                return true;
             }
+        }
         if($fieldsData){
             foreach($fieldsData as $id => $fieldValue){
                 $fieldObj   = TZ_Portfolio_PlusFrontHelperExtraFields::getExtraField($id, $table);

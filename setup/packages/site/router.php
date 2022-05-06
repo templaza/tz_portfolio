@@ -134,6 +134,11 @@ class TZ_Portfolio_PlusRouter extends RouterBase
             $vars   = $this -> notSefParse($segments);
         }
 
+        // Since v2.5.8
+        if(empty($vars)){
+            return array();
+        }
+
         $vars   = array_merge($vars, $addonVars);
 
         // Remove all segments
@@ -1068,6 +1073,12 @@ class TZ_Portfolio_PlusRouter extends RouterBase
                         $vars['year'] = $segments[1];
                         $vars['month'] = $segments[2];
                     }
+                    // Since v2.5.8
+                    elseif(is_numeric($segments[1])){
+                        $vars['year'] = $segments[1];
+                    }else{
+                        return array();
+                    }
                 }
                 return $vars;
             }
@@ -1203,6 +1214,11 @@ class TZ_Portfolio_PlusRouter extends RouterBase
             } else {
                 $vars['view'] = 'portfolio';
                 $vars['id'] = $cat_id;
+            }
+
+            // Since version 2.5.8
+            if(!empty($vars['view']) && $vars['view'] == 'portfolio' && $vars['id'] == 0){
+                return array();
             }
 
             return $vars;

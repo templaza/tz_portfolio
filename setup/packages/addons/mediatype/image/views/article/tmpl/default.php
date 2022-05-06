@@ -35,10 +35,10 @@ if($item && $image && isset($image -> url) && !empty($image -> url)):
     <div class="tz_portfolio_plus_image">
         <?php if($params -> get('image_lightbox_enable', 1)){ ?>
         <a class="image-title" data-thumb="<?php
-        echo (isset($image -> url_detail) && !$image -> url_detail)?$image -> url_detail:$image -> url;
+        echo (isset($image -> url_detail) && $image -> url_detail)?$image -> url_detail:$image -> url;
         ?>" data-id="image<?php echo time();?>"<?php echo $params -> get('image_lightbox_caption_enable', 1)?' data-caption="'.(isset($image -> caption) && $image -> caption ? $image -> caption : $item -> title).'
         "':'';?> href="<?php
-        echo (isset($image -> url_detail) && !$image -> url_detail)?$image -> url_detail:$image -> url; ?>">
+        echo (isset($image -> url_detail) && $image -> url_detail)?$image -> url_detail:$image -> url; ?>">
         <?php } ?>
         <?php if(isset($image -> url_detail) && trim($image -> url_detail)):
                 $imagesrc   =   $image -> url_detail;
