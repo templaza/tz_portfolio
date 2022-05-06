@@ -16,6 +16,14 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+06/05/2022 - 2.5.8
+	
+	- Fix issue display message article alias if it exists.
+	- Fix issue lightbox preview with image detail of add-on image.
+	- Fix issue self url.
+	- Fix issue load preset in backend.
+	- Fix issue title tag is "h2" when disable page heading in single article view
+
 13/04/2022 - 2.5.7
 	
 	- Fix issue save html of textarea custom field.
