@@ -16,6 +16,11 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+17/05/2022 - 2.5.9
+	
+	- Fix issue js window load event with jQuery v3.x
+	- Fix issue remove preset
+
 06/05/2022 - 2.5.8
 	
 	- Fix issue display message article alias if it exists.
