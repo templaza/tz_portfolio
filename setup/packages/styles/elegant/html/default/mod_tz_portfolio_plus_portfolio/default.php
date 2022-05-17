@@ -92,7 +92,7 @@ if(!TZ_Portfolio_PlusFrontHelper::scriptExists('/\$\("#portfolio' . $module->id 
                     }
                 });
             });
-            $(window).load(function(){
+            $(window).on("load", function(){
                 var $tzppisotope    = $("#portfolio' . $module->id . '").data("tzPortfolioPlusIsotope");
                 if(typeof $tzppisotope === "object"){
                     $tzppisotope.imagesLoaded(function(){

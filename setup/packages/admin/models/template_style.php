@@ -365,7 +365,8 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
             }
 
             // Trigger the onContentBeforeSave event.
-            $result = Factory::getApplication() -> triggerEvent($this->event_before_save, array($this->option . '.' . $this->name, $table, $isNew, $data));
+            $result = Factory::getApplication() -> triggerEvent($this->event_before_save,
+                array($this->option . '.' . $this->name, $table, $isNew, $data));
 
             if (in_array(false, $result, true))
             {
@@ -616,7 +617,8 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
             $this->cleanCache();
 
             // Trigger the onContentAfterSave event.
-            Factory::getApplication() -> triggerEvent($this->event_after_save, array($this->option . '.' . $this->name, $table, $isNew));
+            Factory::getApplication() -> triggerEvent($this->event_after_save,
+                array($this->option . '.' . $this->name, $table, $isNew, $data));
         }
         catch (Exception $e)
         {
@@ -1036,7 +1038,7 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
 
                         // Trigger the onContentBeforeSave event.
                         $result = Factory::getApplication() -> triggerEvent($this->event_before_save,
-                            array($this->option . '.' . $this->name, $table, $isNew));
+                            array($this->option . '.' . $this->name, $table, $isNew, $data));
 
                         if (in_array(false, $result, true))
                         {

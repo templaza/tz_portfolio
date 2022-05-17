@@ -83,7 +83,7 @@ jQuery(function($){
             }
         });
     });
-    $(window).load(function(){
+    $(window).on("load", function(){
         var $tzppisotope    = $("#portfolio' . $module->id . '").data("tzPortfolioPlusIsotope");
         if(typeof $tzppisotope === "object"){
             $tzppisotope.imagesLoaded(function(){
