@@ -45,20 +45,12 @@ class TZ_Portfolio_PlusViewCategories extends JViewLegacy
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
-			JError::raiseWarning(500, implode("\n", $errors));
-			return false;
+            throw new \Exception(implode("\n", $errors), 500);
 		}
 
-		if ($items === false)
+		if ($items === false || $parent == false)
 		{
-			JError::raiseError(404, JText::_('JGLOBAL_CATEGORY_NOT_FOUND'));
-			return false;
-		}
-
-		if ($parent == false)
-		{
-			JError::raiseError(404, JText::_('JGLOBAL_CATEGORY_NOT_FOUND'));
-			return false;
+            throw new \Exception(JText::_('JGLOBAL_CATEGORY_NOT_FOUND'),404);
 		}
 
 		$params = &$state->params;

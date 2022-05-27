@@ -101,9 +101,7 @@ class TZ_Portfolio_PlusViewArticle extends TZ_Portfolio_PlusViewLegacy
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
-			JError::raiseWarning(500, implode("\n", $errors));
-
-			return false;
+            throw new \Exception(implode("\n", $errors), 500);
 		}
 
 		// Create a shortcut for $item.
@@ -196,9 +194,7 @@ class TZ_Portfolio_PlusViewArticle extends TZ_Portfolio_PlusViewLegacy
 
 		// Check the view access to the article (the model has already computed the values).
 		if ($item->params->get('access-view') != true && (($item->params->get('show_noauth') != true &&  $user->get('guest') ))) {
-            JError::raiseWarning(403, JText::_('JERROR_ALERTNOAUTHOR'));
-            return;
-
+            throw new \Exception(JText::_('JERROR_ALERTNOAUTHOR'), 403);
 		}
 
         //

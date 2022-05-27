@@ -148,7 +148,7 @@ class TZ_Portfolio_PlusHelperTags{
                 if (count($newTagTitles)) {
                     if ($newTagId = self::_insertTagsByTitle($newTagTitles)) { // Get last tag id new is added
                         foreach($newTagTitles as $key => $value){
-                           array_push($tagsIds, $newTagId + $key);
+                            array_push($tagsIds, $newTagId + $key);
                         }
                     }
                 }
@@ -277,7 +277,7 @@ class TZ_Portfolio_PlusHelperTags{
                 $query = $db->getQuery(true);
 
                 $query->insert('#__tz_portfolio_plus_tags');
-                $query->columns('title, alias, published');
+                $query->columns('title, alias, published, params, description');
 
                 foreach ($titles as $title) {
                     if (Factory::getConfig()->get('unicodeslugs') == 1) {
@@ -285,7 +285,8 @@ class TZ_Portfolio_PlusHelperTags{
                     } else {
                         $alias = JFilterOutput::stringURLSafe($title);
                     }
-                    $query->values($db->quote($title) . ',' . $db->quote($alias) . ', 1');
+                    $query->values($db->quote($title) . ',' . $db->quote($alias) . ', 1, '.$db -> quote('')
+                        .', '.$db -> quote(''));
                 }
                 $db->setQuery($query);
 

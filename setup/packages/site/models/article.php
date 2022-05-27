@@ -263,14 +263,14 @@ class TZ_Portfolio_PlusModelArticle extends JModelItem
 
 				$data = $db->loadObject();
 
-				if (empty($data)) {
-					return JError::raiseError(404, JText::_('COM_TZ_PORTFOLIO_PLUS_ERROR_ARTICLE_NOT_FOUND'));
-				}
+                if (empty($data)) {
+                    throw new \Exception(JText::_('COM_TZ_PORTFOLIO_PLUS_ERROR_ARTICLE_NOT_FOUND'), 404);
+                }
 
-				// Check for published state if filter set.
-				if (((is_numeric($published)) || (is_numeric($archived))) && (($data->state != $published) && ($data->state != $archived))) {
-					return JError::raiseError(404, JText::_('COM_TZ_PORTFOLIO_PLUS_ERROR_ARTICLE_NOT_FOUND'));
-				}
+                // Check for published state if filter set.
+                if (((is_numeric($published)) || (is_numeric($archived))) && (($data->state != $published) && ($data->state != $archived))) {
+                    throw new \Exception(JText::_('COM_TZ_PORTFOLIO_PLUS_ERROR_ARTICLE_NOT_FOUND'), 404);
+                }
 
                 $params = $this->getState('params');
 
@@ -353,7 +353,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelItem
 			{
 				if ($e->getCode() == 404) {
 					// Need to go thru the error handler to allow Redirect to work.
-					JError::raiseError(404, $e->getMessage());
+                    throw new \Exception($e->getMessage(), 404);
 				}
 				else {
 					$this->setError($e);

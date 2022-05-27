@@ -11,6 +11,12 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+27/05/2022 - 2.6.0
+	
+	- Fix issue class "JError" not found on front-end
+	- Fix issue Field 'description' doesn't have a default when create tag in back-end. 
+	- Fix issue sortable items on mobile of add-ons (image gallery, grid gallery...) used jQuery ui sortable on mobile.
+
 17/05/2022 - 2.5.9
 	
 	- Fix issue js window load event with jQuery v3.x

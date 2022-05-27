@@ -24,20 +24,22 @@ use Joomla\CMS\Factory;
 
 class TZ_Portfolio_PlusTableTags extends JTable
 {
-//    /** @var int Primary key */
-//    var $id 				= 0;
-//    /** @var string */
-//    var $title 				= null;
-//    /** @var int */
-//    var $published  		= null;
-//    /** @var string*/
-//    var $attribs		    = null;
-//    /** @var string*/
-//    var $description		= null;
 
     function __construct(&$db) {
         parent::__construct('#__tz_portfolio_plus_tags','id',$db);
 
+    }
+
+    public function store($updateNulls = false)
+    {
+        if(!isset($this -> params) || is_null($this -> params)){
+            $this -> params = '';
+        }
+        if(!isset($this -> description) || is_null($this -> description)){
+            $this -> description = '';
+        }
+
+        return parent::store($updateNulls);
     }
 
     public function publish($pks = null,$state=1,$userId = 0){
