@@ -11,10 +11,12 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
-27/05/2022 - 2.6.0
+09/06/2022 - 2.6.0
 	
 	- Fix issue class "JError" not found on front-end
 	- Fix issue Field 'description' doesn't have a default when create tag in back-end. 
+	- Fix issue the image file does not exist in back-end.
+	- Fix issue Class 'TZ_Portfolio_PlusFrontHelper' not found of module TZ Portfolio Plus Portfolio.
 	- Fix issue sortable items on mobile of add-ons (image gallery, grid gallery...) used jQuery ui sortable on mobile.
 
 17/05/2022 - 2.5.9

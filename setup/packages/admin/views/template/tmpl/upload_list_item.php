@@ -151,7 +151,7 @@ if($itemsServer = $this -> itemsServer){
                     ?>
                 </div>
                 <div class="bottom">
-                    <ul class="unstyled list-unstyled pull-left float-left">
+                    <ul class="unstyled list-unstyled pull-left float-left float-md-start float-none mb-1 mb-md-3">
                         <li><?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_LATEST_VERSION', '') ?><span><?php
                                 echo $item -> pProduce -> pVersion?$item -> pProduce ->  pVersion:JText::_('COM_TZ_PORTFOLIO_PLUS_NA');
                                 ?></span>
@@ -161,7 +161,7 @@ if($itemsServer = $this -> itemsServer){
                                 ?></span>
                         </li>
                     </ul>
-                    <ul class="unstyled list-unstyled pull-right float-right text-right">
+                    <ul class="unstyled list-unstyled pull-right float-right float-md-end float-none text-right">
                         <li><?php
                             $updated = '<span>'.JHtml::_('date', $item -> modified, JText::_('DATE_FORMAT_LC4')).'</span>';
                             echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_LAST_UPDATED', $updated);

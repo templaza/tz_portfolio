@@ -24,6 +24,8 @@ defined('_JEXEC') or die;
 require_once dirname(__FILE__) . '/helper.php';
 
 JLoader::import('com_tz_portfolio_plus.libraries.helper.modulehelper', JPATH_ADMINISTRATOR.'/components');
+JLoader::register('TZ_Portfolio_PlusFrontHelper', JPATH_SITE
+    .'/components/com_tz_portfolio_plus/helpers/tz_portfolio_plus.php');
 
 JHtml::_('jquery.framework');
 
