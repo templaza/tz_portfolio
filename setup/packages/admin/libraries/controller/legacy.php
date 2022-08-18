@@ -206,7 +206,7 @@ class TZ_Portfolio_Plus_AddOnControllerLegacy extends JControllerLegacy{
     {
         $this->task = $task;
 
-        $task = strtolower($task);
+        $task = $task ? strtolower($task) : '';
 
         if (isset($this->taskMap[$task]))
         {
@@ -307,7 +307,7 @@ class TZ_Portfolio_Plus_AddOnControllerLegacy extends JControllerLegacy{
             $backuppath = $basePath . '/' . $backupfile;
         }
         // Get the controller class name.
-        $class = ucfirst($prefix) . 'Controller' . ucfirst($type);
+        $class = ($prefix ? ucfirst($prefix) : '') . 'Controller' . ($type ? ucfirst($type) : '');
 
         // Include the class if not present.
         if (!class_exists($class))

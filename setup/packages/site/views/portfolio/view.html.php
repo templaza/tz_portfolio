@@ -218,7 +218,7 @@ class TZ_Portfolio_PlusViewPortfolio extends JViewLegacy
             }
         }
         //Escape strings for HTML output
-        $this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx'));
+        $this->pageclass_sfx = $params->get('pageclass_sfx') ? htmlspecialchars($params->get('pageclass_sfx')) : '';
 
         if ($active)
         {
