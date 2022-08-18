@@ -106,7 +106,7 @@ class TZ_Portfolio_PlusViewLegacy extends JViewLegacy{
                                             }
                                         }
                                     }
-                                    $html   = trim($html);
+                                    $html   = $html ? trim($html) : '';
                                 }
 
                                 if(!empty($html) || (!empty($children -> children) and is_array($children -> children))){
