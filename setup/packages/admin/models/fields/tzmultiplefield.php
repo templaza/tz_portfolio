@@ -119,7 +119,7 @@ class JFormFieldTZMultipleField extends JFormField
                     $tz_class->formControl = 'tzform';
                     // Init children field for children class
                     $tz_class -> setup($xmlElement, '');
-                    $tz_class -> value      = $xmlElement['default'];
+                    $tz_class -> value      = is_string($xmlElement['default']) ? $xmlElement['default'] : '';
                     $tz_name                = (string)$xmlElement['name'];
                     $tz_tbl_require         = (bool)$xmlElement['table_required'];
 
