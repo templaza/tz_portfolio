@@ -718,7 +718,7 @@ class TZ_Portfolio_PlusExtraField{
 
         ob_start();
 
-        if (File::exists($file))
+        if (is_string($file) && File::exists($file))
         {
             include($file);
         }
