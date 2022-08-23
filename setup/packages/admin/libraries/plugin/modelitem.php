@@ -33,7 +33,7 @@ class TZ_Portfolio_PlusPluginModelItem extends JModelItem{
     {
         $input  = Factory::getApplication() -> input;
         $return = $input -> get('return', null, 'default', 'base64');
-        $this->setState('return_page', base64_decode($return));
+        $this->setState('return_page', ($return ? base64_decode($return) : ''));
 
         $this -> setState($this -> getName().'.addon', $this -> addon);
         $this -> setState($this -> getName().'.article', $this -> article);

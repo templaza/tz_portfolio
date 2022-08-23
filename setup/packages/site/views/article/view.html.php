@@ -355,7 +355,7 @@ class TZ_Portfolio_PlusViewArticle extends TZ_Portfolio_PlusViewLegacy
         }
 
 		//Escape strings for HTML output
-		$this->pageclass_sfx = htmlspecialchars($this->item->params->get('pageclass_sfx'));
+		$this->pageclass_sfx = $this->item->params->get('pageclass_sfx') ? htmlspecialchars($this->item->params->get('pageclass_sfx')) : '';
 
 		$this->_prepareDocument();
 

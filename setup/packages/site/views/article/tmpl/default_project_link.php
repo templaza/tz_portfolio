@@ -24,7 +24,7 @@
 // no direct access
 defined('_JEXEC') or die;
 
-if (trim($this->item->params ->get('project_link'))) :
+if ($this->item->params ->get('project_link')) :
     ?>
     <div class="tpPortfolioLink"><a href="<?php echo $this->item->params ->get('project_link'); ?>" title="<?php
         echo $this->item->params ->get('project_link_title');

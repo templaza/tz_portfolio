@@ -94,7 +94,7 @@ class TZ_Portfolio_PlusViewCategory extends JViewLegacy
 		}
 
  		// The extension can be in the form com_foo.section
-		$parts = explode('.', $extension);
+		$parts = is_string($extension) ? explode('.', $extension) : [];
 		$component = 'com_tz_portfolio_plus';
 		$section = (count($parts) > 1) ? $parts[1] : null;
 
