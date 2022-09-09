@@ -16,6 +16,15 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+09/09/2022 - 2.6.1
+	
+	- Comparetible with php 8.x
+	- Fix issue file url is not string
+	- Fix issue multifield value is null
+	- Fix deprecated warning of tzcheckbox
+	- Fix issue $extension is null
+	- Update calendar field for Article
+
 14/06/2022 - 2.6.0
 	
 	- Fix issue class "JError" not found on front-end
