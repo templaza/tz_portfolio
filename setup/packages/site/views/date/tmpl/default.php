@@ -75,7 +75,9 @@ echo $this->pageclass_sfx;?>" itemscope itemtype="http://schema.org/Blog">
                     <div class="date-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <h2 class="text-info date mt-3 mb-4"><?php echo JHtml::_('date',$item -> date_group,JText::_('COM_TZ_PORTFOLIO_PLUS_DATE_FORMAT_LC3'));?></h2>
                     </div>
-                    <?php endif;?>
+                    <?php
+                    $colCounter = 0;
+                    endif;?>
                         <div class="<?php echo ($cols && isset($cols[$colCounter]))?'col-md-'.$cols[$colCounter]
                             .(($i != 0 && $i % $col == 0)?' clr':''):'col-md-12'; ?>">
                             <div class="TzItem mb-4 card rounded-0 <?php echo $item->state == 0 ? ' system-unpublished' : null; ?>"
@@ -87,7 +89,9 @@ echo $this->pageclass_sfx;?>" itemscope itemtype="http://schema.org/Blog">
                             </div>
                         </div>
 
-                <?php endforeach; ?>
+                <?php
+                    $colCounter = $colCounter < (count($cols) - 1)?$colCounter + 1:0;
+                endforeach; ?>
             </div>
             <?php endif; ?>
 

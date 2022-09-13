@@ -51,30 +51,46 @@ if($this->params -> get('enable_bootstrap',1) && $this->params -> get('bootstrap
     <?php endif;?>
 
     <?php $date = null;?>
-    <?php if (!empty($this->items)) :
+    <?php if (!empty($this->items)){
+        $col        = $this->params -> get('article_columns', 1);
+        $cols       = TZ_Portfolio_PlusContentHelper::getBootstrapColumns($col);
+        $colCounter = 0;
         ?>
-        <div class="TzItemsRow">
+        <div class="TzItemsRow<?php echo $col > 1?' row':''; ?>">
             <?php
-            foreach ($this->items as $key => &$item) : ?>
+            foreach ($this->items as $i => &$item){
+                ?>
 
                 <?php if(isset($item -> date_group) AND !empty($item -> date_group)
-                    AND $date != strtotime(date(JText::_('COM_TZ_PORTFOLIO_PLUS_DATE_FORMAT_LC3'),strtotime($item -> date_group))) ):?>
-                    <div class="date-group">
-                        <div class="clearfix"></div>
-                        <h2 class="text-info date"><?php echo JHtml::_('date',$item -> date_group,JText::_('COM_TZ_PORTFOLIO_PLUS_DATE_FORMAT_LC3'));?></h2>
-                    </div>
-                <?php endif;?>
-                <div class="TzItem <?php echo $item->state == 0 ? ' system-unpublished' : null; ?>"
-                     itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-                    <?php
-                    $this->item = &$item;
-                    echo $this->loadTemplate('item');
-                    ?>
-                    <div class="clr"></div>
+                    AND $date != strtotime(date(JText::_('COM_TZ_PORTFOLIO_PLUS_DATE_FORMAT_LC3'),strtotime($item -> date_group))) ) { ?>
+                <div class="date-group<?php echo $col > 1 ? '  col-lg-12 col-md-12 col-sm-12 col-xs-12' : ''; ?>">
+                    <div class="clearfix"></div>
+                    <h2 class="text-info date"><?php echo JHtml::_('date', $item->date_group, JText::_('COM_TZ_PORTFOLIO_PLUS_DATE_FORMAT_LC3')); ?></h2>
                 </div>
-            <?php endforeach; ?>
+                <?php
+                $colCounter = 0;
+                } ?>
+
+                <?php if($col > 1){ ?>
+                <div class="<?php echo ($cols && isset($cols[$colCounter]))?'col-md-'.$cols[$colCounter]
+                    .(($i != 0 && $i % $col == 0)?' clr':''):'col-md-12'; ?>">
+                <?php } ?>
+                    <div class="TzItem <?php echo $item->state == 0 ? ' system-unpublished' : null; ?>"
+                         itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+                        <?php
+                        $this->item = &$item;
+                        echo $this->loadTemplate('item');
+                        ?>
+                        <div class="clr"></div>
+                    </div>
+                <?php if($col > 1){ ?>
+                </div>
+                <?php
+                $colCounter = $colCounter < (count($cols) - 1)?$colCounter + 1:0;
+                } ?>
+            <?php } ?>
         </div>
-    <?php endif; ?>
+    <?php } ?>
 
     <?php if (!empty($this->link_items)) : ?>
         <?php echo $this->loadTemplate('links'); ?>
