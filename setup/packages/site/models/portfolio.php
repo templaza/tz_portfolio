@@ -47,7 +47,7 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
         $global_params    = JComponentHelper::getParams('com_tz_portfolio_plus');
 
         if($layout_type = $params -> get('layout_type',array())){
-            if(!empty($layout_type) || (is_array($layout_type) && !count($layout_type))){
+            if(empty($layout_type) || (is_array($layout_type) && !count($layout_type))){
                 $params -> set('layout_type',$global_params -> get('layout_type',array()));
             }
         }else{
