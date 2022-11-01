@@ -43,7 +43,7 @@ class PlgTZ_Portfolio_PlusUserProfileHelper{
             return self::$cache[$storeId];
         }
 
-        $_author = Factory::getApplication() -> getIdentity() -> get($authorId);
+        $_author = JFactory::getUser($authorId);
 
         if(!$_author){
             return false;

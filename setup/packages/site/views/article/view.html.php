@@ -69,6 +69,7 @@ class TZ_Portfolio_PlusViewArticle extends TZ_Portfolio_PlusViewLegacy
         JPluginHelper::importPlugin('content');
         TZ_Portfolio_PlusPluginHelper::importPlugin('mediatype');
         TZ_Portfolio_PlusPluginHelper::importPlugin('content');
+        TZ_Portfolio_PlusPluginHelper::importPlugin('user');
 
         if($this -> item -> id && $params -> get('show_tags',1)) {
             $this -> item -> listTags = TZ_Portfolio_PlusFrontHelperTags::getTagsByArticleId($this -> item -> id, array(
