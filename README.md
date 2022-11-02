@@ -16,6 +16,12 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+02/11/2022 - 2.6.2
+	
+	- Fix issue with about author in article view
+	- Fix issue Article Listing Columns in date view
+	- Fix issue option layout type in portfolio menu
+
 09/09/2022 - 2.6.1
 	
 	- Comparetible with php 8.x
