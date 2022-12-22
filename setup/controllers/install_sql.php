@@ -305,6 +305,9 @@ class TZ_Portfolio_PlusSetupControllerInstall_Sql extends TZ_Portfolio_PlusSetup
         if(!array_key_exists('checked_out_time',$fields)){
             $arr[]  = 'ADD `checked_out_time` datetime NOT NULL DEFAULT \'0000-00-00 00:00:00\'';
         }
+        if(!array_key_exists('images',$fields)){
+            $arr[]  = 'ADD `images` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL AFTER `detail_view`';
+        }
 
         if($arr && count($arr)>0){
             $arr    = implode(',',$arr);

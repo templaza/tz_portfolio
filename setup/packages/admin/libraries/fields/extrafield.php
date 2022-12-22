@@ -1162,4 +1162,18 @@ class TZ_Portfolio_PlusExtraField{
 //            $form -> loadFile('article', false);
         }
     }
+
+    public function getImage(){
+        if($this -> images){
+            return $this -> images;
+        }
+        return null;
+    }
+
+    public function hasImage(){
+        if(!empty($this -> getImage()) && $this -> params -> get('show_image',1)){
+            return true;
+        }
+        return false;
+    }
 }

@@ -517,6 +517,14 @@
             <option value="0">JHIDE</option>
             <option value="1">JSHOW</option>
         </field>
+        <field name="show_date_field_image"
+               type="list"
+               label="COM_TZ_PORTFOLIO_PLUS_SHOW_FIELD_IMAGE_LABEL"
+               description="COM_TZ_PORTFOLIO_PLUS_SHOW_FIELD_IMAGE_DESC">
+            <option value="">COM_TZ_PORTFOLIO_PLUS_OPTION_INHERIT_FROM_FIELD</option>
+            <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
+        </field>
     </fieldset>
     <!-- END PARAMETERS FOR THE DATE LISTINGS -->
 
@@ -686,6 +694,14 @@
                default="0"
                label="COM_TZ_PORTFOLIO_PLUS_SHOW_EMAIL_LABEL"
                description="COM_TZ_PORTFOLIO_PLUS_SHOW_EMAIL_DESC">
+            <option value="0">JHIDE</option>
+            <option value="1">JSHOW</option>
+        </field>
+        <field name="show_search_field_image"
+               type="list"
+               label="COM_TZ_PORTFOLIO_PLUS_SHOW_FIELD_IMAGE_LABEL"
+               description="COM_TZ_PORTFOLIO_PLUS_SHOW_FIELD_IMAGE_DESC">
+            <option value="">COM_TZ_PORTFOLIO_PLUS_OPTION_INHERIT_FROM_FIELD</option>
             <option value="0">JHIDE</option>
             <option value="1">JSHOW</option>
         </field>

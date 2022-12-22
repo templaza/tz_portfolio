@@ -291,6 +291,7 @@ CREATE TABLE IF NOT EXISTS `#__tz_portfolio_plus_fields` (
   `advanced_search` tinyint(4) NOT NULL DEFAULT '0',
   `list_view` tinyint(4) NOT NULL DEFAULT '0',
   `detail_view` tinyint(4) NOT NULL DEFAULT '1',
+  `images` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
   `params` text NULL,
   `description` text NULL,
   `access` INT(10) UNSIGNED NOT NULL DEFAULT '1',

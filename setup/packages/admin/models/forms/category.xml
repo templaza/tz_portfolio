@@ -371,6 +371,14 @@
 				<option value="0">JHIDE</option>
 				<option value="1">JSHOW</option>
 			</field>
+			<field name="show_cat_field_image"
+				   type="list"
+				   label="COM_TZ_PORTFOLIO_PLUS_SHOW_FIELD_IMAGE_LABEL"
+				   description="COM_TZ_PORTFOLIO_PLUS_SHOW_FIELD_IMAGE_DESC">
+				<option value="">COM_TZ_PORTFOLIO_PLUS_OPTION_INHERIT_FROM_FIELD</option>
+				<option value="0">JHIDE</option>
+				<option value="1">JSHOW</option>
+			</field>
 		</fieldset>
 		<!-- End article options in category listings -->
 
@@ -519,6 +527,14 @@
 				   description="JGLOBAL_SHOW_UNAUTH_LINKS_DESC">
 				<option value="0">JNO</option>
 				<option value="1">JYES</option>
+			</field>
+			<field name="show_field_image"
+				   type="list"
+				   label="COM_TZ_PORTFOLIO_PLUS_SHOW_FIELD_IMAGE_LABEL"
+				   description="COM_TZ_PORTFOLIO_PLUS_SHOW_FIELD_IMAGE_DESC">
+				<option value="">COM_TZ_PORTFOLIO_PLUS_OPTION_INHERIT_FROM_FIELD</option>
+				<option value="0">JHIDE</option>
+				<option value="1">JSHOW</option>
 			</field>
 			<!-- End article options-->
 

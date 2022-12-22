@@ -22,6 +22,7 @@ defined('_JEXEC') or die;
 
 if($item = $this -> item):
     if(isset($item -> extrafields) && !empty($item -> extrafields)):
+        $params = $item->params;
 ?>
 <ul class="tz-extrafields">
 <?php foreach($item -> extrafields as $field):?>

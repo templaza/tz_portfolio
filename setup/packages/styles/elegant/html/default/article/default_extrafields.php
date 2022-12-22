@@ -22,11 +22,16 @@ defined('_JEXEC') or die;
 
 if($item = $this -> item):
     if(isset($item -> extrafields) && !empty($item -> extrafields)):
+        $params = $item -> params;
 ?>
 <div class="tpArticleExtraField">
     <ul class="list-group">
     <?php foreach($item -> extrafields as $field):?>
         <li class="list-group-item">
+            <?php if($params -> get('show_field_image', $field -> hasImage())){ ?>
+                <span class="tpp-extrafield__image pull-left float-left mr-1">
+            <img src="<?php echo $field -> getImage();?>" alt="<?php echo $field -> getTitle();?>"/></span>
+            <?php }?>
             <?php if($field -> hasTitle()):?>
             <h5><?php echo $field -> getTitle();?></h5>
             <?php endif;?>

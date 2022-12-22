@@ -81,6 +81,8 @@
                description="COM_TZ_PORTFOLIO_PLUS_TYPE_DESC">
             <option value="">COM_TZ_PORTFOLIO_PLUS_OPTION_SELECT_TYPE</option>
         </field>
+        <field type="media" name="images"
+               label="COM_TZ_PORTFOLIO_PLUS_FORM_IMAGE"/>
 
         <field type="tzextrafieldvalues" name="value"
                label="COM_TZ_PORTFOLIO_PLUS_OPTION_FIELD_VALUE_LABEL"
@@ -126,6 +128,30 @@
                 <option value="0">JHIDE</option>
                 <option value="1">JSHOW</option>
             </field>
+            <field type="radio" name="show_image"
+                   class="switcher btn-group" default="1"
+                   layout="joomla.form.field.radio.switcher"
+                   label="COM_TZ_PORTFOLIO_PLUS_SHOW_IMAGE_LABEL"
+                   description="COM_TZ_PORTFOLIO_PLUS_EXTRAFIELDS_SHOW_IMAGE_DESC">
+                <option value="0">JHIDE</option>
+                <option value="1">JSHOW</option>
+            </field>
+<!--            <field type="radio" name="show_image_list_view"-->
+<!--                   class="switcher btn-group" default="1"-->
+<!--                   layout="joomla.form.field.radio.switcher"-->
+<!--                   label="COM_TZ_PORTFOLIO_PLUS_EXTRAFIELDS_SHOW_IMAGE_LIST_VIEW"-->
+<!--                   description="COM_TZ_PORTFOLIO_PLUS_EXTRAFIELDS_SHOW_IMAGE_LIST_VIEW_DESC">-->
+<!--                <option value="0">JHIDE</option>-->
+<!--                <option value="1">JSHOW</option>-->
+<!--            </field>-->
+<!--            <field type="radio" name="show_image_detail_view"-->
+<!--                   class="switcher btn-group" default="1"-->
+<!--                   layout="joomla.form.field.radio.switcher"-->
+<!--                   label="COM_TZ_PORTFOLIO_PLUS_EXTRAFIELDS_SHOW_IMAGE_DETAILS_VIEW"-->
+<!--                   description="COM_TZ_PORTFOLIO_PLUS_EXTRAFIELDS_SHOW_IMAGE_DETAILS_VIEW_DESC">-->
+<!--                <option value="0">JHIDE</option>-->
+<!--                <option value="1">JSHOW</option>-->
+<!--            </field>-->
             <field type="radio" name="enable_search_link"
                    default="0" class="switcher btn-group"
                    layout="joomla.form.field.radio.switcher"
