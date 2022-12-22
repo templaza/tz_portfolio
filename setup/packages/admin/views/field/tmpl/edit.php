@@ -50,6 +50,7 @@ if(!COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
                         <?php echo $this -> form -> renderField('groupid');?>
                         <?php echo $this -> form -> renderField('published');?>
                         <?php echo $this -> form -> renderField('type');?>
+                        <?php echo $this -> form -> renderField('images');?>
                         <div class="control-group">
                             <div class="control-label"><?php echo $form -> getLabel('value');?></div>
                             <div class="controls">
