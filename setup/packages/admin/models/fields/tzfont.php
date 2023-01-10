@@ -127,7 +127,7 @@ class JFormFieldTZFont extends JFormField
         $fontFamily = isset($value->fontFamily) ? $value->fontFamily : '';
         $base_id    =   'tzfont-option';
         $html = '<div class="tzfont-container">';
-        $html .= '<div class="row-fluid">';
+        $html .= '<div class="'.(JVERSION >= 4 ? 'row' : 'row-fluid').'">';
         $html .= '<div class="span6 col-sm-6">';
         $html .= '<label><small>'. \JText::_('TZPORTFOLIO_TYPO_FONT_FAMILY') .'</small></label>';
         // Font list
@@ -155,7 +155,7 @@ class JFormFieldTZFont extends JFormField
         $html .= '</div>';
         $html .= '</div>';
 
-        $html .= '<div class="row-fluid">';
+        $html .= '<div class="'.(JVERSION >= 4 ? 'row' : 'row-fluid').'">';
         //Font Size
         $fontSize = (isset($value->fontSize))?$value->fontSize:'';
         $html .= '<div class="span6 col-sm-6">';
@@ -170,7 +170,7 @@ class JFormFieldTZFont extends JFormField
         $html .= '</div>';
         $html .= '</div>';
 
-        $html .= '<div class="row-fluid">';
+        $html .= '<div class="'.(JVERSION >= 4 ? 'row' : 'row-fluid').'">';
         //Font Style
         $html .= '<div class="span6 col-sm-6">';
         $html .= '<label><small>'. \JText::_('TZPORTFOLIO_TYPO_FONT_STYLE') .'</small></label>';
@@ -210,7 +210,7 @@ class JFormFieldTZFont extends JFormField
         $html .= '</div>';
         $html .= '</div>';
 
-        $html .= '<div class="row-fluid">';
+        $html .= '<div class="'.(JVERSION >= 4 ? 'row' : 'row-fluid').'">';
         //Text transform
         $html .= '<div class="span6 col-sm-6">';
         $html .= '<label><small>'. \JText::_('TZPORTFOLIO_TYPO_TEXT_TRANSFORM') .'</small></label>';
