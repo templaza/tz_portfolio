@@ -92,7 +92,7 @@ $column[]   =   ($params -> get('column', 1) && intval($params -> get('column', 
                     <?php if($params -> get('show_category_text', 1)){ ?>
                         <label class="group-label" for="catid"><?php echo ($text = $params -> get('category_text'))?$text:JText::_('MOD_TZ_PORTFOLIO_PLUS_FILTER_CATEGORY');?></label>
                     <?php } ?>
-                    <select name="id" class="inputbox" id="catid">
+                    <select name="id" class="form-select" id="catid">
                         <?php echo JHtml::_('select.options', $categoryOptions, 'value', 'text',
                             (($input -> get('option') == 'com_tz_portfolio_plus')?$input -> get('id'):'')); ?>
                     </select>
