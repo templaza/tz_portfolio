@@ -93,6 +93,18 @@
                         label="MOD_TZ_PORTFOLIO_PLUS_FILTER_FIELD_BUTTONTEXT_LABEL"
                         description="MOD_TZ_PORTFOLIO_PLUS_FILTER_FIELD_BUTTONTEXT_DESC"
                         showon="button:1"/>
+                <field type="list" name="button_style" default="1" showon="button:1"
+                       label="MOD_TZ_PORTFOLIO_PLUS_FILTER_BUTTON_STYLE_LABEL">
+                    <option value="btn-primary">Primary</option>
+                    <option value="btn-secondary">Secondary</option>
+                    <option value="btn-success">Success</option>
+                    <option value="btn-danger">Danger</option>
+                    <option value="btn-warning">Warning</option>
+                    <option value="btn-info">Info</option>
+                    <option value="btn-light">Light</option>
+                    <option value="btn-dark">Dark</option>
+                    <option value="btn-link">Link</option>
+                </field>
                 <field type="radio" name="show_category"
                        layout="joomla.form.field.radio.switcher"
                        default="0" class="switcher btn-group btn-group-yesno"

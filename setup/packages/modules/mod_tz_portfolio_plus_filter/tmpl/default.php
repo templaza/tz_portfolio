@@ -108,8 +108,8 @@ $column[]   =   ($params -> get('column', 1) && intval($params -> get('column', 
         ?>
             <div class="align-self-end <?php echo $params -> get('search_inline', 0) ? 'col-auto' : 'col-12'; ?>">
                 <?php if($params -> get('button', 1)){?>
-                <div class="form-group">
-                    <button class="button btn btn-primary">
+                <div class="form-group d-grid">
+                    <button class="button btn <?php echo $params -> get('button_style', 'btn-primary'); ?>">
                         <?php
                         $btn_output = null;
                         if($imagebutton){
