@@ -23,8 +23,6 @@
 defined('_JEXEC') or die;
 
 if($advfilter):
-
-    JHtml::_('formbehavior.chosen', 'select');
     if($params -> get('show_group_title', 0)) {
         $adv    = $advfilter;
         $first  = array_shift($adv);
@@ -34,17 +32,20 @@ if($advfilter):
         if(isset($group -> fields) && $group -> fields){
             if($params -> get('show_group_title', 0)){
                 echo JHtml::_('bootstrap.addTab', 'tz-filter-'.$module -> id, 'tz-filter-group-'.$group -> id, $group -> name);
+                echo '<div class="row py-3">';
             }
             foreach($group -> fields as $field){
-                if($searchinput = $field -> getSearchInput()){
-?>
-            <div class="form-group">
-                <?php echo $searchinput;?>
-            </div>
+                if($searchinput = $field -> getSearchInput()){ ?>
+                    <div class="<?php echo implode(' ', $column); ?>">
+                        <div class="form-group">
+                            <?php echo $searchinput;?>
+                        </div>
+                    </div>
 <?php
                 }
             }
             if($params -> get('show_group_title', 0)){
+                echo '</div>';
                 echo JHtml::_('bootstrap.endTab');
             }
         }
