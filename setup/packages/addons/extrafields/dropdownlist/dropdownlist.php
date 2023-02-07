@@ -175,7 +175,7 @@ class TZ_Portfolio_PlusExtraFieldDropDownList extends TZ_Portfolio_PlusExtraFiel
             return $html;
         }
 
-        $this -> setAttribute('class', 'form-control', 'search');
+        $this -> setAttribute('class', 'form-select', 'search');
 
         $html   = '<label class="group-label">'.$this -> getTitle().'</label>';
 

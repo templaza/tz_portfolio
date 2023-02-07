@@ -28,6 +28,7 @@ if ($options):
         ?>
         <label class="group-label"><?php echo $this->getTitle(); ?></label>
         <?php }
+        $this->setAttribute("class", 'form-select', "search");
         echo JHtml::_('select.genericlist', $options, $this->getSearchName(), $this->getAttribute(null, null, "search"), 'value', 'text', $value, $this->getSearchId());
     }else{
 ?>
