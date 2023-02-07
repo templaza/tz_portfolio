@@ -75,7 +75,7 @@ $column[]   =   ($params -> get('column', 1) && intval($params -> get('column', 
             <div class="<?php echo implode(' ', $column); ?>">
                 <div class="form-group">
                     <?php if($params -> get('show_box_label', 1)){?>
-                        <label for="mod_tz_portfolio_plus_filter-searchword"><?php echo $label ?></label>
+                        <label for="mod_tz_portfolio_plus_filter-searchword" class="form-label"><?php echo $label ?></label>
                     <?php }?>
                     <input type="search" name="searchword" id="mod_tz_portfolio_plus_filter-searchword"
                            maxlength="<?php echo $maxlength; ?>"
@@ -90,7 +90,7 @@ $column[]   =   ($params -> get('column', 1) && intval($params -> get('column', 
             <div class="<?php echo implode(' ', $column); ?>">
                 <div class="form-group">
                     <?php if($params -> get('show_category_text', 1)){ ?>
-                        <label class="group-label" for="catid"><?php echo ($text = $params -> get('category_text'))?$text:JText::_('MOD_TZ_PORTFOLIO_PLUS_FILTER_CATEGORY');?></label>
+                        <label class="form-label" for="catid"><?php echo ($text = $params -> get('category_text'))?$text:JText::_('MOD_TZ_PORTFOLIO_PLUS_FILTER_CATEGORY');?></label>
                     <?php } ?>
                     <select name="id" class="form-select" id="catid">
                         <?php echo JHtml::_('select.options', $categoryOptions, 'value', 'text',

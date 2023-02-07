@@ -1091,7 +1091,7 @@ class TZ_Portfolio_PlusExtraField{
             return $html;
         }
 
-        $html   = '<label class="group-label">'.$this -> getTitle().'</label>';
+        $html   = '<label class="form-label">'.$this -> getTitle().'</label>';
 
         $this -> setAttribute('class', 'form-control', 'search');
 

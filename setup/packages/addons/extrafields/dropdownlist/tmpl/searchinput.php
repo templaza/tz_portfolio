@@ -26,7 +26,7 @@ if ($options):
         || $params -> get('search_type', 'dropdownlist') == 'multiselect') {
         if($params -> get('show_label', 1)) {
         ?>
-        <label class="group-label"><?php echo $this->getTitle(); ?></label>
+        <label class="form-label"><?php echo $this->getTitle(); ?></label>
         <?php }
         $this->setAttribute("class", 'form-select', "search");
         echo JHtml::_('select.genericlist', $options, $this->getSearchName(), $this->getAttribute(null, null, "search"), 'value', 'text', $value, $this->getSearchId());
@@ -34,7 +34,7 @@ if ($options):
 ?>
     <fieldset id="<?php echo $this -> getSearchId();?>" class="checkboxes <?php echo $this -> getInputClass();?>">
         <?php if($params -> get('show_label', 1)){?>
-        <label class="group-label"><?php echo $this -> getTitle();?></label>
+        <label class="form-label"><?php echo $this -> getTitle();?></label>
         <?php }?>
         <ul class="list-unstyled list-extrafield mb-0">
             <?php foreach ($options AS $key => $option){
