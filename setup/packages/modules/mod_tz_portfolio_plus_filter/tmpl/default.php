@@ -66,11 +66,13 @@ $column[]   =   ($params -> get('column_lg', 1) && intval($params -> get('column
 $column[]   =   ($params -> get('column_md', 1) && intval($params -> get('column_md', 1))) ? 'col-md-' . 12/$params -> get('column_md', 1) : 'col-md';
 $column[]   =   ($params -> get('column_sm', 1) && intval($params -> get('column_sm', 1))) ? 'col-sm-' . 12/$params -> get('column_sm', 1) : 'col-sm';
 $column[]   =   ($params -> get('column', 1) && intval($params -> get('column', 1))) ? 'col-' . 12/$params -> get('column', 1) : 'col';
+$gutter     =   $params -> get('gutter', '') ? ' '. $params -> get('gutter', '') : '';
+$button_width   =   $params -> get('button_width', '') ? ' style="width:'. $params -> get('button_width', '').'px;"' : '';
 ?>
 <div class="tz-filter<?php echo $moduleclass_sfx ?> tpp-bootstrap">
     <form action="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&view=search&Itemid='.$mitemid);?>"
           method="post">
-        <div class="row">
+        <div class="row<?php echo $gutter; ?>">
         <?php if($params -> get('show_search_word', 1)) { ?>
             <div class="<?php echo implode(' ', $column); ?>">
                 <div class="form-group">
@@ -108,7 +110,7 @@ $column[]   =   ($params -> get('column', 1) && intval($params -> get('column', 
         ?>
             <div class="align-self-end <?php echo $params -> get('search_inline', 0) ? 'col-auto' : 'col-12'; ?>">
                 <?php if($params -> get('button', 1)){?>
-                <div class="form-group d-grid">
+                <div class="form-group d-grid"<?php echo $button_width; ?>>
                     <button class="button btn <?php echo $params -> get('button_style', 'btn-primary'); ?>">
                         <?php
                         $btn_output = null;

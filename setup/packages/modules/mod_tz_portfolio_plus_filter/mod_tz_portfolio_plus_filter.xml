@@ -2,8 +2,8 @@
 <extension version="3.0" type="module" client="site" method="upgrade">
     <name>mod_tz_portfolio_plus_filter</name>
     <author>TemPlaza</author>
-    <creationDate>February 07th 2023</creationDate>
-    <copyright>Copyright (C) 2016 TemPlaza. All rights reserved.</copyright>
+    <creationDate>February 14th 2023</creationDate>
+    <copyright>Copyright (C) 2023 TemPlaza. All rights reserved.</copyright>
     <license>GNU/GPL v2 or later http://www.gnu.org/licenses/gpl-2.0.html</license>
     <authorEmail>support@templaza.com</authorEmail>
     <authorUrl>www.tzportfolio.com/</authorUrl>
@@ -105,6 +105,14 @@
                     <option value="btn-dark">Dark</option>
                     <option value="btn-link">Link</option>
                 </field>
+                <field name="button_width" type="number" label="MOD_TZ_PORTFOLIO_PLUS_FILTER_FIELD_BUTTON_WIDTH_LABEL" min="0" max="2000" step="1" />
+                <field type="radio" name="search_inline"
+                       layout="joomla.form.field.radio.switcher"
+                       default="0" class="switcher btn-group"
+                       label="MOD_TZ_PORTFOLIO_PLUS_FILTER_SEARCH_BUTTON_INLINE">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
                 <field type="radio" name="show_category"
                        layout="joomla.form.field.radio.switcher"
                        default="0" class="switcher btn-group btn-group-yesno"
@@ -203,12 +211,14 @@
                     <option value="4">1/4</option>
                     <option value="6">1/6</option>
                 </field>
-                <field type="radio" name="search_inline"
-                       layout="joomla.form.field.radio.switcher"
-                       default="0" class="switcher btn-group"
-                       label="MOD_TZ_PORTFOLIO_PLUS_FILTER_SEARCH_BUTTON_INLINE">
-                    <option value="0">JNO</option>
-                    <option value="1">JYES</option>
+                <field type="list" name="gutter" default=""
+                       label="MOD_TZ_PORTFOLIO_PLUS_FILTER_GUTTER">
+                    <option value="">Default</option>
+                    <option value="gx-1">X-Small</option>
+                    <option value="gx-2">Small</option>
+                    <option value="gx-3">Medium</option>
+                    <option value="gx-4">Large</option>
+                    <option value="gx-5">X-Large</option>
                 </field>
             </fieldset>
 
