@@ -121,7 +121,7 @@ class PlgTZ_Portfolio_PlusMediaTypeModelImage extends TZ_Portfolio_PlusPluginMod
                         $image_url  = TZ_Portfolio_PlusFrontHelper::getImageURLBySize($media -> url,
                             $size ->image_name_prefix);
 
-                        if(File::exists($image_url)) {
+                        if(File::exists(JPath::clean(JPATH_ROOT . DIRECTORY_SEPARATOR . $image_url))) {
                             File::delete(JPath::clean(JPATH_ROOT . DIRECTORY_SEPARATOR . $image_url));
                         }
                     }
@@ -133,7 +133,7 @@ class PlgTZ_Portfolio_PlusMediaTypeModelImage extends TZ_Portfolio_PlusPluginMod
                         $image_url  = TZ_Portfolio_PlusFrontHelper::getImageURLBySize($media -> url_detail,
                             $size ->image_name_prefix);
 
-                        if(File::exists($image_url)) {
+                        if(File::exists(JPath::clean(JPATH_ROOT . DIRECTORY_SEPARATOR . $image_url))) {
                             File::delete(JPath::clean(JPATH_ROOT . DIRECTORY_SEPARATOR . $image_url));
                         }
                     }
