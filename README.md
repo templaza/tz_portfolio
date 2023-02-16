@@ -11,6 +11,19 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+16/02/2023 - 2.6.3
+	
+	- Fix issue remove image files of image add-on
+	- Fix issue undefined function setError of form controller library
+	- Fix issue filter by empty category of module TZ Portfolio Plus Filter when this module refer to portfolio view
+	- Update tzfont design
+	- Update Dropdown List Addon
+	- Update image for extrafield
+	- Update TZ Portfolio Plus Filter:
+	    + Update label style
+    	+ Update Button Style
+    	+ Update Filter style
+
 02/11/2022 - 2.6.2
 	
 	- Fix issue with about author in article view
