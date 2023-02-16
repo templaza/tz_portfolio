@@ -209,7 +209,8 @@ class TZ_Portfolio_PlusRouter extends RouterBase
             unset($query['view']);
 
             // Since v2.3.1
-            if($removeCategory && $queryIdGiven && $view == 'portfolio'){
+            if($removeCategory && $queryIdGiven && $view == 'portfolio' &&
+                (!empty($query['id']) || !empty($query['catid']))){
                 $segments[] = $params -> get('sef_portfolio_prefix','category');
             }
 
