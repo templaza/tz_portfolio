@@ -36,7 +36,13 @@ class PlgTZ_Portfolio_PlusMediaTypeModelImage extends TZ_Portfolio_PlusPluginMod
         $app    = JFactory::getApplication();
         $input  = $app -> input;
 
-        $_data      = array('id' => ($data -> id), 'asset_id' => ($data -> asset_id),'media' => '{}');
+        $_data  = array('id' => ($data -> id), 'asset_id' => ($data -> asset_id),'media' => '{}');
+        $alias  = '';
+        if(is_array($data) && isset($data['alias'])){
+            $alias  = $data['alias'];
+        }elseif(is_object($data) && isset($data -> alias)){
+            $alias  = $data -> alias;
+        }
 
         $params     = $this -> getState('params');
 
@@ -124,6 +130,13 @@ class PlgTZ_Portfolio_PlusMediaTypeModelImage extends TZ_Portfolio_PlusPluginMod
                         if(File::exists(JPath::clean(JPATH_ROOT . DIRECTORY_SEPARATOR . $image_url))) {
                             File::delete(JPath::clean(JPATH_ROOT . DIRECTORY_SEPARATOR . $image_url));
                         }
+                    }elseif(isset($image_data['url']) && empty($image_data['url']) && !empty($alias)){
+                        // Remove all old images of this article if it has images
+                        $murl       = COM_TZ_PORTFOLIO_PLUS_MEDIA_ARTICLE_BASE.'/'.$alias;
+                        $old_files  = glob(JPATH_ROOT.DIRECTORY_SEPARATOR.$murl.'_'.$size ->image_name_prefix.'.*');
+                        if(!empty($old_files)) {
+                            array_map('Joomla\CMS\Filesystem\File::delete', $old_files);
+                        }
                     }
 
                     // Delete old image hover files
@@ -135,6 +148,13 @@ class PlgTZ_Portfolio_PlusMediaTypeModelImage extends TZ_Portfolio_PlusPluginMod
 
                         if(File::exists(JPath::clean(JPATH_ROOT . DIRECTORY_SEPARATOR . $image_url))) {
                             File::delete(JPath::clean(JPATH_ROOT . DIRECTORY_SEPARATOR . $image_url));
+                        }
+                    }elseif(isset($image_data['url_detail']) && empty($image_data['url_detail']) && !empty($alias)){
+                        // Remove all old images of this article if it has images
+                        $murl       = COM_TZ_PORTFOLIO_PLUS_MEDIA_ARTICLE_BASE.'/'.$alias;
+                        $old_files  = glob(JPATH_ROOT.DIRECTORY_SEPARATOR.$murl.'-h_'.$size ->image_name_prefix.'.*');
+                        if(!empty($old_files)) {
+                            array_map('Joomla\CMS\Filesystem\File::delete', $old_files);
                         }
                     }
                 }
@@ -154,10 +174,16 @@ class PlgTZ_Portfolio_PlusMediaTypeModelImage extends TZ_Portfolio_PlusPluginMod
                 }
             }
         }else{
+            if(isset($image_data['url']) && empty($image_data['url']) && !empty($alias)){
+                $old_files  = glob(JPATH_ROOT.DIRECTORY_SEPARATOR.$murl.'_o.*');
+                if(!empty($old_files)) {
+                    array_map('Joomla\CMS\Filesystem\File::delete', $old_files);
+                }
+            }
             unset($image_data['url']);
         }
 
-        // Remove Image hover file when tick to remove file box
+        // Remove Image detail file when tick to remove file box
         if(isset($image_data['url_detail_remove']) && $image_data['url_detail_remove']){
             // Before upload image to file must delete original file
             if($media && isset($media -> url_detail) && !empty($media -> url_detail)){
@@ -171,6 +197,12 @@ class PlgTZ_Portfolio_PlusMediaTypeModelImage extends TZ_Portfolio_PlusPluginMod
                 }
             }
         }else{
+            if(isset($image_data['url_detail']) && empty($image_data['url_detail']) && !empty($alias)){
+                $old_files  = glob(JPATH_ROOT.DIRECTORY_SEPARATOR.$murl.'h_o.*');
+                if(!empty($old_files)) {
+                    array_map('Joomla\CMS\Filesystem\File::delete', $old_files);
+                }
+            }
             unset($image_data['url_detail']);
         }
 
@@ -596,7 +628,7 @@ class PlgTZ_Portfolio_PlusMediaTypeModelImage extends TZ_Portfolio_PlusPluginMod
 //        if (is_resource($file) && (get_resource_type($file) != 'gd')) {
 //            $mainLayer = TppImageWaterMark::initFromResourceVar($file);
 //        }else{
-            $mainLayer = TppImageWaterMark::initFromPath($file);
+        $mainLayer = TppImageWaterMark::initFromPath($file);
 //        }
 
 
