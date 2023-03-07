@@ -411,7 +411,7 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
                             $update_query = 'UPDATE '.$db -> quoteName('#__menu').' SET params='
                                 .$db -> quote($params -> toString()).
                                 ' WHERE id='.$item -> id;
-                            if(count($update_query)){
+                            if(!empty($update_query)){
                                 $db -> setQuery($update_query);
                                 $db ->execute();
                             }
@@ -440,7 +440,7 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
                             $update_query = 'UPDATE '.$db -> quoteName('#__menu').' SET params='
                                 .$db -> quote($params -> toString()).
                                 ' WHERE id='.$menu -> id;
-                            if(count($update_query)){
+                            if(!empty($update_query)){
                                 $db -> setQuery($update_query);
                                 $db ->execute();
                             }
