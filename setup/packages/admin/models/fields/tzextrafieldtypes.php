@@ -40,10 +40,26 @@ class JFormFieldTZExtraFieldTypes extends JFormFieldList
                 (function($, window){
                     "use strict";
                     $( document ).ready(function() {
-                        Joomla.loadingLayer("load");
+                        if (Joomla.loadingLayer && typeof Joomla.loadingLayer === "function") {
+                            // We are in J3 so use the old method
+                            Joomla.loadingLayer("load");
+                        } else {
+                             // We are in the future
+                             let spinner = document.querySelector("joomla-core-loader");
+                             if(spinner){
+                                 spinner.parentNode.removeChild(spinner);
+                             }
+                        }
                     });
                     window.tppTypeHasChanged = function(element){
-                        Joomla.loadingLayer("show");
+                        if (Joomla.loadingLayer && typeof Joomla.loadingLayer === "function") {
+                            // We are in J3 so use the old method                            
+                            Joomla.loadingLayer("show");
+                        } else {
+                             // We are in the future
+                            var spinner = document.createElement("joomla-core-loader");
+                            document.body.appendChild(spinner);
+                        }
                         var cat = $(element);
                         $("input[name=task]").val("field.reload");
                         element.form.submit();
