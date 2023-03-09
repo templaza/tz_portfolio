@@ -158,7 +158,7 @@ $assoc		= JLanguageAssociations::isEnabled();
                                     && $item->created_by == $userId)) && $canCheckin;
                         ?>
                         <tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item -> catid;
-                        ?>" data-dragable-group="<?php echo $item->catid; ?>">
+                        ?>" data-draggable-group="<?php echo $item->catid; ?>">
                             <td class="order nowrap center text-center hidden-phone">
                                 <?php
                                 $iconClass = '';

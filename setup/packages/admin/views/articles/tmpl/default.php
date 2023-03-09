@@ -187,7 +187,7 @@ $this -> document -> addScriptDeclaration('(function($, TZ_Portfolio_Plus){
                         $canApprove     = TZ_Portfolio_PlusHelperACL::allowApprove($item);
                         ?>
                         <tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item -> catid;
-                        ?>" data-dragable-group="<?php echo $item->catid; ?>">
+                        ?>" data-draggable-group="<?php echo $item->catid; ?>">
                             <td class="order nowrap center text-center hidden-phone">
                                 <?php
                                 $iconClass = '';

@@ -126,7 +126,9 @@ if ($saveOrder)
                                         .$item->id)
                                     && $item->created_by == $userId)) && $canCheckin;
                         ?>
-                    <tr class="row<?php echo ($i%2==1)?'1':$i;?>"<?php echo ($group = $this -> state -> get('filter.group'))?'sortable-group-id="'.$group.'"':''?>>
+                        <tr class="row<?php echo ($i%2==1)?'1':$i;?>"<?php
+                        echo ($group = $this -> state -> get('filter.group'))?'sortable-group-id="'.$group
+                            .'"':'';?> data-draggable-group="<?php echo $group?$group:0; ?>">
                         <td class="order nowrap center text-center hidden-phone">
                             <?php
                             $iconClass = '';

@@ -170,7 +170,8 @@ $this -> document -> addScriptDeclaration('
                     $canChange = $user->authorise('core.edit.state', 'com_tz_portfolio_plus.addon') && $canCheckin;
 
                     ?>
-                    <tr class="<?php echo ($i%2==0)?'row0':'row1';?>" sortable-group-id="<?php echo $item->folder?>">
+                    <tr class="<?php echo ($i%2==0)?'row0':'row1';?>" sortable-group-id="<?php echo $item->folder
+                    ?>" data-draggable-group="<?php echo $item->folder?>">
                         <td class="order nowrap center text-center hidden-phone">
                             <?php
                             $iconClass = '';

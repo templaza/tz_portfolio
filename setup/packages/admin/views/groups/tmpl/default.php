@@ -124,7 +124,7 @@ if ($saveOrder)
                             ($user->authorise('core.edit.state.own', 'com_tz_portfolio_plus.group.' . $item->id)
                                 && $item->created_by == $userId)) && $canCheckin;
                         ?>
-                    <tr class="row<?php echo ($i % 2 == 1) ? '1' : $i; ?>">
+                    <tr class="row<?php echo ($i % 2 == 1) ? '1' : $i; ?>" data-draggable-group="0">
                         <td class="order nowrap center text-center hidden-phone">
                             <?php
                             $iconClass = '';

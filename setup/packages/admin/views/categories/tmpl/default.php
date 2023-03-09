@@ -41,7 +41,7 @@ $extension	= $this->escape($this->state->get('filter.extension'));
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
 $ordering 	= ($listOrder == 'a.lft');
-$saveOrder 	= ($listOrder == 'a.lft' && $listDirn == 'asc');
+$saveOrder 	= ($listOrder == 'a.lft' && strtolower($listDirn) == 'asc');
 
 $j4Compare  = COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE;
 if ($saveOrder)
@@ -154,7 +154,9 @@ if ($saveOrder)
                             $parentsStr = "";
                         }
                         ?>
-                        <tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item->parent_id;?>" item-id="<?php echo $item->id?>" parents="<?php echo $parentsStr?>" level="<?php echo $item->level?>">
+                        <tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item->parent_id;
+                        ?>" data-draggable-group="<?php echo $item->parent_id; ?>" item-id="<?php echo $item->id
+                        ?>" parents="<?php echo $parentsStr?>" level="<?php echo $item->level?>">
                             <td class="order nowrap center text-center hidden-phone">
                                 <?php
                                 $iconClass = '';
