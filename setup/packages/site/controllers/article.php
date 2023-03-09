@@ -20,7 +20,9 @@
 // no direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Router\Route;
 use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Language\Multilanguage;
 
 jimport('joomla.filesystem.file');
 JLoader::import('com_tz_portfolio_plus.libraries.controller.article', JPATH_ADMINISTRATOR.'/components');
@@ -181,6 +183,28 @@ class TZ_Portfolio_PlusControllerArticle extends TZ_Portfolio_PlusControllerArti
         // Load the parameters.
         $params   = $app->getParams();
         $menuitem = (int) $params->get('redirect_menuitem');
+
+        // Check for redirection after submission when creating a new article only
+        if ($menuitem > 0 && $articleId == 0) {
+            $lang = '';
+
+            if (Multilanguage::isEnabled()) {
+                $item = $app->getMenu()->getItem($menuitem);
+                $lang = !is_null($item) && $item->language != '*' ? '&lang=' . $item->language : '';
+            }
+
+            // If ok, redirect to the return page.
+            if ($result) {
+                $this->setRedirect(Route::_('index.php?Itemid=' . $menuitem . $lang, false));
+            }
+        } elseif ($this->getTask() === 'save2copy') {
+            // Redirect to the article page, use the redirect url set from parent controller
+        } else {
+            // If ok, redirect to the return page.
+            if ($result) {
+                $this->setRedirect(Route::_($this->getReturnPage(), false));
+            }
+        }
 
         return $result;
 	}
