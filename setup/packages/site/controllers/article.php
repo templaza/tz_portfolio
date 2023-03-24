@@ -56,10 +56,55 @@ class TZ_Portfolio_PlusControllerArticle extends TZ_Portfolio_PlusControllerArti
 	 */
 	public function cancel($key = 'a_id')
 	{
-		parent::cancel($key);
+        $result = parent::cancel($key);
 
-		// Redirect to the return page.
-		$this->setRedirect($this->getReturnPage());
+        /** @var SiteApplication $app */
+        $app = $this->app;
+
+        // Load the parameters.
+        $params = $app->getParams();
+
+        $customCancelRedir = (bool) $params->get('custom_cancel_redirect');
+
+        if ($customCancelRedir) {
+            $cancelMenuitemId = (int) $params->get('cancel_redirect_menuitem');
+
+            if ($cancelMenuitemId > 0) {
+                $item = $app->getMenu()->getItem($cancelMenuitemId);
+                $lang = '';
+
+                if (Multilanguage::isEnabled()) {
+                    $lang = !is_null($item) && $item->language != '*' ? '&lang=' . $item->language : '';
+                }
+
+                // Redirect to the user specified return page.
+                $redirlink = $item->link . $lang . '&Itemid=' . $cancelMenuitemId;
+            } else {
+                // Redirect to the same article submission form (clean form).
+                $redirlink = $app->getMenu()->getActive()->link . '&Itemid=' . $app->getMenu()->getActive()->id;
+            }
+        } else {
+            $menuitemId = (int) $params->get('redirect_menuitem');
+
+            if ($menuitemId > 0) {
+                $lang = '';
+                $item = $app->getMenu()->getItem($menuitemId);
+
+                if (Multilanguage::isEnabled()) {
+                    $lang = !is_null($item) && $item->language != '*' ? '&lang=' . $item->language : '';
+                }
+
+                // Redirect to the general (redirect_menuitem) user specified return page.
+                $redirlink = $item->link . $lang . '&Itemid=' . $menuitemId;
+            } else {
+                // Redirect to the return page.
+                $redirlink = $this->getReturnPage();
+            }
+        }
+
+        $this->setRedirect(Route::_($redirlink, false));
+
+        return $result;
 	}
 
     /**

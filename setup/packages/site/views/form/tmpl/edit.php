@@ -77,6 +77,12 @@ if($params -> get('enable_bootstrap',1) && $params -> get('bootstrapversion', 4)
 }elseif($params -> get('enable_bootstrap',1) && $params -> get('bootstrapversion', 4) == 3){
     $bootstrapClass = 'tzpp_bootstrap3 ';
 }
+
+$menu   = JFactory::getApplication() -> getMenu();
+$active = $menu -> getActive();
+$url    = 'index.php?option=com_tz_portfolio_plus&view='.$this -> getName()
+    .((isset($active -> id) && $active -> id)?'&Itemid='.$active -> id:'')
+    .'&a_id=' . (int) $this->item->id;
 ?>
 
 <div class="<?php echo $bootstrapClass;?>tp-edit-page<?php echo $this->pageclass_sfx; ?>">
@@ -88,7 +94,7 @@ if($params -> get('enable_bootstrap',1) && $params -> get('bootstrapversion', 4)
         </div>
     <?php } ?>
 
-    <form action="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&a_id=' . (int) $this->item->id);
+    <form action="<?php echo JRoute::_($url);
     ?>" method="post" name="adminForm" id="adminForm" class="form-validate form-vertical"
           enctype="multipart/form-data">
 
