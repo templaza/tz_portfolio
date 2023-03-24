@@ -225,6 +225,7 @@
             <fieldset name="advanced">
 
                 <field type="modulelayout" name="layout"
+                       class="form-select"
                        label="JFIELD_ALT_LAYOUT_LABEL"
                        description="JFIELD_ALT_MODULE_LAYOUT_DESC"/>
                 <field type="text" name="moduleclass_sfx"
