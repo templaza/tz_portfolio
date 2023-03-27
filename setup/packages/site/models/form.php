@@ -82,10 +82,12 @@ class TZ_Portfolio_PlusModelForm extends TZ_Portfolio_PlusModelArticle
         // Convert attrib field to Registry.
         $value->params = new Registry($value->attribs);
 
-        // Convert the params field to an array.
-        $registry = new Registry;
-        $registry->loadString($value->attribs);
-        $value->attribs = $registry->toArray();
+        if(isset($value -> attribs) && !empty($value -> attribs)){
+            // Convert the params field to an array.
+            $registry = new Registry;
+            $registry->loadString($value->attribs);
+            $value->attribs = $registry->toArray();
+        }
 
         // Compute selected asset permissions.
         $user   = JFactory::getUser();

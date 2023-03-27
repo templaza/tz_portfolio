@@ -37,6 +37,7 @@ class TZ_Portfolio_PlusExtraField{
     protected $id_suffix            = null;
     protected $name                 = null;
     protected $field                = null;
+    protected $fieldname            = null;
     protected $fieldtype            = null;
     protected $multiple             = false;
     protected $multiple_option      = false;

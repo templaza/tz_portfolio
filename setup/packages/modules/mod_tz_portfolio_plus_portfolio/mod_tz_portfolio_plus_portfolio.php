@@ -53,5 +53,5 @@ if($show_filter) {
     $filter_tag = modTZ_Portfolio_PlusPortfolioHelper::getTagsFilterByArticle($params);
     $filter_cat = modTZ_Portfolio_PlusPortfolioHelper::getCategoriesFilterByArticle($params);
 }
-$moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'));
+$moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx', ''));
 require TZ_Portfolio_PlusModuleHelper::getTZLayoutPath($module, $params->get('layout', 'default'));

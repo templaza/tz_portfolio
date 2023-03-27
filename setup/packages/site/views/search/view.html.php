@@ -323,7 +323,7 @@ class TZ_Portfolio_PlusViewSearch extends JViewLegacy
         $this -> availLetter    = $this -> get('AvailableLetter');
 
         //Escape strings for HTML output
-        $this->pageclass_sfx    = htmlspecialchars($params->get('pageclass_sfx'));
+        $this->pageclass_sfx    = htmlspecialchars($params->get('pageclass_sfx', ''));
 
         $advFilterFields  = $this -> get('AdvFilterFields');
         $this -> advFilterFields  = $advFilterFields;

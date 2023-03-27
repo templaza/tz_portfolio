@@ -38,6 +38,7 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
     protected $vars                 = array();
     protected $data_manager         = false;
     protected $form;
+    protected $item;
 
     protected $_myFormDataBeforeSave;
 

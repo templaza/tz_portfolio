@@ -76,7 +76,7 @@ class TZ_Portfolio_PlusViewForm extends JViewLegacy
         $params = &$this->state->params;
 
         // Escape strings for HTML output
-        $this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx'));
+        $this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx', ''));
 
         $this->params = $params;
 		

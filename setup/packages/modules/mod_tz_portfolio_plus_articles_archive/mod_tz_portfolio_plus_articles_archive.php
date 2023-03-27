@@ -40,7 +40,7 @@ if($params -> get('enable_bootstrap', 0) && $params -> get('enable_bootstrap_js'
 }
 
 $params->def('count', 10);
-$moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'));
+$moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx', ''));
 $list = modTZ_Portfolio_PlusArchiveHelper::getList($params);
 
 require TZ_Portfolio_PlusModuleHelper::getTZLayoutPath($module, $params->get('layout', 'default'));

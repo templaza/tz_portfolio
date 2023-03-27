@@ -38,7 +38,7 @@ $maxlength          = $upper_limit;
 $text               = htmlspecialchars($params->get('text', JText::_('MOD_TZ_PORTFOLIO_PLUS_FILTER_SEARCHBOX_TEXT')), ENT_COMPAT, 'UTF-8');
 $label              = htmlspecialchars($params->get('label', JText::_('MOD_TZ_PORTFOLIO_PLUS_FILTER_LABEL_TEXT')), ENT_COMPAT, 'UTF-8');
 $set_Itemid         = (int) $params->get('set_itemid', 0);
-$moduleclass_sfx    = htmlspecialchars($params->get('moduleclass_sfx'), ENT_COMPAT, 'UTF-8');
+$moduleclass_sfx    = htmlspecialchars($params->get('moduleclass_sfx', ''), ENT_COMPAT, 'UTF-8');
 
 $mitemid            = $set_Itemid > 0 ? $set_Itemid : $app->input->get('Itemid');
 $advfilter          = modTZ_Portfolio_PlusFilterHelper::getAdvFilterFields($params);

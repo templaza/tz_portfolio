@@ -108,7 +108,7 @@ if($params -> get('enable_bootstrap',1) && $params -> get('bootstrapversion', 4)
                 <?php if($extrafields = $this -> loadTemplate('extrafields')):?>
                     <?php echo $extrafields;?>
                 <?php endif;?>
-                <?php if (trim($this->item->params ->get('project_link'))) : ?>
+                <?php if (trim($this->item->params ->get('project_link', ''))) : ?>
                     <div class="tpPortfolioLink"><a href="<?php echo $this->item->params ->get('project_link'); ?>" title="<?php echo $this->item->params ->get('project_link_title'); ?>" target="_blank" itemprop="url"><?php echo $this->item->params ->get('project_link_title'); ?></a></div>
                 <?php endif; ?>
                 <?php

@@ -376,7 +376,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
                 $item->urls = $registry->toArray();
             }
 
-            $item->articletext = trim($item->fulltext) != '' ? $item->introtext
+            $item->articletext = !empty($item -> fulltext) && trim($item->fulltext) != '' ? $item->introtext
                 . "<hr id=\"system-readmore\" />" . $item->fulltext : $item->introtext;
 
             if(isset($item -> media) && !empty($item -> media)){

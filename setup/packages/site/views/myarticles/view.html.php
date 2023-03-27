@@ -74,7 +74,7 @@ class TZ_Portfolio_PlusViewMyArticles extends JViewLegacy
         $this -> params = $params;
 
         //Escape strings for HTML output
-        $this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx'));
+        $this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx', ''));
 
 
         parent::display($tpl);

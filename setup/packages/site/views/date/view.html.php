@@ -291,7 +291,7 @@ class TZ_Portfolio_PlusViewDate extends JViewLegacy{
         }
 
         //Escape strings for HTML output
-        $this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx'));
+        $this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx', ''));
 
         $this -> state      = $state;
         $this -> params     = $params;
