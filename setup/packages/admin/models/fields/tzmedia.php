@@ -100,7 +100,12 @@ class JFormFieldTZMedia extends JFormFieldMedia{
 
             $urlImg = JUri::root() . str_replace('.' . File::getExt($value),
                     ($this->element['img_prefix'] ? '_' . $this->element['img_prefix'] : '')
-                    . '.' . File::getExt($value), $value) . '?time=' . time();
+                    . '.' . File::getExt($value), $value);
+
+            if(version_compare(JVERSION, '4.0', '<')) {
+                $urlImg .= '?time=' . time();
+            }
+
             $img = '<img src="' . $urlImg. '" style="'
                 . ($this->element['img_max-width'] ? 'max-width: 200px; ' : '') . 'cursor: pointer;" title="">';
             $html[] = $img;
