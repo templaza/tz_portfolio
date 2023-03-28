@@ -143,14 +143,18 @@ class TZ_Portfolio_PlusHelperQuery
 
 		switch ($orderDate)
 		{
-			case 'modified' :
-				$queryDate = ' CASE WHEN c.modified = 0 THEN '.$tblprefix.'.created ELSE '.$tblprefix.'.modified END';
-				break;
+            case 'modified' :
+                $queryDate = ' CASE WHEN '.$tblprefix.'.modified IS NULL THEN '.$tblprefix.'.created ELSE '.$tblprefix.'.modified END';
+                break;
 
-			// use created if publish_up is not set
-			case 'published' :
-				$queryDate = ' CASE WHEN '.$tblprefix.'.publish_up = 0 THEN '.$tblprefix.'.created ELSE '.$tblprefix.'.publish_up END ';
-				break;
+            // use created if publish_up is not set
+            case 'published' :
+                $queryDate = ' CASE WHEN '.$tblprefix.'.publish_up IS NULL THEN '.$tblprefix.'.created ELSE '.$tblprefix.'.publish_up END ';
+                break;
+
+            case 'unpublished':
+                $queryDate = ' CASE WHEN '.$tblprefix.'.publish_down IS NULL THEN '.$tblprefix.'.created ELSE '.$tblprefix.'.publish_down END ';
+                break;
 
 			case 'created' :
 			default :

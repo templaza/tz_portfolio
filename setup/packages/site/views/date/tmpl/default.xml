@@ -52,7 +52,7 @@
 
             <!-- Start order options -->
             <field type="spacer" name="spacer_ordering_name"
-                   class="alert aler-warning btn-block"
+                   class="alert alert-warning btn-block"
                    label="COM_TZ_PORTFOLIO_PLUS_ORDERING_TITLE"/>
 
             <field name="orderby_pri"
@@ -81,6 +81,16 @@
                 <option value="order">JGLOBAL_ORDERING</option>
                 <option	value="rorder">JGLOBAL_REVERSE_ORDERING</option>
             </field>
+            <field name="order_date" type="list"
+                   useglobal="true"
+                   validate="options"
+                   label="JGLOBAL_ORDERING_DATE_LABEL"
+                   description="JGLOBAL_ORDERING_DATE_DESC">
+                <option value="created">JGLOBAL_CREATED</option>
+                <option value="modified">JGLOBAL_MODIFIED</option>
+                <option value="published">JPUBLISHED</option>
+                <option value="unpublished">JUNPUBLISHED</option>
+            </field>
             <field type="list" name="order_fieldgroup"
                    label="COM_TZ_PORTFOLIO_PLUS_FIELD_GROUP_ORDER_LABEL">
                 <option value="">JGLOBAL_USE_GLOBAL</option>
@@ -95,7 +105,7 @@
             <!-- Start pagination options -->
             <field type="spacer" name="spacer_pagination_hr" hr="true"/>
             <field type="spacer" name="spacer_pagination_name"
-                   class="alert aler-warning btn-block"
+                   class="alert alert-warning btn-block"
                    label="COM_TZ_PORTFOLIO_PLUS_PAGINATION_TITLE"/>
             <field name="show_limit_box"
                    type="list"

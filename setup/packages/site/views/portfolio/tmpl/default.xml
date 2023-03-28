@@ -127,7 +127,7 @@
             <!-- Start order options -->
             <field type="spacer" hr="true"/>
             <field type="spacer" name="spacer_ordering_name"
-                   class="alert aler-warning btn-block"
+                   class="alert alert-warning btn-block"
                    label="COM_TZ_PORTFOLIO_PLUS_ORDERING_TITLE"/>
 
             <field name="orderby_pri"
@@ -142,8 +142,8 @@
             </field>
             <field name="orderby_sec"
                    type="list"
-                   label="JGLOBAL_Article_Order_Label"
-                   description="JGLOBAL_Article_Order_Desc">
+                   label="JGLOBAL_ARTICLE_ORDER_LABEL"
+                   description="JGLOBAL_ARTICLE_ORDER_DESC">
                 <option value="">JGLOBAL_USE_GLOBAL</option>
                 <option value="rdate">JGLOBAL_MOST_RECENT_FIRST</option>
                 <option value="date">JGLOBAL_OLDEST_FIRST</option>
@@ -158,12 +158,22 @@
                 <option value="priority">COM_TZ_PORTFOLIO_PLUS_PRIORITY_ORDER</option>
                 <option	value="rpriority">COM_TZ_PORTFOLIO_PLUS_PRIORITY_REVERSE_ORDER</option>
             </field>
+            <field name="order_date" type="list"
+                   useglobal="true"
+                   validate="options"
+                   label="JGLOBAL_ORDERING_DATE_LABEL"
+                   description="JGLOBAL_ORDERING_DATE_DESC">
+                <option value="created">JGLOBAL_CREATED</option>
+                <option value="modified">JGLOBAL_MODIFIED</option>
+                <option value="published">JPUBLISHED</option>
+                <option value="unpublished">JUNPUBLISHED</option>
+            </field>
             <!-- End order options -->
 
             <!-- Start pagination options -->
             <field type="spacer" hr="true"/>
             <field type="spacer" name="spacer_pagination_name"
-                   class="alert aler-warning btn-block"
+                   class="alert alert-warning btn-block"
                    label="COM_TZ_PORTFOLIO_PLUS_PAGINATION_TITLE"/>
             <field type="list" name="tz_portfolio_plus_layout"
                    label="COM_TZ_PORTFOLIO_PLUS_PORTFOLIO_PAGINATION_LAYOUT_LABEL"

@@ -94,8 +94,10 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
 
         $this -> setState('filter.shownIds', $app -> input -> get('shownIds', array(), 'array'));
 
+        $articleOrderDate	= $params->get('order_date', 'created');
+
         $orderby    = '';
-        $secondary  = TZ_Portfolio_PlusHelperQuery::orderbySecondary($params -> get('orderby_sec', 'rdate'));
+        $secondary  = TZ_Portfolio_PlusHelperQuery::orderbySecondary($params -> get('orderby_sec', 'rdate'), $articleOrderDate);
         $primary    = TZ_Portfolio_PlusHelperQuery::orderbyPrimary($params -> get('orderby_pri'));
 
         $orderby .= $primary . ' ' . $secondary;
@@ -504,7 +506,7 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
                             &$item,
                             &$item -> params,
                             $this->getState('list.start')));
-                            $item->event->contentDisplayListView = trim(implode("\n", $results));
+                        $item->event->contentDisplayListView = trim(implode("\n", $results));
 
                         // Process the tz portfolio's mediatype plugins.
                         $results    = $app -> triggerEvent('onContentDisplayMediaType',array(
@@ -555,7 +557,7 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
 
         $params = JComponentHelper::getParams('com_tz_portfolio_plus');
 
-		$input		= JFactory::getApplication() -> input;
+        $input		= JFactory::getApplication() -> input;
         $Itemid     = $data['Itemid'];
         $page       = $data['page'];
         $layout     = $data['layout'];
@@ -602,8 +604,11 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
         $this -> setState('filter.fields',$data['fields']);
         $this -> setState('filter.searchword',$searchword);
 
+
+        $articleOrderDate	= $params->get('order_date', 'created');
+
         $orderby    = '';
-        $secondary  = TZ_Portfolio_PlusHelperQuery::orderbySecondary($params -> get('orderby_sec', 'rdate'));
+        $secondary  = TZ_Portfolio_PlusHelperQuery::orderbySecondary($params -> get('orderby_sec', 'rdate'), $articleOrderDate);
         $primary    = TZ_Portfolio_PlusHelperQuery::orderbyPrimary($params -> get('orderby_pri'));
 
         $orderby .= $primary . ' ' . $secondary;
@@ -754,24 +759,24 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
     }
 
     public function getAvailableItem() {
-	    if (isset($_COOKIE["tppLatestItem"])  && $_COOKIE["tppLatestItem"] !='undefined' && $tppLatestItem  =   $_COOKIE["tppLatestItem"]) {
-	    	$tppLatestItem  =   (int)str_replace('tzelement','', $tppLatestItem);
-	    	if ($tppLatestItem) {
-			    $query  =   $this->getListQuery();
-			    $query->where ('c.id = '.$tppLatestItem);
-			    $db = JFactory::getDbo();
-			    $db->setQuery($query);
-			    $data   =   $db->loadObject();
-			    if ($data) {
-				    return $data;
-			    }
-		    }
-	    }
-		return false;
+        if (isset($_COOKIE["tppLatestItem"])  && $_COOKIE["tppLatestItem"] !='undefined' && $tppLatestItem  =   $_COOKIE["tppLatestItem"]) {
+            $tppLatestItem  =   (int)str_replace('tzelement','', $tppLatestItem);
+            if ($tppLatestItem) {
+                $query  =   $this->getListQuery();
+                $query->where ('c.id = '.$tppLatestItem);
+                $db = JFactory::getDbo();
+                $db->setQuery($query);
+                $data   =   $db->loadObject();
+                if ($data) {
+                    return $data;
+                }
+            }
+        }
+        return false;
     }
 
     public function ajaxComments(){
-		$input	= JFactory::getApplication() -> input;
+        $input	= JFactory::getApplication() -> input;
         $data   = json_decode(base64_decode($input -> getString('url')));
         $id     = json_decode(base64_decode($input -> getString('id')));
         if($data){
@@ -826,7 +831,7 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
                 if($params -> get('tz_comment_type','disqus') == 'facebook'){
                     if($threadLink){
                         $url        = 'http://api.facebook.com/restserver.php?method=links.getStats'
-                                      .$threadLink;
+                            .$threadLink;
                         $content    = $fetch -> get($url);
 
                         if($content){
@@ -854,9 +859,9 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
                 if($params -> get('tz_comment_type','disqus') == 'disqus'){
 
                     $url        = 'https://disqus.com/api/3.0/threads/list.json?api_secret='
-                                  .$params -> get('disqusApiSecretKey','4sLbLjSq7ZCYtlMkfsG7SS5muVp7DsGgwedJL5gRsfUuXIt6AX5h6Ae6PnNREMiB')
-                                  .'&forum='.$params -> get('disqusSubDomain','templazatoturials')
-                                  .$threadLink.'&include=open';
+                        .$params -> get('disqusApiSecretKey','4sLbLjSq7ZCYtlMkfsG7SS5muVp7DsGgwedJL5gRsfUuXIt6AX5h6Ae6PnNREMiB')
+                        .'&forum='.$params -> get('disqusSubDomain','templazatoturials')
+                        .$threadLink.'&include=open';
 
                     if($_content = $fetch -> get($url)){
 
