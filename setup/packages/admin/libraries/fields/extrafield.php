@@ -1164,9 +1164,23 @@ class TZ_Portfolio_PlusExtraField{
         }
     }
 
-    public function getImage(){
-        if($this -> images){
-            return $this -> images;
+    public function getImage($full_path = true){
+        if($src = $this -> images){
+            if(method_exists('Joomla\CMS\HTML\HTMLHelper', 'cleanImageURL')){
+                if(($img = HTMLHelper::_('cleanImageURL', $src)) && isset($img -> url)){
+                    if($full_path){
+                        return Uri::root().$img -> url;
+                    }else{
+                        return $img -> url;
+                    }
+                }
+            }
+
+            if($full_path){
+                $src    = Uri::root().$src;
+            }
+
+            return $src;
         }
         return null;
     }
