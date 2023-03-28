@@ -325,6 +325,13 @@
 				<option value="0">JHIDE</option>
 				<option value="1">JSHOW</option>
 			</field>
+			<field name="cat_link_tag" type="list"
+				   label="COM_TZ_PORTFOLIO_PLUS_LINK_TAG_LABEL"
+				   description="COM_TZ_PORTFOLIO_PLUS_LINK_TAG_DESC">
+				<option value="">COM_TZ_PORTFOLIO_PLUS_OPTION_INHERIT_FROM_CATEGORY</option>
+				<option value="0">JNO</option>
+				<option value="1">JYES</option>
+			</field>
 			<field name="show_cat_field_image"
 				   type="list"
 				   label="COM_TZ_PORTFOLIO_PLUS_SHOW_FIELD_IMAGE_LABEL"
@@ -430,6 +437,27 @@
 				<option value="">COM_TZ_PORTFOLIO_PLUS_OPTION_INHERIT_FROM_CATEGORY</option>
 				<option	value="0">JHIDE</option>
 				<option	value="1">JSHOW</option>
+			</field>
+			<field type="list" name="show_hits"
+				   label="COM_TZ_PORTFOLIO_PLUS_SHOW_HITS_LABEL"
+				   description="COM_TZ_PORTFOLIO_PLUS_SHOW_HITS_DESC">
+				<option value="">COM_TZ_PORTFOLIO_PLUS_OPTION_INHERIT_FROM_CATEGORY</option>
+				<option value="0">JHIDE</option>
+				<option value="1">JSHOW</option>
+			</field>
+			<field type="list" name="show_tags"
+				   label="COM_TZ_PORTFOLIO_PLUS_SHOW_TAGS"
+				   description="COM_TZ_PORTFOLIO_PLUS_SHOW_TAGS_DESC">
+				<option value="">COM_TZ_PORTFOLIO_PLUS_OPTION_INHERIT_FROM_CATEGORY</option>
+				<option value="0">JHIDE</option>
+				<option value="1">JSHOW</option>
+			</field>
+			<field name="link_tag" type="list"
+				   label="COM_TZ_PORTFOLIO_PLUS_LINK_TAG_LABEL"
+				   description="COM_TZ_PORTFOLIO_PLUS_LINK_TAG_DESC">
+				<option value="">COM_TZ_PORTFOLIO_PLUS_OPTION_INHERIT_FROM_CATEGORY</option>
+				<option value="0">JNO</option>
+				<option value="1">JYES</option>
 			</field>
 
 			<field type="spacer" name="spacer_hr-2" hr="true"/>

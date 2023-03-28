@@ -24,7 +24,12 @@ if($params -> get('show_cat_tags',0) && $this -> item && isset($this -> item -> 
 <div class="tpp-item-tags">
     <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_TAGS',''); ?>
     <?php foreach($this -> item -> tags as $i => $item): ?>
-        <a href="<?php echo $item ->link; ?>"><?php echo $item -> title;?></a><?php if($i != count($this -> item -> tags) - 1):?><span><?php echo ','?></span><?php endif;?>
+        <?php if($params -> get('cat_link_tag', 1)){ ?>
+            <a href="<?php echo $item ->link; ?>"><?php echo $item -> title;?></a>
+        <?php }else{ ?>
+            <span><?php echo $item -> title;?></span>
+        <?php }?>
+        <?php if($i != count($this -> item -> tags) - 1):?><span><?php echo ','?></span><?php endif;?>
     <?php endforeach;?>
 </div>
 <?php endif;?>

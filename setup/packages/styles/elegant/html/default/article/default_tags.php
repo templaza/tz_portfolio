@@ -29,11 +29,12 @@ if($params -> get('show_tags',1)){
 <div class="tpArticleTag">
     <span class="title"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_TAG_TITLE');?></span>
     <?php foreach($this -> listTags as $i => $item){ ?>
-        <span  class="tag-list<?php echo $i ?>" itemprop="keywords">
-          <a class="badge badge-secondary" href="<?php echo $item -> link; ?>"<?php
-          if(isset($tmpl) AND !empty($tmpl)): echo ' target="_blank"'; endif;?>><?php
-              echo $item -> title;
-              ?></a>
+        <span class="tag-list<?php echo $i;  echo !$params -> get('link_tag', 0)?' label label-default badge badge-secondary':'';
+        ?>" itemprop="keywords">
+            <?php if($params -> get('link_tag', 1)){ ?>
+              <a class="label label-default badge badge-secondary" href="<?php echo $item -> link; ?>"<?php
+              if(isset($tmpl) AND !empty($tmpl)): echo ' target="_blank"'; endif;?>><?php } ?><?php
+                  echo $item -> title;?><?php if($params -> get('link_tag', 1)){ ?></a><?php } ?>
         </span>
     <?php } ?>
 </div>
