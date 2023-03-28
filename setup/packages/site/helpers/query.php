@@ -20,6 +20,8 @@
 // no direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+
 /**
  * Content Component Query Helper.
  */
@@ -68,7 +70,9 @@ class TZ_Portfolio_PlusHelperQuery
 	 */
 	public static function orderbySecondary($orderby, $orderDate = 'created', $tblprefix = 'c')
 	{
-		$queryDate = self::getQueryDate($orderDate, $tblprefix);
+        $db = Factory::getDbo();
+
+		$queryDate  = self::getQueryDate($orderDate, $tblprefix);
 
 		switch ($orderby)
 		{
@@ -95,6 +99,10 @@ class TZ_Portfolio_PlusHelperQuery
 			case 'rhits' :
 				$orderby = $tblprefix.'.hits';
 				break;
+
+            case 'random':
+                $orderby = $db->getQuery(true)->rand();
+                break;
 
 			case 'order' :
 				$orderby = $tblprefix.'.ordering';
