@@ -120,7 +120,7 @@
 		/>
 
 		<field
-				name="publish_up"
+				name="publish_down"
 				type="calendar"
 				label="JGLOBAL_FIELD_PUBLISH_DOWN_LABEL"
 				description="JGLOBAL_FIELD_PUBLISH_DOWN_DESC"
