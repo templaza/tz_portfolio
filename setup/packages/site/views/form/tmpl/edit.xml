@@ -25,8 +25,8 @@
 				layout="joomla.form.field.radio.switcher"
 				label="COM_TZ_PORTFOLIO_PLUS_CREATE_ARTICLE_CATEGORY_LABEL"
 				description="COM_TZ_PORTFOLIO_PLUS_CREATE_ARTICLE_CATEGORY_DESC">
-					<option value="1">JYES</option>
 					<option value="0">JNO</option>
+					<option value="1">JYES</option>
 			</field>
 			<field name="catid"
 				type="modal_category"
