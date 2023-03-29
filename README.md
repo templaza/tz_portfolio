@@ -11,6 +11,24 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+30/03/2023 - 2.6.4
+	
+	- Fix issue Deprecated with php8.2:
+	    + Compatible with php8.2
+	- Fix issue save article on front-end
+	- Fix issue of edit layout in back-end
+	- Fix issue option Layout style for modules
+	- Fix issue load add-on's xml file in back-end
+	- Fix issue image preview of tzmedia field in back-end
+	- Fix issue display svg image of extrafield on front-end
+	- Fix issue show article's Finish Publishing option in back-end
+	- Fix issue js Joomla.loadingLayer is not a function of tzextrafieldtypes
+	- Fix issue sortable of views: articles, addons, categories,... in back-end
+	- Added Date for Ordering option with Unpublished for Portfolio, Date Articles, Search views
+	- Update enable or disable link tag option
+	- Update options Submission - Cancel Redirect for create article view
+	- Update order by random for views: Portfolio, Date Articles, Search and TZ Portfolio Plus Portfolio module
+
 16/02/2023 - 2.6.3
 	
 	- Fix issue remove image files of image add-on
