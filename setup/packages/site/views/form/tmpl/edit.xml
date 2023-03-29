@@ -22,6 +22,7 @@
 				type="radio"
                 class="btn-group"
 				default="0"
+				layout="joomla.form.field.radio.switcher"
 				label="COM_TZ_PORTFOLIO_PLUS_CREATE_ARTICLE_CATEGORY_LABEL"
 				description="COM_TZ_PORTFOLIO_PLUS_CREATE_ARTICLE_CATEGORY_DESC">
 					<option value="1">JYES</option>
