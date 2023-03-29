@@ -41,7 +41,7 @@ $saveOrder	= $listOrder == 'ordering';
 $j4Compare  = COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE;
 if ($saveOrder)
 {
-    $saveOrderingUrl = 'index.php?option=com_tz_portfolio_plus&task=categories.saveOrderAjax&tmpl=component' . JSession::getFormToken() . '=1';
+    $saveOrderingUrl = 'index.php?option=com_tz_portfolio_plus&task=addons.saveOrderAjax&tmpl=component' . JSession::getFormToken() . '=1';
 
     if($j4Compare){
         JHtml::_('draggablelist.draggable');

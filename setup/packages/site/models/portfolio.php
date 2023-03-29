@@ -567,7 +567,7 @@ class TZ_Portfolio_PlusModelPortfolio extends JModelList
         $tagid      = $data['tid'];
         $searchword = $data['searchword'];
 
-        $tags       = stripslashes($input -> getString('tags'));
+        $tags       = stripslashes($input -> getString('tags', ''));
         $tags       = json_decode($tags);
 
         $menu       = JMenu::getInstance('site');

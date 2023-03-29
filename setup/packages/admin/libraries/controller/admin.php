@@ -27,7 +27,9 @@ jimport('joomla.application.component.controlleradmin');
 
 class TZ_Portfolio_Plus_AddOnControllerAdmin extends TZ_Portfolio_Plus_AddOnControllerLegacy{
 
+    protected $option;
     protected $view_list;
+    protected $text_prefix;
     protected $core_view_list;
 
     public function __construct($config = array())

@@ -196,7 +196,8 @@ if($params -> get('enable_bootstrap',1) && $params -> get('bootstrapversion', 4)
                                         ?>
                                         <a class="title" href="<?php
                                         echo JRoute::_('index.php?option=com_tz_portfolio_plus&task=article.edit&a_id='
-                                            .$item->id.'&return='.base64_encode(JRoute::_($url)));?>">
+                                            .$item->id.((isset($active -> id) && $active -> id)?'&Itemid='.$active -> id:'')
+                                            .'&return='.base64_encode(JRoute::_($url)));?>">
                                             <?php echo $editIcon.$this->escape($item->title); ?></a>
                                     <?php }else{ ?>
                                         <?php echo $this->escape($item->title); ?>

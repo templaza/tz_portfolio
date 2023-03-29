@@ -182,15 +182,6 @@ class TZ_Portfolio_PlusRouter extends RouterBase
         if (isset($query['view'])) {
             $view = $query['view'];
         } else {
-//            if(isset($query['a_id'])){
-//                $segments[] = 'com_tz_portfolio_plus';
-//                $segments[] = 'form';
-//                $segments[] = 'edit';
-//            }
-//            var_dump($segments);
-//            var_dump($menuItemGiven);
-//            var_dump($menuItem);
-//            var_dump($query);
             // we need to have a view in the query or it is an invalid URL
             return $segments;
         }
@@ -530,10 +521,6 @@ class TZ_Portfolio_PlusRouter extends RouterBase
             }
             unset($query['view']);
             return $segments;
-        }
-
-        if($view == 'form' && isset($query['view'])){
-            unset($query['view']);
         }
 
         // if the layout is specified and it is the same as the layout in the menu item, we

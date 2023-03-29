@@ -20,10 +20,12 @@
 //no direct access
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
 use Joomla\Registry\Registry;
+use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Path;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Layout\FileLayout;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
@@ -36,6 +38,7 @@ class TZ_Portfolio_PlusExtraField{
     protected $id                   = null;
     protected $id_suffix            = null;
     protected $name                 = null;
+    protected $value                = null;
     protected $field                = null;
     protected $fieldname            = null;
     protected $fieldtype            = null;

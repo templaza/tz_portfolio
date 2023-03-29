@@ -402,7 +402,7 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
                         -> select('*')
                         -> from('#__menu')
                         ->where('id IN (' . implode(',', $post['jform']['menus_assignment_old']) . ')')
-                        ->where('checked_out IN (0,' . (int) $user->id . ')');
+                        ->where('(checked_out IS NULL OR checked_out IN (0,' . (int) $user->id . '))');
                     $db -> setQuery($query);
                     if($menu = $db -> loadObjectList()){
                         foreach($menu as $item){
@@ -428,7 +428,7 @@ class TZ_Portfolio_PlusModelTemplate_Style extends JModelAdmin
                         -> select('*')
                         -> from('#__menu')
                         ->where('id IN (' . implode(',', $data['menus_assignment']) . ')')
-                        ->where('checked_out IN (0,' . (int) $user->id . ')');
+                        ->where('(checked_out IS NULL OR checked_out IN (0,' . (int) $user->id . '))');
 
                     $db -> setQuery($query);
 
