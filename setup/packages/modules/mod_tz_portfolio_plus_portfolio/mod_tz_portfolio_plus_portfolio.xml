@@ -7,7 +7,7 @@
     <license>GNU/GPL v2 or later http://www.gnu.org/licenses/gpl-2.0.html</license>
     <authorEmail>support@templaza.com</authorEmail>
     <authorUrl>www.templaza.com/</authorUrl>
-    <version>2.6.0</version>
+    <version>2.6.1</version>
     <description>MOD_TZ_PORTFOLIO_PLUS_PORTFOLIO_XML_DESCRIPTION</description>
     <files>
         <filename module="mod_tz_portfolio_plus_portfolio">mod_tz_portfolio_plus_portfolio.php</filename>
@@ -165,10 +165,21 @@
                     <option value="rauthor">JGLOBAL_AUTHOR_REVERSE_ALPHABETICAL</option>
                     <option value="hits">JGLOBAL_MOST_HITS</option>
                     <option value="rhits">JGLOBAL_LEAST_HITS</option>
+                    <option value="random">JGLOBAL_RANDOM_ORDER</option>
                     <option value="order">JGLOBAL_ORDERING</option>
                     <option	value="rorder">JGLOBAL_REVERSE_ORDERING</option>
                     <option value="priority">COM_TZ_PORTFOLIO_PLUS_PRIORITY_ORDER</option>
                     <option	value="rpriority">COM_TZ_PORTFOLIO_PLUS_PRIORITY_REVERSE_ORDER</option>
+                </field>
+                <field name="order_date" type="list"
+                       default="created"
+                       showon="orderby_sec:rdate[OR]orderby_sec:date"
+                       label="JGLOBAL_ORDERING_DATE_LABEL"
+                       description="JGLOBAL_ORDERING_DATE_DESC">
+                    <option value="created">JGLOBAL_CREATED</option>
+                    <option value="modified">JGLOBAL_MODIFIED</option>
+                    <option value="published">JPUBLISHED</option>
+                    <option value="unpublished">JUNPUBLISHED</option>
                 </field>
 
                 <field name="usermenuitem" type="menuitem" default="auto"

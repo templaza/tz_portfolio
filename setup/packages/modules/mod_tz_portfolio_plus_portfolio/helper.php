@@ -108,53 +108,13 @@ class modTZ_Portfolio_PlusPortfolioHelper
         }
 
         $primary    = TZ_Portfolio_PlusHelperQuery::orderbyPrimary($params -> get('orderby_pri'));
-//        $secondary  = TZ_Portfolio_PlusHelperQuery::orderbySecondary($params -> get('orderby_sec', 'rdate'));
-
-        switch ($params->get('orderby_sec', 'rdate')) {
-            default:
-                $secondary = 'c.id DESC';
-                break;
-            case 'rdate':
-                $secondary = 'c.created DESC';
-                break;
-            case 'date':
-                $secondary = 'c.created ASC';
-                break;
-            case 'alpha':
-                $secondary = 'c.title ASC';
-                break;
-            case 'ralpha':
-                $secondary = 'c.title DESC';
-                break;
-            case 'author':
-                $secondary = 'u.name ASC';
-                break;
-            case 'rauthor':
-                $secondary = 'u.name DESC';
-                break;
-            case 'hits':
-                $secondary = 'c.hits DESC';
-                break;
-            case 'rhits':
-                $secondary = 'c.hits ASC';
-                break;
-            case 'order':
-                $secondary = 'c.ordering ASC';
-                break;
-            case 'rorder':
-                $secondary = 'c.ordering DESC';
-                break;
-            case 'priority' :
-                $secondary = 'c.priority ASC';
-                break;
-            case 'rpriority' :
-                $secondary = 'c.priority DESC';
-                break;
-        }
+        $secondary  = TZ_Portfolio_PlusHelperQuery::orderbySecondary($params -> get('orderby_sec', 'rdate'),
+            $params -> get('order_date', 'created'));
 
         if ($params->get('random_article', 0)) {
             $query->order('RAND()');
         }
+
         $orderby = $primary . ' ' . $secondary;
 
         $query->order($orderby);
