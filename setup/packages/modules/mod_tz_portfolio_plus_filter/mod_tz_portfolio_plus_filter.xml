@@ -7,7 +7,7 @@
     <license>GNU/GPL v2 or later http://www.gnu.org/licenses/gpl-2.0.html</license>
     <authorEmail>support@templaza.com</authorEmail>
     <authorUrl>www.tzportfolio.com/</authorUrl>
-    <version>2.6.3</version>
+    <version>2.6.4</version>
     <description>MOD_TZ_PORTFOLIO_PLUS_FILTER_XML_DESCRIPTION</description>
     <files>
         <filename module="mod_tz_portfolio_plus_filter">mod_tz_portfolio_plus_filter.php</filename>
@@ -176,7 +176,7 @@
                 <field type="spacer" name="spacer_module_responsive_hr" hr="true" />
                 <field name="module_responsive _note" type="note" label="TZPORTFOLIO_ADDON_RESPONSIVE" />
                 <field type="list" name="column_lg" default="1"
-                       label="TZPORTFOLIO_ADDON_COLUMN_LG">
+                       label="MOD_TZ_PORTFOLIO_PLUS_FILTER_COLUMN_LG">
                     <option value="auto">auto</option>
                     <option value="1">1/1</option>
                     <option value="2">1/2</option>
@@ -185,7 +185,7 @@
                     <option value="6">1/6</option>
                 </field>
                 <field type="list" name="column_md" default="1"
-                       label="TZPORTFOLIO_ADDON_COLUMN_MD">
+                       label="MOD_TZ_PORTFOLIO_PLUS_FILTER_COLUMN_MD">
                     <option value="auto">auto</option>
                     <option value="1">1/1</option>
                     <option value="2">1/2</option>
@@ -194,7 +194,7 @@
                     <option value="6">1/6</option>
                 </field>
                 <field type="list" name="column_sm" default="1"
-                       label="TZPORTFOLIO_ADDON_COLUMN_SM">
+                       label="MOD_TZ_PORTFOLIO_PLUS_FILTER_COLUMN_SM">
                     <option value="auto">auto</option>
                     <option value="1">1/1</option>
                     <option value="2">1/2</option>
@@ -203,7 +203,7 @@
                     <option value="6">1/6</option>
                 </field>
                 <field type="list" name="column" default="1"
-                       label="TZPORTFOLIO_ADDON_COLUMN_XS">
+                       label="MOD_TZ_PORTFOLIO_PLUS_FILTER_COLUMN_XS">
                     <option value="auto">auto</option>
                     <option value="1">1/1</option>
                     <option value="2">1/2</option>
