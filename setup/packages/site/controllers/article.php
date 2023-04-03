@@ -59,7 +59,7 @@ class TZ_Portfolio_PlusControllerArticle extends TZ_Portfolio_PlusControllerArti
         $result = parent::cancel($key);
 
         /** @var SiteApplication $app */
-        $app = $this->app;
+        $app    = JFactory::getApplication();
 
         // Load the parameters.
         $params = $app->getParams();
