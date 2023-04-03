@@ -748,6 +748,8 @@ class TZ_Portfolio_PlusExtraField{
         {
             $this->article = $article;
         }
+
+        $this -> __initValue();
     }
 
     public function setAttribute($name, $value, $type = 'output'){
@@ -1193,5 +1195,18 @@ class TZ_Portfolio_PlusExtraField{
             return true;
         }
         return false;
+    }
+
+    protected function __initValue(){
+        $value = $this->getDefaultValues();
+
+        if ($this->article_id)
+        {
+            $value       = $this->getValue();
+        }
+        if(!empty($value)) {
+            $value = $this->parseDefaultValues($value);
+        }
+        $this -> value  = $value;
     }
 }
