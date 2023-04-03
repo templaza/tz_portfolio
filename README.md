@@ -16,6 +16,10 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+03/04/2023 - 2.6.5
+	
+	- Fix issue extrafield value in article of version 2.6.4
+
 30/03/2023 - 2.6.4
 	
 	- Fix issue Deprecated with php8.2:
