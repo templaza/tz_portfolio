@@ -75,7 +75,6 @@
                        default="0"
                        class="switcher btn-group"
                        layout="joomla.form.field.radio.switcher"
-                       showon="mt_image_watermark:1"
                        label="PLG_MEDIATYPE_IMAGE_ALLOW_IMAGE_ORIGINAL_LABEL"
                        description="PLG_MEDIATYPE_IMAGE_ALLOW_IMAGE_ORIGINAL_DESC">
                     <option value="0">JNO</option>
@@ -85,7 +84,6 @@
                        default="0"
                        class="switcher btn-group"
                        layout="joomla.form.field.radio.switcher"
-                       showon="mt_image_watermark:1"
                        label="PLG_MEDIATYPE_IMAGE_ALLOW_IMAGE_DETAIL_LABEL">
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
@@ -93,50 +91,41 @@
                 <field type="radio" name="mt_image_watermark_stype"
                        default="text"
                        class="switcher btn-group"
-                       showon="mt_image_watermark:1"
                        layout="joomla.form.field.radio.switcher"
                        label="PLG_MEDIATYPE_IMAGE_WATERMARK_SOURCE_TYPE_LABEL">
                     <option value="text">COM_TZ_PORTFOLIO_PLUS_TEXT</option>
                     <option value="image">COM_TZ_PORTFOLIO_PLUS_FORM_IMAGE</option>
                 </field>
                 <field type="text" name="mt_image_watermark_text"
-                       showon="mt_image_watermark:1[AND]mt_image_watermark_stype:text"
+                       showon="mt_image_watermark_stype:text"
                        label="COM_TZ_PORTFOLIO_PLUS_TEXT"/>
                 <field type="media" name="mt_image_watermark_image"
-                       showon="mt_image_watermark:1[AND]mt_image_watermark_stype:image"
+                       showon="mt_image_watermark_stype:image"
                        label="COM_TZ_PORTFOLIO_PLUS_FORM_IMAGE"/>
                 <field type="media" name="mt_image_watermark_fontpath"
                        default="administrator/components/com_tz_portfolio_plus/fonts/arial.ttf"
-                       showon="mt_image_watermark:1[AND]mt_image_watermark_stype:text"
+                       showon="mt_image_watermark_stype:text"
                        label="PLG_MEDIATYPE_IMAGE_FONT_PATH"
                        description="PLG_MEDIATYPE_IMAGE_FONT_PATH_DESC"/>
                 <field type="number" name="mt_image_watermark_fontsize"
                        min="1" default="14"
-                       showon="mt_image_watermark:1[AND]mt_image_watermark_stype:text"
+                       showon="mt_image_watermark_stype:text"
                        label="PLG_MEDIATYPE_IMAGE_FONT_SIZE"/>
                 <field type="color" name="mt_image_watermark_color"
                        default="#fff"
-                       showon="mt_image_watermark:1[AND]mt_image_watermark_stype:text"
+                       showon="mt_image_watermark_stype:text"
                        label="PLG_MEDIATYPE_IMAGE_COLOR"/>
-                <!--<field type="color" name="mt_image_watermark_text_bgcolor"-->
-                       <!--default="#fff"-->
-                       <!--showon="mt_image_watermark:1[AND]mt_image_watermark_stype:text"-->
-                       <!--label="PLG_MEDIATYPE_IMAGE_TEXT_BACKGROUND_COLOR"/>-->
                 <field type="color" name="mt_image_watermark_bgcolor"
-                       showon="mt_image_watermark:1"
                        label="PLG_MEDIATYPE_IMAGE_BACKGROUND_COLOR"/>
                 <field type="number" name="mt_image_watermark_rotate"
                        default="0"
                        min="0" max="360"
-                       showon="mt_image_watermark:1"
                        label="PLG_MEDIATYPE_IMAGE_ROTATE"/>
                 <field type="number" name="mt_image_watermark_opacity"
                        min="0" max="100"
-                       showon="mt_image_watermark:1"
                        label="PLG_MEDIATYPE_IMAGE_OPACITY"/>
                 <field type="list" name="mt_image_watermark_filter"
                        default="-1"
-                       showon="mt_image_watermark:1"
                        label="PLG_MEDIATYPE_IMAGE_FILTER">
                     <option value="-1">JNONE</option>
                     <option value="0">PLG_MEDIATYPE_IMAGE_NEGATE</option>
@@ -155,8 +144,8 @@
                 <field type="list" name="mt_image_watermark_flip"
                        default="0"
                        multiple="true"
+                       layout="joomla.form.field.list-fancy-select"
                        hint="PLG_MEDIATYPE_IMAGE_OPTION_SELECT_FLIP"
-                       showon="mt_image_watermark:1"
                        label="PLG_MEDIATYPE_IMAGE_FLIP">
                     <option value="horizontal">PLG_MEDIATYPE_IMAGE_HORIZONTAL</option>
                     <option value="vertical">PLG_MEDIATYPE_IMAGE_VERTICAL</option>
@@ -164,7 +153,6 @@
                 <field type="radio" name="mt_image_watermark_resize"
                        default="1"
                        class="switcher btn-group"
-                       showon="mt_image_watermark:1"
                        layout="joomla.form.field.radio.switcher"
                        label="PLG_MEDIATYPE_IMAGE_RESIZE"
                        description="PLG_MEDIATYPE_IMAGE_RESIZE_DESC">
@@ -173,17 +161,16 @@
                 </field>
                 <field type="numeric" name="mt_image_watermark_resize_wpercent"
                        default="30" min="0"
-                       showon="mt_image_watermark:1[AND]mt_image_watermark_resize:1"
+                       showon="mt_image_watermark_resize:1"
                        label="PLG_MEDIATYPE_IMAGE_RESIZE_WIDTH_PERCENT"
                        description="PLG_MEDIATYPE_IMAGE_RESIZE_WIDTH_PERCENT_DESC"/>
                 <field type="numeric" name="mt_image_watermark_resize_hpercent"
                        min="0"
-                       showon="mt_image_watermark:1[AND]mt_image_watermark_resize:1"
+                       showon="mt_image_watermark_resize:1"
                        label="PLG_MEDIATYPE_IMAGE_RESIZE_HEIGHT_PERCENT"
                        description="PLG_MEDIATYPE_IMAGE_RESIZE_HEIGHT_PERCENT_DESC"/>
                 <field type="list" name="mt_image_watermark_position"
                        default="LT"
-                       showon="mt_image_watermark:1"
                        label="PLG_MEDIATYPE_IMAGE_POSITION">
                     <option value="LT">PLG_MEDIATYPE_LEFT_TOP</option>
                     <option value="MT">PLG_MEDIATYPE_MIDDLE_TOP</option>
@@ -197,7 +184,6 @@
                 </field>
                 <field type="text" name="mt_image_watermark_coordinates"
                        default="10,10"
-                       showon="mt_image_watermark:1"
                        label="PLG_MEDIATYPE_IMAGE_COORDINATES"
                        description="PLG_MEDIATYPE_IMAGE_COORDINATES_DESC"/>
             </fieldset>
