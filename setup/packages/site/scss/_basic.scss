@@ -232,3 +232,29 @@ html[dir="rtl"]{
     margin-bottom: 22px;
   }
 }
+/* Since v2.6.6 */
+.tp-edit-page{
+  .choices__button_joomla{
+    background: none;
+    text-indent: -9999px;
+    border: none;
+    position: relative;
+    color: #fff;
+    opacity: 0.5;
+    padding: 0 10px;
+    &:before{
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: block;
+      text-align: center;
+      text-indent: 0;
+      content: "×";
+    }
+    &:hover{
+      opacity: 1;
+    }
+  }
+}

@@ -44,15 +44,22 @@ if(!$this -> tagsSuggest){
 $doc -> addScriptDeclaration('
 (function($){
     "use strict";
-    $(document).ready(function(){        
-        $(\'#jform_second_catid option[value="\'+$(\'#jform_catid\').val()+\'"]\').attr(\'disabled\',\'disabled\');
-            $(\'#jform_second_catid\').trigger(\'liszt:updated\');
-            $(\'#jform_catid\').on(\'change\',function(){
-                $(\'#jform_second_catid option:selected\').removeAttr(\'selected\');
-                $(\'#jform_second_catid option:disabled\').removeAttr(\'disabled\');
-                $(\'#jform_second_catid option[value="\'+this.value+\'"]\').attr(\'disabled\',\'disabled\');
-                $(\'#jform_second_catid\').trigger(\'liszt:updated\');
+    $(document).ready(function(){
+        $("#jform_catid").on("change",function(){
+            $("#jform_second_catid option[value="+ this.value +"]:selected").removeAttr("selected");
+            $("#jform_second_catid option:disabled").removeAttr("disabled");
+            $("#jform_second_catid option[value="+this.value+"]").attr("disabled","disabled");
+            $("#jform_second_catid").trigger("liszt:updated");
+            
+            var __second_fancy  = $("#jform_second_catid").closest("joomla-field-fancy-select")[0];
+            if(typeof __second_fancy !== "undefined" && typeof __second_fancy.choicesInstance !== "undefined"){
+                __second_fancy.enableAllOptions();
+                __second_fancy.choicesInstance.removeActiveItemsByValue(this.value);
+                __second_fancy.disableByValue(this.value);
+            }
         });
+        $("#jform_catid").trigger("change");
+        
         $(document).off("click.bs.tab.data-api")
 					.on("click.bs.tab.data-api", "[data-toggle=tab]", function (e) {
             e.preventDefault();
