@@ -43,6 +43,7 @@
 		<field name="second_catid" type="categoryedit"
                extension="com_tz_portfolio_plus" multiple="true"
 			   class="inputbox"
+			   layout="joomla.form.field.list-fancy-select"
 			   label="COM_TZ_PORTFOLIO_PLUS_SECONDARY_CATEGORY"
 			   description="JFIELD_CATEGORY_DESC">
 		</field>
