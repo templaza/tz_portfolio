@@ -102,22 +102,21 @@ class JFormFieldTZMedia extends JFormFieldMedia{
                     ($this->element['img_prefix'] ? '_' . $this->element['img_prefix'] : '')
                     . '.' . File::getExt($value), $value);
 
-            if(version_compare(JVERSION, '4.0', '<')) {
-                $urlImg .= '?time=' . time();
-            }
+            $urlImg .= '?time=' . time();
+            $mUrlImg    = $urlImg;
 
             $img = '<img src="' . $urlImg. '" style="'
                 . ($this->element['img_max-width'] ? 'max-width: 200px; ' : '') . 'cursor: pointer;" title="">';
             $html[] = $img;
             $html[] = '</a>';
 
-//            if(version_compare(JVERSION, '4.0', 'ge')) {
             $image = new JImage();
             $image->loadFile(JPATH_SITE . '/' . str_replace('.' . File::getExt($value),
                     ($this->element['img_prefix'] ? '_' . $this->element['img_prefix'] : '')
                     . '.' . File::getExt($value), $value));
 
-            $imgHtml    = JHtml::_('image', $urlImg, JText::_('JLIB_FORM_MEDIA_PREVIEW_ALT'));
+//            $imgHtml    = JHtml::_('image', $mUrlImg, JText::_('JLIB_FORM_MEDIA_PREVIEW_ALT'));
+            $imgHtml    = '<img src="' . $mUrlImg. '" alt="'.JText::_('JLIB_FORM_MEDIA_PREVIEW_ALT').'" class="img-fluid">';
             $imgHtml    = '<div style="text-align:center; overflow-y: auto;">'.$imgHtml.'</div>';
 
             $unix   = null;

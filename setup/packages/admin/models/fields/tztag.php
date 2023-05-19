@@ -46,14 +46,28 @@ class JFormFieldTZTag extends JFormFieldList{
 
             $minTermLength = 1;
 
-            $displayData = array(
-                'minTermLength' => $minTermLength,
-                'selector'      => $cssId,
-                'allowCustom'   => TZ_Portfolio_PlusUser::getUser()->authorise('core.create',
-                    'com_tz_portfolio_plus.tag') ? $this->allowCustom() : false,
-            );
+            $is_j4  = COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE;
 
-            $this->getRenderer('form.field.tag')->render($displayData);
+            if($is_j4) {
+                $displayData = $this->getLayoutData();
+
+                $displayData['selector']        = $cssId;
+                $displayData['allowCustom']     = $this->allowCustom();
+                $displayData['options']         = $this -> getOptions();
+                $displayData['minTermLength']   = $minTermLength;
+                $displayData['remoteSearch']    = $this -> isRemoteSearch();
+
+                return $this->getRenderer('form.field.tag')->render($displayData);
+            }else{
+                $displayData = array(
+                    'minTermLength' => $minTermLength,
+                    'selector' => $cssId,
+                    'allowCustom' => TZ_Portfolio_PlusUser::getUser()->authorise('core.create',
+                        'com_tz_portfolio_plus.tag') ? $this->allowCustom() : false,
+                );
+
+                $this->getRenderer('form.field.tag')->render($displayData);
+            }
         }
 
         if (!is_array($this->value) && !empty($this->value))
@@ -188,5 +202,14 @@ class JFormFieldTZTag extends JFormFieldList{
     protected function getLayoutPaths()
     {
         return array();
+    }
+
+    public function isRemoteSearch()
+    {
+        if ($this->element['remote-search']) {
+            return !\in_array((string) $this->element['remote-search'], array('0', 'false', ''));
+        }
+
+        return true;
     }
 }

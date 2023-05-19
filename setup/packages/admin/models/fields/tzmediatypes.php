@@ -33,7 +33,9 @@ class JFormFieldTZMediaTypes extends JFormFieldList
     {
         $setup  = parent::setup($element, $value, $group);
 
-        if($this -> multiple) {
+        $layout = $this -> layout;
+
+        if($this -> multiple && $layout != 'joomla.form.field.list-fancy-select') {
             JHtml::_('formbehavior.chosen', '#' . $this->id);
         }
 
