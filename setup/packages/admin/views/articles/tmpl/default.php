@@ -30,24 +30,25 @@ use Joomla\Component\Content\Administrator\Helper\ContentHelper;
 $j4Compare  = COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE;
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
 
-JHtml::_('formbehavior.chosen', '.multipleMediaType', null,
-    array('placeholder_text_multiple' => JText::_('COM_TZ_PORTFOLIO_PLUS_OPTION_SELECT_MEDIA_TYPE')));
-JHtml::_('formbehavior.chosen', '.multipleAuthors', null,
-    array('placeholder_text_multiple' => JText::_('JOPTION_SELECT_AUTHOR')));
-JHtml::_('formbehavior.chosen', '.multipleAccessLevels', null,
-    array('placeholder_text_multiple' => JText::_('JOPTION_SELECT_ACCESS')));
-JHtml::_('formbehavior.chosen', '.multipleCategories', null,
-    array('placeholder_text_multiple' => JText::_('JOPTION_SELECT_CATEGORY')));
-JHtml::_('formbehavior.chosen', '#filter_category_id_sec', null,
-    array('placeholder_text_multiple' => JText::_('COM_TZ_PORTFOLIO_PLUS_OPTION_SELECT_SECONDARY_CATEGORY')));
-
 if(!$j4Compare) {
     JHtml::_('behavior.multiselect');
     JHtml::_('bootstrap.tooltip');
     JHtml::_('dropdown.init');
+
+    JHtml::_('formbehavior.chosen', '.multipleMediaType', null,
+        array('placeholder_text_multiple' => JText::_('COM_TZ_PORTFOLIO_PLUS_OPTION_SELECT_MEDIA_TYPE')));
+    JHtml::_('formbehavior.chosen', '.multipleAuthors', null,
+        array('placeholder_text_multiple' => JText::_('JOPTION_SELECT_AUTHOR')));
+    JHtml::_('formbehavior.chosen', '.multipleAccessLevels', null,
+        array('placeholder_text_multiple' => JText::_('JOPTION_SELECT_ACCESS')));
+    JHtml::_('formbehavior.chosen', '.multipleCategories', null,
+        array('placeholder_text_multiple' => JText::_('JOPTION_SELECT_CATEGORY')));
+    JHtml::_('formbehavior.chosen', '#filter_category_id_sec', null,
+        array('placeholder_text_multiple' => JText::_('COM_TZ_PORTFOLIO_PLUS_OPTION_SELECT_SECONDARY_CATEGORY')));
+
     JHtml::_('formbehavior.chosen', 'select');
 }else{
-    JHtml::_('formbehavior.chosen', 'select[multiple]');
+    JHtml::_('formbehavior.chosen', 'select[multiple]:not(.choices__input)');
 }
 
 $user		    = Factory::getUser();
