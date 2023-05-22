@@ -11,6 +11,12 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+22/05/2023 - 2.6.6
+
+    - Fix issue image watermark with php8
+    - Fix issue disable Secondary Category when Main Category changed in article form
+    - Update joomla 4 list fancy select layout for fields
+
 03/04/2023 - 2.6.5
 	
 	- Fix issue extrafield value in article of version 2.6.4
