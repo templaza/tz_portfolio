@@ -193,7 +193,11 @@ class TZ_Portfolio_PlusModelSearch extends JModelList
             // Filter by word
             if ($searchWord = $this->getState('filter.searchword')) {
                 $searchWord = $db->quote('%' . $db->escape($searchWord, true) . '%', true);
-                $query->where('(c.title LIKE ' . $searchWord . ' OR c.introtext LIKE ' . $searchWord.')');
+                if($params -> get('search_from_intro', 1)) {
+                    $query->where('(c.title LIKE ' . $searchWord . ' OR c.introtext LIKE ' . $searchWord . ')');
+                }else{
+                    $query->where('c.title LIKE ' . $searchWord);
+                }
             }
 
             // Filter by extrafields
