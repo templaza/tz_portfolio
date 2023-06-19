@@ -391,7 +391,7 @@ class TZ_Portfolio_PlusModelArticle extends JModelAdmin
                 $tags   = TZ_Portfolio_PlusHelperTags::getTagsByArticleId($item -> id);
                 if($tags && count($tags)) {
                     $tags = ArrayHelper::getColumn($tags, 'id');
-                    $tags = implode(',', $tags);
+//                    $tags = implode(',', $tags);
                     $item->tags = $tags;
                 }
             }
