@@ -21,6 +21,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\Filesystem\Path;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Folder;
 
@@ -67,10 +68,26 @@ class TZ_Portfolio_PlusControllerLegacy  extends JControllerLegacy{
                         TZ_Portfolio_PlusTemplate::loadLanguage($template -> template);
 
                         $componentPath  = array_pop($path['template']);
+
+                        // TZ Portfolio+ path from joomla template
+                        if(isset($template -> jpath_base) && !empty($template -> jpath_base)){
+                            $mpath  = Path::clean($template->jpath_base . DIRECTORY_SEPARATOR . $name);
+                            if(!in_array($mpath, $path['template'])) {
+                                $jPath  = array_shift($path['template']);
+                                $path['template'][] = $mpath;
+                                $path['template'][] = $jPath;
+                            }
+                        }
+
+                        // TZ Portfolio+ base path of style
                         if(isset($template -> base_path) && $template -> base_path) {
-                            $path['template'][] = $template->base_path . DIRECTORY_SEPARATOR . $name;
+                            $mpath  = Path::clean($template->base_path . DIRECTORY_SEPARATOR . $name);
+                            if(!in_array($mpath, $path['template'])) {
+                                $path['template'][] = $mpath;
+                            }
                         }
                         $path['template'][] = $componentPath;
+
                         $view -> set('_path',$path);
                     }
                 }

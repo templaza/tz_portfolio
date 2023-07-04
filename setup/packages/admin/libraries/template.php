@@ -21,6 +21,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\Filesystem\Path;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Filesystem\Folder;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
@@ -110,19 +111,34 @@ class TZ_Portfolio_PlusTemplate {
 
         $tplparams      = $template -> params;
 
-        $template -> base_path  = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH.DIRECTORY_SEPARATOR
+        $template -> base_path  = Path::clean(COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH.DIRECTORY_SEPARATOR
             . $template->template. DIRECTORY_SEPARATOR . 'html'. DIRECTORY_SEPARATOR
-            . $template->params -> get('layout','default');
+            . $template->params -> get('layout','default'));
+
+        $jTemplate  = Factory::getApplication() -> getTemplate();
+
+        // Create Joomla Template Path for TZ Portfolio Style
+        $template -> jpath_base  = Path::clean(JPATH_THEMES . '/' . $jTemplate.'/html/'.COM_TZ_PORTFOLIO_PLUS
+            .'/templates/'.$template->template.'/'. $template->params -> get('layout','default'));
 
         if($home){
             if($home -> template != $template -> template) {
-                $template->home_path = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH . DIRECTORY_SEPARATOR
+                $template->home_path = Path::clean(COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH . DIRECTORY_SEPARATOR
                     . $home->template . DIRECTORY_SEPARATOR . 'html' . DIRECTORY_SEPARATOR
-                    . $tplparams->get('layout', 'default');
+                    . $tplparams->get('layout', 'default'));
+
+                // Create Joomla Template Path for TZ Portfolio Style
+                $template -> jpath_home  = Path::clean(JPATH_THEMES . '/' . $jTemplate.'/html/'
+                    .COM_TZ_PORTFOLIO_PLUS.'/templates/'.$home->template.'/'
+                    . $tplparams->get('layout', 'default'));
             }else{
-                $template->home_path = COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH . DIRECTORY_SEPARATOR
+                $template->home_path = Path::clean(COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH . DIRECTORY_SEPARATOR
                     . $home->template . DIRECTORY_SEPARATOR . 'html' . DIRECTORY_SEPARATOR
-                    . $home -> params->get('layout', 'default');
+                    . $home -> params->get('layout', 'default'));
+
+                // Create Joomla Template Path for TZ Portfolio Style
+                $template -> jpath_home  = Path::clean(JPATH_THEMES . '/' . $jTemplate.'/html/'.COM_TZ_PORTFOLIO_PLUS
+                    .'/templates/'.$home->template.'/'. $home -> params->get('layout', 'default'));
             }
         }
 
