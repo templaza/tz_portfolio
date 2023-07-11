@@ -912,6 +912,8 @@ class TZ_Portfolio_PlusPlugin extends JPlugin{
             // Get addon info
             $addon      = TZ_Portfolio_PlusPluginHelper::getPlugin($this -> _type, $this -> _name);
 
+            $model->setState($this->_name . '.addon_id', $addon -> id);
+
             $table  = $model -> getTable();
             if($table -> load(array('extension_id' => $addon -> id, 'content_id' => $article -> id))) {
                 $model->setState($this->_name . '.id', (int)$table->get('id'));

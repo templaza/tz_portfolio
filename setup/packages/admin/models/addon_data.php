@@ -57,8 +57,12 @@ class TZ_Portfolio_PlusModelAddon_Data extends JModelAdmin{
 
     function getForm($data = array(), $loadData = true){
 
+        $form_path  = '';
+        $form_name  = 'com_tz_portfolio_plus.'.$this -> getName();
+
         // Load addon's form
-        if($addonId = Factory::getApplication()->input->getInt('addon_id')){
+        if($addonId = $this -> getState($this -> getName().'.addon_id',
+            Factory::getApplication()->input->getInt('addon_id'))){
             // Get a row instance.
             $table = $this->getTable('Extensions','TZ_Portfolio_PlusTable');
 
@@ -76,6 +80,13 @@ class TZ_Portfolio_PlusModelAddon_Data extends JModelAdmin{
             $path   = COM_TZ_PORTFOLIO_PLUS_ADDON_PATH.DIRECTORY_SEPARATOR.$table -> folder
                 .DIRECTORY_SEPARATOR.$table -> element;
 
+            $form_name  = 'com_tz_portfolio_plus.addon.'.$table -> folder.'.'.$this -> getName();
+            $form_path  = $path.DIRECTORY_SEPARATOR.'admin/models/form/'.$this -> getName().'.xml';
+
+            if(!file_exists($form_path)){
+                $form_path  = $path.DIRECTORY_SEPARATOR.'admin/models/forms/'.$this -> getName().'.xml';
+            }
+
             // Add plugin form's path
             JForm::addFormPath($path.DIRECTORY_SEPARATOR.'admin/models/form');
             JForm::addFormPath($path.DIRECTORY_SEPARATOR.'admin/models/forms');
@@ -83,6 +94,11 @@ class TZ_Portfolio_PlusModelAddon_Data extends JModelAdmin{
 
         $form = $this->loadForm('com_tz_portfolio_plus.'.$this -> getName()
             , $this -> getName(), array('control' => 'jform', 'load_data' => $loadData));
+
+        if(!empty($form_path) && file_exists($form_path)) {
+            $form->loadFile($form_path, false);
+        }
+
         if (empty($form)) {
             return false;
         }
