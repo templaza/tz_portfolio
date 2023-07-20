@@ -110,67 +110,69 @@ class JFormFieldTZMedia extends JFormFieldMedia{
             $html[] = $img;
             $html[] = '</a>';
 
-            $image = new JImage();
-            $image->loadFile(JPATH_SITE . '/' . str_replace('.' . File::getExt($value),
+            $file   = JPATH_SITE . '/' . str_replace('.' . File::getExt($value),
                     ($this->element['img_prefix'] ? '_' . $this->element['img_prefix'] : '')
-                    . '.' . File::getExt($value), $value));
+                    . '.' . File::getExt($value), $value);
+            if(file_exists($file)) {
+                $image = new JImage();
+                $image->loadFile($file);
 
-//            $imgHtml    = JHtml::_('image', $mUrlImg, JText::_('JLIB_FORM_MEDIA_PREVIEW_ALT'));
-            $imgHtml    = '<img src="' . $mUrlImg. '" alt="'.JText::_('JLIB_FORM_MEDIA_PREVIEW_ALT').'" class="img-fluid">';
-            $imgHtml    = '<div style="text-align:center; overflow-y: auto;">'.$imgHtml.'</div>';
+                $imgHtml    = '<img src="' . $mUrlImg. '" alt="'.JText::_('JLIB_FORM_MEDIA_PREVIEW_ALT').'" class="img-fluid">';
+                $imgHtml    = '<div style="text-align:center; overflow-y: auto;">'.$imgHtml.'</div>';
 
-            $unix   = null;
-            if($this -> multiple){
-                $unix   = uniqid();
-            }
+                $unix   = null;
+                if($this -> multiple){
+                    $unix   = uniqid();
+                }
 
-            $html[] = JHtml::_('bootstrap.renderModal',
-                'tp-image-preview__modal-'.$field_name.$unix,
-                array(
-                    'title' => JText::_('JGLOBAL_PREVIEW'),
-//                    'height' => '100%',
-//                    'width' => '100%',
-//                    'modalWidth' => '60',
-//                    'bodyHeight' => '60',
-                    'footer' => '<button type="button" class="btn" data-dismiss="modal" data-bs-dismiss="modal">'
-                        . JText::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</button>',
-                ),
-                $imgHtml);
+                $html[] = JHtml::_('bootstrap.renderModal',
+                    'tp-image-preview__modal-'.$field_name.$unix,
+                    array(
+                        'title' => JText::_('JGLOBAL_PREVIEW'),
+                        //                    'height' => '100%',
+                        //                    'width' => '100%',
+                        //                    'modalWidth' => '60',
+                        //                    'bodyHeight' => '60',
+                        'footer' => '<button type="button" class="btn" data-dismiss="modal" data-bs-dismiss="modal">'
+                            . JText::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</button>',
+                    ),
+                    $imgHtml);
 
-            $doc = Factory::getApplication() -> getDocument();
-            if(version_compare(JVERSION, '4.0', 'ge')) {
-                $doc->addScriptDeclaration('
-                    (function($, window){
-                        $(document).ready(function(){
-                            $("#tp-image-preview__modal-' . $field_name . $unix . '").parent()
-                                .find(".tp-image-preview__modal").on("click", function(e){
-                                e.preventDefault();
-                                $("#tp-image-preview__modal-' . $field_name . $unix . '")
-                                    .on("show.bs.modal", function(){
-                                        $(this).find(".modal-dialog").width(' . ($image->getWidth() + 2) . ');
-                                    })
-                                    .modal("show");
+                $doc = Factory::getApplication() -> getDocument();
+                if(version_compare(JVERSION, '4.0', 'ge')) {
+                    $doc->addScriptDeclaration('
+                        (function($, window){
+                            $(document).ready(function(){
+                                $("#tp-image-preview__modal-' . $field_name . $unix . '").parent()
+                                    .find(".tp-image-preview__modal").on("click", function(e){
+                                    e.preventDefault();
+                                    $("#tp-image-preview__modal-' . $field_name . $unix . '")
+                                        .on("show.bs.modal", function(){
+                                            $(this).find(".modal-dialog").width(' . ($image->getWidth() + 2) . ');
+                                        })
+                                        .modal("show");
+                                });
                             });
-                        });
-                    })(jQuery, window);');
-            }else{
-                $doc->addScriptDeclaration('
-                    (function($, window){
-                        $(document).ready(function(){
-                            $("#tp-image-preview__modal-' . $field_name . $unix . '").parent()
-                                .find(".tp-image-preview__modal").on("click", function(e){
-                                e.preventDefault();
-                                $("#tp-image-preview__modal-' . $field_name . $unix . '")
-                                    .on("show.bs.modal", function(){                                    
-                                        var imgHeight   = $(this).find("img").prop("naturalHeight");                                        
-                                        if($(this).height() < imgHeight){
-                                            $(this).find(".modal-body").css("overflow-y", "auto");
-                                        }
-                                    })
-                                    .modal("show");
+                        })(jQuery, window);');
+                }else{
+                    $doc->addScriptDeclaration('
+                        (function($, window){
+                            $(document).ready(function(){
+                                $("#tp-image-preview__modal-' . $field_name . $unix . '").parent()
+                                    .find(".tp-image-preview__modal").on("click", function(e){
+                                    e.preventDefault();
+                                    $("#tp-image-preview__modal-' . $field_name . $unix . '")
+                                        .on("show.bs.modal", function(){                                    
+                                            var imgHeight   = $(this).find("img").prop("naturalHeight");                                        
+                                            if($(this).height() < imgHeight){
+                                                $(this).find(".modal-body").css("overflow-y", "auto");
+                                            }
+                                        })
+                                        .modal("show");
+                                });
                             });
-                        });
-                    })(jQuery, window);');
+                        })(jQuery, window);');
+                }
             }
         }
         $html[] = '</div>';
