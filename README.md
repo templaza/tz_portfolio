@@ -16,6 +16,15 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+07/09/2023 - 2.6.7
+
+    - Fix issue of language files
+    - Fix issue load add-on xml file
+    - Fix issue load multiple tags in article edit form
+    - Fix issue image file does not exist of tzmedia field
+    - Fix issue infinitescroll when disable isotope script    
+    - Added option Search word from introtext
+
 22/05/2023 - 2.6.6
 
     - Fix issue image watermark with php8
