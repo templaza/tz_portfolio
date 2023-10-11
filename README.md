@@ -11,6 +11,11 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+11/10/2023 - 2.6.8
+
+    - Update scssphp v1.11.1
+    - Updae code compatible with Joomla 5
+
 07/09/2023 - 2.6.7
 
     - Fix issue of language files
