@@ -22,10 +22,11 @@ defined('JPATH_PLATFORM') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
+use Joomla\Database\DatabaseDriver;
 
 class TZ_Portfolio_PlusTableAddon_Data extends JTable
 {
-    public function __construct(JDatabaseDriver $db)
+    public function __construct(DatabaseDriver $db)
     {
         parent::__construct('#__tz_portfolio_plus_addon_data', 'id', $db);
     }
