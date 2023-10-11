@@ -21,6 +21,7 @@
 defined('JPATH_PLATFORM') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\Database\DatabaseDriver;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Application\ApplicationHelper;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
@@ -40,11 +41,11 @@ class TZ_Portfolio_PlusTableCategory extends JTableNested
     /**
      * Constructor
      *
-     * @param   JDatabaseDriver  $db  Database driver object.
+     * @param   DatabaseDriver  $db  Database driver object.
      *
      * @since   11.1
      */
-    public function __construct(JDatabaseDriver $db)
+    public function __construct(DatabaseDriver $db)
     {
         parent::__construct('#__tz_portfolio_plus_categories', 'id', $db);
 

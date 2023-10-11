@@ -22,11 +22,13 @@
 -------------------------------------------------------------------------*/
 
 // no direct access
+use Joomla\Database\DatabaseDriver;
+
 defined('_JEXEC') or die;
 
 class TZ_Portfolio_PlusTableContent_Category_Map extends JTable
 {
-    public function __construct(JDatabaseDriver $db)
+    public function __construct(DatabaseDriver $db)
     {
         parent::__construct('#__tz_portfolio_plus_content_category_map', 'id', $db);
     }

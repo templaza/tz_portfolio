@@ -18,14 +18,18 @@
 			   multiple="true"
 			   class="multipleCategories"
 			   onchange="this.form.submit();"
+			   layout="joomla.form.field.list-fancy-select"
 			   label="JOPTION_FILTER_CATEGORY"
+			   hint="JOPTION_SELECT_CATEGORY"
 			   description="JOPTION_FILTER_CATEGORY_DESC"/>
 
 		<field type="tzmediatypes" name="type"
 			   multiple="true"
 			   class="multipleMediaType"
 			   onchange="this.form.submit();"
+			   layout="joomla.form.field.list-fancy-select"
 			   label="COM_TZ_PORTFOLIO_PLUS_TYPE_OF_MEDIA"
+			   hint="COM_TZ_PORTFOLIO_PLUS_OPTION_SELECT_MEDIA_TYPE"
 			   description="COM_TZ_PORTFOLIO_PLUS_TYPE_OF_MEDIA">
 			<option value="none">COM_TZ_PORTFOLIO_PLUS_OPTION_NONE_MEDIA</option>
 		</field>

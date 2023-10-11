@@ -26,12 +26,13 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Installer\Adapter\TemplateAdapter;
+use Joomla\Database\DatabaseDriver;
 
 \JLoader::import('com_tz_portfolio_plus.includes.framework',JPATH_ADMINISTRATOR.'/components');
 
 class TZ_Portfolio_PlusInstallerTemplateAdapter extends TemplateAdapter{
 
-    public function __construct(\JInstaller $parent, \JDatabaseDriver $db, array $options = array())
+    public function __construct(\JInstaller $parent, DatabaseDriver $db, array $options = array())
     {
 
         parent::__construct($parent, $db, $options);

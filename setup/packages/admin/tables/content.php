@@ -22,6 +22,7 @@ defined('JPATH_PLATFORM') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Access\Rules;
+use Joomla\Database\DatabaseDriver;
 use Joomla\Registry\Registry;
 use Joomla\String\StringHelper;
 use Joomla\CMS\Event\AbstractEvent;
@@ -42,11 +43,11 @@ class TZ_Portfolio_PlusTableContent extends JTable
     /**
      * Constructor
      *
-     * @param   JDatabaseDriver  $db  A database connector object
+     * @param   DatabaseDriver  $db  A database connector object
      *
      * @since   11.1
      */
-    public function __construct(JDatabaseDriver $db)
+    public function __construct(DatabaseDriver $db)
     {
         parent::__construct('#__tz_portfolio_plus_content', 'id', $db);
 

@@ -25,12 +25,13 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Installer\Adapter\PluginAdapter;
+use Joomla\Database\DatabaseDriver;
 
 \JLoader::import('com_tz_portfolio_plus.includes.framework',JPATH_ADMINISTRATOR.'/components');
 
 class TZ_Portfolio_PlusInstallerPluginAdapter extends PluginAdapter{
 
-    public function __construct(\JInstaller $parent, \JDatabaseDriver $db, array $options = array())
+    public function __construct(\JInstaller $parent, DatabaseDriver $db, array $options = array())
     {
 
         parent::__construct($parent, $db, $options);

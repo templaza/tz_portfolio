@@ -63,7 +63,9 @@ defined('_JEXEC') or die;
     <?php } else { ?>
         <script src="<?php echo JURI::root(true);?>/media/system/js/core.min.js"></script>
         <script src="<?php echo JURI::root(true);?>/media/vendor/jquery/js/jquery.min.js"></script>
-        <script src="<?php echo JURI::root(true);?>/media/vendor/bootstrap/js/bootstrap-es5.js"></script>
+        <?php if(version_compare(JVERSION, '5.0', '<')){?>
+            <script src="<?php echo JURI::root(true);?>/media/vendor/bootstrap/js/bootstrap-es5.js"></script>
+        <?php }?>
         <script src="<?php echo JURI::root(true);?>/media/system/js/joomla-toolbar-button.js"></script>
     <?php } ?>
 

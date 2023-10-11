@@ -199,7 +199,7 @@ class TZ_Portfolio_PlusExtraField{
     }
 
     public function getFieldValues(){
-        $storeId = md5(__METHOD__ . "::" . $this->id);
+        $storeId = md5(__METHOD__ . "::" . $this->id.'::'.serialize($this -> field));
         if (!isset(self::$cache[$storeId]))
         {
             $fieldValues    = null;

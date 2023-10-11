@@ -30,7 +30,7 @@ JHtml::_('bootstrap.tooltip');
 if(!COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
     JHtml::_('formbehavior.chosen', 'select');
 }else{
-    JHtml::_('formbehavior.chosen', 'select[multiple]');
+    JHtml::_('formbehavior.chosen', 'select[multiple]:not(.choices__input)');
 }
 ?>
 <form name="adminForm" method="post" id="adminForm" class="tpArticle"

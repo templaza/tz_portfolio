@@ -22,11 +22,12 @@
 // No direct access
 defined('JPATH_PLATFORM') or die;
 
+use Joomla\Database\DatabaseDriver;
 use Joomla\Registry\Registry;
 
 class TZ_Portfolio_PlusTableAddon_Meta extends JTable
 {
-    public function __construct(JDatabaseDriver $db)
+    public function __construct(DatabaseDriver $db)
     {
         parent::__construct('#__tz_portfolio_plus_addon_meta', 'id', $db);
     }

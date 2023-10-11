@@ -27,11 +27,13 @@ $params     = $this -> params;
 
 $j4Compare  = COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE;
 
-JHtml::_('formbehavior.chosen', '.multipleMediaType', null,
-    array('placeholder_text_multiple' => JText::_('COM_TZ_PORTFOLIO_PLUS_OPTION_SELECT_MEDIA_TYPE')));
-JHtml::_('formbehavior.chosen', '.multipleCategories', null,
-    array('placeholder_text_multiple' => JText::_('JOPTION_SELECT_CATEGORY')));
-JHtml::_('formbehavior.chosen', 'select');
+if(!$j4Compare) {
+    JHtml::_('formbehavior.chosen', '.multipleMediaType', null,
+        array('placeholder_text_multiple' => JText::_('COM_TZ_PORTFOLIO_PLUS_OPTION_SELECT_MEDIA_TYPE')));
+    JHtml::_('formbehavior.chosen', '.multipleCategories', null,
+        array('placeholder_text_multiple' => JText::_('JOPTION_SELECT_CATEGORY')));
+    JHtml::_('formbehavior.chosen', 'select');
+}
 
 $user		    = JFactory::getUser();
 $userId		    = $user->get('id');

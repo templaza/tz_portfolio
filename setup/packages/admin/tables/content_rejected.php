@@ -21,10 +21,11 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\Database\DatabaseDriver;
 
 class TZ_Portfolio_PlusTableContent_Rejected extends JTable
 {
-    public function __construct(JDatabaseDriver $db)
+    public function __construct(DatabaseDriver $db)
     {
         parent::__construct('#__tz_portfolio_plus_content_rejected', 'id', $db);
     }
