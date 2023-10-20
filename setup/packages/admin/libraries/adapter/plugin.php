@@ -31,7 +31,7 @@ use Joomla\Database\DatabaseDriver;
 
 class TZ_Portfolio_PlusInstallerPluginAdapter extends PluginAdapter{
 
-    public function __construct(\JInstaller $parent, DatabaseDriver $db, array $options = array())
+    public function __construct(\JInstaller $parent, $db, array $options = array())
     {
 
         parent::__construct($parent, $db, $options);
