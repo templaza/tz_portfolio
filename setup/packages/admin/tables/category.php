@@ -45,7 +45,7 @@ class TZ_Portfolio_PlusTableCategory extends JTableNested
      *
      * @since   11.1
      */
-    public function __construct(DatabaseDriver $db)
+    public function __construct($db)
     {
         parent::__construct('#__tz_portfolio_plus_categories', 'id', $db);
 

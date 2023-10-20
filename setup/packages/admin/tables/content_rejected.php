@@ -25,7 +25,7 @@ use Joomla\Database\DatabaseDriver;
 
 class TZ_Portfolio_PlusTableContent_Rejected extends JTable
 {
-    public function __construct(DatabaseDriver $db)
+    public function __construct($db)
     {
         parent::__construct('#__tz_portfolio_plus_content_rejected', 'id', $db);
     }

@@ -26,7 +26,7 @@ use Joomla\Database\DatabaseDriver;
 
 class TZ_Portfolio_PlusTableAddon_Data extends JTable
 {
-    public function __construct(DatabaseDriver $db)
+    public function __construct($db)
     {
         parent::__construct('#__tz_portfolio_plus_addon_data', 'id', $db);
     }

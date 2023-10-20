@@ -27,7 +27,7 @@ use Joomla\Registry\Registry;
 
 class TZ_Portfolio_PlusTableAddon_Meta extends JTable
 {
-    public function __construct(DatabaseDriver $db)
+    public function __construct($db)
     {
         parent::__construct('#__tz_portfolio_plus_addon_meta', 'id', $db);
     }
