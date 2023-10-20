@@ -16,6 +16,11 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+20/10/2023 - 2.6.9
+
+    - Fix issue DatabaseDriver of v2.6.8 with Joomla 3
+    - Fix issue install extensions of v2.6.8 with Joomla 3
+
 11/10/2023 - 2.6.8
 
     - Update scssphp v1.11.1
