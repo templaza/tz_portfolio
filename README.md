@@ -11,6 +11,10 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+01/12/2023 - 2.7.0
+
+    - Fix issue js edit row setting of layout builder with Joomla 4 & Joomla 5
+
 20/10/2023 - 2.6.9
 
     - Fix issue DatabaseDriver of v2.6.8 with Joomla 3
