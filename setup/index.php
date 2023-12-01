@@ -195,7 +195,7 @@ if ($active === 'complete') {
                 $group = posix_getpwuid(filegroup($file->path));
 
                 $file->owner = $owner['name'];
-                $file->group = $group['name'];
+                $file->group = !empty($group) && is_array($group)?$group['name']:'';
                 $file->permissions = substr(decoct(fileperms($file->path)), 1);
             }
         }
