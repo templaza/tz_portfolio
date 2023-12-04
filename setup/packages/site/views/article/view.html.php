@@ -252,7 +252,7 @@ class TZ_Portfolio_PlusViewArticle extends TZ_Portfolio_PlusViewLegacy
 
         $item->event = new stdClass();
         $results = $app -> triggerEvent('onContentDisplayAuthorAbout',
-            array('com_tz_portfolio_plus.article', $item -> author_id, &$this->params, &$item, $offset));
+            array('com_tz_portfolio_plus.article', $item -> author_id, &$item->params, &$item, $offset));
         $item->event->authorAbout = trim(implode("\n", $results));
 
         $results = $app -> triggerEvent('onContentAfterTitle',
