@@ -161,6 +161,17 @@ class JFormFieldTZRules extends JFormFieldRules
         // Get the available user groups.
         $groups = $this->getUserGroups();
 
+        if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE){
+            $this -> groups         = $groups;
+            $this -> actions        = $actions;
+            $this -> assetId        = $assetId;
+            $this -> assetRules     = $assetRules;
+            $this -> parentAssetId  = $parentAssetId;
+
+            // Trim the trailing line in the layout file
+            return trim($this->getRenderer($this->layout)->render($this->getLayoutData()));
+        }
+
         // Ajax request data.
         $ajaxUri = JRoute::_('index.php?option=com_config&task=config.store&format=json&' . JSession::getFormToken() . '=1');
 
