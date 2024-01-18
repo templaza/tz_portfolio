@@ -230,7 +230,7 @@ class TZ_Portfolio_PlusModelAddons extends JModelList
             return false;
         }
 
-        $data   = false;
+        $data   = array();
 
         foreach($addons as $item){
 
@@ -249,11 +249,11 @@ class TZ_Portfolio_PlusModelAddons extends JModelList
             }
         }
 
-        if($data){
-            $this -> cache[$storeId]    = $data;
+        if(!empty($data)){
+            return $this -> cache[$storeId]    = $data;
         }
 
-        return $data;
+        return false;
     }
 
     protected function findAddOnFromServer($addon){
