@@ -60,72 +60,68 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
                 <?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
             </div>
         <?php }else{ ?>
-        <table class="table table-striped" id="tagsList">
-            <thead>
-            <tr>
-                <th width="1%"><?php echo JText::_('#');?></th>
-                <th width="1%" class="center text-center">
-                    <?php echo JHtml::_('grid.checkall'); ?>
+            <table class="table table-striped" id="tagsList">
+                <thead>
+                <tr>
+                    <th width="1%"><?php echo JText::_('#');?></th>
+                    <th width="1%" class="center text-center">
+                        <?php echo JHtml::_('grid.checkall'); ?>
+                        </th>
+                    <th width="1%" style="min-width:55px" class="nowrap center text-center">
+                            <?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'published', $listDirn, $listOrder); ?>
+                        </th>
+                    <th class="title">
+                        <?php echo JHtml::_('searchtools.sort','JGLOBAL_TITLE','title', $listDirn, $listOrder);?>
                     </th>
-                <th width="1%" style="min-width:55px" class="nowrap center text-center">
-						<?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'published', $listDirn, $listOrder); ?>
-					</th>
-                <th class="title">
-                    <?php echo JHtml::_('searchtools.sort','JGLOBAL_TITLE','title', $listDirn, $listOrder);?>
-                </th>
-                <th nowrap="nowrap" width="1%">
-                    <?php echo JHtml::_('searchtools.sort','JGRID_HEADING_ID','id', $listDirn, $listOrder);?>
-                </th>
-            </tr>
-            </thead>
-
-            <?php if($this -> items):?>
-            <tbody>
-            <?php
-            $canEdit    = $user->authorise('core.edit',       'com_tz_portfolio_plus.tag');
-            $canChange  = $user->authorise('core.edit.state', 'com_tz_portfolio_plus.tag');
-            foreach($this -> items as $i => $item):?>
-                <tr class="<?php echo ($i%2==0)?'row0':'row1';?>">
-                    <td>
-                        <?php echo $i+1;?>
-                        <input type="hidden" name="order[]">
-                    </td>
-                    <td class="center text-center">
-                        <?php echo JHtml::_('grid.id', $i, $item->id); ?>
-                    </td>
-                    <td class="center text-center">
-                        <?php echo JHtml::_('jgrid.published', $item->published, $i, 'tags.', $canChange, 'cb'); ?>
-                    </td>
-                    <td class="nowrap has-context">
-                        <div class="pull-left float-left">
-                            <?php if($canEdit){ ?>
-                            <a href="index.php?option=com_tz_portfolio_plus&task=tag.edit&id=<?php echo $item -> id;?>">
-                                <?php echo $this -> escape($item -> title);?>
-                            </a>
-                            <?php }else{ ?>
-                                <?php echo $this -> escape($item -> title);?>
-                            <?php } ?>
-                            <span class="small">
-                                <?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
-                            </span>
-                        </div>
-                    </td>
-
-                    <td align="center text-center"><?php echo $item -> id;?></td>
+                    <th nowrap="nowrap" width="1%">
+                        <?php echo JHtml::_('searchtools.sort','JGRID_HEADING_ID','id', $listDirn, $listOrder);?>
+                    </th>
                 </tr>
-            <?php endforeach;?>
-            </tbody>
-            <?php endif;?>
+                </thead>
 
-            <tfoot>
-            <tr>
-                <td colspan="11">
-                    <?php echo $this -> pagination -> getListFooter();?>
-                </td>
-            </tr>
-            </tfoot>
+                <?php if($this -> items):?>
+                <tbody>
+                <?php
+                $canEdit    = $user->authorise('core.edit',       'com_tz_portfolio_plus.tag');
+                $canChange  = $user->authorise('core.edit.state', 'com_tz_portfolio_plus.tag');
+                foreach($this -> items as $i => $item):?>
+                    <tr class="<?php echo ($i%2==0)?'row0':'row1';?>">
+                        <td>
+                            <?php echo $i+1;?>
+                            <input type="hidden" name="order[]">
+                        </td>
+                        <td class="center text-center">
+                            <?php echo JHtml::_('grid.id', $i, $item->id); ?>
+                        </td>
+                        <td class="center text-center">
+                            <?php echo JHtml::_('jgrid.published', $item->published, $i, 'tags.', $canChange, 'cb'); ?>
+                        </td>
+                        <td class="nowrap has-context">
+                            <div class="pull-left float-left">
+                                <?php if($canEdit){ ?>
+                                <a href="index.php?option=com_tz_portfolio_plus&task=tag.edit&id=<?php echo $item -> id;?>">
+                                    <?php echo $this -> escape($item -> title);?>
+                                </a>
+                                <?php }else{ ?>
+                                    <?php echo $this -> escape($item -> title);?>
+                                <?php } ?>
+                                <span class="small">
+                                    <?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
+                                </span>
+                            </div>
+                        </td>
 
-        </table>
+                        <td align="center text-center"><?php echo $item -> id;?></td>
+                    </tr>
+                <?php endforeach;?>
+                </tbody>
+                <?php endif;?>
+
+            </table>
+
+            <?php // load the pagination. ?>
+            <?php echo $this->pagination->getListFooter(); ?>
+
         <?php } ?>
 
         <input type="hidden" name="task" value="">

@@ -108,14 +108,6 @@ if ($saveOrder)
                         </th>
                     </tr>
                 </thead>
-                <tfoot>
-                    <tr>
-                        <td colspan="15">
-                            <?php echo $this->pagination->getListFooter(); ?>
-                        </td>
-                    </tr>
-                </tfoot>
-
                 <tbody <?php if ($saveOrder) :?> class="js-draggable" data-url="<?php echo $saveOrderingUrl;
                 ?>" data-direction="<?php echo strtolower($listDirn); ?>" data-nested="true"<?php endif; ?>>
                     <?php
@@ -238,6 +230,10 @@ if ($saveOrder)
                     <?php endforeach; ?>
                 </tbody>
             </table>
+
+            <?php // load the pagination. ?>
+            <?php echo $this->pagination->getListFooter(); ?>
+
             <?php //Load the batch processing form. ?>
                 <?php echo JHtml::_(
                     'bootstrap.renderModal',

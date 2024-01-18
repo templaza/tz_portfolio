@@ -117,186 +117,182 @@ $this -> document -> addScriptDeclaration('
                 <?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
             </div>
         <?php }else{ ?>
-        <table class="table table-striped"  id="addonList">
-            <thead>
-            <tr>
-                <th width="1%" class="nowrap center text-center">
-                    <?php echo JHtml::_('searchtools.sort', '', 'ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2'); ?>
-                </th>
-                <th width="1%" class="hidden-phone">
-                    <?php echo JHtml::_('grid.checkall'); ?>
-                </th>
-                <th width="1%" class="nowrap center text-center">
-                    <?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'published', $listDirn, $listOrder); ?>
-                </th>
-                <th class="title">
-                    <?php echo JHtml::_('searchtools.sort','JGLOBAL_TITLE','name',$listDirn,$listOrder);?>
-                </th>
-                <th width="7%" class="nowrap center text-center">
-                    <?php echo JHtml::_('searchtools.sort', 'COM_TZ_PORTFOLIO_PLUS_TYPE', 'folder', $listDirn, $listOrder); ?>
-                </th>
-                <th width="10%" class="nowrap center text-center">
-                    <?php echo JHtml::_('searchtools.sort', 'COM_TZ_PORTFOLIO_PLUS_ELEMENT', 'element', $listDirn, $listOrder); ?>
-                </th>
-                <th width="5%" class="nowrap hidden-phone">
-                    <?php echo JHtml::_('searchtools.sort',  'JGRID_HEADING_ACCESS', 'f.access', $listDirn, $listOrder); ?>
-                </th>
-                <th class="nowrap center text-center" width="6%">
-                    <?php echo JText::_('JVERSION'); ?>
-                </th>
-                <th class="nowrap center text-center" width="10%">
-                    <?php echo JText::_('JDATE'); ?>
-                </th>
-                <th class="nowrap" width="10%">
-                    <?php echo JText::_('JAUTHOR'); ?>
-                </th>
-                <th class="nowrap" width="1%">
-                    <?php echo JHtml::_('searchtools.sort','JGRID_HEADING_ID','id',$listDirn,$listOrder);?>
-                </th>
-            </tr>
-            </thead>
+            <table class="table table-striped"  id="addonList">
+                <thead>
+                <tr>
+                    <th width="1%" class="nowrap center text-center">
+                        <?php echo JHtml::_('searchtools.sort', '', 'ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2'); ?>
+                    </th>
+                    <th width="1%" class="hidden-phone">
+                        <?php echo JHtml::_('grid.checkall'); ?>
+                    </th>
+                    <th width="1%" class="nowrap center text-center">
+                        <?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'published', $listDirn, $listOrder); ?>
+                    </th>
+                    <th class="title">
+                        <?php echo JHtml::_('searchtools.sort','JGLOBAL_TITLE','name',$listDirn,$listOrder);?>
+                    </th>
+                    <th width="7%" class="nowrap center text-center">
+                        <?php echo JHtml::_('searchtools.sort', 'COM_TZ_PORTFOLIO_PLUS_TYPE', 'folder', $listDirn, $listOrder); ?>
+                    </th>
+                    <th width="10%" class="nowrap center text-center">
+                        <?php echo JHtml::_('searchtools.sort', 'COM_TZ_PORTFOLIO_PLUS_ELEMENT', 'element', $listDirn, $listOrder); ?>
+                    </th>
+                    <th width="5%" class="nowrap hidden-phone">
+                        <?php echo JHtml::_('searchtools.sort',  'JGRID_HEADING_ACCESS', 'f.access', $listDirn, $listOrder); ?>
+                    </th>
+                    <th class="nowrap center text-center" width="6%">
+                        <?php echo JText::_('JVERSION'); ?>
+                    </th>
+                    <th class="nowrap center text-center" width="10%">
+                        <?php echo JText::_('JDATE'); ?>
+                    </th>
+                    <th class="nowrap" width="10%">
+                        <?php echo JText::_('JAUTHOR'); ?>
+                    </th>
+                    <th class="nowrap" width="1%">
+                        <?php echo JHtml::_('searchtools.sort','JGRID_HEADING_ID','id',$listDirn,$listOrder);?>
+                    </th>
+                </tr>
+                </thead>
 
-            <?php if($this -> items):?>
-            <tbody <?php if ($saveOrder) :?> class="js-draggable" data-url="<?php echo $saveOrderingUrl;
-            ?>" data-direction="<?php echo strtolower($listDirn); ?>" data-nested="true"<?php endif; ?>>
-                <?php foreach($this -> items as $i => $item):
+                <?php if($this -> items):?>
+                <tbody <?php if ($saveOrder) :?> class="js-draggable" data-url="<?php echo $saveOrderingUrl;
+                ?>" data-direction="<?php echo strtolower($listDirn); ?>" data-nested="true"<?php endif; ?>>
+                    <?php foreach($this -> items as $i => $item):
 
-                    $canCreate = $user->authorise('core.create',     'com_tz_portfolio_plus.addon');
-                    $canEdit   = ($user->authorise('core.edit', 'com_tz_portfolio_plus.addon.'.$item -> id)
-                        || $user->authorise('core.admin', 'com_tz_portfolio_plus.addon.'.$item -> id)
-                            || $user->authorise('core.options', 'com_tz_portfolio_plus.addon.'.$item -> id));
-                    $canCheckin = $user->authorise('core.manage',     'com_checkin')
-                        || $item->checked_out == $user->get('id') || $item->checked_out == 0;
-                    $canChange = $user->authorise('core.edit.state', 'com_tz_portfolio_plus.addon') && $canCheckin;
+                        $canCreate = $user->authorise('core.create',     'com_tz_portfolio_plus.addon');
+                        $canEdit   = ($user->authorise('core.edit', 'com_tz_portfolio_plus.addon.'.$item -> id)
+                            || $user->authorise('core.admin', 'com_tz_portfolio_plus.addon.'.$item -> id)
+                                || $user->authorise('core.options', 'com_tz_portfolio_plus.addon.'.$item -> id));
+                        $canCheckin = $user->authorise('core.manage',     'com_checkin')
+                            || $item->checked_out == $user->get('id') || $item->checked_out == 0;
+                        $canChange = $user->authorise('core.edit.state', 'com_tz_portfolio_plus.addon') && $canCheckin;
 
-                    ?>
-                    <tr class="<?php echo ($i%2==0)?'row0':'row1';?>" sortable-group-id="<?php echo $item->folder
-                    ?>" data-draggable-group="<?php echo $item->folder?>">
-                        <td class="order nowrap center text-center hidden-phone">
-                            <?php
-                            $iconClass = '';
-                            if (!$canChange)
-                            {
-                                $iconClass = ' inactive';
-                            }
-                            elseif (!$saveOrder)
-                            {
-                                $iconClass = ' inactive tip-top hasTooltip" title="' . JHtml::tooltipText('JORDERINGDISABLED');
-                            }
-                            ?>
-                            <span class="sortable-handler<?php echo $iconClass ?>">
-                            <span class="icon-menu"></span>
-                        </span>
-                            <?php if ($canChange && $saveOrder) : ?>
-                                <input type="text" style="display:none" name="order[]" size="5" value="<?php echo $item->ordering;?>" class="width-20 text-area-order " />
-                            <?php endif; ?>
-                        </td>
-                        <td class="center text-center">
-                            <?php echo JHtml::_('grid.id', $i, $item->id); ?>
-                        </td>
-                        <td class="center text-center">
-                            <?php
-                            $states	= array(
-                                2 => array(
-                                    '',
-                                    'COM_TZ_PORTFOLIO_PLUS_ADDON_PROTECTED',
-                                    '',
-                                    'COM_TZ_PORTFOLIO_PLUS_ADDON_PROTECTED',
-                                    true,
-                                    'protected',
-                                    'protected',
-                                ),
-                                1 => array(
-                                    'unpublish',
-                                    'COM_TZ_PORTFOLIO_PLUS_ADDON_ENABLED',
-                                    'COM_TZ_PORTFOLIO_PLUS_ADDON_DISABLE',
-                                    'COM_TZ_PORTFOLIO_PLUS_ADDON_ENABLED',
-                                    true,
-                                    'publish',
-                                    'publish',
-                                ),
-                                0 => array(
-                                    'publish',
-                                    'COM_TZ_PORTFOLIO_PLUS_ADDON_DISABLED',
-                                    'COM_TZ_PORTFOLIO_PLUS_ADDON_ENABLE',
-                                    'COM_TZ_PORTFOLIO_PLUS_ADDON_DISABLED',
-                                    true,
-                                    'unpublish',
-                                    'unpublish',
-                                ),
-                            );
-
-                            if($item ->protected) {
-                                echo JHtml::_('jgrid.state', $states, 2, $i, 'addon.', false, true, 'cb');
-                            }else{
-                                echo JHtml::_('jgrid.state', $states, $item->published, $i, 'addons.', $canChange, true, 'cb');
-                            }
-                            ?>
-                        </td>
-                        <td class="nowrap has-context">
-                            <div class="pull-left float-left">
-                                <?php if ($item->checked_out) : ?>
-                                    <?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'addons.', $canCheckin); ?>
-                                <?php endif; ?>
-                                <?php if($canEdit){?>
-                                <a href="index.php?option=com_tz_portfolio_plus&task=addon.edit&id=<?php
-                                echo $item -> id;?>" class="js-tpp-title"><?php
-                                    echo $item->name;
-                                ?></a>
-                                <?php }else{
-                                    echo $item -> name;
-                                } ?>
-
+                        ?>
+                        <tr class="<?php echo ($i%2==0)?'row0':'row1';?>" sortable-group-id="<?php echo $item->folder
+                        ?>" data-draggable-group="<?php echo $item->folder?>">
+                            <td class="order nowrap center text-center hidden-phone">
                                 <?php
-                                if($item -> data_manager){
-                                ?>
-                                    <a href="<?php echo JRoute::_(TZ_Portfolio_PlusHelperAddon_Datas::getRootURL($item -> id));?>"
-                                       class="btn btn-secondary btn-small btn-sm hasTooltip js-tpp-data-manage"
-                                       title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ADDON_DATA_MANAGER')?>">
-                                        <span class="icon-book me-1"></span><span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ADDON_DATA_MANAGER')?></span>
-                                    </a>
-                                <?php
+                                $iconClass = '';
+                                if (!$canChange)
+                                {
+                                    $iconClass = ' inactive';
+                                }
+                                elseif (!$saveOrder)
+                                {
+                                    $iconClass = ' inactive tip-top hasTooltip" title="' . JHtml::tooltipText('JORDERINGDISABLED');
                                 }
                                 ?>
-                            </div>
-                        </td>
-                        <td class="center text-center">
-                            <?php echo $item -> folder;?>
-                        </td>
-                        <td class="center text-center">
-                            <?php echo $item -> element;?>
-                        </td>
-                        <td class="nowrap small hidden-phone">
-                            <?php echo $this->escape($item->access_level); ?>
-                        </td>
-                        <td class="nowrap center text-center hidden-phone">
-                            <?php echo @$item -> version != '' ? $item -> version : '&#160;';?>
-                        </td>
-                        <td class="nowrap center text-center hidden-phone">
-
-                            <?php echo @$item-> creationDate != '' ? $item-> creationDate : '&#160;'; ?>
-                        </td>
-                        <td class="nowrap hidden-phone">
-                            <span class="editlinktip hasTooltip" title="<?php echo JHtml::tooltipText(JText::_('COM_TZ_PORTFOLIO_PLUS_AUTHOR_INFORMATION'), $item -> author_info, 0); ?>">
-                                <?php echo @$item->author != '' ? $item->author : '&#160;'; ?>
+                                <span class="sortable-handler<?php echo $iconClass ?>">
+                                <span class="icon-menu"></span>
                             </span>
-                        </td>
+                                <?php if ($canChange && $saveOrder) : ?>
+                                    <input type="text" style="display:none" name="order[]" size="5" value="<?php echo $item->ordering;?>" class="width-20 text-area-order " />
+                                <?php endif; ?>
+                            </td>
+                            <td class="center text-center">
+                                <?php echo JHtml::_('grid.id', $i, $item->id); ?>
+                            </td>
+                            <td class="center text-center">
+                                <?php
+                                $states	= array(
+                                    2 => array(
+                                        '',
+                                        'COM_TZ_PORTFOLIO_PLUS_ADDON_PROTECTED',
+                                        '',
+                                        'COM_TZ_PORTFOLIO_PLUS_ADDON_PROTECTED',
+                                        true,
+                                        'protected',
+                                        'protected',
+                                    ),
+                                    1 => array(
+                                        'unpublish',
+                                        'COM_TZ_PORTFOLIO_PLUS_ADDON_ENABLED',
+                                        'COM_TZ_PORTFOLIO_PLUS_ADDON_DISABLE',
+                                        'COM_TZ_PORTFOLIO_PLUS_ADDON_ENABLED',
+                                        true,
+                                        'publish',
+                                        'publish',
+                                    ),
+                                    0 => array(
+                                        'publish',
+                                        'COM_TZ_PORTFOLIO_PLUS_ADDON_DISABLED',
+                                        'COM_TZ_PORTFOLIO_PLUS_ADDON_ENABLE',
+                                        'COM_TZ_PORTFOLIO_PLUS_ADDON_DISABLED',
+                                        true,
+                                        'unpublish',
+                                        'unpublish',
+                                    ),
+                                );
 
-                        <td align="center text-center hidden-phone"><?php echo $item -> id;?></td>
-                    </tr>
-                <?php endforeach;?>
-                </tbody>
-            <?php endif;?>
+                                if($item ->protected) {
+                                    echo JHtml::_('jgrid.state', $states, 2, $i, 'addon.', false, true, 'cb');
+                                }else{
+                                    echo JHtml::_('jgrid.state', $states, $item->published, $i, 'addons.', $canChange, true, 'cb');
+                                }
+                                ?>
+                            </td>
+                            <td class="nowrap has-context">
+                                <div class="pull-left float-left">
+                                    <?php if ($item->checked_out) : ?>
+                                        <?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'addons.', $canCheckin); ?>
+                                    <?php endif; ?>
+                                    <?php if($canEdit){?>
+                                    <a href="index.php?option=com_tz_portfolio_plus&task=addon.edit&id=<?php
+                                    echo $item -> id;?>" class="js-tpp-title"><?php
+                                        echo $item->name;
+                                    ?></a>
+                                    <?php }else{
+                                        echo $item -> name;
+                                    } ?>
 
-            <tfoot>
-            <tr>
-                <td colspan="11">
-                    <?php echo $this -> pagination -> getListFooter();?>
-                </td>
-            </tr>
-            </tfoot>
+                                    <?php
+                                    if($item -> data_manager){
+                                    ?>
+                                        <a href="<?php echo JRoute::_(TZ_Portfolio_PlusHelperAddon_Datas::getRootURL($item -> id));?>"
+                                           class="btn btn-secondary btn-small btn-sm hasTooltip js-tpp-data-manage"
+                                           title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ADDON_DATA_MANAGER')?>">
+                                            <span class="icon-book me-1"></span><span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ADDON_DATA_MANAGER')?></span>
+                                        </a>
+                                    <?php
+                                    }
+                                    ?>
+                                </div>
+                            </td>
+                            <td class="center text-center">
+                                <?php echo $item -> folder;?>
+                            </td>
+                            <td class="center text-center">
+                                <?php echo $item -> element;?>
+                            </td>
+                            <td class="nowrap small hidden-phone">
+                                <?php echo $this->escape($item->access_level); ?>
+                            </td>
+                            <td class="nowrap center text-center hidden-phone">
+                                <?php echo @$item -> version != '' ? $item -> version : '&#160;';?>
+                            </td>
+                            <td class="nowrap center text-center hidden-phone">
 
-        </table>
+                                <?php echo @$item-> creationDate != '' ? $item-> creationDate : '&#160;'; ?>
+                            </td>
+                            <td class="nowrap hidden-phone">
+                                <span class="editlinktip hasTooltip" title="<?php echo JHtml::tooltipText(JText::_('COM_TZ_PORTFOLIO_PLUS_AUTHOR_INFORMATION'), $item -> author_info, 0); ?>">
+                                    <?php echo @$item->author != '' ? $item->author : '&#160;'; ?>
+                                </span>
+                            </td>
+
+                            <td align="center text-center hidden-phone"><?php echo $item -> id;?></td>
+                        </tr>
+                    <?php endforeach;?>
+                    </tbody>
+                <?php endif;?>
+
+            </table>
+
+            <?php // load the pagination. ?>
+            <?php echo $this->pagination->getListFooter(); ?>
+
         <?php } ?>
 
         <input type="hidden" name="task" value="">

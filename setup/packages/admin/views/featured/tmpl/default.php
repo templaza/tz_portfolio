@@ -21,6 +21,8 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Button\FeaturedButton;
 
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
 JHtml::_('bootstrap.tooltip');
@@ -95,6 +97,11 @@ $assoc		= JLanguageAssociations::isEnabled();
                     <th width="1%" class="hidden-phone">
                         <?php echo JHtml::_('grid.checkall'); ?>
                     </th>
+                    <?php if($j4Compare){ ?>
+                        <th scope="col" class="w-1 text-center d-none d-md-table-cell">
+                            <?php echo HTMLHelper::_('searchtools.sort', 'JFEATURED', 'a.featured', $listDirn, $listOrder); ?>
+                        </th>
+                    <?php } ?>
                     <th width="1%" style="min-width:55px" class="nowrap center text-center">
                         <?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
                     </th>
@@ -134,11 +141,6 @@ $assoc		= JLanguageAssociations::isEnabled();
                     </th>
                 </tr>
                 </thead>
-                <tfoot>
-                <tr>
-                    <td colspan="13"><?php echo $this->pagination->getListFooter(); ?></td>
-                </tr>
-                </tfoot>
                 <tbody <?php if ($saveOrder) :?> class="js-draggable" data-url="<?php echo $saveOrderingUrl;
                 ?>" data-direction="<?php echo strtolower($listDirn); ?>" data-nested="true"<?php endif; ?>>
                 <?php
@@ -156,6 +158,7 @@ $assoc		= JLanguageAssociations::isEnabled();
                                 ||($user->authorise('core.edit.state.own', 'com_tz_portfolio_plus.article.'
                                         .$item->id)
                                     && $item->created_by == $userId)) && $canCheckin;
+                        $canApprove     = TZ_Portfolio_PlusHelperACL::allowApprove($item);
                         ?>
                         <tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item -> catid;
                         ?>" data-draggable-group="<?php echo $item->catid; ?>">
@@ -180,18 +183,64 @@ $assoc		= JLanguageAssociations::isEnabled();
                             <td class="center text-center">
                                 <?php echo JHtml::_('grid.id', $i, $item->id); ?>
                             </td>
+                            <?php if($j4Compare){ ?>
+                                <td class="center text-center">
+                                    <?php
+                                    $workflow_featured = false;
+                                    $options = [
+                                        'task_prefix' => 'articles.',
+                                        'disabled' => $workflow_featured || !$canChange,
+                                        'id' => 'featured-' . $item->id
+                                    ];
+
+                                    echo (new FeaturedButton)
+                                        ->render((int) $item->featured, $i, $options);
+                                    ?>
+                                </td>
+                            <?php } ?>
                             <td class="center text-center">
+                                <?php
+                                $filterPublished    = $this -> state -> get('filter.published');
+
+                                if(!$j4Compare){
+                                ?>
                                 <div class="btn-group">
-                                    <?php echo JHtml::_('jgrid.published', $item->state, $i, 'articles.', $canChange, 'cb', $item->publish_up, $item->publish_down); ?>
-                                    <?php echo JHtml::_('tzcontentadmin.featured', $item->featured, $i, $canChange); ?>
-                                    <?php // Create dropdown items and render the dropdown list.
-                                    if (!$j4Compare && $canChange)
-                                    {
-                                        JHtml::_('actionsdropdown.' . ((int) $item->state === -2 ? 'un' : '') . 'trash', 'cb' . $i, 'articles');
-                                        echo JHtml::_('actionsdropdown.render', $this->escape($item->title));
+                                    <?php
                                     }
+                                    if($canApprove && ($item -> state == 3 || $item -> state == 4) ){
+                                        echo JHtml::_('tppgrid.approve', $i, $this->getName() . '.', $canChange, 'cb');
+                                        echo JHtml::_('tppgrid.reject', $i, $this->getName() . '.', $canChange, 'cb');
+                                    }elseif($item -> state != 4){
+                                        if($item -> state == -3 || $item -> state == 3){
+                                            echo JHtml::_('jgrid.action', $i, 'trash',
+                                                $this -> getName().'.', 'JTOOLBAR_TRASH', 'JTOOLBAR_TRASH', '', true, 'trash', $canChange);
+                                        }else{
+                                            echo JHtml::_('tppgrid.status', $item->state, $i, $item -> state,
+                                                $this -> getName().'.', $canChange, 'cb', $item->publish_up, $item->publish_down);
+                                            if(!$j4Compare) {
+                                                echo JHtml::_('tzcontentadmin.featured', $item->featured, $i, $canChange);
+                                            }
+                                        }
+                                    }
+                                    // Create dropdown items and render the dropdown list.
+                                    if (!$j4Compare && $canChange &&
+                                        ($canApprove || (!$canApprove && $item -> state != 3 && $item -> state != 4)))
+                                    {
+                                        if($item -> state == 3) {
+                                            JHtml::_('actionsdropdown.trash', 'cb' . $i,  $this -> getName());
+                                        }else {
+                                            JHtml::_('actionsdropdown.' . ((int)$item->state === -2 ? 'un' : '')
+                                                . 'trash', 'cb' . $i,  $this -> getName());
+                                        }
+                                        if($item -> state != -3) {
+                                            echo JHtml::_('actionsdropdown.render', $this->escape($item->title));
+                                        }
+                                    }
+
+                                    if(!$j4Compare){
                                     ?>
                                 </div>
+                            <?php } ?>
                             </td>
                             <td class="nowrap has-context">
                                 <?php if ($item->checked_out) : ?>
@@ -275,6 +324,10 @@ $assoc		= JLanguageAssociations::isEnabled();
                 ?>
                 </tbody>
             </table>
+
+            <?php // load the pagination. ?>
+            <?php echo $this->pagination->getListFooter(); ?>
+
         <?php } ?>
 
         <input type="hidden" name="task" value="" />
