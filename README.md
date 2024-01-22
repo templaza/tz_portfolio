@@ -11,6 +11,14 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+22/01/2024 - 2.7.1
+
+    - Fix issue with php8.2
+    - Fix issue save acl with Joomla 4.x and Joomla 5.x
+    - Fix error tzrules field with Jommla 4.x, Joomla 5.x
+    - Fix issue option disable author about of article view
+    - Update back-end style with Joomla dark mode
+
 01/12/2023 - 2.7.0
 
     - Fix issue js edit row setting of layout builder with Joomla 4 & Joomla 5
