@@ -24,14 +24,17 @@
 // no direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Language\Text;
+
 $input -> set('active', 0);
-$xml    = simplexml_load_file(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/tz_portfolio_plus.xml');
+$xml    = simplexml_load_file(COM_TZ_PORTFOLIO_ADMIN_PATH.'/tz_portfolio.xml');
 ?>
 <script>
     $(document).ready(function(){
        $.ajax({
            type: "POST",
-           url: "<?php echo JURI::root();?>administrator/index.php?option=com_tz_portfolio_plus&ajax=1",
+           url: "<?php echo Uri::root();?>administrator/index.php?option=com_tz_portfolio&ajax=1",
            data: {
                task: "completed"
            }
@@ -43,11 +46,11 @@ $xml    = simplexml_load_file(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/tz_portfolio_pl
 		<i class="icon-checkmark mr-0"></i>
 	</div>
 
-	<p><?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_SETUP_COMPLETED_DESC', $xml -> forumUrl, $xml -> guideUrl);?>
+	<p><?php echo Text::sprintf('COM_TZ_PORTFOLIO_SETUP_COMPLETED_DESC', $xml -> forumUrl, $xml -> guideUrl);?>
 
     <br><br>
 
-	<p><b><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_CHECK_US_SOCIAL_DESC');?></b></p>
+	<p><b><?php echo Text::_('COM_TZ_PORTFOLIO_CHECK_US_SOCIAL_DESC');?></b></p>
 
     <?php
     $btn_class  = '';
@@ -56,10 +59,10 @@ $xml    = simplexml_load_file(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/tz_portfolio_pl
         ?>
     <div class="d-flex justify-content-center text-center align-items-center">
     <?php }?>
-        <a class="btn btn-social hasTooltip<?php echo $btn_class; ?>" href="<?php echo (string) $xml -> facebookUrl;?>" target="_blank" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_FANPAGE');?>"><i class="tpb tp-facebook-f"></i></a>
-        <a class="btn btn-social hasTooltip<?php echo $btn_class; ?>" href="<?php echo (string) $xml -> youtubeUrl;?>" target="_blank" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_VIDEO_TUTORIALS');?>"><i class="tpb tp-youtube"></i></a>
-        <a class="btn btn-social hasTooltip<?php echo $btn_class; ?>" href="<?php echo (string) $xml -> jedUrl;?>" target="_blank" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_RATE_ON_JED');?>"><i class="tpb tp-joomla"></i></a>
-        <a class="btn btn-social hasTooltip<?php echo $btn_class; ?>" href="<?php echo (string) $xml -> transifexUrl;?>" target="_blank" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_FIND_HELP_TRANSLATE');?>"><i class="tps tp-globe"></i></a>
+        <a class="btn btn-social hasTooltip<?php echo $btn_class; ?>" href="<?php echo (string) $xml -> facebookUrl;?>" target="_blank" title="<?php echo Text::_('COM_TZ_PORTFOLIO_FANPAGE');?>"><i class="fab fa-facebook-f"></i></a>
+        <a class="btn btn-social hasTooltip<?php echo $btn_class; ?>" href="<?php echo (string) $xml -> youtubeUrl;?>" target="_blank" title="<?php echo Text::_('COM_TZ_PORTFOLIO_VIDEO_TUTORIALS');?>"><i class="fab fa-youtube"></i></a>
+        <a class="btn btn-social hasTooltip<?php echo $btn_class; ?>" href="<?php echo (string) $xml -> jedUrl;?>" target="_blank" title="<?php echo Text::_('COM_TZ_PORTFOLIO_RATE_ON_JED');?>"><i class="fab fa-joomla"></i></a>
+        <a class="btn btn-social hasTooltip<?php echo $btn_class; ?>" href="<?php echo (string) $xml -> transifexUrl;?>" target="_blank" title="<?php echo Text::_('COM_TZ_PORTFOLIO_FIND_HELP_TRANSLATE');?>"><i class="fas fa-globe"></i></a>
     <?php if(version_compare(JVERSION, '4.0', 'ge')){?>
     </div>
     <?php }?>

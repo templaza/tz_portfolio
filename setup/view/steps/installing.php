@@ -1,13 +1,13 @@
 <?php
 /*------------------------------------------------------------------------
 
-# TZ Portfolio Plus Extension
+# TZ Portfolio Extension
 
 # ------------------------------------------------------------------------
 
 # Author:    DuongTVTemPlaza
 
-# Copyright: Copyright (C) 2011-2019 TZ Portfolio.com. All Rights Reserved.
+# Copyright: Copyright (C) 2011-2024 TZ Portfolio.com. All Rights Reserved.
 
 # @License - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 

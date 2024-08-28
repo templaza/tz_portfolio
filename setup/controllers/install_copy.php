@@ -1,13 +1,13 @@
 <?php
 /*------------------------------------------------------------------------
 
-# TZ Portfolio Plus Extension
+# TZ Portfolio Extension
 
 # ------------------------------------------------------------------------
 
 # Author:    DuongTVTemPlaza
 
-# Copyright: Copyright (C) 2011-2019 TZ Portfolio.com. All Rights Reserved.
+# Copyright: Copyright (C) 2011-2024 TZ Portfolio.com. All Rights Reserved.
 
 # @License - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 
@@ -24,7 +24,11 @@
 // no direct access
 defined('_JEXEC') or die;
 
-class TZ_Portfolio_PlusSetupControllerInstall_Copy extends TZ_Portfolio_PlusSetupControllerLegacy
+use Joomla\Filesystem\File;
+use Joomla\CMS\Language\Text;
+use Joomla\Filesystem\Folder;
+
+class TZ_PortfolioSetupControllerInstall_Copy extends TZ_PortfolioSetupControllerLegacy
 {
 
     /**
@@ -47,27 +51,29 @@ class TZ_Portfolio_PlusSetupControllerInstall_Copy extends TZ_Portfolio_PlusSetu
         // Where the extracted items should reside
         $path = $tmpPath . '/' . $type;
 
-        // Extract the admin folder
-        $state = $this->tppExtract($archivePath, $path);
+        if(file_exists($archivePath)){
+            // Extract the admin folder
+            $state = $this->tppExtract($archivePath, $path);
 
-        if (!$state) {
-            $this->setInfo(JText::sprintf('COM_TZ_PORTFOLIO_PLUS_SETUP_COPY_ERROR_UNABLE_EXTRACT', $type), false);
-            return $this->output();
+            if (!$state) {
+                $this->setInfo(Text::sprintf('COM_TZ_PORTFOLIO_SETUP_COPY_ERROR_UNABLE_EXTRACT', $type), false);
+                return $this->output();
+            }
         }
 
         // Look for files in this path
-        $files = JFolder::files( $path , '.' , false , true );
+        $files = Folder::files( $path , '.' , false , true );
 
         // Look for folders in this path
-        $folders = JFolder::folders( $path , '.' , false , true );
+        $folders = Folder::folders( $path , '.' , false , true );
 
         // Construct the target path first.
         if ($type == 'admin') {
-            $target = JPATH_ADMINISTRATOR . '/components/com_tz_portfolio_plus';
+            $target = JPATH_ADMINISTRATOR . '/components/com_tz_portfolio';
         }
 
         if ($type == 'site') {
-            $target = JPATH_ROOT . '/components/com_tz_portfolio_plus';
+            $target = JPATH_ROOT . '/components/com_tz_portfolio';
         }
 
         if ($type == 'media') {
@@ -75,8 +81,8 @@ class TZ_Portfolio_PlusSetupControllerInstall_Copy extends TZ_Portfolio_PlusSetu
         }
 
         // Ensure that the target folder exists
-        if (!JFolder::exists($target)) {
-            JFolder::create($target);
+        if (!is_dir($target)) {
+            Folder::create($target);
         }
 
         // Scan for files in the folder
@@ -89,11 +95,10 @@ class TZ_Portfolio_PlusSetupControllerInstall_Copy extends TZ_Portfolio_PlusSetu
             $targetFile = $target . '/' . $name;
 
             // Copy the file
-            JFile::copy($file, $targetFile);
+            File::copy($file, $targetFile);
 
             $totalFiles++;
         }
-
 
         // Scan for folders in this folder
         foreach ($folders as $folder) {
@@ -101,13 +106,19 @@ class TZ_Portfolio_PlusSetupControllerInstall_Copy extends TZ_Portfolio_PlusSetu
             $targetFolder = $target . '/' . $name;
 
             // Copy the folder across
-            JFolder::copy($folder, $targetFolder, '', true);
+            Folder::copy($folder, $targetFolder, '', true);
 
             $totalFolders++;
         }
 
+        // Replace uninstall sql of TZ Portfolio Plus
+        $tzplusPath = JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus';
+        if(file_exists($tzplusPath.'/tz_portfolio_plus.xml')
+            && $type == 'admin'){
+            File::write($tzplusPath.'/install/uninstall.sql', '');
+        }
 
-        $result = $this->getResultObj(JText::sprintf('COM_TZ_PORTFOLIO_PLUS_SETUP_COPY_FILES_SUCCESS', $totalFiles, $totalFolders), true);
+        $result = $this->getResultObj(Text::sprintf('COM_TZ_PORTFOLIO_SETUP_COPY_FILES_SUCCESS', $totalFiles, $totalFolders), true);
 
         return $this->output($result);
     }

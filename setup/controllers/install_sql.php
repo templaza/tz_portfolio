@@ -1,13 +1,13 @@
 <?php
 /*------------------------------------------------------------------------
 
-# TZ Portfolio Plus Extension
+# TZ Portfolio Extension
 
 # ------------------------------------------------------------------------
 
 # Author:    DuongTVTemPlaza
 
-# Copyright: Copyright (C) 2011-2019 TZ Portfolio.com. All Rights Reserved.
+# Copyright: Copyright (C) 2011-2024 TZ Portfolio.com. All Rights Reserved.
 
 # @License - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 
@@ -24,7 +24,13 @@
 // no direct access
 defined('_JEXEC') or die;
 
-class TZ_Portfolio_PlusSetupControllerInstall_Sql extends TZ_Portfolio_PlusSetupControllerLegacy
+use Joomla\CMS\Factory;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Language\Text;
+use Joomla\Filesystem\Folder;
+use Joomla\Database\DatabaseInterface;
+
+class TZ_PortfolioSetupControllerInstall_Sql extends TZ_PortfolioSetupControllerLegacy
 {
 
     /**
@@ -44,32 +50,34 @@ class TZ_Portfolio_PlusSetupControllerInstall_Sql extends TZ_Portfolio_PlusSetup
         // Extract the queries
         $path = $tmpPath . '/sql';
 
-        // Check if this folder exists.
-        if (JFolder::exists($path)) {
-            JFolder::delete($path);
-        }
+        if(file_exists($tmpQueriesPath)){
+            // Check if this folder exists.
+            if (is_dir($path)) {
+                Folder::delete($path);
+            }
 
-        // Extract the archive now
-        $state = $this->tppExtract($tmpQueriesPath, $path);
+            // Extract the archive now
+            $state = $this->tppExtract($tmpQueriesPath, $path);
 
-        if (!$state) {
-            $this->setInfo('COM_TZ_PORTFOLIO_PLUS_SETUP_ERROR_UNABLE_EXTRACT_QUERIES', false);
-            return $this->output();
+            if (!$state) {
+                $this->setInfo('COM_TZ_PORTFOLIO_SETUP_ERROR_UNABLE_EXTRACT_QUERIES', false);
+                return $this->output();
+            }
         }
 
         // Get the list of files in the folder.
-        $queryFiles = JFolder::files($path, '[^demo].+sql', true, true);
+        $queryFiles = Folder::files($path, '[^demo].+sql', true, true);
         if($this->input -> getInt('sample_data', 0)){
             $queryFiles[]  = $path.'/demo.sql';
         }
 
         // When there are no queries file, we should just display a proper warning instead of exit
         if (!$queryFiles) {
-            $this->setInfo('COM_TZ_PORTFOLIO_PLUS_SETUP_ERROR_EMPTY_QUERIES_FOLDER', false);
+            $this->setInfo('COM_TZ_PORTFOLIO_SETUP_ERROR_EMPTY_QUERIES_FOLDER', false);
             return $this->output();
         }
 
-        $db = JFactory::getDBO();
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
         $isMySQL = $this->isMySQL();
         $total = 0;
 
@@ -98,21 +106,25 @@ class TZ_Portfolio_PlusSetupControllerInstall_Sql extends TZ_Portfolio_PlusSetup
 
         $this -> createSectionPermissions();
 
+        if(file_exists(JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/tz_portfolio_plus.xml')){
+            $this -> migratePermissions();
+        }
+
         // lets fix the created_by id
         $this->fixArticlesAuthorId();
 
         $this -> addDefaultStylePreset();
 
-        $this->setInfo(JText::sprintf('COM_EASYBLOG_INSTALLATION_SQL_EXECUTED_SUCCESS', $total), true);
+        $this->setInfo(Text::sprintf('COM_TZ_PORTFOLIO_INSTALLATION_SQL_EXECUTED_SUCCESS', $total), true);
         return $this->output();
     }
 
     public function fixArticlesAuthorId()
     {
         // assuming the user that logged into backed installer will be a superadmin as well.
-        $my = JFactory::getUser();
+        $my = Factory::getUser();
 
-        $db = JFactory::getDBO();
+        $db =  Factory::getContainer()->get(DatabaseInterface::class);
 
         /* Fix author id of articles */
         $query = "update `#__tz_portfolio_plus_content` set `created_by` = " . $my->id;
@@ -137,24 +149,24 @@ class TZ_Portfolio_PlusSetupControllerInstall_Sql extends TZ_Portfolio_PlusSetup
     public function fixAssetCategory()
     {
         $asset  = null;
-        $db     = JFactory::getDbo();
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $query  = $db -> getQuery(true);
 
         $query->select('*');
         $query->from('#__assets');
-        $query->where('name = ' . $db->quote('com_tz_portfolio_plus.category'));
+        $query->where('name = ' . $db->quote('com_tz_portfolio.category'));
         $db->setQuery($query);
 
         if(!$asset = $db->loadObject()){
             $query -> clear();
             $query->select('*');
             $query->from('#__assets');
-            $query->where('name = ' . $db->quote('com_tz_portfolio_plus'));
+            $query->where('name = ' . $db->quote('com_tz_portfolio'));
             $db->setQuery($query);
             $asset = $db->loadObject();
         }
 
-        $assetTbl       = JTable::getInstance('Asset');
+        $assetTbl       = Table::getInstance('Asset');
 
         /* Get all categories with created_user_id is 0 */
         $query -> clear();
@@ -164,14 +176,14 @@ class TZ_Portfolio_PlusSetupControllerInstall_Sql extends TZ_Portfolio_PlusSetup
         $db -> setQuery($query);
         if($categories = $db -> loadObjectList()){
             foreach($categories as $item){
-                $assetTblLoaded = $assetTbl -> loadByName('com_tz_portfolio_plus.category.'.$item -> id);
+                $assetTblLoaded = $assetTbl -> loadByName('com_tz_portfolio.category.'.$item -> id);
                 if($asset && !$assetTblLoaded) {
                     $query->clear();
 
                     $query->insert('#__assets');
                     $query->columns('parent_id, lft, rgt, level, name, title, rules');
                     $query->values($asset->id . ',' . ($asset->lft + 1) . ',' . ($asset->rgt + 1)
-                        . ',2,' . $db->quote('com_tz_portfolio_plus.category.'.$item -> id) . ',' . $db->quote($item -> title)
+                        . ',2,' . $db->quote('com_tz_portfolio.category.'.$item -> id) . ',' . $db->quote($item -> title)
                         . ',' . $db->quote('{}'));
                     $db->setQuery($query);
                     $db->execute();
@@ -183,7 +195,7 @@ class TZ_Portfolio_PlusSetupControllerInstall_Sql extends TZ_Portfolio_PlusSetup
                     }
                 }
 
-                if($new_asset_id) {
+                if(isset($new_asset_id) && !empty($new_asset_id)) {
                     $query->clear();
                     $query->update('#__tz_portfolio_plus_categories');
                     $query->set('asset_id = ' . $new_asset_id);
@@ -198,14 +210,15 @@ class TZ_Portfolio_PlusSetupControllerInstall_Sql extends TZ_Portfolio_PlusSetup
     }
 
     public function addDefaultStylePreset(){
-        $db = JFactory::getDbo();
+        $db = Factory::getDbo();
 
         // Insert default template
         $template_sql   = 'SELECT COUNT(*) FROM #__tz_portfolio_plus_templates';
         $db -> setQuery($template_sql);
+
         if(!$db -> loadResult()){
-            $def_file   = JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/views/template_style/tmpl/default.json';
-            if(\JFile::exists($def_file)){
+            $def_file   = JPATH_ROOT.'/media/com_tz_portfolio/style/default.json';
+            if(file_exists($def_file)){
                 $def_value      = file_get_contents($def_file);
                 $template_sql2  = 'INSERT IGNORE INTO `#__tz_portfolio_plus_templates`(`id`, `title`, `home`, `params`) VALUES(1, \'system - Default\', \'1\',\''.$def_value.'\')';
                 $db -> setQuery($template_sql2);
@@ -216,7 +229,7 @@ class TZ_Portfolio_PlusSetupControllerInstall_Sql extends TZ_Portfolio_PlusSetup
 
     public function alterTable()
     {
-        $db = JFactory::getDbo();
+        $db = Factory::getDbo();
 
         // Add fields for table tz_portfolio_plus_content;
         $fields = $db -> getTableColumns('#__tz_portfolio_plus_content');
@@ -450,17 +463,17 @@ class TZ_Portfolio_PlusSetupControllerInstall_Sql extends TZ_Portfolio_PlusSetup
         $sections   = array('category', 'group', 'tag', 'addon', 'template', 'style');
         if(count($sections)){
             // Get the parent asset id so we have a correct tree.
-            $parentAsset = JTable::getInstance('Asset');
+            $parentAsset = Table::getInstance('Asset');
 
-            if($parentAsset->loadByName('com_tz_portfolio_plus')){
+            if($parentAsset->loadByName('com_tz_portfolio')){
 
                 $parentAssetId = $parentAsset->id;
 
                 // Create permissions for acl
-                $asset  = JTable::getInstance('Asset');
+                $asset  = Table::getInstance('Asset');
 
                 foreach($sections as $section){
-                    $name  = 'com_tz_portfolio_plus.'.$section;
+                    $name  = 'com_tz_portfolio.'.$section;
                     $asset -> reset();
                     if($asset->loadByName($name) !== false){
                         continue;
@@ -470,16 +483,16 @@ class TZ_Portfolio_PlusSetupControllerInstall_Sql extends TZ_Portfolio_PlusSetup
                     $asset -> name  	= $name;
                     switch ($section){
                         default:
-                            $asset -> title  = JText::_('COM_TZ_PORTFOLIO_PLUS_'.strtoupper($section).'S');
+                            $asset -> title  = Text::_('COM_TZ_PORTFOLIO_'.strtoupper($section).'S');
                             break;
                         case 'category':
-                            $asset -> title  = JText::_('COM_TZ_PORTFOLIO_PLUS_CATEGORIES');
+                            $asset -> title  = Text::_('COM_TZ_PORTFOLIO_CATEGORIES');
                             break;
                         case 'group':
-                            $asset -> title  = JText::_('COM_TZ_PORTFOLIO_PLUS_FIELD_GROUPS');
+                            $asset -> title  = Text::_('COM_TZ_PORTFOLIO_FIELD_GROUPS');
                             break;
                         case 'style':
-                            $asset -> title  = JText::_('COM_TZ_PORTFOLIO_PLUS_TEMPLATE_STYLES');
+                            $asset -> title  = Text::_('COM_TZ_PORTFOLIO_TEMPLATE_STYLES');
                             break;
 
                     }
@@ -488,6 +501,63 @@ class TZ_Portfolio_PlusSetupControllerInstall_Sql extends TZ_Portfolio_PlusSetup
                     {
                         $asset->store();
                     }
+                }
+            }
+        }
+    }
+
+    protected function migratePermissions(){
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
+        $query  = $db -> getQuery(true);
+
+        // Get the parent asset id so we have a correct tree.
+        $tblAsset       = Table::getInstance('Asset');
+        $tblParentAsset = Table::getInstance('Asset');
+
+        $query -> select('a.*');
+        $query -> from($tblAsset -> getTableName().' AS a');
+        $query -> where('a.name LIKE '.$db -> quote('com_tz_portfolio_plus%'));
+        $query -> order('a.parent_id ASC');
+
+        $db -> setQuery($query);
+
+        if($assets = $db -> loadObjectList()){
+            foreach($assets as $asset){
+                $tblAsset -> reset();
+                $tblAsset -> set('id', 0);
+
+                $tblParentAsset -> reset();
+                $tblParentAsset -> set('id', 0);
+
+                $newAssetName   = preg_replace('/^com_tz_portfolio_plus/',
+                    'com_tz_portfolio', $asset -> name);
+
+                if(!$tblAsset -> loadByName($newAssetName)){
+                    /* Get parent asset */
+                    $parentId   = $asset -> parent_id;
+
+                    if($tblParentAsset -> load($asset -> parent_id)){
+                        $parentId   = $tblParentAsset -> parent_id;
+
+                        if(preg_match('/^com_tz_portfolio_plus/', $tblParentAsset -> name)){
+                            $parentName   = preg_replace('/^com_tz_portfolio_plus/',
+                                'com_tz_portfolio', $tblParentAsset -> name);
+                            $tblParentAsset -> reset();
+                            $tblParentAsset -> id   = 0;
+                            if($tblParentAsset -> loadByName($parentName)){
+                                $parentId   = $tblParentAsset -> id;
+                            }
+                        }
+                    }
+                    /* Create asset */
+                    $tblAsset->setLocation($parentId, 'last-child');
+
+                    $tblAsset -> parent_id  = $parentId;
+                    $tblAsset -> name       = $newAssetName;
+                    $tblAsset -> rules      = $asset -> rules;
+                    $tblAsset -> title      = $asset -> title;
+
+                    $tblAsset -> store();
                 }
             }
         }

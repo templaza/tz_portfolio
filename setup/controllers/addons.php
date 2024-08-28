@@ -1,13 +1,13 @@
 <?php
 /*------------------------------------------------------------------------
 
-# TZ Portfolio Plus Extension
+# TZ Portfolio Extension
 
 # ------------------------------------------------------------------------
 
 # Author:    DuongTVTemPlaza
 
-# Copyright: Copyright (C) 2011-2019 TZ Portfolio.com. All Rights Reserved.
+# Copyright: Copyright (C) 2011-2024 TZ Portfolio.com. All Rights Reserved.
 
 # @License - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 
@@ -24,7 +24,9 @@
 // no direct access
 defined('_JEXEC') or die;
 
-class TZ_Portfolio_PlusSetupControllerAddons extends TZ_Portfolio_PlusSetupControllerLegacy
+use Joomla\Filesystem\Folder;
+
+class TZ_PortfolioSetupControllerAddons extends TZ_PortfolioSetupControllerLegacy
 {
     public function lists()
     {
@@ -38,7 +40,7 @@ class TZ_Portfolio_PlusSetupControllerAddons extends TZ_Portfolio_PlusSetupContr
 
         $modulesExtractPath = $path . '/modules';
         $pluginsExtractPath = $path . '/plugins';
-        $addonsExtractPath  = $path . '/addons';
+        $addonsExtractPath  = $path . '/add-ons';
         $stylesExtractPath  = $path . '/styles';
 
         $install    = new stdClass();
@@ -87,24 +89,30 @@ class TZ_Portfolio_PlusSetupControllerAddons extends TZ_Portfolio_PlusSetupContr
     {
         $zip = $path . '/modules.zip';
 
-        $state = $this->tppExtract($zip, $tmp);
+        if(file_exists($zip)){
+            $state = $this->tppExtract($zip, $tmp);
+    
+            // @TODO: Return errors
+            if (!$state) {
+                return false;
+            }
+        }
 
-        // @TODO: Return errors
-        if (!$state) {
+        if(!is_dir($tmp)){
             return false;
         }
 
         // Get a list of modules
-        $items = \JFolder::folders($tmp, '.', false, true);
+        $items = Folder::folders($tmp, '.', false, true);
 
         $modules = array();
 
         $modulesProtect = array(
-            'mod_tz_portfolio_plus_tags',
-            'mod_tz_portfolio_plus_filter',
-            'mod_tz_portfolio_plus_portfolio',
-            'mod_tz_portfolio_plus_categories',
-            'mod_tz_portfolio_plus_articles_archive'
+            'mod_tz_portfolio',
+            'mod_tz_portfolio_tags',
+            'mod_tz_portfolio_filter',
+            'mod_tz_portfolio_categories',
+            'mod_tz_portfolio_articles_archive'
         );
 
         foreach ($items as $item) {
@@ -143,20 +151,26 @@ class TZ_Portfolio_PlusSetupControllerAddons extends TZ_Portfolio_PlusSetupContr
     {
         $zip = $path . '/plugins.zip';
 
-        $state = $this->tppExtract($zip, $tmp);
-
-        // @TODO: Return errors
-        if (!$state) {
+        if(file_exists($zip)){
+            $state = $this->tppExtract($zip, $tmp);
+    
+            // @TODO: Return errors
+            if (!$state) {
+                return false;
+            }
+        }
+        
+        if(!is_dir($tmp)){
             return false;
         }
 
         // Get a list of plugin groups
-        $groups = JFolder::folders($tmp, '.', false, true);
+        $groups = Folder::folders($tmp, '.', false, true);
 
         $plugins = array();
 
         $pluginsProtect = array(
-            'plg_system_tz_portfolio_plus',
+            'plg_system_tz_portfolio',
             'plg_quickicon_tz_portfolio_plus'
         );
 
@@ -164,7 +178,7 @@ class TZ_Portfolio_PlusSetupControllerAddons extends TZ_Portfolio_PlusSetupContr
             $groupTitle = basename($group);
 
             // Get a list of items in each groups
-            $items = JFolder::folders($group, '.', false, true);
+            $items = Folder::folders($group, '.', false, true);
 
             foreach ($items as $item) {
                 $element = basename($item);
@@ -203,15 +217,21 @@ class TZ_Portfolio_PlusSetupControllerAddons extends TZ_Portfolio_PlusSetupContr
     {
         $zip = $path . '/addons.zip';
 
-        $state = $this->tppExtract($zip, $tmp);
+        if(file_exists($zip)){
+            $state = $this->tppExtract($zip, $tmp);
 
-        // @TODO: Return errors
-        if (!$state) {
+            // @TODO: Return errors
+            if (!$state) {
+                return false;
+            }
+        }
+
+        if(!is_dir($tmp)){
             return false;
         }
 
         // Get a list of plugin groups
-        $groups = JFolder::folders($tmp, '.', false, true);
+        $groups = Folder::folders($tmp, '.', false, true);
 
         $addons = array();
 
@@ -231,7 +251,7 @@ class TZ_Portfolio_PlusSetupControllerAddons extends TZ_Portfolio_PlusSetupContr
             $groupTitle = basename($group);
 
             // Get a list of items in each groups
-            $items = JFolder::folders($group, '.', false, true);
+            $items = Folder::folders($group, '.', false, true);
 
             foreach ($items as $item) {
                 $element = basename($item);
@@ -247,7 +267,7 @@ class TZ_Portfolio_PlusSetupControllerAddons extends TZ_Portfolio_PlusSetupContr
                 $attribs    = $parser -> attributes();
                 $type       = (string) $attribs -> type;
 
-                if(!$type || ($type && $type != 'tz_portfolio_plus-plugin' && $type != 'tz_portfolio_plus-addon')){
+                if(!$type || ($type && $type != 'tz_portfolio_plus-plugin' && $type != 'tz_portfolio-addon')){
                     continue;
                 }
 
@@ -280,15 +300,21 @@ class TZ_Portfolio_PlusSetupControllerAddons extends TZ_Portfolio_PlusSetupContr
 
         $zip = $path . '/styles.zip';
 
-        $state = $this->tppExtract($zip, $tmp);
+        if(file_exists($zip)){
+            $state = $this->tppExtract($zip, $tmp);
 
-        // @TODO: Return errors
-        if (!$state) {
+            // @TODO: Return errors
+            if (!$state) {
+                return false;
+            }
+        }
+
+        if(!is_dir($tmp)){
             return false;
         }
 
         // Get a list of modules
-        $items = JFolder::folders($tmp, '.', false, true);
+        $items = Folder::folders($tmp, '.', false, true);
 
         $styles = array();
 
@@ -312,7 +338,7 @@ class TZ_Portfolio_PlusSetupControllerAddons extends TZ_Portfolio_PlusSetupContr
             $attribs    = $parser -> attributes();
             $type       = (string) $attribs -> type;
 
-            if(!$type || ($type && $type != 'tz_portfolio_plus-template' & $type != 'tz_portfolio_plus-style')){
+            if(!$type || ($type && $type != 'tz_portfolio_plus-template' & $type != 'tz_portfolio-style')){
                 continue;
             }
 

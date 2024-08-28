@@ -1,32 +1,40 @@
 <?php
 /*------------------------------------------------------------------------
 
-# TZ Portfolio Plus Extension
+# TZ Portfolio Extension
 
 # ------------------------------------------------------------------------
 
-# author    DuongTVTemPlaza
+# Author:    DuongTVTemPlaza
 
-# copyright Copyright (C) 2015 templaza.com. All Rights Reserved.
+# Copyright: Copyright (C) 2011-2024 TZ Portfolio.com. All Rights Reserved.
 
-# @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
+# @License - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 
-# Websites: http://www.templaza.com
+# Website: http://www.tzportfolio.com
 
-# Technical Support:  Forum - http://templaza.com/Forum
+# Technical Support:  Forum - https://www.tzportfolio.com/help/forum.html
+
+# Family website: http://www.templaza.com
+
+# Family Support: Forum - https://www.templaza.com/Forums.html
 
 -------------------------------------------------------------------------*/
 
 // No direct access
 defined('_JEXEC') or die;
 
-class TZ_Portfolio_PlusSetupControllerLicense extends TZ_Portfolio_PlusSetupControllerLegacy
+use Joomla\Filesystem\File;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Http\HttpFactory;
+
+class TZ_PortfolioSetupControllerLicense extends TZ_PortfolioSetupControllerLegacy
 {
 
     public function verify()
     {
 
-        $key = $this->input->get('token_key', COM_TZ_PORTFOLIO_PLUS_SETUP_TOKEN_KEY, 'default');
+        $key = $this->input->get('token_key', COM_TZ_PORTFOLIO_SETUP_TOKEN_KEY, 'default');
         $result = new stdClass();
 
         if (!$key) {
@@ -38,23 +46,23 @@ class TZ_Portfolio_PlusSetupControllerLicense extends TZ_Portfolio_PlusSetupCont
         $license = $this -> getLicense();
         if($license){
             $post   = array('license' => $license -> reference, 'produce' => 'tz-portfolio-plus');
-            if($activeResponse = JHttpFactory::getHttp() -> post(COM_TZ_PORTFOLIO_PLUS_SETUP_ACTIVE, $post)){
+            if($activeResponse = HttpFactory::getHttp() -> post(COM_TZ_PORTFOLIO_SETUP_ACTIVE, $post)){
                 $active = $activeResponse -> body;
                 $active = json_decode($active);
                 if($active -> state == 400 || ($active -> state == 200 && (!isset($active -> license) ||
                             (isset($active -> license) && !$active -> license)))){
                     $result->state = 400;
                     $result -> type     = 'error';
-                    $result->message = JText::_('COM_TZ_PORTFOLIO_PLUS_SETUP_LICENSE_EXPIRED');
+                    $result->message = Text::_('COM_TZ_PORTFOLIO_SETUP_LICENSE_EXPIRED');
                     return $this->output($result);
                 }
             }
         }
 
-        if(JFile::exists(COM_TZ_PORTFOLIO_PLUS_SETUP_LICENCE_PATH.'/license.php')
+        if(file_exists(COM_TZ_PORTFOLIO_SETUP_LICENCE_PATH.'/license.php')
             && (!$license || ($license && (!isset($license -> reference) || (isset($license -> reference)
                             && !$license -> reference))))){
-            JFile::delete(COM_TZ_PORTFOLIO_PLUS_SETUP_LICENCE_PATH.'/license.php');
+            File::delete(COM_TZ_PORTFOLIO_SETUP_LICENCE_PATH.'/license.php');
         }
 
         // Verify the key
@@ -62,7 +70,7 @@ class TZ_Portfolio_PlusSetupControllerLicense extends TZ_Portfolio_PlusSetupCont
 
         if ($response === false) {
             $result->state = 400;
-            $result->message = JText::_('COM_TZ_PORTFOLIO_PLUS_SETUP_UNABLE_TO_VERIFY');
+            $result->message = Text::_('COM_TZ_PORTFOLIO_SETUP_UNABLE_TO_VERIFY');
             return $this->output($result);
         }
 
@@ -90,7 +98,7 @@ class TZ_Portfolio_PlusSetupControllerLicense extends TZ_Portfolio_PlusSetupCont
         $post       = array('token_key' => $key, 'produce' => 'tz-portfolio-plus');
         $header     = array();
 
-        if($response = JHttpFactory::getHttp() -> post(COM_TZ_PORTFOLIO_PLUS_SETUP_VERIFY, $post,
+        if($response = HttpFactory::getHttp() -> post(COM_TZ_PORTFOLIO_SETUP_VERIFY, $post,
             $header)){
             if($response -> code == 200) {
                 return json_decode($response->body);
@@ -106,9 +114,9 @@ class TZ_Portfolio_PlusSetupControllerLicense extends TZ_Portfolio_PlusSetupCont
      * */
     public function getLicense(){
 
-        $file    = COM_TZ_PORTFOLIO_PLUS_SETUP_LICENCE_PATH.'/license.php';
+        $file    = COM_TZ_PORTFOLIO_SETUP_LICENCE_PATH.'/license.php';
 
-        if(JFile::exists($file)){
+        if(file_exists($file)){
             $license    = file_get_contents($file);
             $license    = str_replace('<?php die("Access Denied"); ?>#x#', '', $license);
             $license    = trim($license);

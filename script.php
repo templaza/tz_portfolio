@@ -1,19 +1,23 @@
 <?php
 /*------------------------------------------------------------------------
 
-# TZ Portfolio Plus Extension
+# TZ Portfolio Extension
 
 # ------------------------------------------------------------------------
 
-# author    DuongTVTemPlaza
+# Author:    DuongTVTemPlaza
 
-# copyright Copyright (C) 2015 templaza.com. All Rights Reserved.
+# Copyright: Copyright (C) 2011-2024 TZ Portfolio.com. All Rights Reserved.
 
-# @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
+# @License - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 
-# Websites: http://www.templaza.com
+# Website: http://www.tzportfolio.com
 
-# Technical Support:  Forum - http://templaza.com/Forum
+# Technical Support:  Forum - https://www.tzportfolio.com/help/forum.html
+
+# Family website: http://www.templaza.com
+
+# Family Support: Forum - https://www.templaza.com/Forums.html
 
 -------------------------------------------------------------------------*/
 
@@ -21,31 +25,31 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Language\Text;
+use Joomla\Filesystem\Folder;
+use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Language\LanguageHelper;
 
-jimport('joomla.filesytem.file');
-jimport('joomla.filesytem.folder');
-jimport('joomla.installer.installer');
-
-class com_tz_portfolio_plusInstallerScript{
+class com_tz_portfolioInstallerScript{
 
     protected $install_new  = false;
 
     public function postflight($type, $parent){
-        // Display information when installed
-        $this -> installationResult();
-
+        if($type != 'uninstall') {
+            // Display information when installed
+            $this->installationResult();
+        }
     }
 
     public function uninstall($parent){
-        $mediaFolder    = 'tz_portfolio_plus';
+        $mediaFolder    = 'com_tz_portfolio';
         $mediaFolderPath    = JPATH_SITE.'/'.'media'.'/'.$mediaFolder;
-        if(Folder::exists($mediaFolderPath)){
+        if(is_dir($mediaFolderPath)){
             Folder::delete($mediaFolderPath);
         }
         $imageFolderPath    = JPATH_SITE.'/'.'images'.'/'.$mediaFolder;
-        if(Folder::exists($imageFolderPath)){
+        if(is_dir($imageFolderPath)){
             Folder::delete($imageFolderPath);
         }
 
@@ -64,16 +68,17 @@ class com_tz_portfolio_plusInstallerScript{
                 $mname = (string)$module->attributes() -> module;
                 $client = (string)$module->attributes() -> client;
 
-                $query = "SELECT `extension_id` FROM #__extensions WHERE `type`='module' AND `element` = ".$db->Quote($mname)."";
+                $query = "SELECT `extension_id` FROM #__extensions WHERE `type`='module' AND `element` = "
+                    .$db->quote($mname);
                 $db->setQuery($query);
                 $IDs = $db->loadColumn();
                 if (count($IDs)) {
                     foreach ($IDs as $id) {
-                        $installer = new JInstaller;
+                        $installer = new Installer;
                         $result = $installer->uninstall('module', $id);
                     }
+                    $status->modules[] = array ('name'=>$mname, 'client'=>$client, 'result'=>$result);
                 }
-                $status->modules[] = array ('name'=>$mname, 'client'=>$client, 'result'=>$result);
             }
         }
 
@@ -89,19 +94,13 @@ class com_tz_portfolio_plusInstallerScript{
                 $IDs = $db->loadColumn();
                 if (count($IDs)) {
                     foreach ($IDs as $id) {
-                        $installer = new JInstaller;
+                        $installer = new Installer;
                         $result = $installer->uninstall('plugin', $id);
                     }
+                    $status->plugins[] = array ('name'=>$pname, 'group'=>$pgroup, 'result'=>$result);
                 }
-                $status->plugins[] = array ('name'=>$pname, 'group'=>$pgroup, 'result'=>$result);
             }
         }
-
-        $query = $db -> getQuery(true);
-        $query -> delete('#__assets');
-        $query -> where('name LIKE '.$db -> quote('com_tz_portfolio_plus').'%');
-        $db -> setQuery($query);
-        $db -> execute();
 
         $this -> uninstallationResult($status);
     }
@@ -151,36 +150,36 @@ class com_tz_portfolio_plusInstallerScript{
         </style>
         <?php
         $lang = Factory::getApplication() -> getLanguage();
-        $lang -> load('com_tz_portfolio_plus', JPATH_ADMINISTRATOR);
+        $lang -> load('com_tz_portfolio', JPATH_ADMINISTRATOR);
         ?>
         <div class="tpp-installation-status">
             <div class="box-head">
                 <div class="logo">
-                    <img src="<?php echo JUri::root().'/administrator/components/com_tz_portfolio_plus/setup/assets/images/logo.png';?>" alt="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS'); ?>"/>
+                    <img src="<?php echo Uri::root().'/administrator/components/com_tz_portfolio/setup/assets/images/logo.png';?>" alt="<?php echo Text::_('COM_TZ_PORTFOLIO'); ?>"/>
                 </div>
-                <h2 class="title"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS'); ?><small><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_DESCRIPTION'); ?></small></h2>
+                <h2 class="title"><?php echo Text::_('COM_TZ_PORTFOLIO'); ?><small><?php echo Text::_('COM_TZ_PORTFOLIO_DESCRIPTION'); ?></small></h2>
             </div>
             <div class="box-content">
-                <h3><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_THANKS_YOU_FOR_USING'); ?></h3>
-                <p><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_THANKS_YOU_FOR_USING_DESC'); ?></p>
-                <a href="<?php echo JUri::root();?>administrator/index.php?option=com_tz_portfolio_plus" class="btn btn-success"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_CONTINUE_WITH_INSTALLATION'); ?></a>
+                <h3><?php echo Text::_('COM_TZ_PORTFOLIO_THANKS_YOU_FOR_USING'); ?></h3>
+                <p><?php echo Text::_('COM_TZ_PORTFOLIO_THANKS_YOU_FOR_USING_DESC'); ?></p>
+                <a href="<?php echo Uri::root();?>administrator/index.php?option=com_tz_portfolio" class="btn btn-success text-white"><?php echo Text::_('COM_TZ_PORTFOLIO_CONTINUE_WITH_INSTALLATION'); ?></a>
             </div>
         </div>
     <?php
     }
     function uninstallationResult($status){
         $lang   = Factory::getApplication() -> getLanguage();
-        $lang -> load('com_tz_portfolio_plus', JPATH_ADMINISTRATOR);
+        $lang -> load('com_tz_portfolio', JPATH_ADMINISTRATOR);
         $rows   = 0;
         ?>
-        <h2 style="margin-top: 20px;"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS'); ?></h2>
-        <span style="font-weight: normal"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_DESCRIPTION');?></span>
-        <h3 style="margin-top: 20px;"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_REMOVE_STATUS'); ?></h3>
+        <h2 style="margin-top: 20px;"><?php echo Text::_('COM_TZ_PORTFOLIO'); ?></h2>
+        <span style="font-weight: normal"><?php echo Text::_('COM_TZ_PORTFOLIO_DESCRIPTION');?></span>
+        <h3 style="margin-top: 20px;"><?php echo Text::_('COM_TZ_PORTFOLIO_REMOVE_STATUS'); ?></h3>
         <table class="table table-striped table-condensed">
             <thead>
             <tr>
-                <th class="title" colspan="2"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_EXTENSION'); ?></th>
-                <th width="30%"><?php echo JText::_('JSTATUS'); ?></th>
+                <th class="title" colspan="2"><?php echo Text::_('COM_TZ_PORTFOLIO_EXTENSION'); ?></th>
+                <th width="30%"><?php echo Text::_('JSTATUS'); ?></th>
             </tr>
             </thead>
             <tfoot>
@@ -190,13 +189,13 @@ class com_tz_portfolio_plusInstallerScript{
             </tfoot>
             <tbody>
             <tr class="row0">
-                <td class="key" colspan="2"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS').' '.JText::_('COM_TZ_PORTFOLIO_PLUS_COMPONENT'); ?></td>
-                <td><span style="color: green; font-weight: bold;"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_REMOVED'); ?></span></td>
+                <td class="key" colspan="2"><?php echo Text::_('COM_TZ_PORTFOLIO').' '.Text::_('COM_TZ_PORTFOLIO_COMPONENT'); ?></td>
+                <td><span style="color: green; font-weight: bold;"><?php echo Text::_('COM_TZ_PORTFOLIO_REMOVED'); ?></span></td>
             </tr>
             <?php if (count($status->modules)): ?>
                 <tr>
-                    <th><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_MODULE'); ?></th>
-                    <th><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_CLIENT'); ?></th>
+                    <th><?php echo Text::_('COM_TZ_PORTFOLIO_MODULE'); ?></th>
+                    <th><?php echo Text::_('COM_TZ_PORTFOLIO_CLIENT'); ?></th>
                     <th></th>
                 </tr>
                 <?php foreach ($status->modules as $module): ?>
@@ -206,17 +205,17 @@ class com_tz_portfolio_plusInstallerScript{
                     endif;
                     ?>
                     <tr class="row<?php echo (++ $rows % 2); ?>">
-                        <td class="key"><?php echo JText::_($module['name']); ?></td>
+                        <td class="key"><?php echo Text::_($module['name']); ?></td>
                         <td class="key"><?php echo ucfirst($module['client']); ?></td>
-                        <td><span style="color: green; font-weight: bold;"><?php echo ($module['result'])?JText::_('COM_TZ_PORTFOLIO_PLUS_REMOVED'):JText::_('COM_TZ_PORTFOLIO_PLUS_NOT_REMOVED'); ?></span></td>
+                        <td><span style="color: green; font-weight: bold;"><?php echo ($module['result'])?Text::_('COM_TZ_PORTFOLIO_REMOVED'):Text::_('COM_TZ_PORTFOLIO_NOT_REMOVED'); ?></span></td>
                     </tr>
                 <?php endforeach; ?>
             <?php endif; ?>
 
             <?php if (count($status->plugins)): ?>
                 <tr>
-                    <th><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_PLUGIN'); ?></th>
-                    <th><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_GROUP'); ?></th>
+                    <th><?php echo Text::_('COM_TZ_PORTFOLIO_PLUGIN'); ?></th>
+                    <th><?php echo Text::_('COM_TZ_PORTFOLIO_GROUP'); ?></th>
                     <th></th>
                 </tr>
                 <?php foreach ($status->plugins as $plugin): ?>
@@ -226,24 +225,24 @@ class com_tz_portfolio_plusInstallerScript{
                     endif;
                     ?>
                     <tr class="row<?php echo (++ $rows % 2); ?>">
-                        <td class="key"><?php echo JText::_(strtoupper('plg_'.$plugin['group'].'_'.$plugin['name'])); ?></td>
+                        <td class="key"><?php echo Text::_(strtoupper('plg_'.$plugin['group'].'_'.$plugin['name'])); ?></td>
                         <td class="key"><?php echo ucfirst($plugin['group']); ?></td>
-                        <td><span style="color: green; font-weight: bold;"><?php echo ($plugin['result'])?JText::_('COM_TZ_PORTFOLIO_PLUS_REMOVED'):JText::_('COM_TZ_PORTFOLIO_PLUS_NOT_REMOVED'); ?></span></td>
+                        <td><span style="color: green; font-weight: bold;"><?php echo ($plugin['result'])?Text::_('COM_TZ_PORTFOLIO_REMOVED'):Text::_('COM_TZ_PORTFOLIO_NOT_REMOVED'); ?></span></td>
                     </tr>
                 <?php endforeach; ?>
             <?php endif; ?>
 
             <?php if (isset($status -> languages) AND count($status->languages)): ?>
                 <tr>
-                    <th><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_LANGUAGES'); ?></th>
-                    <th><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_COUNTRY'); ?></th>
+                    <th><?php echo Text::_('COM_TZ_PORTFOLIO_LANGUAGES'); ?></th>
+                    <th><?php echo Text::_('COM_TZ_PORTFOLIO_COUNTRY'); ?></th>
                     <th></th>
                 </tr>
                 <?php foreach ($status->languages as $language): ?>
                     <tr class="row<?php echo (++ $rows % 2); ?>">
                         <td class="key"><?php echo ucfirst($language['language']); ?></td>
                         <td class="key"><?php echo ucfirst($language['country']); ?></td>
-                        <td><span style="color: green; font-weight: bold;"><?php echo ($language['result'])?JText::_('COM_TZ_PORTFOLIO_PLUS_REMOVED'):JText::_('COM_TZ_PORTFOLIO_PLUS_NOT_REMOVED'); ?></span></td>
+                        <td><span style="color: green; font-weight: bold;"><?php echo ($language['result'])?Text::_('COM_TZ_PORTFOLIO_REMOVED'):Text::_('COM_TZ_PORTFOLIO_NOT_REMOVED'); ?></span></td>
                     </tr>
                 <?php endforeach; ?>
             <?php endif; ?>

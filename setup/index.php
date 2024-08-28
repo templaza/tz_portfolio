@@ -1,13 +1,13 @@
 <?php
 /*------------------------------------------------------------------------
 
-# TZ Portfolio Plus Extension
+# TZ Portfolio Extension
 
 # ------------------------------------------------------------------------
 
 # Author:    DuongTVTemPlaza
 
-# Copyright: Copyright (C) 2011-2019 TZ Portfolio.com. All Rights Reserved.
+# Copyright: Copyright (C) 2011-2024 TZ Portfolio.com. All Rights Reserved.
 
 # @License - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 
@@ -24,16 +24,23 @@
 // no direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Component\ComponentHelper;
+
 /* Require defines */
 require_once (dirname(__FILE__).'/includes/defines.php');
 require_once (dirname(__FILE__).'/includes/string.php');
 
-jimport('joomla.filesystem.file');
-jimport('joomla.filesystem.folder');
-
 // Get application
-$app = JFactory::getApplication();
+$app = Factory::getApplication();
 $input = $app->input;
+
+$lang = Factory::getApplication() -> getLanguage();
+$lang -> load('com_tz_portfolio', JPATH_ADMINISTRATOR);
 
 // Ensure that the Joomla sections don't appear.
 $input->set('tmpl', 'component');
@@ -43,16 +50,17 @@ $cancelSetup = $input->get('cancelSetup', false, 'bool');
 
 if($cancelSetup){
     // Remove folder installation
-    if(JFolder::exists(COM_TZ_PORTFOLIO_PLUS_SETUP_PATH)){
-        JFolder::delete(COM_TZ_PORTFOLIO_PLUS_SETUP_PATH);
+    if(is_dir(COM_TZ_PORTFOLIO_SETUP_PATH)){
+        Folder::delete(COM_TZ_PORTFOLIO_SETUP_PATH);
     }
 
     // Redirect the user back to TZ Portfolio Plus
-    return $app->redirect('index.php?option=com_tz_portfolio_plus');
+    return $app->redirect('index.php?option=com_tz_portfolio');
 }
 
 // Determines if the current mode is re-install
-$reinstall = $input->get('reinstall', false, 'bool') || $input->get('install', false, 'bool');
+$reinstall = $input->get('reinstall', false, 'bool') ||
+    $input->get('install', false, 'bool');
 
 // If the mode is update, we need to get the latest version
 $update = $input->get('update', false, 'bool');
@@ -61,11 +69,15 @@ $update = $input->get('update', false, 'bool');
 $task = $input->get('task', null);
 
 if($task){
-    JLoader::import('com_tz_portfolio_plus.setup.controllers.legacy',
-        JPATH_ADMINISTRATOR.'/components');
 
-    $controller	= JControllerLegacy::getInstance('TZ_Portfolio_PlusSetup',
-        array('base_path' => COM_TZ_PORTFOLIO_PLUS_SETUP_PATH));
+    require_once JPATH_ADMINISTRATOR.'/components/com_tz_portfolio/setup/controllers/legacy.php';
+
+//    JLoader::registerNamespace('\TemPlaza\Component\TZ_Portfolio\Setup',
+//        JPATH_ADMINISTRATOR.'/components/com_tz_portfolio/setup/src');
+
+    $controller	= \Joomla\CMS\MVC\Controller\BaseController::getInstance('TZ_PortfolioSetup',
+        array('base_path' => COM_TZ_PORTFOLIO_SETUP_PATH));
+
     if (!empty($controller)) {
         $controller->execute($input->get('task'));
         $controller->redirect();
@@ -73,16 +85,65 @@ if($task){
 }
 
 //Initialize steps
-$contents = file_get_contents(COM_TZ_PORTFOLIO_PLUS_SETUP_CONFIG . '/install.json');
+$contents = file_get_contents(COM_TZ_PORTFOLIO_SETUP_CONFIG . '/install.json');
 $steps = json_decode($contents);
+
+if(ComponentHelper::isInstalled('com_tz_portfolio_plus')
+    || PluginHelper::getPlugin('system','tz_portfolio_plus')){
+//    array_shift($steps);
+//    $lastStep   = array_pop($steps);
+//    $lastStep -> index++;
+    $lastStep   = end($steps);
+    array_push($steps,
+        (object)[
+            "index"     => $lastStep -> index + 1,
+            "title"     => "COM_TZ_PORTFOLIO_INSTALLATION_DISABLE_TZ_PORTFOLIO_PLUS",
+            "desc"      => "COM_TZ_PORTFOLIO_INSTALLATION_DISABLE_TZ_PORTFOLIO_PLUS_DESC",
+            "template"  => "disable",
+        ]);
+}
 
 // Workflow
 $active = $input->get('active', 0, 'default');
 
 if ($active === 'complete') {
+    if($input -> get('disable_tz_portfolio_plus') && (ComponentHelper::isInstalled('com_tz_portfolio_plus')
+            || PluginHelper::getPlugin('system','tz_portfolio_plus'))){
+
+        $db     = Factory::getDbo();
+
+        // Disable TZ Portfolio Plus component
+        if(ComponentHelper::isInstalled('com_tz_portfolio_plus')){
+            $query  = $db -> getQuery(true);
+
+            $query -> update('#__extensions');
+            $query -> set('enabled = 0');
+            $query -> where('type='.$db -> quote('component'));
+            $query -> where('element='.$db -> quote('com_tz_portfolio_plus'));
+
+            $db -> setQuery($query);
+            $db -> execute();
+        }
+
+        // Disable System TZ Portfolio Plus plugin
+        if(PluginHelper::getPlugin('system','tz_portfolio_plus')){
+
+            $query  = $db -> getQuery(true);
+
+            $query -> update('#__extensions');
+            $query -> set('enabled = 0');
+            $query -> where('type='.$db -> quote('plugin'));
+            $query -> where('folder='.$db -> quote('system'));
+            $query -> where('element='.$db -> quote('tz_portfolio_plus'));
+
+            $db -> setQuery($query);
+            $db -> execute();
+        }
+    }
+
     $activeStep = new stdClass();
 
-    $activeStep->title = JText::_('COM_EASYBLOG_INSTALLER_INSTALLATION_COMPLETED');
+    $activeStep->title = Text::_('COM_TZ_PORTFOLIO_INSTALLER_INSTALLATION_COMPLETED');
     $activeStep->template = 'complete';
 
     // Assign class names to the step items.
@@ -117,7 +178,7 @@ if ($active === 'complete') {
         $curl = is_callable('curl_init');
 
         // MySQL info
-        $db = JFactory::getDBO();
+        $db = Factory::getDBO();
         $mysqlVersion = $db->getVersion();
 
         // PHP info
@@ -174,13 +235,13 @@ if ($active === 'complete') {
 
             // The only proper way to test this is to not use is_writable
             $contents = "<body></body>";
-            $state = JFile::write($file->path . '/tmp.html', $contents);
+            $state = File::write($file->path . '/tmp.html', $contents);
 
             // Initialize this to false by default
             $file->writable = false;
 
             if ($state) {
-                JFile::delete($file->path . '/tmp.html');
+                File::delete($file->path . '/tmp.html');
 
                 $file->writable = true;
             }
@@ -208,11 +269,11 @@ if ($active === 'complete') {
             $errorStep->template = 'requirements';
             $activeStep = $errorStep;
 
-            require(COM_TZ_PORTFOLIO_PLUS_SETUP_VIEW_PATH . '/default.php');
+            require(COM_TZ_PORTFOLIO_SETUP_VIEW_PATH . '/default.php');
             return;
         }
     }
 }
 
-require(COM_TZ_PORTFOLIO_PLUS_SETUP_VIEW_PATH . '/default.php');
+require(COM_TZ_PORTFOLIO_SETUP_VIEW_PATH . '/default.php');
 exit;

@@ -1,13 +1,13 @@
 <?php
 /*------------------------------------------------------------------------
 
-# TZ Portfolio Plus Extension
+# TZ Portfolio Extension
 
 # ------------------------------------------------------------------------
 
 # Author:    DuongTVTemPlaza
 
-# Copyright: Copyright (C) 2011-2019 TZ Portfolio.com. All Rights Reserved.
+# Copyright: Copyright (C) 2011-2024 TZ Portfolio.com. All Rights Reserved.
 
 # @License - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 
@@ -24,16 +24,22 @@
 // no direct access
 defined('_JEXEC') or die;
 
-class TZ_Portfolio_PlusSetupControllerInstall extends TZ_Portfolio_PlusSetupControllerLegacy
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
+use Joomla\CMS\Http\HttpFactory;
+
+class TZ_PortfolioSetupControllerInstall extends TZ_PortfolioSetupControllerLegacy
 {
     public function activePro(){
 
-        $uri        = JUri::getInstance();
+        $uri        = Uri::getInstance();
         $license    = $this -> input -> get('license');
         $header     = array('content-type' => 'text/x-json; charset=UTF-8');
-        $lang       = JFactory::getApplication('administrator') -> getLanguage();
+        $lang       = Factory::getApplication('administrator') -> getLanguage();
 
-        $response = \JHttpFactory::getHttp()->post(COM_TZ_PORTFOLIO_PLUS_SETUP_ACTIVE,
+        $response = HttpFactory::getHttp()->post(COM_TZ_PORTFOLIO_SETUP_ACTIVE,
             array(
                 'license' => $license,
                 'language'  => ($lang -> getTag()),
@@ -53,15 +59,15 @@ class TZ_Portfolio_PlusSetupControllerInstall extends TZ_Portfolio_PlusSetupCont
                 $lic    = $result -> license;
                 $data   = '<?php die("Access Denied"); ?>#x#' . serialize($lic);
 
-                $licPath    = COM_TZ_PORTFOLIO_PLUS_SETUP_LICENCE_PATH.'/license.php';
+                $licPath    = COM_TZ_PORTFOLIO_SETUP_LICENCE_PATH.'/license.php';
 
-                if(JFile::exists($licPath)){
-                    JFile::delete($licPath);
+                if(file_exists($licPath)){
+                    File::delete($licPath);
                 }
 
-                JFile::write($licPath, $data);
+                File::write($licPath, $data);
 
-                $this->setInfo('COM_TZ_PORTFOLIO_PLUS_SETUP_ACTIVE_PRO_VERSION_SUCCESS', true, array('license' => $license));
+                $this->setInfo('COM_TZ_PORTFOLIO_SETUP_ACTIVE_PRO_VERSION_SUCCESS', true, array('license' => $license));
             }else{
                 $this->setInfo($result -> message, false);
             }
@@ -76,57 +82,57 @@ class TZ_Portfolio_PlusSetupControllerInstall extends TZ_Portfolio_PlusSetupCont
         // Check the api key from the request
         $license    = $this->input->get('license', '');
 
-        if(!$license && JFile::exists(COM_TZ_PORTFOLIO_PLUS_SETUP_LICENCE_PATH.'/license.php')){
-            JFile::delete(COM_TZ_PORTFOLIO_PLUS_SETUP_LICENCE_PATH.'/license.php');
+        if(!$license && file_exists(COM_TZ_PORTFOLIO_SETUP_LICENCE_PATH.'/license.php')){
+            File::delete(COM_TZ_PORTFOLIO_SETUP_LICENCE_PATH.'/license.php');
         }
 
         // Get the package
-        $package = COM_TZ_PORTFOLIO_PLUS_SETUP_PACKAGE;
+        $package = COM_TZ_PORTFOLIO_SETUP_PACKAGE;
 
         // Construct storage path
-        $storage = COM_TZ_PORTFOLIO_PLUS_SETUP_PACKAGES . '/' . $package;
+        $storage = COM_TZ_PORTFOLIO_SETUP_PACKAGES . '/' . $package;
 
-        $exists = JFile::exists($storage);
+        $exists = file_exists($storage);
 
         // Test if package really exists
         if (!$exists) {
-            $this->setInfo('COM_TZ_PORTFOLIO_PLUS_SETUP_ERROR_PACKAGE_DOESNT_EXIST', false);
+            $this->setInfo('COM_TZ_PORTFOLIO_SETUP_ERROR_PACKAGE_DOESNT_EXIST', false);
             return $this->output();
         }
 
         // Remove all files in tmp
         try{
-            if(JFolder::exists(COM_TZ_PORTFOLIO_PLUS_SETUP_TMP)) {
-                JFolder::delete(COM_TZ_PORTFOLIO_PLUS_SETUP_TMP);
+            if(is_dir(COM_TZ_PORTFOLIO_SETUP_TMP)) {
+                Folder::delete(COM_TZ_PORTFOLIO_SETUP_TMP);
             }
         }catch (Exception $e){
 
         }
 
         // Check if the temporary folder exists
-        if (!JFolder::exists(COM_TZ_PORTFOLIO_PLUS_SETUP_TMP)) {
-            JFolder::create(COM_TZ_PORTFOLIO_PLUS_SETUP_TMP);
+        if (!is_dir(COM_TZ_PORTFOLIO_SETUP_TMP)) {
+            Folder::create(COM_TZ_PORTFOLIO_SETUP_TMP);
         }
 
         // Generate a temporary folder name
-        $fileName = 'com_tz_portfolio_plus_package_' . uniqid();
-        $tmp = COM_TZ_PORTFOLIO_PLUS_SETUP_TMP . '/' . $fileName;
+        $fileName = 'com_tz_portfolio_package_' . uniqid();
+        $tmp = COM_TZ_PORTFOLIO_SETUP_TMP . '/' . $fileName;
 
 
         // Delete any folders that already exists
-        if (JFolder::exists($tmp)) {
-            JFolder::delete($tmp);
+        if (is_dir($tmp)) {
+            Folder::delete($tmp);
         }
 
         // Try to extract the files
         $state = $this->tppExtract($storage, $tmp);
 
         if (!$state) {
-            $this->setInfo('COM_TZ_PORTFOLIO_PLUS_SETUP_ERROR_EXTRACT_ERRORS', false);
+            $this->setInfo('COM_TZ_PORTFOLIO_SETUP_ERROR_EXTRACT_ERRORS', false);
             return $this->output();
         }
 
-        $this->setInfo('COM_TZ_PORTFOLIO_PLUS_SETUP_EXTRACT_SUCCESS', true, array('path' => $tmp));
+        $this->setInfo('COM_TZ_PORTFOLIO_SETUP_EXTRACT_SUCCESS', true, array('path' => $tmp));
         return $this->output();
     }
 }

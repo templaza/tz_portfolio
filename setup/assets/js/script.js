@@ -55,9 +55,9 @@ var tpp = {
         "path": null,
         "controller": "install"
     },
-    ajaxUrl: "<?php echo JURI::root();?>administrator/index.php?option=com_tz_portfolio_plus&ajax=1",
+    ajaxUrl: "<?php echo Joomla\CMS\Uri\Uri::root();?>administrator/index.php?option=com_tz_portfolio&ajax=1",
     string: {
-        install_complete: "<?php echo TZ_Portfolio_PlusSetupString::jsPlusAddSlashes(JText::_('COM_TZ_PORTFOLIO_PLUS_SETUP_INSTALLING_COMPLETED'));?>"
+        install_complete: "<?php echo TZ_Portfolio_PlusSetupString::jsPlusAddSlashes(Joomla\CMS\Language\Text::_('COM_TZ_PORTFOLIO_SETUP_INSTALLING_COMPLETED'));?>"
     },
     language: "<?php echo $lang -> getTag(); ?>",
 

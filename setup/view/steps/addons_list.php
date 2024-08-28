@@ -108,7 +108,7 @@ $('[data-checkbox-style]').on('click', function() {
 			<div class="checkbox check-all">
 				<input type="checkbox" id="module-all" data-select-all checked="checked"<?php echo $install -> moduleDisabled?' disabled':''; ?>/>
 				<label for="module-all">
-					<div><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SETUP_INSTALL_MODULES'); ?></div>
+					<div><?php echo JText::_('COM_TZ_PORTFOLIO_SETUP_INSTALL_MODULES'); ?></div>
 				</label>
 			</div>
             <ul class="list-reset">
@@ -139,7 +139,7 @@ $('[data-checkbox-style]').on('click', function() {
 			<div class="checkbox check-all">
 				<input type="checkbox" id="plugin-all" data-select-all checked="checked"<?php echo $install -> pluginDisabled?' disabled':''; ?>/>
 				<label for="plugin-all">
-					<div><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SETUP_INSTALL_PLUGINS'); ?></div>
+					<div><?php echo JText::_('COM_TZ_PORTFOLIO_SETUP_INSTALL_PLUGINS'); ?></div>
 				</label>
 			</div>
             <ul class="list-reset">
@@ -166,7 +166,7 @@ $('[data-checkbox-style]').on('click', function() {
                 <div class="checkbox check-all">
                     <input type="checkbox" id="style-all" data-select-all checked="checked"<?php echo $install -> styleDisabled?' disabled':''; ?>/>
                     <label for="style-all">
-                        <div><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SETUP_INSTALL_STYLES'); ?></div>
+                        <div><?php echo JText::_('COM_TZ_PORTFOLIO_SETUP_INSTALL_STYLES'); ?></div>
                     </label>
                 </div>
                 <ul class="list-reset">
@@ -194,7 +194,7 @@ $('[data-checkbox-style]').on('click', function() {
 			<div class="checkbox check-all">
 				<input type="checkbox" id="addon-all" data-select-all checked="checked"<?php echo $install -> addonDisabled?' disabled':''; ?>/>
 				<label for="addon-all">
-					<div><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SETUP_INSTALL_ADDONS'); ?></div>
+					<div><?php echo JText::_('COM_TZ_PORTFOLIO_SETUP_INSTALL_ADDONS'); ?></div>
 				</label>
 			</div>
             <ul class="list-reset">

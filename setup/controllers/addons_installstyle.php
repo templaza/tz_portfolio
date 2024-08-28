@@ -1,13 +1,13 @@
 <?php
 /*------------------------------------------------------------------------
 
-# TZ Portfolio Plus Extension
+# TZ Portfolio Extension
 
 # ------------------------------------------------------------------------
 
 # Author:    DuongTVTemPlaza
 
-# Copyright: Copyright (C) 2011-2019 TZ Portfolio.com. All Rights Reserved.
+# Copyright: Copyright (C) 2011-2024 TZ Portfolio.com. All Rights Reserved.
 
 # @License - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 
@@ -24,9 +24,12 @@
 // no direct access
 defined('_JEXEC') or die;
 
-use TZ_Portfolio_Plus\Installer\TZ_Portfolio_PlusInstaller;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use TemPlaza\Component\TZ_Portfolio\Administrator\Library\TZ_PortfolioTemplate;
+use TemPlaza\Component\TZ_Portfolio\Administrator\Library\TZ_PortfolioInstaller;
 
-class TZ_Portfolio_PlusSetupControllerAddons_InstallStyle extends TZ_Portfolio_PlusSetupControllerLegacy
+class TZ_PortfolioSetupControllerAddons_InstallStyle extends TZ_PortfolioSetupControllerLegacy
 {
     protected $extensionProtected   = array();
 
@@ -54,22 +57,23 @@ class TZ_Portfolio_PlusSetupControllerAddons_InstallStyle extends TZ_Portfolio_P
 		// Try to install the module now.
 		$state = $this->installStyle($style, $absolutePath);
 
-        JLoader::import('com_tz_portfolio_plus.libraries.template',JPATH_ADMINISTRATOR.DIRECTORY_SEPARATOR.'components');
-		TZ_Portfolio_PlusTemplate::loadLanguage($style);
+		TZ_PortfolioTemplate::loadLanguage($style);
 
-		$this->setInfo(JText::sprintf('Style %1$s installed on the site', JText::_('TZ_PORTFOLIO_PLUS_TPL_'.$style)), true);
+        $lang   = Factory::getApplication() -> getLanguage();
+        $key    = 'TZ_PORTFOLIO_TPL_'.$style;
+        if(!$lang -> hasKey('TZ_PORTFOLIO_TPL_'.$style)){
+            $key    = 'TZ_PORTFOLIO_PLUS_TPL_'.$style;
+        }
+
+        $this->setInfo(Text::sprintf('Style %1$s installed on the site', Text::_($key)), true);
 		return $this->output();
 	}
 
 	public function installStyle($element, $path)
 	{
 
-        // Require TZ Portfolio Plus installer library
-        JLoader::import('com_tz_portfolio_plus.libraries.installer',JPATH_ADMINISTRATOR
-            .DIRECTORY_SEPARATOR.'components');
-
         // Get TZ Portfolio Plus's installer instance
-        $installer    = TZ_Portfolio_PlusInstaller::getInstance();
+        $installer    = TZ_PortfolioInstaller::getInstance();
 
         // Prevent any output from the installer
         ob_start();
@@ -93,9 +97,9 @@ class TZ_Portfolio_PlusSetupControllerAddons_InstallStyle extends TZ_Portfolio_P
 	/* Set default style */
     protected function setDefaultStyle($style){
 
-        if($style != 'elegant'){
-            return false;
-        }
+        // if($style != 'elegant'){
+            // return false;
+        // }
 
         $db     = JFactory::getDbo();
         $query  = $db -> getQuery(true);
@@ -109,7 +113,7 @@ class TZ_Portfolio_PlusSetupControllerAddons_InstallStyle extends TZ_Portfolio_P
             $query -> update('#__tz_portfolio_plus_templates');
             $query -> set('home = 1');
             $query -> where('template='.$db -> quote($style));
-            $query -> where('title='.$db -> quote('elegant - Default'));
+            $query -> where('title='.$db -> quote($style.' - Default'));
             $db -> setQuery($query);
             $db -> execute();
             return true;

@@ -1,13 +1,13 @@
 <?php
 /*------------------------------------------------------------------------
 
-# TZ Portfolio Plus Extension
+# TZ Portfolio Extension
 
 # ------------------------------------------------------------------------
 
 # Author:    DuongTVTemPlaza
 
-# Copyright: Copyright (C) 2011-2019 TZ Portfolio.com. All Rights Reserved.
+# Copyright: Copyright (C) 2011-2024 TZ Portfolio.com. All Rights Reserved.
 
 # @License - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 
@@ -24,7 +24,12 @@
 // no direct access
 defined('_JEXEC') or die;
 
-class TZ_Portfolio_PlusSetupControllerLegacy extends JControllerAdmin {
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\Database\DatabaseDriver;
+use Joomla\CMS\MVC\Controller\AdminController;
+
+class TZ_PortfolioSetupControllerLegacy extends AdminController {
 
     private $result = array();
 
@@ -32,7 +37,7 @@ class TZ_Portfolio_PlusSetupControllerLegacy extends JControllerAdmin {
     {
         parent::__construct($config);
 
-        $this -> app    = JFactory::getApplication();
+        $this -> app    = Factory::getApplication();
         $this -> input  = $this -> app -> input;
     }
 
@@ -52,7 +57,7 @@ class TZ_Portfolio_PlusSetupControllerLegacy extends JControllerAdmin {
     {
         $result = new stdClass();
         $result->state = $state;
-        $result->message = JText::_($message);
+        $result->message = Text::_($message);
 
         if (!empty($args)) {
             foreach ($args as $key => $val) {
@@ -71,13 +76,8 @@ class TZ_Portfolio_PlusSetupControllerLegacy extends JControllerAdmin {
      */
     public function tppExtract($destination, $extracted)
     {
-        if (JVERSION < 4.0) {
-            $state = JArchive::extract($destination, $extracted);
-
-        } else {
-            $archive = new Joomla\Archive\Archive();
-            $state = $archive->extract($destination, $extracted);
-        }
+        $archive = new Joomla\Archive\Archive();
+        $state = $archive->extract($destination, $extracted);
 
         return $state;
     }
@@ -93,7 +93,7 @@ class TZ_Portfolio_PlusSetupControllerLegacy extends JControllerAdmin {
         $obj = new stdClass();
         $obj->state = $state;
         $obj->stateMessage = $stateMessage;
-        $obj->message = JText::_($message);
+        $obj->message = Text::_($message);
 
         return $obj;
     }
@@ -107,7 +107,7 @@ class TZ_Portfolio_PlusSetupControllerLegacy extends JControllerAdmin {
      */
     public function isMySQL()
     {
-        $jConfig = JFactory::getConfig();
+        $jConfig = Factory::getConfig();
         $dbType = $jConfig->get('dbtype');
 
         return $dbType == 'mysql' || $dbType == 'mysqli';
@@ -125,7 +125,7 @@ class TZ_Portfolio_PlusSetupControllerLegacy extends JControllerAdmin {
 
         if (is_null($_cache)) {
 
-            $db = JFactory::getDBO();
+            $db = Factory::getDBO();
 
             if (method_exists($db, 'hasUTF8mb4Support')) {
                 $_cache = $db->hasUTF8mb4Support();
@@ -194,12 +194,7 @@ class TZ_Portfolio_PlusSetupControllerLegacy extends JControllerAdmin {
      */
     public function splitSql($contents)
     {
-        if (JVERSION < 4.0) {
-            $queries = JInstallerHelper::splitSql($contents);
-
-        } else {
-            $queries = JDatabaseDriver::splitSql($contents);
-        }
+        $queries = DatabaseDriver::splitSql($contents);
 
         return $queries;
     }

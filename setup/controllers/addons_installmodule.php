@@ -1,13 +1,13 @@
 <?php
 /*------------------------------------------------------------------------
 
-# TZ Portfolio Plus Extension
+# TZ Portfolio Extension
 
 # ------------------------------------------------------------------------
 
 # Author:    DuongTVTemPlaza
 
-# Copyright: Copyright (C) 2011-2019 TZ Portfolio.com. All Rights Reserved.
+# Copyright: Copyright (C) 2011-2024 TZ Portfolio.com. All Rights Reserved.
 
 # @License - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 
@@ -24,7 +24,10 @@
 // no direct access
 defined('_JEXEC') or die;
 
-class TZ_Portfolio_PlusSetupControllerAddons_InstallModule extends TZ_Portfolio_PlusSetupControllerLegacy
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Installer\Installer;
+
+class TZ_PortfolioSetupControllerAddons_InstallModule extends TZ_PortfolioSetupControllerLegacy
 {
 	public function install()
 	{
@@ -40,7 +43,7 @@ class TZ_Portfolio_PlusSetupControllerAddons_InstallModule extends TZ_Portfolio_
 		// Try to install the module now.
 		$state = $this->installModule($module, $absolutePath);
 
-		$this->setInfo(JText::sprintf('Module %1$s installed on the site', JText::_($module)), true);
+		$this->setInfo(Text::sprintf('Module %1$s installed on the site', Text::_($module)), true);
 		return $this->output();
 	}
 
@@ -48,7 +51,7 @@ class TZ_Portfolio_PlusSetupControllerAddons_InstallModule extends TZ_Portfolio_
 	{
 		
 		// Get Joomla's installer instance
-		$installer = new JInstaller();
+		$installer = new Installer();
 
 		// Allow overwriting existing modules
 		$installer->setOverwrite(true);
