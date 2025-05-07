@@ -519,13 +519,13 @@ class TZ_Portfolio_PlusTemplate {
                     self::$imported['import_fontawesome'] = true;
                 }
 
-                if(count($variables)) {
-                    $scss->setVariables($variables);
+                if (count($variables)) {
+                    $scss->addVariables($variables);
                 }
-                $scss -> setImportPaths($importPaths);
-                $scss -> setFormatter('ScssPhp\ScssPhp\Formatter\Compressed');
+                $scss->setImportPaths($importPaths);
+                $scss->setOutputStyle(\ScssPhp\ScssPhp\OutputStyle::COMPRESSED);
 
-                $content    = $scss -> compile($compileCode);
+                $content = $scss->compileString($compileCode)->getCss();
 
                 if(!Folder::exists($css_path)){
                     Folder::create($css_path);
