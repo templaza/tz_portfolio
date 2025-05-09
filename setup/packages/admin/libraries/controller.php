@@ -55,6 +55,7 @@ class TZ_Portfolio_PlusControllerLegacy  extends JControllerLegacy{
             $view -> document   = Factory::getApplication() -> getDocument();
             if($template   = TZ_Portfolio_PlusTemplate::getTemplate(true)){
                 if($template -> id){
+//                    $tplparams  = $template -> params;
                     $path       = $view -> get('_path');
 
                     $bool_tpl   = false;
@@ -73,8 +74,8 @@ class TZ_Portfolio_PlusControllerLegacy  extends JControllerLegacy{
                             $mpath  = Path::clean($template->jpath_base . DIRECTORY_SEPARATOR . $name);
                             if(!in_array($mpath, $path['template'])) {
                                 $jPath  = array_shift($path['template']);
-                                array_unshift($path['template'], $jPath);
-                                array_unshift($path['template'], $mpath);
+                                $path['template'][] = $mpath;
+                                $path['template'][] = $jPath;
                             }
                         }
 

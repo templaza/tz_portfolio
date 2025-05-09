@@ -19,6 +19,7 @@
 
 // No direct access
 defined('_JEXEC') or die;
+require "phpclass/vendor/autoload.php";
 
 use Joomla\CMS\Factory;
 use Joomla\Filesystem\Path;
@@ -468,8 +469,6 @@ class TZ_Portfolio_PlusTemplate {
 
             if (!file_exists($css_path.'/'. $cssname . '.css')) {
                 self::clearCache($styleName, $bootverPrefix);
-
-                require_once COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/libraries/phpclass/scssphp/scss.inc.php';
 
                 $scss       = new ScssPhp\ScssPhp\Compiler();
                 $coreSassPath  = COM_TZ_PORTFOLIO_PLUS_PATH_SITE.'/scss';
