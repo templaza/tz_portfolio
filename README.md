@@ -16,6 +16,10 @@ Demo: http://demo.tzportfolio.com/
 
 *** Changelog ***
 
+May 09th 2025 - 2.7.3
+
+    - Fix issue load SCSS library in Template Library
+
 May 07th 2025 - 2.7.2
 
     - Update scssphp v2.0.1
