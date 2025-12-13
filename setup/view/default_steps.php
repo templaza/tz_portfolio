@@ -23,7 +23,7 @@
 
 // no direct access
 defined('_JEXEC') or die;
-
+use Joomla\CMS\Language\Text;
 if(isset($steps) && $steps){
 ?>
     <?php foreach ($steps as $i => $step) { ?>
@@ -32,7 +32,7 @@ if(isset($steps) && $steps){
                 <span class="number"><?php echo $i + 1; ?></span>
                 <span class="icon-checkmark mr-0 complete"></span>
             </div>
-            <div class="title"><?php echo JText::_($step -> title); ?></div>
+            <div class="title"><?php echo Text::_($step -> title); ?></div>
         </li>
     <?php } ?>
 <?php } ?>
@@ -41,5 +41,5 @@ if(isset($steps) && $steps){
         <span class="number"><?php echo count($steps) + 1; ?></span>
         <span class="icon-checkmark mr-0 complete"></span>
     </div>
-    <div class="title"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_COMPLETED'); ?></div>
+    <div class="title"><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_COMPLETED'); ?></div>
 </li>

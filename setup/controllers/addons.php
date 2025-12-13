@@ -23,7 +23,8 @@
 
 // no direct access
 defined('_JEXEC') or die;
-
+use Joomla\Filesystem\Folder;
+use Joomla\Filesystem\File;
 class TZ_Portfolio_PlusSetupControllerAddons extends TZ_Portfolio_PlusSetupControllerLegacy
 {
     public function lists()
@@ -95,7 +96,7 @@ class TZ_Portfolio_PlusSetupControllerAddons extends TZ_Portfolio_PlusSetupContr
         }
 
         // Get a list of modules
-        $items = \JFolder::folders($tmp, '.', false, true);
+        $items = Folder::folders($tmp, '.', false, true);
 
         $modules = array();
 
@@ -151,7 +152,7 @@ class TZ_Portfolio_PlusSetupControllerAddons extends TZ_Portfolio_PlusSetupContr
         }
 
         // Get a list of plugin groups
-        $groups = JFolder::folders($tmp, '.', false, true);
+        $groups = Folder::folders($tmp, '.', false, true);
 
         $plugins = array();
 
@@ -164,7 +165,7 @@ class TZ_Portfolio_PlusSetupControllerAddons extends TZ_Portfolio_PlusSetupContr
             $groupTitle = basename($group);
 
             // Get a list of items in each groups
-            $items = JFolder::folders($group, '.', false, true);
+            $items = Folder::folders($group, '.', false, true);
 
             foreach ($items as $item) {
                 $element = basename($item);
@@ -211,7 +212,7 @@ class TZ_Portfolio_PlusSetupControllerAddons extends TZ_Portfolio_PlusSetupContr
         }
 
         // Get a list of plugin groups
-        $groups = JFolder::folders($tmp, '.', false, true);
+        $groups = Folder::folders($tmp, '.', false, true);
 
         $addons = array();
 
@@ -231,7 +232,7 @@ class TZ_Portfolio_PlusSetupControllerAddons extends TZ_Portfolio_PlusSetupContr
             $groupTitle = basename($group);
 
             // Get a list of items in each groups
-            $items = JFolder::folders($group, '.', false, true);
+            $items = Folder::folders($group, '.', false, true);
 
             foreach ($items as $item) {
                 $element = basename($item);
@@ -288,7 +289,7 @@ class TZ_Portfolio_PlusSetupControllerAddons extends TZ_Portfolio_PlusSetupContr
         }
 
         // Get a list of modules
-        $items = JFolder::folders($tmp, '.', false, true);
+        $items = Folder::folders($tmp, '.', false, true);
 
         $styles = array();
 

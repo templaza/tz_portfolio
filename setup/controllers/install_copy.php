@@ -23,7 +23,9 @@
 
 // no direct access
 defined('_JEXEC') or die;
-
+use Joomla\Filesystem\Folder;
+use Joomla\Filesystem\File;
+use Joomla\CMS\Language\Text;
 class TZ_Portfolio_PlusSetupControllerInstall_Copy extends TZ_Portfolio_PlusSetupControllerLegacy
 {
 
@@ -51,19 +53,19 @@ class TZ_Portfolio_PlusSetupControllerInstall_Copy extends TZ_Portfolio_PlusSetu
         $state = $this->tppExtract($archivePath, $path);
 
         if (!$state) {
-            $this->setInfo(JText::sprintf('COM_TZ_PORTFOLIO_PLUS_SETUP_COPY_ERROR_UNABLE_EXTRACT', $type), false);
+            $this->setInfo(Text::sprintf('COM_TZ_PORTFOLIO_PLUS_SETUP_COPY_ERROR_UNABLE_EXTRACT', $type), false);
             return $this->output();
         }
 
         // Look for files in this path
-        $files = JFolder::files( $path , '.' , false , true );
+        $files = Folder::files( $path , '.' , false , true );
 
         // Look for folders in this path
-        $folders = JFolder::folders( $path , '.' , false , true );
+        $folders = Folder::folders( $path , '.' , false , true );
 
         // Construct the target path first.
         if ($type == 'admin') {
-            $target = JPATH_ADMINISTRATOR . '/components/com_tz_portfolio_plus';
+            $target = JPATH_ROOT . '/administrator/components/com_tz_portfolio_plus';
         }
 
         if ($type == 'site') {
@@ -75,8 +77,8 @@ class TZ_Portfolio_PlusSetupControllerInstall_Copy extends TZ_Portfolio_PlusSetu
         }
 
         // Ensure that the target folder exists
-        if (!JFolder::exists($target)) {
-            JFolder::create($target);
+        if (!Folder::exists($target)) {
+            Folder::create($target);
         }
 
         // Scan for files in the folder
@@ -89,7 +91,7 @@ class TZ_Portfolio_PlusSetupControllerInstall_Copy extends TZ_Portfolio_PlusSetu
             $targetFile = $target . '/' . $name;
 
             // Copy the file
-            JFile::copy($file, $targetFile);
+            File::copy($file, $targetFile);
 
             $totalFiles++;
         }
@@ -101,13 +103,13 @@ class TZ_Portfolio_PlusSetupControllerInstall_Copy extends TZ_Portfolio_PlusSetu
             $targetFolder = $target . '/' . $name;
 
             // Copy the folder across
-            JFolder::copy($folder, $targetFolder, '', true);
+            Folder::copy($folder, $targetFolder, '', true);
 
             $totalFolders++;
         }
 
 
-        $result = $this->getResultObj(JText::sprintf('COM_TZ_PORTFOLIO_PLUS_SETUP_COPY_FILES_SUCCESS', $totalFiles, $totalFolders), true);
+        $result = $this->getResultObj(Text::sprintf('COM_TZ_PORTFOLIO_PLUS_SETUP_COPY_FILES_SUCCESS', $totalFiles, $totalFolders), true);
 
         return $this->output($result);
     }

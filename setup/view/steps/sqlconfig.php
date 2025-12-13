@@ -23,14 +23,14 @@
 
 // no direct access
 defined('_JEXEC') or die;
-
+use Joomla\CMS\Language\Text;
 ?>
 <script>
     $(document).ready(function(){
         $("[data-installation-form] input[type=radio][name=sample_data]").on("change", function(){
             var $this   = $(this);
             if(this.value == 1){
-                var result = confirm("<?php echo htmlspecialchars(JText::_('COM_TZ_PORTFOLIO_PLUS_SETUP_SAMPLE_DATA_QUESTION'))?>");
+                var result = confirm("<?php echo htmlspecialchars(Text::_('COM_TZ_PORTFOLIO_PLUS_SETUP_SAMPLE_DATA_QUESTION'))?>");
                 if(!result){
                     $this.prop("checked", "");
                     $("#field_sample_data0").prop("checked", true);
@@ -44,17 +44,17 @@ defined('_JEXEC') or die;
 </script>
 
 <form action="index.php?option=com_tz_portfolio_plus" method="post" name="installation" data-installation-form>
-    <p class="section-desc"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SETUP_DATABASE_CONFIG_DESC');?></p>
+    <p class="section-desc"><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_SETUP_DATABASE_CONFIG_DESC');?></p>
     
     <div class="installation-inner">
         <div class="control-group">
-            <h4><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_INSTALL_SAMPLE_DATA');?></h4>
+            <h4><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_INSTALL_SAMPLE_DATA');?></h4>
             <?php $joomla4  = version_compare(JVERSION, 4.0, '>='); ?>
             <fieldset id="field_sample_data" class="switcher<?php echo $joomla4?' float-none m-auto has-success':' btn-group radio';?>">
                 <input type="radio" id="field_sample_data0" name="sample_data" value="0" checked="checked">
-                <label for="field_sample_data0" class="<?php echo !$joomla4?' btn active btn-danger':'';?>"><?php echo JText::_('JNO'); ?></label>
+                <label for="field_sample_data0" class="<?php echo !$joomla4?' btn active btn-danger':'';?>"><?php echo Text::_('JNO'); ?></label>
                 <input type="radio" id="field_sample_data1" name="sample_data" value="1">
-                <label for="field_sample_data1" class="<?php echo !$joomla4?' btn':'';?>"><?php echo JText::_('JYES'); ?></label>
+                <label for="field_sample_data1" class="<?php echo !$joomla4?' btn':'';?>"><?php echo Text::_('JYES'); ?></label>
                 <?php if($joomla4){?>
                     <span class="toggle-outside text-left"><span class="toggle-inside"></span></span>
                 <?php } ?>

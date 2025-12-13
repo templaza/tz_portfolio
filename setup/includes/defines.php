@@ -23,6 +23,9 @@
 
 // no direct access
 defined('_JEXEC') or die;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
 
 $path = dirname(dirname(__FILE__));
 
@@ -34,7 +37,7 @@ if(!defined('COM_TZ_PORTFOLIO_PLUS_SETUP_VIEW_PATH')) {
         .'view');
 }
 if(!defined('COM_TZ_PORTFOLIO_PLUS_SETUP_URL')) {
-    define('COM_TZ_PORTFOLIO_PLUS_SETUP_URL', JURI::base() . 'components/com_tz_portfolio_plus/setup');
+    define('COM_TZ_PORTFOLIO_PLUS_SETUP_URL', Uri::base() . 'components/com_tz_portfolio_plus/setup');
 }
 if(!defined('COM_TZ_PORTFOLIO_PLUS_SETUP_CONTROLLERS')) {
     define('COM_TZ_PORTFOLIO_PLUS_SETUP_CONTROLLERS', $path . '/controllers');
@@ -76,7 +79,12 @@ if(!defined('COM_TZ_PORTFOLIO_PLUS_SETUP_PACKAGE')) {
 $configXMLFile  = JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/config.xml';
 //if(JFile::exists($configXMLFile)){
 if(!defined('COM_TZ_PORTFOLIO_PLUS_SETUP_TOKEN_KEY')) {
-    $params = JComponentHelper::getParams('com_tz_portfolio_plus');
-    define('COM_TZ_PORTFOLIO_PLUS_SETUP_TOKEN_KEY', $input -> get('token_key')?$input -> get('token_key'):$params->get('token_key', ''));
+    $params = ComponentHelper::getParams('com_tz_portfolio_plus');
+    $input  = Factory::getApplication()->getInput();
+    $tokenKey = $input->getString('token_key', $params->get('token_key', ''));
+
+    if (!defined('COM_TZ_PORTFOLIO_PLUS_SETUP_TOKEN_KEY')) {
+        define('COM_TZ_PORTFOLIO_PLUS_SETUP_TOKEN_KEY', $tokenKey);
+    }
 }
 //}

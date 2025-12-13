@@ -23,7 +23,8 @@
 
 // no direct access
 defined('_JEXEC') or die;
-
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Installer\Installer;
 class TZ_Portfolio_PlusSetupControllerAddons_InstallModule extends TZ_Portfolio_PlusSetupControllerLegacy
 {
 	public function install()
@@ -40,7 +41,7 @@ class TZ_Portfolio_PlusSetupControllerAddons_InstallModule extends TZ_Portfolio_
 		// Try to install the module now.
 		$state = $this->installModule($module, $absolutePath);
 
-		$this->setInfo(JText::sprintf('Module %1$s installed on the site', JText::_($module)), true);
+		$this->setInfo(Text::sprintf('Module %1$s installed on the site', Text::_($module)), true);
 		return $this->output();
 	}
 
@@ -48,7 +49,7 @@ class TZ_Portfolio_PlusSetupControllerAddons_InstallModule extends TZ_Portfolio_
 	{
 		
 		// Get Joomla's installer instance
-		$installer = new JInstaller();
+		$installer = Installer::getInstance();
 
 		// Allow overwriting existing modules
 		$installer->setOverwrite(true);

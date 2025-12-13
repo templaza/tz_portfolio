@@ -23,9 +23,10 @@
 
 // no direct access
 defined('_JEXEC') or die;
-
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
 $unchecked  = false;
-$lang       = JFactory::getLanguage();
+$lang       = Factory::getLanguage();
 ?>
 <script type="text/javascript">
 $('[data-select-all]').on('change', function() {
@@ -108,7 +109,7 @@ $('[data-checkbox-style]').on('click', function() {
 			<div class="checkbox check-all">
 				<input type="checkbox" id="module-all" data-select-all checked="checked"<?php echo $install -> moduleDisabled?' disabled':''; ?>/>
 				<label for="module-all">
-					<div><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SETUP_INSTALL_MODULES'); ?></div>
+					<div><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_SETUP_INSTALL_MODULES'); ?></div>
 				</label>
 			</div>
             <ul class="list-reset">
@@ -122,7 +123,7 @@ $('[data-checkbox-style]').on('click', function() {
                             echo $module->element;?>" <?php echo $module->checked ? 'checked="checked"' : ''
                             ?> data-checkbox data-checkbox-module <?php echo $module->disabled ? 'disabled':''; ?> />
                             <label for="module-<?php echo $module->element; ?>">
-                                <?php echo JText::_($module->title);?>
+                                <?php echo Text::_($module->title);?>
                             </label>
                         </div>
                     </li>
@@ -139,7 +140,7 @@ $('[data-checkbox-style]').on('click', function() {
 			<div class="checkbox check-all">
 				<input type="checkbox" id="plugin-all" data-select-all checked="checked"<?php echo $install -> pluginDisabled?' disabled':''; ?>/>
 				<label for="plugin-all">
-					<div><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SETUP_INSTALL_PLUGINS'); ?></div>
+					<div><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_SETUP_INSTALL_PLUGINS'); ?></div>
 				</label>
 			</div>
             <ul class="list-reset">
@@ -152,7 +153,7 @@ $('[data-checkbox-style]').on('click', function() {
                                 ?>" value="<?php echo $plugin->element;?>" data-group="<?php echo $plugin->group;
                                 ?>" checked="checked" data-checkbox data-checkbox-plugin <?php echo $plugin->disabled ? 'disabled':''; ?>/>
                                 <label for="plugin-<?php echo $plugin->group . '-' . $plugin->element; ?>">
-                                    <?php echo JText::_($plugin->title); ?>
+                                    <?php echo Text::_($plugin->title); ?>
                                 </label>
                             </div>
                         </li>
@@ -166,7 +167,7 @@ $('[data-checkbox-style]').on('click', function() {
                 <div class="checkbox check-all">
                     <input type="checkbox" id="style-all" data-select-all checked="checked"<?php echo $install -> styleDisabled?' disabled':''; ?>/>
                     <label for="style-all">
-                        <div><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SETUP_INSTALL_STYLES'); ?></div>
+                        <div><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_SETUP_INSTALL_STYLES'); ?></div>
                     </label>
                 </div>
                 <ul class="list-reset">
@@ -180,7 +181,7 @@ $('[data-checkbox-style]').on('click', function() {
                                 echo $style->element;?>" <?php echo $style->checked ? 'checked="checked"' : ''
                                 ?> data-checkbox data-checkbox-style <?php echo $style->disabled ? 'disabled':''; ?> />
                                 <label for="style-<?php echo $style->element; ?>">
-                                    <?php echo JText::_($style->title);?>
+                                    <?php echo Text::_($style->title);?>
                                 </label>
                             </div>
                         </li>
@@ -194,7 +195,7 @@ $('[data-checkbox-style]').on('click', function() {
 			<div class="checkbox check-all">
 				<input type="checkbox" id="addon-all" data-select-all checked="checked"<?php echo $install -> addonDisabled?' disabled':''; ?>/>
 				<label for="addon-all">
-					<div><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SETUP_INSTALL_ADDONS'); ?></div>
+					<div><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_SETUP_INSTALL_ADDONS'); ?></div>
 				</label>
 			</div>
             <ul class="list-reset">
@@ -209,7 +210,7 @@ $('[data-checkbox-style]').on('click', function() {
                                 ?>" value="<?php echo $addon->element;?>" data-group="<?php echo $addon->group;
                                 ?>" checked="checked" data-checkbox data-checkbox-addon <?php echo $addon->disabled ? 'disabled':''; ?>/>
                                 <label for="addon-<?php echo $addon->group . '-' . $addon->element; ?>">
-                                    <?php echo JText::_($addon->title); ?>
+                                    <?php echo Text::_($addon->title); ?>
                                 </label>
                             </div>
                         </li>
