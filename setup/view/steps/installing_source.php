@@ -23,7 +23,9 @@
 
 // no direct access
 defined('_JEXEC') or die;
-
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Language\Text;
+use Joomla\Filesystem\File;
 ?>
 <script type="text/javascript">
 (function($){
@@ -51,7 +53,7 @@ defined('_JEXEC') or die;
         var licenceVerify   = function(){
             $.ajax({
                 type: 'POST',
-                url: '<?php echo JURI::root();?>administrator/index.php?option=com_tz_portfolio_plus&ajax=1&task=license.verify',
+                url: '<?php echo Uri::root();?>administrator/index.php?option=com_tz_portfolio_plus&ajax=1&task=license.verify',
                 data: {
                     task: "license.verify",
                     "token_key": $('[data-api-key]').val()
@@ -82,7 +84,7 @@ defined('_JEXEC') or die;
 
                 var submit = $('[data-installation-submit]');
 
-                submit.find("> span:first").html("<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SKIP_THIS_STEP'); ?>");
+                submit.find("> span:first").html("<?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_SKIP_THIS_STEP'); ?>");
 
                 // User is not allowed to install
                 if (result.state == 400) {
@@ -122,7 +124,7 @@ defined('_JEXEC') or die;
                     // If there are multiple licenses, we need to request them to submit
                     if (result.licenses.length > 1) {
 
-                        submit.find("> span:first").html("<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SETUP_NEXT_STEP'); ?>");
+                        submit.find("> span:first").html("<?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_SETUP_NEXT_STEP'); ?>");
 
                         licenses.removeClass('hide');
                         $('[data-token-key-group]').addClass("hide");
@@ -159,15 +161,15 @@ defined('_JEXEC') or die;
 <form action="index.php?option=com_tz_portfolio_plus" method="post" name="installation" data-installation-form><?php
     $fileExists = JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/controller.php';
 
-    if(JFile::exists($fileExists)){ ?>
+    if(File::exists($fileExists)){ ?>
         <?php
         $class      = ' alert-danger';
-        $errorMsg   = JText::_('COM_TZ_PORTFOLIO_PLUS_SETUP_METHOD_TOKEN_KEY_INVALID');
+        $errorMsg   = Text::_('COM_TZ_PORTFOLIO_PLUS_SETUP_METHOD_TOKEN_KEY_INVALID');
         ?>
     <?php }else{ ?>
         <?php
         $class      = ' alert-warning';
-        $errorMsg = JText::_('COM_TZ_PORTFOLIO_PLUS_NEW_INSTALLATION_METHOD_TOKEN_KEY_INVALID'); ?>
+        $errorMsg = Text::_('COM_TZ_PORTFOLIO_PLUS_NEW_INSTALLATION_METHOD_TOKEN_KEY_INVALID'); ?>
     <?php }
     ?>
 	<div class="hide alert<?php echo $class; ?>" data-source-errors data-api-errors>
@@ -177,16 +179,16 @@ defined('_JEXEC') or die;
         <div class="installation-inner">
 
             <div class="form-inline hide" data-licenses>
-                <p><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SETUP_METHOD_SELECT_LICENSE_INFO');?></p>
+                <p><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_SETUP_METHOD_SELECT_LICENSE_INFO');?></p>
                 <div data-licenses-placeholder></div>
             </div>
 
             <div class="text-center" data-checking>
                 <div class="progress progress-loading"></div>
-                <div><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_CHECKING_LICENSES');?></div>
+                <div><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_CHECKING_LICENSES');?></div>
             </div>
             <div class="control-group hide" data-token-key-group>
-                <h4><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SETUP_ENTER_TOKEN_KEY');?></h4>
+                <h4><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_SETUP_ENTER_TOKEN_KEY');?></h4>
                 <input type="text" value="<?php echo COM_TZ_PORTFOLIO_PLUS_SETUP_TOKEN_KEY; ?>" name="token_key" class="hide" data-api-key />
             </div>
             <input type="hidden" name="method" value="directory" />

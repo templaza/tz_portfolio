@@ -23,16 +23,18 @@
 
 // no direct access
 defined('_JEXEC') or die;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
 ?>
 <script type="text/javascript">
 $(document).ready(function(){
 
 	<?php if ($reinstall) { ?>
-		tpp.ajaxUrl = "<?php echo JURI::root();?>administrator/index.php?option=com_easyblog&ajax=1&reinstall=1";
+		tpp.ajaxUrl = "<?php echo Uri::root();?>administrator/index.php?option=com_easyblog&ajax=1&reinstall=1";
 	<?php } ?>
 
 	<?php if ($update) { ?>
-		tpp.ajaxUrl = "<?php echo JURI::root();?>administrator/index.php?option=com_easyblog&ajax=1&update=1";
+		tpp.ajaxUrl = "<?php echo Uri::root();?>administrator/index.php?option=com_easyblog&ajax=1&update=1";
 	<?php } ?>
 
 	// Immediately proceed with installation
@@ -46,11 +48,11 @@ $(document).ready(function(){
 </script>
 <form name="installation" method="post" data-installation-form>
 	<p class="section-desc">
-		<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SETUP_INSTALLING_DESC');?>
+		<?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_SETUP_INSTALLING_DESC');?>
 	</p>
 
 	<div class="alert alert-primary" data-installation-message style="display: none;">
-		<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SETUP_INSTALLING_COMPLETED'); ?>
+		<?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_SETUP_INSTALLING_COMPLETED'); ?>
 	</div>
 
 	<div data-install-progress>
@@ -61,16 +63,16 @@ $(document).ready(function(){
 				<div class="progress-icon">
 					<i class="icon-checkbox-unchecked"></i>
 				</div>
-				<div class="split__title"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ACTIVING_PRO_VERSION');?></div>
-				<span class="progress-state"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ACTIVING');?>...</span>
+				<div class="split__title"><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_ACTIVING_PRO_VERSION');?></div>
+				<span class="progress-state"><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_ACTIVING');?>...</span>
 			</li>
             <?php } ?>
 			<li class="active" data-progress-extract>
 				<div class="progress-icon">
 					<i class="icon-checkbox-unchecked"></i>
 				</div>
-				<div class="split__title"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SETUP_INSTALLING_EXTRACTING_FILES');?></div>
-				<span class="progress-state"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SETUP_INSTALLING_EXTRACTING');?>...</span>
+				<div class="split__title"><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_SETUP_INSTALLING_EXTRACTING_FILES');?></div>
+				<span class="progress-state"><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_SETUP_INSTALLING_EXTRACTING');?>...</span>
 			</li>
 
 			<?php include(dirname(__FILE__) . '/installing_steps.php'); ?>

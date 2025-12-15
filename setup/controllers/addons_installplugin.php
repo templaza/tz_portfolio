@@ -23,6 +23,10 @@
 
 // no direct access
 defined('_JEXEC') or die;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Factory;
+use Joomla\Database\DatabaseInterface;
+use Joomla\CMS\Installer\Installer;
 
 class TZ_Portfolio_PlusSetupControllerAddons_InstallPlugin extends TZ_Portfolio_PlusSetupControllerLegacy
 {
@@ -42,7 +46,7 @@ class TZ_Portfolio_PlusSetupControllerAddons_InstallPlugin extends TZ_Portfolio_
 		// Try to install the plugin now
 		$state = $this->installPlugin($element, $group, $absolutePath);
 
-		$this->setInfo(JText::sprintf('Plugin %1$s installed on the site',JText::_('plg_'.$group.'_'.$element)), true);
+		$this->setInfo(Text::sprintf('Plugin %1$s installed on the site',Text::_('plg_'.$group.'_'.$element)), true);
 
 		return $this->output();
 	}
@@ -56,7 +60,7 @@ class TZ_Portfolio_PlusSetupControllerAddons_InstallPlugin extends TZ_Portfolio_
 	public function installPlugin($element, $group, $absolutePath)
 	{
 	    // Before install check the plugin exists
-        $db = JFactory::getDbo();
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         $query  = $db -> getQuery(true);
         $query -> select('COUNT(*)');
@@ -68,7 +72,7 @@ class TZ_Portfolio_PlusSetupControllerAddons_InstallPlugin extends TZ_Portfolio_
         $hasPlugin  = $db -> loadResult();
 
 		// Get Joomla's installer instance
-		$installer = JInstaller::getInstance();
+        $installer = Installer::getInstance();
 
 //		// Allow overwriting of existing plugins
 //		$installer->setOverwrite(true);

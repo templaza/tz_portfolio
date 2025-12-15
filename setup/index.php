@@ -23,16 +23,17 @@
 
 // no direct access
 defined('_JEXEC') or die;
-
+use Joomla\CMS\Factory;
+use Joomla\Filesystem\Folder;
+use Joomla\Filesystem\File;
+use Joomla\Database\DatabaseInterface;
+use Joomla\CMS\Language\Text;
 /* Require defines */
 require_once (dirname(__FILE__).'/includes/defines.php');
 require_once (dirname(__FILE__).'/includes/string.php');
 
-jimport('joomla.filesystem.file');
-jimport('joomla.filesystem.folder');
-
 // Get application
-$app = JFactory::getApplication();
+$app = Factory::getApplication();
 $input = $app->input;
 
 // Ensure that the Joomla sections don't appear.
@@ -43,8 +44,8 @@ $cancelSetup = $input->get('cancelSetup', false, 'bool');
 
 if($cancelSetup){
     // Remove folder installation
-    if(JFolder::exists(COM_TZ_PORTFOLIO_PLUS_SETUP_PATH)){
-        JFolder::delete(COM_TZ_PORTFOLIO_PLUS_SETUP_PATH);
+    if(Folder::exists(COM_TZ_PORTFOLIO_PLUS_SETUP_PATH)){
+        Folder::delete(COM_TZ_PORTFOLIO_PLUS_SETUP_PATH);
     }
 
     // Redirect the user back to TZ Portfolio Plus
@@ -60,12 +61,16 @@ $update = $input->get('update', false, 'bool');
 // Process controller
 $task = $input->get('task', null);
 
-if($task){
-    JLoader::import('com_tz_portfolio_plus.setup.controllers.legacy',
-        JPATH_ADMINISTRATOR.'/components');
+if ($task) {
+    // Prefer Joomla 6 namespaced controller factory if available
+    if (class_exists(BaseController::class) && is_callable([BaseController::class, 'getInstance'])) {
+        $controller = BaseController::getInstance('TZ_Portfolio_PlusSetup', ['base_path' => COM_TZ_PORTFOLIO_PLUS_SETUP_PATH]);
+    } else {
+        // Fallback to legacy loader for older environments
+        JLoader::import('com_tz_portfolio_plus.setup.controllers.legacy', JPATH_ROOT . '/administrator/components');
+        $controller = TZ_Portfolio_PlusSetupControllerLegacy::getInstance('TZ_Portfolio_PlusSetup', ['base_path' => COM_TZ_PORTFOLIO_PLUS_SETUP_PATH]);
+    }
 
-    $controller	= JControllerLegacy::getInstance('TZ_Portfolio_PlusSetup',
-        array('base_path' => COM_TZ_PORTFOLIO_PLUS_SETUP_PATH));
     if (!empty($controller)) {
         $controller->execute($input->get('task'));
         $controller->redirect();
@@ -82,7 +87,7 @@ $active = $input->get('active', 0, 'default');
 if ($active === 'complete') {
     $activeStep = new stdClass();
 
-    $activeStep->title = JText::_('COM_EASYBLOG_INSTALLER_INSTALLATION_COMPLETED');
+    $activeStep->title = Text::_('COM_EASYBLOG_INSTALLER_INSTALLATION_COMPLETED');
     $activeStep->template = 'complete';
 
     // Assign class names to the step items.
@@ -117,7 +122,7 @@ if ($active === 'complete') {
         $curl = is_callable('curl_init');
 
         // MySQL info
-        $db = JFactory::getDBO();
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
         $mysqlVersion = $db->getVersion();
 
         // PHP info
@@ -174,13 +179,13 @@ if ($active === 'complete') {
 
             // The only proper way to test this is to not use is_writable
             $contents = "<body></body>";
-            $state = JFile::write($file->path . '/tmp.html', $contents);
+            $state = File::write($file->path . '/tmp.html', $contents);
 
             // Initialize this to false by default
             $file->writable = false;
 
             if ($state) {
-                JFile::delete($file->path . '/tmp.html');
+                File::delete($file->path . '/tmp.html');
 
                 $file->writable = true;
             }

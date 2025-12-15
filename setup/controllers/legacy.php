@@ -23,8 +23,11 @@
 
 // no direct access
 defined('_JEXEC') or die;
-
-class TZ_Portfolio_PlusSetupControllerLegacy extends JControllerAdmin {
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Controller\AdminController;
+use Joomla\CMS\Language\Text;
+use Joomla\Database\DatabaseInterface;
+class TZ_Portfolio_PlusSetupControllerLegacy extends AdminController {
 
     private $result = array();
 
@@ -32,7 +35,7 @@ class TZ_Portfolio_PlusSetupControllerLegacy extends JControllerAdmin {
     {
         parent::__construct($config);
 
-        $this -> app    = JFactory::getApplication();
+        $this -> app    = Factory::getApplication();
         $this -> input  = $this -> app -> input;
     }
 
@@ -52,7 +55,7 @@ class TZ_Portfolio_PlusSetupControllerLegacy extends JControllerAdmin {
     {
         $result = new stdClass();
         $result->state = $state;
-        $result->message = JText::_($message);
+        $result->message = Text::_($message);
 
         if (!empty($args)) {
             foreach ($args as $key => $val) {
@@ -93,7 +96,7 @@ class TZ_Portfolio_PlusSetupControllerLegacy extends JControllerAdmin {
         $obj = new stdClass();
         $obj->state = $state;
         $obj->stateMessage = $stateMessage;
-        $obj->message = JText::_($message);
+        $obj->message = Text::_($message);
 
         return $obj;
     }
@@ -107,7 +110,7 @@ class TZ_Portfolio_PlusSetupControllerLegacy extends JControllerAdmin {
      */
     public function isMySQL()
     {
-        $jConfig = JFactory::getConfig();
+        $jConfig = Factory::getConfig();
         $dbType = $jConfig->get('dbtype');
 
         return $dbType == 'mysql' || $dbType == 'mysqli';
@@ -125,7 +128,7 @@ class TZ_Portfolio_PlusSetupControllerLegacy extends JControllerAdmin {
 
         if (is_null($_cache)) {
 
-            $db = JFactory::getDBO();
+            $db = Factory::getDBO();
 
             if (method_exists($db, 'hasUTF8mb4Support')) {
                 $_cache = $db->hasUTF8mb4Support();
@@ -198,7 +201,8 @@ class TZ_Portfolio_PlusSetupControllerLegacy extends JControllerAdmin {
             $queries = JInstallerHelper::splitSql($contents);
 
         } else {
-            $queries = JDatabaseDriver::splitSql($contents);
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
+            $queries = $db->splitSql($contents);
         }
 
         return $queries;
