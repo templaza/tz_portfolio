@@ -21,7 +21,9 @@
 defined('_JEXEC') or die('Restricted access');
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\Folder;
+use Joomla\Filesystem\Folder;
+use Joomla\Filesystem\File;
+use Joomla\CMS\Plugin\CMSPlugin;
 
 jimport('joomla.plugin.plugin');
 jimport('joomla.filesystem.folder');
@@ -31,13 +33,13 @@ JLoader::register('TZ_Portfolio_PlusPlugin',JPATH_ADMINISTRATOR.DIRECTORY_SEPARA
                     .DIRECTORY_SEPARATOR.'com_tz_portfolio_plus'.DIRECTORY_SEPARATOR.'libraries'
                     .DIRECTORY_SEPARATOR.'plugin'.DIRECTORY_SEPARATOR.'plugin.php');
 
-class PlgSystemTZ_Portfolio_Plus extends JPlugin {
+class PlgSystemTZ_Portfolio_Plus extends CMSPlugin {
 
     public function __construct(&$subject, $config = array())
     {
-        JLoader::import('com_tz_portfolio_plus.includes.framework',JPATH_ADMINISTRATOR.'/components');
+        JLoader::import('com_tz_portfolio_plus.includes.framework',JPATH_ROOT.'/administrator/components');
 
-        JLoader::import('com_tz_portfolio_plus.libraries.plugin.helper', JPATH_ADMINISTRATOR.'/components');
+        JLoader::import('com_tz_portfolio_plus.libraries.plugin.helper', JPATH_ROOT.'/administrator/components');
 
         parent::__construct($subject,$config);
     }
@@ -102,7 +104,7 @@ class PlgSystemTZ_Portfolio_Plus extends JPlugin {
 
     protected function _tppAllowImport(){
 
-        $app    = JFactory::getApplication();
+        $app    = Factory::getApplication();
         $option = $app -> input -> get('option');
         $task   = $app -> input -> get('task');
         $view   = $app -> input -> get('view');

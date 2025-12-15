@@ -24,6 +24,9 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Router\Route;
+use Joomla\Filesystem\File as JFile;
+use Joomla\Database\DatabaseInterface;
+use Joomla\CMS\Uri\Uri as JUri;
 
 class plgQuickiconTZ_Portfolio_Plus extends CMSPlugin
 {
@@ -54,10 +57,10 @@ class plgQuickiconTZ_Portfolio_Plus extends CMSPlugin
 
         $xml    = simplexml_load_file(JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/tz_portfolio_plus.xml');
 
-		if (!JFile::exists($file) && Factory::getUser()->authorise('core.manage', 'com_installer'))
+		if (!JFile::exists($file) && Factory::getApplication()->getIdentity()->authorise('core.manage', 'com_installer'))
 		{
 			$updateSite = '%tzportfolio.com/tzupdates%';
-			$db         = Factory::getDbo();
+			$db         = Factory::getContainer()->get(DatabaseInterface::class);
 
 			$query = $db->getQuery(true)
 				->select('*')
@@ -161,7 +164,7 @@ class plgQuickiconTZ_Portfolio_Plus extends CMSPlugin
 		}
 		else
 		{
-            $doc    = JFactory::getDocument();
+            $doc    = Factory::getDocument();
             $doc -> addStyleSheet(JUri::base(true).'/components/com_tz_portfolio_plus/css/tppicon.min.css',
                 array('version' => 'auto'));
             $doc -> addStyleDeclaration('[class^="icon-"][class^="tpp-icon-"]:before,
