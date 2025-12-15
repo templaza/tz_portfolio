@@ -21,12 +21,16 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
 use Joomla\Utilities\ArrayHelper;
 
 jimport('joomla.application.component.controllerform');
 JLoader::import('com_tz_portfolio_plus.helpers.acl', JPATH_ADMINISTRATOR.'/components');
 
-class TZ_Portfolio_PlusControllerArticleBase extends JControllerForm
+class TZ_Portfolio_PlusControllerArticleBase extends FormController
 {
 	/**
 	 * Class constructor.
@@ -73,7 +77,7 @@ class TZ_Portfolio_PlusControllerArticleBase extends JControllerForm
 	protected function allowAdd($data = array())
 	{
 		// Initialise variables.
-		$user = Factory::getUser();
+		$user = Factory::getApplication()->getIdentity();
 		$categoryId = ArrayHelper::getValue($data, 'catid', $this -> input -> getInt('filter_category_id'), 'int');
 		$allow = null;
 
@@ -108,7 +112,7 @@ class TZ_Portfolio_PlusControllerArticleBase extends JControllerForm
     protected function allowEdit($data = array(), $key = 'id')
     {
         $recordId = (int) isset($data[$key]) ? $data[$key] : 0;
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
 
         // Zero record (id:0), return component edit permission by calling parent controller method
         if (!$recordId)
@@ -239,21 +243,22 @@ class TZ_Portfolio_PlusControllerArticleBase extends JControllerForm
 	 */
 	public function batch($model = null)
 	{
-		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
 
 		// Set the model
 		$model = $this->getModel();
 
 		// Preset the redirect
-		$this->setRedirect(JRoute::_('index.php?option=com_tz_portfolio_plus&view=articles' . $this->getRedirectToListAppend(), false));
+		$this->setRedirect(Route::_('index.php?option=com_tz_portfolio_plus&view=articles' . $this->getRedirectToListAppend(), false));
 
 		return parent::batch($model);
 	}
 
-    function tags(){
-        $model      = JModelLegacy::getInstance('Tags','TZ_Portfolio_PlusModel',array('ignore_request' => true));
-        $model -> setState('term',$this -> input -> getString('term',null));
-        echo json_encode($model -> getTags());
-        die();
+    public function tags()
+    {
+        $model = $this->getModel('Tags', 'TZ_Portfolio_PlusModel', array('ignore_request' => true));
+        $model->setState('term', $this->input->getString('term', null));
+        echo json_encode($model->getTags());
+        exit;
     }
 }

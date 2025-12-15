@@ -23,16 +23,21 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
-class TZ_Portfolio_PlusModelDialogBase extends JModelAdmin
+class TZ_Portfolio_PlusModelDialogBase extends AdminModel
 {
     protected $formName;
     protected $rejectModel;
 
     public function __construct()
     {
-        $this -> rejectModel    = JModelLegacy::getInstance('Reject', 'TZ_Portfolio_PlusModel',
-            array('ignore_request' => true));
+        $this->rejectModel = BaseDatabaseModel::getInstance(
+            'Reject',
+            'TZ_Portfolio_PlusModel',
+            array('ignore_request' => true)
+        );
 
         parent::__construct();
     }

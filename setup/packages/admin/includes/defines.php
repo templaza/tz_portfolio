@@ -20,13 +20,14 @@
 // No direct access
 defined('_JEXEC') or die;
 
-use Joomla\CMS\Filesystem\File;
+use Joomla\Filesystem\File;
+use Joomla\CMS\Uri\Uri;
 
 if(!defined('COM_TZ_PORTFOLIO_PLUS_JVERSION_COMPARE')) {
     define('COM_TZ_PORTFOLIO_PLUS_JVERSION_COMPARE', version_compare(JVERSION, '3.0', 'ge'));
 }
 if(!defined('COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE')) {
-    define('COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE', version_compare(JVERSION, '4.0', 'ge'));
+    define('COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE', version_compare(JVERSION, '4.0', '=='));
 }
 if(!DIRECTORY_SEPARATOR){
     define('DIRECTORY_SEPARATOR',DS);
@@ -63,7 +64,7 @@ if(!defined('COM_TZ_PORTFOLIO_PLUS_MEDIA_ARTICLE_ROOT')) {
     define ('COM_TZ_PORTFOLIO_PLUS_MEDIA_ARTICLE_ROOT', JPATH_ROOT . DIRECTORY_SEPARATOR.COM_TZ_PORTFOLIO_PLUS_MEDIA_ARTICLE_BASE);
 }
 if(!defined('COM_TZ_PORTFOLIO_PLUS_MEDIA_BASEURL')) {
-    define ('COM_TZ_PORTFOLIO_PLUS_MEDIA_BASEURL', JURI::root() . 'media/tz_portfolio_plus/article/cache');
+    define ('COM_TZ_PORTFOLIO_PLUS_MEDIA_BASEURL', Uri::root() . 'media/tz_portfolio_plus/article/cache');
 }
 if(!defined('COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH')) {
     define ('COM_TZ_PORTFOLIO_PLUS_TEMPLATE_PATH',COM_TZ_PORTFOLIO_PLUS_PATH_SITE.DIRECTORY_SEPARATOR.'templates');

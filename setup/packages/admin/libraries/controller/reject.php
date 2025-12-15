@@ -21,16 +21,19 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Controller\FormController;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Log\Log;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Utilities\ArrayHelper;
 
-jimport('joomla.application.component.controllerform');
-jimport('joomla.filesystem.file');
-
-class TZ_Portfolio_PlusControllerRejectBase extends JControllerForm
+class TZ_Portfolio_PlusControllerRejectBase extends FormController
 {
     protected function allowReject($data = array())
     {
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
 
         return $user->authorise('core.approve', $this->option);
     }
@@ -49,7 +52,7 @@ class TZ_Portfolio_PlusControllerRejectBase extends JControllerForm
         // Check if there is a return value
         $return = $this->input->get('return', null, 'base64');
 
-        if (!is_null($return) && \JUri::isInternal(base64_decode($return)))
+        if (!is_null($return) && Uri::isInternal(base64_decode($return)))
         {
             $url = base64_decode($return);
         }
@@ -60,7 +63,10 @@ class TZ_Portfolio_PlusControllerRejectBase extends JControllerForm
     public function save($key = null, $urlVar = null)
     {
         // Check for request forgeries
-        JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+        if (!Session::checkToken())
+        {
+            throw new \RuntimeException(Text::_('JINVALID_TOKEN'), 403);
+        }
 
         $app        = Factory::getApplication();
 
@@ -75,7 +81,7 @@ class TZ_Portfolio_PlusControllerRejectBase extends JControllerForm
 
         if (empty($cid))
         {
-            \JLog::add(\JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), \JLog::WARNING, 'jerror');
+            Log::add(Text::_($this->text_prefix . '_NO_ITEM_SELECTED'), Log::WARNING, 'jerror');
         }else {
             // Make sure the item ids are integers
             $cid = ArrayHelper::toInteger($cid);
@@ -83,11 +89,11 @@ class TZ_Portfolio_PlusControllerRejectBase extends JControllerForm
             // Access check.
             if (!$this->allowReject($data)) {
 
-                $this->setError(\JText::_('COM_TZ_PORTFOLIO_PLUS_ERROR_NOT_REJECT_ARTICLE'));
+                $this->setError(Text::_('COM_TZ_PORTFOLIO_PLUS_ERROR_NOT_REJECT_ARTICLE'));
                 $this->setMessage($this->getError(), 'error');
 
                 $this->setRedirect(
-                    \JRoute::_($url, false)
+                    Route::_($url, false)
                 );
                 $this->redirect();
             }
@@ -119,11 +125,11 @@ class TZ_Portfolio_PlusControllerRejectBase extends JControllerForm
                 $app->setUserState($context . '.data', $validData);
 
                 // Redirect back to the edit screen.
-                $this->setError(\JText::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $model->getError()));
+                $this->setError(Text::sprintf('JLIB_APPLICATION_ERROR_SAVE_FAILED', $model->getError()));
                 $this->setMessage($this->getError(), 'error');
 
                 $this->setRedirect(
-                    \JRoute::_(
+                    Route::_(
                         $url, false
                     )
                 );
@@ -137,15 +143,15 @@ class TZ_Portfolio_PlusControllerRejectBase extends JControllerForm
 //            // Check if there is a return value
 //            $return = $this->input->get('return', null, 'base64');
 //
-//            if (!is_null($return) && \JUri::isInternal(base64_decode($return)))
+//            if (!is_null($return) && Uri::isInternal(base64_decode($return)))
 //            {
 //                $url = base64_decode($return);
 //            }
 
-        $this->setMessage(JText::plural('COM_TZ_PORTFOLIO_PLUS_N_ITEMS_REJECTED', count($cid)));
+        $this->setMessage(Text::plural('COM_TZ_PORTFOLIO_PLUS_N_ITEMS_REJECTED', count($cid)));
 
             // Redirect to the list screen.
-            $this->setRedirect(\JRoute::_($url, false));
+            $this->setRedirect(Route::_($url, false));
 
             // Invoke the postSave method to allow for the child class to access the model.
             $this->postSaveHook($model, $validData);

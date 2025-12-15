@@ -19,9 +19,8 @@
 
 // No direct access
 defined('_JEXEC') or die;
-
+use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Form\Form;
-
 if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE){
     class TZ_Portfolio_PlusModelAdmin extends JModelAdmin
     {
@@ -36,7 +35,7 @@ if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE){
         }
     }
 }else{
-    class TZ_Portfolio_PlusModelAdmin extends JModelAdmin
+    class TZ_Portfolio_PlusModelAdmin extends AdminModel
     {
         public function getForm($data = array(), $loadData = true)
         {

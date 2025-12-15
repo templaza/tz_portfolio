@@ -20,9 +20,9 @@
 // No direct access
 defined('_JEXEC') or die;
 
-jimport('joomla.uri.uri');
+use Joomla\CMS\Uri\Uri;
 
-class TZ_Portfolio_PlusUri extends JUri{
+class TZ_Portfolio_PlusUri extends Uri{
     protected static $jsc_path = 'components/com_tz_portfolio_plus';
 
     public static function base($pathonly = false,$admin=false)

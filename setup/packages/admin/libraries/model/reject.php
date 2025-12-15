@@ -23,8 +23,11 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Table\Table;
+use Joomla\Database\DatabaseInterface;
 
-class TZ_Portfolio_PlusModelRejectBase extends JModelAdmin
+class TZ_Portfolio_PlusModelRejectBase extends AdminModel
 {
     protected function populateState()
     {
@@ -41,7 +44,8 @@ class TZ_Portfolio_PlusModelRejectBase extends JModelAdmin
 
     public function getTable($type = 'Content_Rejected', $prefix = 'TZ_Portfolio_PlusTable', $config = array())
     {
-        return JTable::getInstance($type, $prefix, $config);
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        return Table::getInstance($type, $prefix, ['dbo' => $db] + $config);
     }
 
     public function getForm($data = array(), $loadData = true)

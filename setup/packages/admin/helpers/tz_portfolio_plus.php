@@ -21,9 +21,10 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
+use Joomla\Filesystem\File;
 use Joomla\CMS\Filesystem\Path;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
+use Joomla\CMS\Language\Text;
 
 class TZ_Portfolio_PlusHelper
 {
@@ -41,69 +42,69 @@ class TZ_Portfolio_PlusHelper
 	 */
 	public static function addSubmenu($vName)
 	{
-	    $user   = Factory::getUser();
+	    $user   = Factory::getApplication()->getIdentity();
         $class  = 'JHtmlSidebar';
 
-        call_user_func_array($class.'::addEntry',array(JText::_('COM_TZ_PORTFOLIO_PLUS_DASHBOARD'),
+        call_user_func_array($class.'::addEntry',array(Text::_('COM_TZ_PORTFOLIO_PLUS_DASHBOARD'),
             'index.php?option=com_tz_portfolio_plus&view=dashboard',
             $vName == 'dashboard'));
 
         if($user -> authorise('core.manage.article', 'com_tz_portfolio_plus')) {
-            call_user_func_array($class . '::addEntry', array(JText::_('COM_TZ_PORTFOLIO_PLUS_ARTICLES'),
+            call_user_func_array($class . '::addEntry', array(Text::_('COM_TZ_PORTFOLIO_PLUS_ARTICLES'),
                 'index.php?option=com_tz_portfolio_plus&view=articles',
                 $vName == 'articles'));
         }
 
         if($user -> authorise( 'core.manage.category', 'com_tz_portfolio_plus')) {
-            call_user_func_array($class . '::addEntry', array(JText::_('COM_TZ_PORTFOLIO_PLUS_CATEGORIES'),
+            call_user_func_array($class . '::addEntry', array(Text::_('COM_TZ_PORTFOLIO_PLUS_CATEGORIES'),
                 'index.php?option=com_tz_portfolio_plus&view=categories',
                 $vName == 'categories'));
         }
 
         if($user -> authorise('core.manage.article', 'com_tz_portfolio_plus')) {
-            call_user_func_array($class.'::addEntry',array(JText::_('COM_TZ_PORTFOLIO_PLUS_SUBMENU_FEATURED_ARTICLES'),
+            call_user_func_array($class.'::addEntry',array(Text::_('COM_TZ_PORTFOLIO_PLUS_SUBMENU_FEATURED_ARTICLES'),
                 'index.php?option=com_tz_portfolio_plus&view=featured',
                 $vName == 'featured'));
         }
 
         if($user -> authorise( 'core.manage.field', 'com_tz_portfolio_plus')) {
-            call_user_func_array($class . '::addEntry', array(JText::_('COM_TZ_PORTFOLIO_PLUS_FIELDS'),
+            call_user_func_array($class . '::addEntry', array(Text::_('COM_TZ_PORTFOLIO_PLUS_FIELDS'),
                 'index.php?option=com_tz_portfolio_plus&view=fields',
                 $vName == 'fields'));
         }
 
         if($user -> authorise( 'core.manage.group', 'com_tz_portfolio_plus')) {
-            call_user_func_array($class.'::addEntry',array(JText::_('COM_TZ_PORTFOLIO_PLUS_FIELD_GROUPS'),
+            call_user_func_array($class.'::addEntry',array(Text::_('COM_TZ_PORTFOLIO_PLUS_FIELD_GROUPS'),
                 'index.php?option=com_tz_portfolio_plus&view=groups',
                 $vName == 'groups'));
         }
         if($user -> authorise( 'core.manage.tag', 'com_tz_portfolio_plus')) {
-            call_user_func_array($class.'::addEntry',array(JText::_('COM_TZ_PORTFOLIO_PLUS_TAGS'),
+            call_user_func_array($class.'::addEntry',array(Text::_('COM_TZ_PORTFOLIO_PLUS_TAGS'),
                         'index.php?option=com_tz_portfolio_plus&view=tags',
                         $vName == 'tags'));
         }
         if($user -> authorise( 'core.manage.addon', 'com_tz_portfolio_plus')) {
-            call_user_func_array($class.'::addEntry',array(JText::_('COM_TZ_PORTFOLIO_PLUS_ADDONS'),
+            call_user_func_array($class.'::addEntry',array(Text::_('COM_TZ_PORTFOLIO_PLUS_ADDONS'),
                 'index.php?option=com_tz_portfolio_plus&view=addons',
                 $vName == 'addons'));
         }
         if($user -> authorise( 'core.manage.style', 'com_tz_portfolio_plus')) {
-            call_user_func_array($class.'::addEntry',array(JText::_('COM_TZ_PORTFOLIO_PLUS_TEMPLATE_STYLES'),
+            call_user_func_array($class.'::addEntry',array(Text::_('COM_TZ_PORTFOLIO_PLUS_TEMPLATE_STYLES'),
                 'index.php?option=com_tz_portfolio_plus&view=template_styles',
                 $vName == 'template_styles'));
         }
         if($user -> authorise( 'core.manage.template', 'com_tz_portfolio_plus')) {
-            call_user_func_array($class.'::addEntry',array(JText::_('COM_TZ_PORTFOLIO_PLUS_TEMPLATES'),
+            call_user_func_array($class.'::addEntry',array(Text::_('COM_TZ_PORTFOLIO_PLUS_TEMPLATES'),
                 'index.php?option=com_tz_portfolio_plus&view=templates',
                 $vName == 'templates'));
         }
         if($user -> authorise( 'core.manage.extension', 'com_tz_portfolio_plus')) {
-            call_user_func_array($class.'::addEntry',array(JText::_('COM_TZ_PORTFOLIO_PLUS_EXTENSIONS'),
+            call_user_func_array($class.'::addEntry',array(Text::_('COM_TZ_PORTFOLIO_PLUS_EXTENSIONS'),
                 'index.php?option=com_tz_portfolio_plus&view=extension&layout=upload',
                 $vName == 'extension'));
         }
         if($user -> authorise( 'core.manage.acl', 'com_tz_portfolio_plus')) {
-            call_user_func_array($class.'::addEntry',array(JText::_('COM_TZ_PORTFOLIO_PLUS_ACL'),
+            call_user_func_array($class.'::addEntry',array(Text::_('COM_TZ_PORTFOLIO_PLUS_ACL'),
                 'index.php?option=com_tz_portfolio_plus&view=acls',
                 $vName == 'acls'));
         }
@@ -125,7 +126,7 @@ class TZ_Portfolio_PlusHelper
 		JLog::add(__METHOD__ . '() is deprecated, use JHelperContent::getActions() with new arguments order instead.', JLog::WARNING, 'deprecated');
 
 		// Reverted a change for version 2.5.6
-		$user	= Factory::getUser();
+		$user	= Factory::getApplication()->getIdentity();
 		$result	= new JObject;
 
 		$path = JPATH_ADMINISTRATOR . '/components/com_tz_portfolio_plus/access.xml';
@@ -166,7 +167,7 @@ class TZ_Portfolio_PlusHelper
 			return $result;
 		}
 
-		$user	= Factory::getUser();
+		$user	= Factory::getApplication()->getIdentity();
 		$result	= new JObject;
 
 		$path = JPATH_ADMINISTRATOR . '/components/com_tz_portfolio_plus/access.xml';
@@ -205,7 +206,7 @@ class TZ_Portfolio_PlusHelper
 	{
 		// Filter settings
 		$config		= JComponentHelper::getParams('com_config');
-		$user		= Factory::getUser();
+		$user		= Factory::getApplication()->getIdentity();
 		$userGroups	= JAccess::getGroupsByUser($user->get('id'));
 
 		$filters = $config->get('filters');
@@ -503,7 +504,7 @@ class TZ_Portfolio_PlusHelper
         catch (\RuntimeException $exception){
 
             self::$cache[$store]    = false;
-            \JLog::add(\JText::sprintf('JLIB_INSTALLER_ERROR_DOWNLOAD_SERVER_CONNECT', $exception->getMessage()), \JLog::WARNING, 'jerror');
+            \JLog::add(\Text::sprintf('JLIB_INSTALLER_ERROR_DOWNLOAD_SERVER_CONNECT', $exception->getMessage()), \JLog::WARNING, 'jerror');
 
             return false;
         }

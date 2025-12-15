@@ -26,10 +26,6 @@ use Joomla\CMS\Language\LanguageHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 
-jimport('joomla.filesytem.file');
-jimport('joomla.filesytem.folder');
-jimport('joomla.installer.installer');
-
 class com_tz_portfolio_plusInstallerScript{
 
     protected $install_new  = false;

@@ -26,12 +26,13 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\Event\DispatcherInterface;
+use Joomla\CMS\Plugin\PluginHelper;
 
 tzportfolioplusimport('plugin.helpers.base');
 
 if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE){
     // Declare class with Joomla 4
-    class TZ_Portfolio_PlusPluginHelperLegacy extends JPluginHelper{
+    class TZ_Portfolio_PlusPluginHelperLegacy extends PluginHelper{
 
         protected static $loaded    = array();
 
@@ -116,10 +117,10 @@ if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE){
         }
     }
 }else{
-    class TZ_Portfolio_PlusPluginHelperLegacy extends JPluginHelper{
+    class TZ_Portfolio_PlusPluginHelperLegacy extends PluginHelper{
 
         // Declare class with not Joomla 4
-        protected static function import($plugin, $autocreate = true, \JEventDispatcher $dispatcher = null)
+        protected static function import($plugin, $autocreate = true, DispatcherInterface $dispatcher = null)
         {
             if(TZ_Portfolio_PlusPluginHelperBase::import($plugin, $dispatcher)){
                 if ($autocreate)
@@ -142,7 +143,7 @@ if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE){
             }
         }
 
-        public static function importPlugin($type, $plugin = null, $autocreate = true, \JEventDispatcher $dispatcher = null)
+        public static function importPlugin($type, $plugin = null, $autocreate = true, DispatcherInterface $dispatcher = null)
         {
             // Ensure we have a dispatcher now so we can correctly track the loaded paths
             $dispatcher = $dispatcher ?: TZ_Portfolio_PlusPluginHelperBase::getDispatcher();

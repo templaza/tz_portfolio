@@ -24,14 +24,15 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Toolbar\Toolbar;
+use Joomla\CMS\Toolbar\ToolbarHelper;
 
 JLoader::import('toolbar', JPATH_ADMINISTRATOR.'/includes');
 
-class TZ_Portfolio_PlusToolbarHelper extends JToolbarHelper {
+class TZ_Portfolio_PlusToolbarHelper extends ToolbarHelper {
 
     public static function customHelp($url, $title, $icon = null, $id=null, $width=800, $height=500){
 
-        $bar    = JToolbar::getInstance('toolbar');
+        $bar    = Toolbar::getInstance('toolbar');
         $text   = $title?JText::_($title):JText::_('JTOOLBAR_HELP');
         $doTask = 'Joomla.popupWindow(\''.$url.'\',\''.$text.'\', '.$width.', '.$height.', 1)';
         $id     = $id?$id:'customhelp';
@@ -67,7 +68,7 @@ class TZ_Portfolio_PlusToolbarHelper extends JToolbarHelper {
 
     public static function preferencesAddon($addonId, $height = '550', $width = '875', $alt = 'JToolbar_Options')
     {
-        $bar = JToolbar::getInstance('toolbar');
+        $bar = Toolbar::getInstance('toolbar');
 
         $uri = (string) JUri::getInstance();
         $return = urlencode(base64_encode($uri));
@@ -83,7 +84,7 @@ class TZ_Portfolio_PlusToolbarHelper extends JToolbarHelper {
 
     public static function addonDataManager($alt='COM_TZ_PORTFOLIO_PLUS_ADDONS_MANAGER', $icon = 'puzzle'){
 
-        $bar = JToolbar::getInstance('toolbar');
+        $bar = Toolbar::getInstance('toolbar');
 
         // Add a button linking to config for component.
         $bar->appendButton(

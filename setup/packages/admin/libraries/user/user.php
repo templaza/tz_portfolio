@@ -28,13 +28,13 @@ use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 //jimport('joomla.user.user');
 
-class TZ_Portfolio_PlusUser extends \JUser{
+class TZ_Portfolio_PlusUser extends User{
 
     protected static $instances = array();
 
     public static function getUser($id = null)
     {
-        $instance = Factory::getUser();
+        $instance = Factory::getApplication()->getIdentity();
 
         if (is_null($id))
         {

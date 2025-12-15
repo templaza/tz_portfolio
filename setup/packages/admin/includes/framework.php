@@ -19,6 +19,7 @@
 
 // No direct access
 defined('_JEXEC') or die;
+use Joomla\CMS\HTML\HTMLHelper;
 
 // Require defines.php file
 JLoader::import('com_tz_portfolio_plus.includes.defines',JPATH_ADMINISTRATOR.'/components');
@@ -31,7 +32,7 @@ if(!class_exists('TZ_Portfolio_PlusUri')){
     JLoader::import('com_tz_portfolio_plus.libraries.uri',JPATH_ADMINISTRATOR.DIRECTORY_SEPARATOR.'components');
 }
 
-JHtml::addIncludePath(COM_TZ_PORTFOLIO_PLUS_LIBRARIES.'/html');
+HTMLHelper::addIncludePath(COM_TZ_PORTFOLIO_PLUS_LIBRARIES.'/html');
 
 tzportfolioplusimport('helper.toolbar');
 tzportfolioplusimport('helper.acl');
