@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<extension type="component" version="3.1" method="upgrade">
+<extension type="component" method="upgrade">
     <name>com_tz_portfolio_plus</name>
     <author>TZ Portfolio+</author>
     <creationDate>May 9th, 2025</creationDate>
@@ -23,7 +22,7 @@
 
     <scriptfile>script.php</scriptfile>
 
-    <namespace path="src/">TemPlaza\Component\TZ_Portfolio_Plus</namespace>
+    <namespace path="src">TemPlaza\Component\TZ_Portfolio_Plus</namespace>
 
     <uninstall>
         <sql>

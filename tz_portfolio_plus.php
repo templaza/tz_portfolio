@@ -22,6 +22,8 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\Filesystem\File;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\MVC\Controller\BaseController;
 
 // Access check.
 if (!Factory::getUser()->authorise('core.manage', 'com_tz_portfolio_plus')) {
@@ -53,9 +55,9 @@ if(File::exists($file)){
     JLoader::register('TZ_Portfolio_PlusHelperTemplates', COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH . '/helpers/templates.php');
 
     // Includes my html object
-    JHtml::addIncludePath(COM_TZ_PORTFOLIO_PLUS_ADMIN_HELPERS_PATH . '/html');
+    HTMLHelper::addIncludePath(COM_TZ_PORTFOLIO_PLUS_ADMIN_HELPERS_PATH . '/html');
 
-    $controller = JControllerLegacy::getInstance('TZ_Portfolio_Plus');
+    $controller = BaseController::getInstance('TZ_Portfolio_Plus');
 
     $controller->execute($input->get('task'));
     $controller->redirect();
