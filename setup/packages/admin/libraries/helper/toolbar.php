@@ -25,6 +25,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\CMS\Language\Text;
 
 JLoader::import('toolbar', JPATH_ADMINISTRATOR.'/includes');
 
@@ -33,11 +34,11 @@ class TZ_Portfolio_PlusToolbarHelper extends ToolbarHelper {
     public static function customHelp($url, $title, $icon = null, $id=null, $width=800, $height=500){
 
         $bar    = Toolbar::getInstance('toolbar');
-        $text   = $title?JText::_($title):JText::_('JTOOLBAR_HELP');
+        $text   = $title?Text::_($title):Text::_('JTOOLBAR_HELP');
         $doTask = 'Joomla.popupWindow(\''.$url.'\',\''.$text.'\', '.$width.', '.$height.', 1)';
         $id     = $id?$id:'customhelp';
 
-        $layout = new JLayoutFile('toolbar.customhelp');
+        $layout = new FileLayout('toolbar.customhelp');
         $html   = $layout->render(array('doTask' => $doTask, 'text' => $text, 'icon' => $icon, 'id' => $id));
         $bar -> appendButton('Custom', $html, $id);
     }

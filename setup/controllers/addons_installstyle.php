@@ -23,8 +23,10 @@
 
 // no direct access
 defined('_JEXEC') or die;
-
+use Joomla\CMS\Factory;
 use TZ_Portfolio_Plus\Installer\TZ_Portfolio_PlusInstaller;
+use Joomla\CMS\Language\Text;
+use Joomla\Database\DatabaseInterface;
 
 class TZ_Portfolio_PlusSetupControllerAddons_InstallStyle extends TZ_Portfolio_PlusSetupControllerLegacy
 {
@@ -57,7 +59,7 @@ class TZ_Portfolio_PlusSetupControllerAddons_InstallStyle extends TZ_Portfolio_P
         JLoader::import('com_tz_portfolio_plus.libraries.template',JPATH_ADMINISTRATOR.DIRECTORY_SEPARATOR.'components');
 		TZ_Portfolio_PlusTemplate::loadLanguage($style);
 
-		$this->setInfo(JText::sprintf('Style %1$s installed on the site', JText::_('TZ_PORTFOLIO_PLUS_TPL_'.$style)), true);
+		$this->setInfo(Text::sprintf('Style %1$s installed on the site', Text::_('TZ_PORTFOLIO_PLUS_TPL_'.$style)), true);
 		return $this->output();
 	}
 
@@ -97,7 +99,7 @@ class TZ_Portfolio_PlusSetupControllerAddons_InstallStyle extends TZ_Portfolio_P
             return false;
         }
 
-        $db     = JFactory::getDbo();
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $query  = $db -> getQuery(true);
 
         $query -> select('COUNT(*)');
@@ -123,7 +125,7 @@ class TZ_Portfolio_PlusSetupControllerAddons_InstallStyle extends TZ_Portfolio_P
             return false;
         }
 
-        $db     = JFactory::getDbo();
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $query  = $db -> getQuery(true);
 
         $query -> update('#__tz_portfolio_plus_extensions');

@@ -28,11 +28,12 @@ use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Helper\TagsHelper;
 use Joomla\CMS\Layout\FileLayout;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
+use Joomla\CMS\Form\Field\PredefinedListField;
 
 FormHelper::loadFieldClass('list');
 FormHelper::loadFieldClass('predefinedlist');
 
-class JFormFieldTZStatus extends JFormFieldPredefinedList {
+class JFormFieldTZStatus extends PredefinedListField {
 
     public $type        = 'TZStatus';
     protected $predefinedOptions = array(
@@ -45,6 +46,4 @@ class JFormFieldTZStatus extends JFormFieldPredefinedList {
         '2'  => 'JARCHIVED',
         '*'  => 'JALL',
     );
-
-
 }

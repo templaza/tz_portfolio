@@ -21,11 +21,21 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Path;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Path;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
+use Joomla\CMS\MVC\Controller\BaseController;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Table\Table;
+use Joomla\Database\DatabaseInterface;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
+use Joomla\CMS\Component\ComponentHelper;
 
-class TZ_Portfolio_PlusController extends JControllerLegacy
+class TZ_Portfolio_PlusController extends BaseController
 {
 	/**
 	 * @var		string	The extension for which the categories apply.
@@ -49,7 +59,7 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
 	{
 		parent::__construct($config);
 
-		// Guess the JText message prefix. Defaults to the option.
+		// Guess the Text message prefix. Defaults to the option.
 		if (empty($this->extension)) {
 			$this->extension = $this -> input -> getCmd('extension', 'com_tz_portfolio_plus');
 		}
@@ -71,9 +81,9 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
         $app        = Factory::getApplication();
         $document   = $app -> getDocument();
 
-		$document -> addStyleSheet(JURI::base(true).'/components/com_tz_portfolio_plus/css/style.min.css', array('version' => 'auto'));
+		$document -> addStyleSheet(Uri::base(true).'/components/com_tz_portfolio_plus/css/style.min.css', array('version' => 'auto'));
 
-        JHtml::_('jquery.framework');
+        Factory::getApplication()->getDocument()->getWebAssetManager()->useScript('jquery');
 
         // Set the default view name and format from the Request.
         $view		= $this -> input -> get('view', 'dashboard');
@@ -84,7 +94,7 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
 
         // Check each manage permission
         if(!$this -> _checkAccess($view)){
-            $this->setRedirect(JRoute::_('index.php?option=com_tz_portfolio_plus', false));
+            $this->setRedirect(Route::_('index.php?option=com_tz_portfolio_plus', false));
             return false;
         }
 
@@ -96,7 +106,7 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
             {
                 $response = 404;
             }
-            throw new Exception(JText::sprintf('JLIB_APPLICATION_ERROR_VIEW_NOT_FOUND', $view,
+            throw new Exception(Text::sprintf('JLIB_APPLICATION_ERROR_VIEW_NOT_FOUND', $view,
                 $vFormat, $this->getName() . 'View'), $response);
         }
 
@@ -106,32 +116,32 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
                 && !$this->checkEditId('com_tz_portfolio_plus.edit.'.$view, $id)) {
 
                 // Somehow the person just went to the form - we don't allow that.
-                $this->setMessage(JText::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $id), 'error');
+                $this->setMessage(Text::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $id), 'error');
 
                 // Check edit category
                 if($view == 'category') {
-                    $this->setRedirect(JRoute::_('index.php?option=com_tz_portfolio_plus&view=categories&extension='
+                    $this->setRedirect(Route::_('index.php?option=com_tz_portfolio_plus&view=categories&extension='
                         . $this->extension, false));
                 }
 
                 // Check edit article
                 if($view == 'article') {
-                    $this->setRedirect(JRoute::_('index.php?option=com_tz_portfolio_plus&view=articles', false));
+                    $this->setRedirect(Route::_('index.php?option=com_tz_portfolio_plus&view=articles', false));
                 }
 
                 // Check edit group
                 if($view == 'group') {
-                    $this->setRedirect(JRoute::_('index.php?option=com_tz_portfolio_plus&view=groups', false));
+                    $this->setRedirect(Route::_('index.php?option=com_tz_portfolio_plus&view=groups', false));
                 }
 
                 // Check edit field
                 if($view == 'field') {
-                    $this->setRedirect(JRoute::_('index.php?option=com_tz_portfolio_plus&view=fields', false));
+                    $this->setRedirect(Route::_('index.php?option=com_tz_portfolio_plus&view=fields', false));
                 }
 
                 // Check edit style
                 if($view == 'style') {
-                    $this->setRedirect(JRoute::_('index.php?option=com_tz_portfolio_plus&view=template_styles', false));
+                    $this->setRedirect(Route::_('index.php?option=com_tz_portfolio_plus&view=template_styles', false));
                 }
 
                 return false;
@@ -140,13 +150,13 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
 
             // Check for edit form of addon
             if($view == 'addon'){
-                $user   = Factory::getUser();
+                $user   = Factory::getApplication()->getIdentity();
                 if(!$user -> authorise('core.admin', 'com_tz_portfolio_plus.addon.'.$id)
                     && !$user -> authorise('core.options', 'com_tz_portfolio_plus.addon.'.$id)) {
 
                     // Somehow the person just went to the form - we don't allow that.
-                    $this->setMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
-                    $this->setRedirect(JRoute::_('index.php?option=com_tz_portfolio_plus&view=addons', false));
+                    $this->setMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'error');
+                    $this->setRedirect(Route::_('index.php?option=com_tz_portfolio_plus&view=addons', false));
                     return false;
 
                 }
@@ -158,13 +168,13 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
         $display    = parent::display($cachable, $urlparams);
 
         // Footer
-        JLayoutHelper::render('footer');
+        LayoutHelper::render('footer');
 
         return $display;
 	}
 
 	protected function _checkAccess($view){
-	    $user   = Factory::getUser();
+	    $user   = Factory::getApplication()->getIdentity();
 	    $error  = false;
 
 	    switch ($view){
@@ -233,7 +243,7 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
                 break;
         }
         if($error){
-	        $this -> setMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
+	        $this -> setMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'error');
 	        return false;
         }
         return true;
@@ -279,7 +289,7 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
         $result     = false;
         $message    = null;
         $app        = Factory::getApplication();
-        $db         = Factory::getDbo();
+        $db         = Factory::getContainer()->get(DatabaseInterface::class);
         $query      = $db -> getQuery(true);
 
         $query -> select('COUNT(*)');
@@ -288,12 +298,12 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
         $db -> setQuery($query);
 
         if($db -> loadResult()){
-            $message    = JText::_('COM_TZ_PORTFOLIO_PLUS_INSTALL_SAMPLE_DATA_ERROR');
+            $message    = Text::_('COM_TZ_PORTFOLIO_PLUS_INSTALL_SAMPLE_DATA_ERROR');
         }else{
             $file       = Path::clean(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/install/demo.sql');
             $buffer     = file_get_contents($file);
             $queries    = TZ_Portfolio_PlusDatabase::splitQueries($buffer);
-            $db     = Factory::getDbo();
+            $db     = Factory::getContainer()->get(DatabaseInterface::class);
 
             foreach ($queries as $sql) {
                 // Trim any whitespace.
@@ -303,7 +313,7 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
             }
 
             /* Update created_by with current user */
-            $user   = Factory::getUser();
+            $user   = Factory::getApplication()->getIdentity();
 
             $query  -> clear();
             $query -> update('#__tz_portfolio_plus_content');
@@ -337,8 +347,8 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
                     $db -> execute();
                 }
 
-                \JTable::addIncludePath(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.DIRECTORY_SEPARATOR.'tables');
-                $table  = \JTable::getInstance('Content', 'TZ_Portfolio_PlusTable');
+                Table::addIncludePath(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.DIRECTORY_SEPARATOR.'tables');
+                $table  = Table::getInstance('Content', 'TZ_Portfolio_PlusTable');
 
                 foreach($items as $item){
                     $table -> load($item -> id);
@@ -350,11 +360,22 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
             $menu       = $app -> getMenu('site');
             $menuItems  = $menu -> getItems('link', 'index.php?option=com_tz_portfolio_plus&view=portfolio');
             if(!count($menuItems)){
-                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_menus/tables');
-                JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_menus/models');
-                $modelMenu  = JModelLegacy::getInstance('Item', 'MenusModel');
+                Table::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_menus/tables');
+                $adminPath = defined('JPATH_ADMINISTRATOR')
+                    ? JPATH_ADMINISTRATOR
+                    : (defined('JPATH_ROOT') ? Path::clean(JPATH_ROOT . '/administrator') : '');
 
-                $component  = JComponentHelper::getComponent('com_tz_portfolio_plus');
+// Add include paths for models and tables
+                BaseDatabaseModel::addIncludePath(Path::clean($adminPath . '/components/com_menus/models'));
+                Table::addIncludePath(Path::clean($adminPath . '/components/com_menus/tables'));
+
+// Create the menus Item model via the MVC factory
+                /** @var MVCFactoryInterface $mvcFactory */
+                $mvcFactory = Factory::getContainer()->get(MVCFactoryInterface::class);
+                $modelMenu = $mvcFactory->createModel('Item', 'MenusModel', ['ignore_request' => true], 'com_menus');
+
+// Get the component info using the namespaced helper
+                $component = ComponentHelper::getComponent('com_tz_portfolio_plus');
 
                 $modelMenu -> save(array('title' => 'TZ Portfolio Plus',
                     'component_id' => $component -> id,
@@ -368,7 +389,7 @@ class TZ_Portfolio_PlusController extends JControllerLegacy
                     'language' => '*'));
             }
 
-            $message    = JText::_('COM_TZ_PORTFOLIO_PLUS_INSTALL_SAMPLE_DATA_SUCCESSFULL');
+            $message    = Text::_('COM_TZ_PORTFOLIO_PLUS_INSTALL_SAMPLE_DATA_SUCCESSFULL');
         }
 
         echo new JResponseJson('', $message, !$result);
