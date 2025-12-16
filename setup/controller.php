@@ -23,14 +23,15 @@
 
 // no direct access
 defined('_JEXEC') or die;
-
-class TZ_Portfolio_PlusSetupController extends JControllerLegacy{
+use Joomla\CMS\MVC\Controller\BaseController;
+use Joomla\Filesystem\Folder;
+class TZ_Portfolio_PlusSetupController extends BaseController{
 
     protected $default_view = 'dashboard';
 
     public function completed(){
-        if(JFolder::exists(COM_TZ_PORTFOLIO_PLUS_SETUP_PATH)){
-            JFolder::delete(COM_TZ_PORTFOLIO_PLUS_SETUP_PATH);
+        if(Folder::exists(COM_TZ_PORTFOLIO_PLUS_SETUP_PATH)){
+            Folder::delete(COM_TZ_PORTFOLIO_PLUS_SETUP_PATH);
             return true;
         }
     }
