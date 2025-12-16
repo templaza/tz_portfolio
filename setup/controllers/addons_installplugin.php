@@ -23,7 +23,8 @@
 
 // no direct access
 defined('_JEXEC') or die;
-
+use Joomla\CMS\Factory;
+use Joomla\Database\DatabaseInterface;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Installer\Installer;
 
@@ -59,7 +60,7 @@ class TZ_PortfolioSetupControllerAddons_InstallPlugin extends TZ_PortfolioSetupC
 	public function installPlugin($element, $group, $absolutePath)
 	{
 	    // Before install check the plugin exists
-        $db = JFactory::getDbo();
+        $db = $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         $query  = $db -> getQuery(true);
         $query -> select('COUNT(*)');

@@ -51,7 +51,7 @@ class TZ_PortfolioSetupControllerAddons_InstallModule extends TZ_PortfolioSetupC
 	{
 		
 		// Get Joomla's installer instance
-		$installer = new Installer();
+		$installer = Installer::getInstance();
 
 		// Allow overwriting existing modules
 		$installer->setOverwrite(true);
