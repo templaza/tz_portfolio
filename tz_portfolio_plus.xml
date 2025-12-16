@@ -23,6 +23,8 @@
 
     <scriptfile>script.php</scriptfile>
 
+    <namespace path="src/">TemPlaza\Component\TZ_Portfolio_Plus</namespace>
+
     <uninstall>
         <sql>
             <file charset="utf8" driver="mysql">install/uninstall.sql</file>
