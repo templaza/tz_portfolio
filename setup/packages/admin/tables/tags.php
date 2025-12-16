@@ -21,8 +21,10 @@
 defined('_JEXEC') or die('Restricted access');
 
 use Joomla\CMS\Factory;
-
-class TZ_Portfolio_PlusTableTags extends JTable
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Application\ApplicationHelper;
+class TZ_Portfolio_PlusTableTags extends Table
 {
 
     function __construct(&$db) {
@@ -55,7 +57,7 @@ class TZ_Portfolio_PlusTableTags extends JTable
             // Nothing to set publishing state on, return false.
             else
             {
-                $this->setError(JText::_('JLIB_DATABASE_ERROR_NO_ROWS_SELECTED'));
+                $this->setError(Text::_('JLIB_DATABASE_ERROR_NO_ROWS_SELECTED'));
                 return false;
             }
         }
@@ -81,7 +83,7 @@ class TZ_Portfolio_PlusTableTags extends JTable
             $this->alias = $this->title;
         }
 
-        $this->alias = JApplicationHelper::stringURLSafe($this->alias);
+        $this->alias = ApplicationHelper::stringURLSafe($this->alias);
 
         if (trim(str_replace('-', '', $this->alias)) == '')
         {
@@ -100,8 +102,7 @@ class TZ_Portfolio_PlusTableTags extends JTable
         // If no primary key is given, return false.
         if ($pk === null)
         {
-            $e = new JException(JText::_('JLIB_DATABASE_ERROR_NULL_PRIMARY_KEY'));
-            $this->setError($e);
+            $this->setError(Text::_('JLIB_DATABASE_ERROR_NULL_PRIMARY_KEY'));
             return false;
         }
 
@@ -111,7 +112,7 @@ class TZ_Portfolio_PlusTableTags extends JTable
             // Get and the asset name.
             $this->$k = $pk;
             $name = $this->_getAssetName();
-            $asset = JTable::getInstance('Asset');
+            $asset = Table::getInstance('Asset');
 
             if ($asset->loadByName($name))
             {
@@ -139,7 +140,7 @@ class TZ_Portfolio_PlusTableTags extends JTable
             $this -> _db -> execute();
         }catch (\InvalidArgumentException $e)
         {
-            $this->setError(JText::sprintf('JLIB_DATABASE_ERROR_DELETE_FAILED', get_class($this), $e -> getMessage()));
+            $this->setError(Text::sprintf('JLIB_DATABASE_ERROR_DELETE_FAILED', get_class($this), $e -> getMessage()));
             return false;
         }
 
@@ -153,8 +154,7 @@ class TZ_Portfolio_PlusTableTags extends JTable
         // Check for a database error.
         if (!$this->_db->execute())
         {
-            $e = new JException(JText::sprintf('JLIB_DATABASE_ERROR_DELETE_FAILED', get_class($this), $this->_db->getErrorMsg()));
-            $this->setError($e);
+            $this->setError(Text::sprintf('JLIB_DATABASE_ERROR_DELETE_FAILED', get_class($this), $this->_db->getErrorMsg()));
             return false;
         }
 

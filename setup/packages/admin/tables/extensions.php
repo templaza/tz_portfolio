@@ -21,9 +21,9 @@
 defined('_JEXEC') or die('Restricted access');
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-
-class TZ_Portfolio_PlusTableExtensions extends JTable
+use Joomla\Filesystem\File;
+use Joomla\CMS\Table\Table;
+class TZ_Portfolio_PlusTableExtensions extends Table
 {
     function __construct(&$db)
     {
@@ -89,7 +89,7 @@ class TZ_Portfolio_PlusTableExtensions extends JTable
         return $this->name;
     }
 
-    protected function _getAssetParentId(JTable $table = null, $id = null)
+    protected function _getAssetParentId(Table $table = null, $id = null)
     {
         $assetId = null;
 

@@ -25,11 +25,14 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
 
 if(COM_TZ_PORTFOLIO_PLUS_EDITION == 'free'){
 
     $modalId    = 'tpp-modal__licenses';
-    $params     = JComponentHelper::getParams('com_tz_portfolio_plus');
+    $params     = ComponentHelper::getParams('com_tz_portfolio_plus');
     $xml        = simplexml_load_file(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/tz_portfolio_plus.xml');
 
     $doc        = Factory::getApplication() -> getDocument();
@@ -79,7 +82,7 @@ if(COM_TZ_PORTFOLIO_PLUS_EDITION == 'free'){
                     if($this.hasClass("activating")){
                         return;
                     }
-                    $this.addClass("activating").html("'.htmlspecialchars(JText::_('COM_TZ_PORTFOLIO_PLUS_ACTIVING')).'<span class=\"progress progress-loading\"></span>");
+                    $this.addClass("activating").html("'.htmlspecialchars(Text::_('COM_TZ_PORTFOLIO_PLUS_ACTIVING')).'<span class=\"progress progress-loading\"></span>");
                     $.ajax({
                         type: "POST",
                         url: "index.php?option=com_tz_portfolio_plus",
@@ -106,7 +109,7 @@ if(COM_TZ_PORTFOLIO_PLUS_EDITION == 'free'){
                     });
                 });
                 $("#'.$modalId.' [data-tp-license-dismiss]").on("click", function () {
-                    $("#'.$modalId.' [data-tp-license-accept-active]").removeClass("activating").text("'.htmlspecialchars(JText::_('COM_TZ_PORTFOLIO_PLUS_ACTIVE')).'");
+                    $("#'.$modalId.' [data-tp-license-accept-active]").removeClass("activating").text("'.htmlspecialchars(Text::_('COM_TZ_PORTFOLIO_PLUS_ACTIVE')).'");
                     $("#'.$modalId.' [data-licenses-placeholder]").html("");
                     $("#'.$modalId.'").modal("hide");
                 });
@@ -118,13 +121,13 @@ if(COM_TZ_PORTFOLIO_PLUS_EDITION == 'free'){
     <div class="content ps-0">
         <span class="tps tp-flag-checkered tpp-upgrade-pro__icon"></span>
         <div class="content__inner">
-            <h4><?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_IS_VERSION', JText::_('COM_TZ_PORTFOLIO_PLUS_FREE')); ?></h4>
-            <p><?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_FREE_DESC', $xml -> pricingUrl, $xml -> tokenUrl);?></p>
+            <h4><?php echo Text::sprintf('COM_TZ_PORTFOLIO_PLUS_IS_VERSION', Text::_('COM_TZ_PORTFOLIO_PLUS_FREE')); ?></h4>
+            <p><?php echo Text::sprintf('COM_TZ_PORTFOLIO_PLUS_FREE_DESC', $xml -> pricingUrl, $xml -> tokenUrl);?></p>
         </div>
 
-        <a href="javascript:" class="btn btn-danger btn-large" data-tp-license-active><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_ACTIVE_NOW'); ?></a>
+        <a href="javascript:" class="btn btn-danger btn-large" data-tp-license-active><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_ACTIVE_NOW'); ?></a>
         <a href="javascript:void(0);" class="btn btn-danger btn-large loading hide disabled" data-tp-license-loading>
-            <span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SETUP_LOADING'); ?></span>
+            <span><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_SETUP_LOADING'); ?></span>
             <span class="progress progress-loading"></span>
         </a>
     </div>
@@ -132,12 +135,12 @@ if(COM_TZ_PORTFOLIO_PLUS_EDITION == 'free'){
 
     <?php ob_start(); ?>
     <div data-licenses>
-        <p class="alert alert-info"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SETUP_METHOD_SELECT_LICENSE_INFO');?></p>
+        <p class="alert alert-info"><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_SETUP_METHOD_SELECT_LICENSE_INFO');?></p>
         <div data-licenses-placeholder></div>
     </div>
     <?php $bodyLicenses = ob_get_contents();
     ob_end_clean(); ?>
-    <?php echo JHtml::_(
+    <?php echo HTMLHelper::_(
         'bootstrap.renderModal',
         $modalId,
         array(
@@ -146,7 +149,7 @@ if(COM_TZ_PORTFOLIO_PLUS_EDITION == 'free'){
             'width'       => '800px',
             'bodyHeight'  => '70',
             'modalWidth'  => '40',
-            'footer'      => '<a role="button" class="btn btn-primary" data-tp-license-accept-active>' . JText::_('COM_TZ_PORTFOLIO_PLUS_ACTIVE') . '</a> <a role="button" class="btn" data-tp-license-dismiss aria-hidden="true">' . JText::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</a>',
+            'footer'      => '<a role="button" class="btn btn-primary" data-tp-license-accept-active>' . Text::_('COM_TZ_PORTFOLIO_PLUS_ACTIVE') . '</a> <a role="button" class="btn" data-tp-license-dismiss aria-hidden="true">' . Text::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</a>',
         ), $bodyLicenses
     );?>
 <?php }

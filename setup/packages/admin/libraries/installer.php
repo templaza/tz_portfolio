@@ -24,8 +24,10 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\String\StringHelper;
-use Joomla\CMS\Filesystem\Folder;
+use Joomla\Filesystem\Folder;
 use Joomla\CMS\Installer\Installer;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Table\Table;
 
 \JLoader::import('com_tz_portfolio_plus.includes.framework',JPATH_ADMINISTRATOR.'/components');
 
@@ -39,8 +41,10 @@ class TZ_Portfolio_PlusInstaller extends Installer
 
         // Get a generic TZ_Portfolio_PlusTableExtension instance for use if not already loaded
         if (!($this->extension instanceof TZ_Portfolio_PlusTableExtensions)) {
-            \JTable::addIncludePath(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH . DIRECTORY_SEPARATOR . 'tables');
-            $this->extension = \JTable::getInstance('Extensions', 'TZ_Portfolio_PlusTable');
+            Table::addIncludePath(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH . DIRECTORY_SEPARATOR . 'tables');
+            $this->extension = Table::getInstance('Extensions', 'TZ_Portfolio_PlusTable');
+//            \JTable::addIncludePath(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH . DIRECTORY_SEPARATOR . 'tables');
+//            $this->extension = \JTable::getInstance('Extensions', 'TZ_Portfolio_PlusTable');
         }
 
         if(is_object($this -> extension) && isset($this -> extension -> id)) {
@@ -75,14 +79,14 @@ class TZ_Portfolio_PlusInstaller extends Installer
         }
         else
         {
-            $this->abort(\JText::_('JLIB_INSTALLER_ABORT_NOINSTALLPATH'));
+            $this->abort(Text::_('JLIB_INSTALLER_ABORT_NOINSTALLPATH'));
 
             return false;
         }
 
         if (!$adapter = $this->setupInstall('install', true))
         {
-            $this->abort(\JText::_('JLIB_INSTALLER_ABORT_DETECTMANIFEST'));
+            $this->abort(Text::_('JLIB_INSTALLER_ABORT_DETECTMANIFEST'));
 
             return false;
         }

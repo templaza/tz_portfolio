@@ -23,10 +23,10 @@
 
 // no direct access
 use Joomla\Database\DatabaseDriver;
-
+use Joomla\CMS\Table\Table;
 defined('_JEXEC') or die;
 
-class TZ_Portfolio_PlusTableContent_Category_Map extends JTable
+class TZ_Portfolio_PlusTableContent_Category_Map extends Table
 {
     public function __construct($db)
     {

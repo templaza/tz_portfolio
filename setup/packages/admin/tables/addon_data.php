@@ -23,8 +23,8 @@ defined('JPATH_PLATFORM') or die;
 use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
 use Joomla\Database\DatabaseDriver;
-
-class TZ_Portfolio_PlusTableAddon_Data extends JTable
+use Joomla\CMS\Table\Table;
+class TZ_Portfolio_PlusTableAddon_Data extends Table
 {
     public function __construct($db)
     {
@@ -57,7 +57,7 @@ class TZ_Portfolio_PlusTableAddon_Data extends JTable
         return $this -> element;
     }
 
-    protected function _getAssetParentId(JTable $table = null, $id = null)
+    protected function _getAssetParentId(Table $table = null, $id = null)
     {
         $assetId = null;
 
@@ -93,7 +93,7 @@ class TZ_Portfolio_PlusTableAddon_Data extends JTable
 
     public function store($updateNulls = false)
     {
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
         $date = Factory::getDate();
 
         if (empty($this->modified_by))

@@ -21,11 +21,11 @@
 defined('_JEXEC') or die('Restricted access');
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\Filesystem\Folder;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
-jimport('joomla.application.component.modellist');
-jimport('joomla.filesystem.folder');
-
-class TZ_Portfolio_PlusModelAddons extends JModelList
+class TZ_Portfolio_PlusModelAddons extends ListModel
 {
     public function __construct($config = array())
     {
@@ -78,8 +78,8 @@ class TZ_Portfolio_PlusModelAddons extends JModelList
     }
 
     function getListQuery(){
-        $db     = $this -> getDbo();
-        $user   = Factory::getUser();
+        $db     = $this->getDatabase();
+        $user   = Factory::getApplication()->getIdentity();
         $query  = $db -> getQuery(true);
         $query -> select('e.*');
         $query -> from($db -> quoteName('#__tz_portfolio_plus_extensions').' AS e');
@@ -261,16 +261,22 @@ class TZ_Portfolio_PlusModelAddons extends JModelList
         $finded     = false;
         $adoFinded  = false;
 
-        $options = array(
-            'defaultgroup'	=> $this -> option,
-            'storage' 		=> 'file',
-            'caching'		=> true,
-            'lifetime'      => 30 * 60,
-            'cachebase'		=> JPATH_ADMINISTRATOR.'/cache'
-        );
-        $cache = JCache::getInstance('', $options);
+        $options = [
+            'defaultgroup' => $this->option,
+            'storage'      => 'file',
+            'caching'      => true,
+            'lifetime'     => 30 * 60,
+        ];
 
-        $model  = JModelLegacy::getInstance('AddOn', 'TZ_Portfolio_PlusModel');
+        $cacheBase = defined('JPATH_ADMINISTRATOR')
+            ? JPATH_ADMINISTRATOR . '/cache'
+            : Factory::getConfig()->get('cache_path', JPATH_ROOT . '/cache');
+
+        $options['cachebase'] = $cacheBase;
+
+        $cache = Factory::getCache($this->option, 'callback', $options);
+
+        $model = BaseDatabaseModel::getInstance('AddOn', 'TZ_Portfolio_PlusModel');
 
         $page   = 1;
         while(!$finded){

@@ -23,8 +23,9 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
-
-$user   = Factory::getUser();
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+$user   = Factory::getApplication()->getIdentity();
 
 $doc    = Factory::getApplication() -> getDocument();
 $doc -> addScript(TZ_Portfolio_PlusUri::base(true, true).'/js/script.min.js',
@@ -36,19 +37,19 @@ $date   = Factory::getDate();
 ?>
     <script type="text/html" id="tmpl-tpPortfolio-footer">
         <div class="tpFooter muted">
-            <?php echo JHtml::_('tzbootstrap.addrow');?>
-            <div class="span5 col-md-5"><?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_COPYRIGHT_FOOTER', $date ->year); ?></div>
+            <?php echo HTMLHelper::_('tzbootstrap.addrow');?>
+            <div class="span5 col-md-5"><?php echo Text::sprintf('COM_TZ_PORTFOLIO_PLUS_COPYRIGHT_FOOTER', $date ->year); ?></div>
             <?php if ($user->authorise('core.manage', 'com_installer')) { ?>
                 <div class="span7 col-md-7">
                     <ul class="tpLinks inline unstyled list-unstyled">
-                        <li class="list-inline-item"><a href="<?php echo $xml -> guideUrl; ?>" target="_blank"><i class="tps tp-book"></i> <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_GUIDE'); ?></a></li>
-                        <li class="list-inline-item"><a href="<?php echo $xml -> forumUrl; ?>" target="_blank"><i class="tps tp-comment"></i> <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_FORUM'); ?></a></li>
-                        <li class="list-inline-item"><a href="<?php echo $xml -> transifexUrl; ?>" target="_blank"><span class="tps tp-language"></span> <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_FIND_HELP_TRANSLATE'); ?></a></li>
-                        <li class="list-inline-item"><a href="<?php echo $xml -> jedUrl; ?>" target="_blank"><span class="tpb tp-joomla"></span> <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_RATE_ON_JED'); ?></a></li>
+                        <li class="list-inline-item"><a href="<?php echo $xml -> guideUrl; ?>" target="_blank"><i class="tps tp-book"></i> <?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_GUIDE'); ?></a></li>
+                        <li class="list-inline-item"><a href="<?php echo $xml -> forumUrl; ?>" target="_blank"><i class="tps tp-comment"></i> <?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_FORUM'); ?></a></li>
+                        <li class="list-inline-item"><a href="<?php echo $xml -> transifexUrl; ?>" target="_blank"><span class="tps tp-language"></span> <?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_FIND_HELP_TRANSLATE'); ?></a></li>
+                        <li class="list-inline-item"><a href="<?php echo $xml -> jedUrl; ?>" target="_blank"><span class="tpb tp-joomla"></span> <?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_RATE_ON_JED'); ?></a></li>
                     </ul>
                 </div>
             <?php } ?>
-            <?php echo JHtml::_('tzbootstrap.endrow');?>
+            <?php echo HTMLHelper::_('tzbootstrap.endrow');?>
         </div>
     </script>
 <?php

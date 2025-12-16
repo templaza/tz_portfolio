@@ -21,15 +21,18 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Toolbar\ToolbarHelper as JToolBarHelper;
+use Joomla\CMS\Language\Text as JText;
 
-jimport('joomla.application.component.view');
-JHtml::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/helpers/html');
+HTMLHelper::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_tz_portfolio_plus/helpers/html');
 
 /**
  * View class for a list of articles.
 
  */
-class TZ_Portfolio_PlusViewArticles extends JViewLegacy
+class TZ_Portfolio_PlusViewArticles extends HtmlView
 {
 	protected $items;
 	protected $pagination;
@@ -60,16 +63,16 @@ class TZ_Portfolio_PlusViewArticles extends JViewLegacy
 
 		// Levels filter.
 		$options	= array();
-		$options[]	= JHtml::_('select.option', '1', JText::_('J1'));
-		$options[]	= JHtml::_('select.option', '2', JText::_('J2'));
-		$options[]	= JHtml::_('select.option', '3', JText::_('J3'));
-		$options[]	= JHtml::_('select.option', '4', JText::_('J4'));
-		$options[]	= JHtml::_('select.option', '5', JText::_('J5'));
-		$options[]	= JHtml::_('select.option', '6', JText::_('J6'));
-		$options[]	= JHtml::_('select.option', '7', JText::_('J7'));
-		$options[]	= JHtml::_('select.option', '8', JText::_('J8'));
-		$options[]	= JHtml::_('select.option', '9', JText::_('J9'));
-		$options[]	= JHtml::_('select.option', '10', JText::_('J10'));
+		$options[]	= HTMLHelper::_('select.option', '1', JText::_('J1'));
+		$options[]	= HTMLHelper::_('select.option', '2', JText::_('J2'));
+		$options[]	= HTMLHelper::_('select.option', '3', JText::_('J3'));
+		$options[]	= HTMLHelper::_('select.option', '4', JText::_('J4'));
+		$options[]	= HTMLHelper::_('select.option', '5', JText::_('J5'));
+		$options[]	= HTMLHelper::_('select.option', '6', JText::_('J6'));
+		$options[]	= HTMLHelper::_('select.option', '7', JText::_('J7'));
+		$options[]	= HTMLHelper::_('select.option', '8', JText::_('J8'));
+		$options[]	= HTMLHelper::_('select.option', '9', JText::_('J9'));
+		$options[]	= HTMLHelper::_('select.option', '10', JText::_('J10'));
 
 		$this-> f_levels    = $options;
 
@@ -79,9 +82,9 @@ class TZ_Portfolio_PlusViewArticles extends JViewLegacy
         if ($this->getLayout() !== 'modal')
         {
             $this->addToolbar();
-            if(!COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
-                $this->sidebar = JHtmlSidebar::render();
-            }
+//            if(!COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
+//                $this->sidebar = JHtmlSidebar::render();
+//            }
         }
         else
         {

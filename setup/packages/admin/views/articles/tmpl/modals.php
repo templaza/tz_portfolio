@@ -21,18 +21,22 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
 
 if (Factory::getApplication()-> isClient('site')) {
-    JSession::checkToken('get') or jexit(JText::_('JINVALID_TOKEN'));
+    Session::checkToken('get') or jexit(Text::_('JINVALID_TOKEN'));
 }
 
 require_once JPATH_ROOT . '/components/com_tz_portfolio_plus/helpers/route.php';
 
-JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
-JHtml::_('behavior.framework');
-JHtml::_('bootstrap.tooltip');
-JHtml::_('behavior.multiselect');
-JHtml::_('formbehavior.chosen', 'select');
+HTMLHelper::addIncludePath(JPATH_COMPONENT.'/helpers/html');
+HTMLHelper::_('behavior.framework');
+HTMLHelper::_('bootstrap.tooltip');
+HTMLHelper::_('behavior.multiselect');
+HTMLHelper::_('formbehavior.chosen', 'select');
 
 $function	= Factory::getApplication()->input->getCmd('function', 'jSelectArticle');
 $listOrder	= $this->escape($this->state->get('list.ordering'));
@@ -60,26 +64,26 @@ function tzGetDatas(){
     }
 }');
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&view=articles&layout=modals&tmpl=component&function='
-    .$function.'&'.JSession::getFormToken().'=1');?>"
+<form action="<?php echo Route::_('index.php?option=com_tz_portfolio_plus&view=articles&layout=modals&tmpl=component&function='
+    .$function.'&'.Session::getFormToken().'=1');?>"
       method="post" name="adminForm" id="adminForm" class="form-inline">
     <fieldset class="filter clearfix">
         <div class="btn-toolbar">
             <div class="btn-group pull-left float-left">
                 <label for="filter_search">
-                    <?php echo JText::_('JSEARCH_FILTER_LABEL'); ?>
+                    <?php echo Text::_('JSEARCH_FILTER_LABEL'); ?>
                 </label>
-                <input type="text" name="filter_search" id="filter_search" value="<?php echo $this->escape($this->state->get('filter.search')); ?>" size="30" title="<?php echo JText::_('COM_CONTENT_FILTER_SEARCH_DESC'); ?>" />
+                <input type="text" name="filter_search" id="filter_search" value="<?php echo $this->escape($this->state->get('filter.search')); ?>" size="30" title="<?php echo Text::_('COM_CONTENT_FILTER_SEARCH_DESC'); ?>" />
             </div>
             <div class="btn-group pull-left float-left">
-                <button type="submit" class="btn hasTooltip" data-placement="bottom" title="<?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?>">
+                <button type="submit" class="btn hasTooltip" data-placement="bottom" title="<?php echo Text::_('JSEARCH_FILTER_SUBMIT'); ?>">
                     <i class="icon-search"></i></button>
-                <button type="button" class="btn hasTooltip" data-placement="bottom" title="<?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?>" onclick="document.id('filter_search').value='';this.form.submit();">
+                <button type="button" class="btn hasTooltip" data-placement="bottom" title="<?php echo Text::_('JSEARCH_FILTER_CLEAR'); ?>" onclick="document.id('filter_search').value='';this.form.submit();">
                     <i class="icon-remove"></i></button>
             </div>
             <div class="pull-right float-right">
                 <button type="button" class="btn" onclick="tzGetDatas();">
-                    <i class="icon-save-new"></i> <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_INSERT');?></button>
+                    <i class="icon-save-new"></i> <?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_INSERT');?></button>
             </div>
             <div class="clearfix"></div>
         </div>
@@ -87,32 +91,32 @@ function tzGetDatas(){
 
         <div class="filters">
             <select name="filter_access" class="inputbox" onchange="this.form.submit()">
-                <option value=""><?php echo JText::_('JOPTION_SELECT_ACCESS');?></option>
-                <?php echo JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'));?>
+                <option value=""><?php echo Text::_('JOPTION_SELECT_ACCESS');?></option>
+                <?php echo HTMLHelper::_('select.options', HTMLHelper::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'));?>
             </select>
 
             <select name="filter_published" class="inputbox" onchange="this.form.submit()">
-                <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED');?></option>
-                <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true);?>
+                <option value=""><?php echo Text::_('JOPTION_SELECT_PUBLISHED');?></option>
+                <?php echo HTMLHelper::_('select.options', HTMLHelper::_('jgrid.publishedOptions'), 'value', 'text', $this->state->get('filter.published'), true);?>
             </select>
 
             <select name="filter_category_id" class="input-medium" onchange="this.form.submit()">
-                <option value=""><?php echo JText::_('JOPTION_SELECT_CATEGORY');?></option>
-                <?php echo JHtml::_('select.options', JHtml::_('tzcategory.options', 'com_tz_portfolio_plus'), 'value', 'text', $this->state->get('filter.category_id'));?>
+                <option value=""><?php echo Text::_('JOPTION_SELECT_CATEGORY');?></option>
+                <?php echo HTMLHelper::_('select.options', HTMLHelper::_('tzcategory.options', 'com_tz_portfolio_plus'), 'value', 'text', $this->state->get('filter.category_id'));?>
             </select>
 
             <?php if ($this->state->get('filter.forcedLanguage')) : ?>
                 <select name="filter_category_id" class="input-medium" onchange="this.form.submit()">
-                    <option value=""><?php echo JText::_('JOPTION_SELECT_CATEGORY');?></option>
-                    <?php echo JHtml::_('select.options', JHtml::_('tzcategory.options', 'com_tz_portfolio_plus', array('filter.language' => array('*', $this->state->get('filter.forcedLanguage')))), 'value', 'text', $this->state->get('filter.category_id'));?>
+                    <option value=""><?php echo Text::_('JOPTION_SELECT_CATEGORY');?></option>
+                    <?php echo HTMLHelper::_('select.options', HTMLHelper::_('tzcategory.options', 'com_tz_portfolio_plus', array('filter.language' => array('*', $this->state->get('filter.forcedLanguage')))), 'value', 'text', $this->state->get('filter.category_id'));?>
                 </select>
                 <input type="hidden" name="forcedLanguage" value="<?php echo $this->escape($this->state->get('filter.forcedLanguage')); ?>" />
                 <input type="hidden" name="filter_language" value="<?php echo $this->escape($this->state->get('filter.language')); ?>" />
             <?php else : ?>
 
                 <select name="filter_language" class="inputbox" onchange="this.form.submit()">
-                    <option value=""><?php echo JText::_('JOPTION_SELECT_LANGUAGE');?></option>
-                    <?php echo JHtml::_('select.options', JHtml::_('contentlanguage.existing', true, true), 'value', 'text', $this->state->get('filter.language'));?>
+                    <option value=""><?php echo Text::_('JOPTION_SELECT_LANGUAGE');?></option>
+                    <?php echo HTMLHelper::_('select.options', HTMLHelper::_('contentlanguage.existing', true, true), 'value', 'text', $this->state->get('filter.language'));?>
                 </select>
             <?php endif; ?>
         </div>
@@ -122,28 +126,28 @@ function tzGetDatas(){
         <thead>
         <tr>
             <th width="1%">
-                <input type="checkbox" name="checkall-toggle" value="" title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
+                <input type="checkbox" name="checkall-toggle" value="" title="<?php echo Text::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
             </th>
             <th class="title">
-                <?php echo JHtml::_('grid.sort', 'JGLOBAL_TITLE', 'a.title', $listDirn, $listOrder); ?>
+                <?php echo HTMLHelper::_('grid.sort', 'JGLOBAL_TITLE', 'a.title', $listDirn, $listOrder); ?>
             </th>
             <th width="6%" class="nowrap">
-                <?php echo JHtml::_('grid.sort', 'COM_TZ_PORTFOLIO_PLUS_TYPE_OF_MEDIA', 'groupname', $listDirn, $listOrder); ?>
+                <?php echo HTMLHelper::_('grid.sort', 'COM_TZ_PORTFOLIO_PLUS_TYPE_OF_MEDIA', 'groupname', $listDirn, $listOrder); ?>
             </th>
             <th width="15%">
-                <?php echo JHtml::_('grid.sort',  'JGRID_HEADING_ACCESS', 'access_level', $listDirn, $listOrder); ?>
+                <?php echo HTMLHelper::_('grid.sort',  'JGRID_HEADING_ACCESS', 'access_level', $listDirn, $listOrder); ?>
             </th>
             <th width="15%">
-                <?php echo JHtml::_('grid.sort', 'JCATEGORY', 'a.catid', $listDirn, $listOrder); ?>
+                <?php echo HTMLHelper::_('grid.sort', 'JCATEGORY', 'a.catid', $listDirn, $listOrder); ?>
             </th>
             <th width="5%">
-                <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
+                <?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
             </th>
             <th width="5%">
-                <?php echo JHtml::_('grid.sort',  'JDATE', 'a.created', $listDirn, $listOrder); ?>
+                <?php echo HTMLHelper::_('grid.sort',  'JDATE', 'a.created', $listDirn, $listOrder); ?>
             </th>
             <th width="1%" class="nowrap">
-                <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
+                <?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
             </th>
         </tr>
         </thead>
@@ -158,7 +162,7 @@ function tzGetDatas(){
         <?php foreach ($this->items as $i => $item) :?>
             <tr class="row<?php echo $i % 2; ?>">
                 <td class="center">
-                    <?php echo JHtml::_('grid.id', $i, $item->id); ?>
+                    <?php echo HTMLHelper::_('grid.id', $i, $item->id); ?>
                 </td>
                 <td>
                     <a style="cursor: pointer;" class="pointer"
@@ -191,13 +195,13 @@ function tzGetDatas(){
                 </td>
                 <td class="center small">
                     <?php if ($item->language=='*'):?>
-                        <?php echo JText::alt('JALL', 'language'); ?>
+                        <?php echo Text::alt('JALL', 'language'); ?>
                     <?php else:?>
-                        <?php echo $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
+                        <?php echo $item->language_title ? $this->escape($item->language_title) : Text::_('JUNDEFINED'); ?>
                     <?php endif;?>
                 </td>
                 <td class="center small nowrap">
-                    <?php echo JHtml::_('date', $item->created, JText::_('DATE_FORMAT_LC4')); ?>
+                    <?php echo HTMLHelper::_('date', $item->created, Text::_('DATE_FORMAT_LC4')); ?>
                 </td>
                 <td class="center small">
                     <?php echo (int) $item->id; ?>
@@ -212,6 +216,6 @@ function tzGetDatas(){
         <input type="hidden" name="boxchecked" value="0" />
         <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
         <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
-        <?php echo JHtml::_('form.token'); ?>
+        <?php echo HTMLHelper::_('form.token'); ?>
     </div>
 </form>

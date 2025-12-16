@@ -22,490 +22,520 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\Filesystem\File;
-use Joomla\CMS\Filesystem\Path;
+use Joomla\Filesystem\Path;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Object\CMSObject;
+use Joomla\CMS\Access\Access;
+use Joomla\CMS\Log\Log;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\HTML\Helpers\Sidebar;
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Filter\InputFilter;
+use Joomla\CMS\Http\HttpFactory;
+use Joomla\CMS\Registry\Registry;
 
 class TZ_Portfolio_PlusHelper
 {
-	public static $extension        = 'com_tz_portfolio_plus';
-	protected static $submenus		= array();
-	protected static $cache         = array();
+    public static $extension        = 'com_tz_portfolio_plus';
+    protected static $submenus		= array();
+    protected static $cache         = array();
 
-	/**
-	 * Configure the Linkbar.
-	 *
-	 * @param	string	$vName	The name of the active view.
-	 *
-	 * @return	void
-	 * @since	1.6
-	 */
-	public static function addSubmenu($vName)
-	{
-	    $user   = Factory::getApplication()->getIdentity();
-        $class  = 'JHtmlSidebar';
-
-        call_user_func_array($class.'::addEntry',array(Text::_('COM_TZ_PORTFOLIO_PLUS_DASHBOARD'),
+    /**
+     * Configure the Linkbar.
+     *
+     * @param	string	$vName	The name of the active view.
+     *
+     * @return	void
+     * @since	1.6
+     */
+    public static function addSubmenu($vName)
+    {
+        $user   = Factory::getApplication()->getIdentity();
+        Sidebar::addEntry(
+            Text::_('COM_TZ_PORTFOLIO_PLUS_DASHBOARD'),
             'index.php?option=com_tz_portfolio_plus&view=dashboard',
-            $vName == 'dashboard'));
+            $vName == 'dashboard'
+        );
 
         if($user -> authorise('core.manage.article', 'com_tz_portfolio_plus')) {
-            call_user_func_array($class . '::addEntry', array(Text::_('COM_TZ_PORTFOLIO_PLUS_ARTICLES'),
+            Sidebar::addEntry(
+                Text::_('COM_TZ_PORTFOLIO_PLUS_ARTICLES'),
                 'index.php?option=com_tz_portfolio_plus&view=articles',
-                $vName == 'articles'));
+                $vName == 'articles'
+            );
         }
 
         if($user -> authorise( 'core.manage.category', 'com_tz_portfolio_plus')) {
-            call_user_func_array($class . '::addEntry', array(Text::_('COM_TZ_PORTFOLIO_PLUS_CATEGORIES'),
+            Sidebar::addEntry(
+                Text::_('COM_TZ_PORTFOLIO_PLUS_CATEGORIES'),
                 'index.php?option=com_tz_portfolio_plus&view=categories',
-                $vName == 'categories'));
+                $vName == 'categories'
+            );
         }
 
         if($user -> authorise('core.manage.article', 'com_tz_portfolio_plus')) {
-            call_user_func_array($class.'::addEntry',array(Text::_('COM_TZ_PORTFOLIO_PLUS_SUBMENU_FEATURED_ARTICLES'),
+            Sidebar::addEntry(
+                Text::_('COM_TZ_PORTFOLIO_PLUS_SUBMENU_FEATURED_ARTICLES'),
                 'index.php?option=com_tz_portfolio_plus&view=featured',
-                $vName == 'featured'));
+                $vName == 'featured'
+            );
         }
 
         if($user -> authorise( 'core.manage.field', 'com_tz_portfolio_plus')) {
-            call_user_func_array($class . '::addEntry', array(Text::_('COM_TZ_PORTFOLIO_PLUS_FIELDS'),
+            Sidebar::addEntry(
+                Text::_('COM_TZ_PORTFOLIO_PLUS_FIELDS'),
                 'index.php?option=com_tz_portfolio_plus&view=fields',
-                $vName == 'fields'));
+                $vName == 'fields'
+            );
         }
 
         if($user -> authorise( 'core.manage.group', 'com_tz_portfolio_plus')) {
-            call_user_func_array($class.'::addEntry',array(Text::_('COM_TZ_PORTFOLIO_PLUS_FIELD_GROUPS'),
+            Sidebar::addEntry(
+                Text::_('COM_TZ_PORTFOLIO_PLUS_FIELD_GROUPS'),
                 'index.php?option=com_tz_portfolio_plus&view=groups',
-                $vName == 'groups'));
+                $vName == 'groups'
+            );
         }
         if($user -> authorise( 'core.manage.tag', 'com_tz_portfolio_plus')) {
-            call_user_func_array($class.'::addEntry',array(Text::_('COM_TZ_PORTFOLIO_PLUS_TAGS'),
-                        'index.php?option=com_tz_portfolio_plus&view=tags',
-                        $vName == 'tags'));
+            Sidebar::addEntry(
+                Text::_('COM_TZ_PORTFOLIO_PLUS_TAGS'),
+                'index.php?option=com_tz_portfolio_plus&view=tags',
+                $vName == 'tags'
+            );
         }
         if($user -> authorise( 'core.manage.addon', 'com_tz_portfolio_plus')) {
-            call_user_func_array($class.'::addEntry',array(Text::_('COM_TZ_PORTFOLIO_PLUS_ADDONS'),
+            Sidebar::addEntry(
+                Text::_('COM_TZ_PORTFOLIO_PLUS_ADDONS'),
                 'index.php?option=com_tz_portfolio_plus&view=addons',
-                $vName == 'addons'));
+                $vName == 'addons'
+            );
         }
         if($user -> authorise( 'core.manage.style', 'com_tz_portfolio_plus')) {
-            call_user_func_array($class.'::addEntry',array(Text::_('COM_TZ_PORTFOLIO_PLUS_TEMPLATE_STYLES'),
+            Sidebar::addEntry(
+                Text::_('COM_TZ_PORTFOLIO_PLUS_TEMPLATE_STYLES'),
                 'index.php?option=com_tz_portfolio_plus&view=template_styles',
-                $vName == 'template_styles'));
+                $vName == 'template_styles'
+            );
         }
         if($user -> authorise( 'core.manage.template', 'com_tz_portfolio_plus')) {
-            call_user_func_array($class.'::addEntry',array(Text::_('COM_TZ_PORTFOLIO_PLUS_TEMPLATES'),
+            Sidebar::addEntry(
+                Text::_('COM_TZ_PORTFOLIO_PLUS_TEMPLATES'),
                 'index.php?option=com_tz_portfolio_plus&view=templates',
-                $vName == 'templates'));
+                $vName == 'templates'
+            );
         }
         if($user -> authorise( 'core.manage.extension', 'com_tz_portfolio_plus')) {
-            call_user_func_array($class.'::addEntry',array(Text::_('COM_TZ_PORTFOLIO_PLUS_EXTENSIONS'),
+            Sidebar::addEntry(
+                Text::_('COM_TZ_PORTFOLIO_PLUS_EXTENSIONS'),
                 'index.php?option=com_tz_portfolio_plus&view=extension&layout=upload',
-                $vName == 'extension'));
+                $vName == 'extension'
+            );
         }
         if($user -> authorise( 'core.manage.acl', 'com_tz_portfolio_plus')) {
-            call_user_func_array($class.'::addEntry',array(Text::_('COM_TZ_PORTFOLIO_PLUS_ACL'),
+            Sidebar::addEntry(
+                Text::_('COM_TZ_PORTFOLIO_PLUS_ACL'),
                 'index.php?option=com_tz_portfolio_plus&view=acls',
-                $vName == 'acls'));
+                $vName == 'acls'
+            );
         }
-	}
+    }
 
-	/**
-	 * Gets a list of the actions that can be performed.
-	 *
-	 * @param	int		The category ID.
-	 * @param	int		The article ID.
-	 *
-	 * @return	JObject
-	 * @since	1.6
-	 */
+    /**
+     * Gets a list of the actions that can be performed.
+     *
+     * @param	int		The category ID.
+     * @param	int		The article ID.
+     *
+     * @return	JObject
+     * @since	1.6
+     */
 
-	public static function _getActions($categoryId = 0, $id = 0, $assetName = '')
-	{
-		// Log usage of deprecated function
-		JLog::add(__METHOD__ . '() is deprecated, use JHelperContent::getActions() with new arguments order instead.', JLog::WARNING, 'deprecated');
+    public static function _getActions($categoryId = 0, $id = 0, $assetName = '')
+    {
+        // Log usage of deprecated function
+        Log::add(__METHOD__ . '() is deprecated, use JHelperContent::getActions() with new arguments order instead.', JLog::WARNING, 'deprecated');
 
-		// Reverted a change for version 2.5.6
-		$user	= Factory::getApplication()->getIdentity();
-		$result	= new JObject;
+        // Reverted a change for version 2.5.6
+        $user	= Factory::getApplication()->getIdentity();
+        $result	= new CMSObject();
 
-		$path = JPATH_ADMINISTRATOR . '/components/com_tz_portfolio_plus/access.xml';
+        $path = JPATH_ADMINISTRATOR . '/components/com_tz_portfolio_plus/access.xml';
 
-		if (empty($id) && empty($categoryId))
-		{
-			$section = 'component';
-		}
-		elseif (empty($id))
-		{
-			$section = 'category';
-			$assetName .= '.category.' . (int) $categoryId;
-		}
-		else
-		{
-			// Used only in com_content
-			$section = 'article';
-			$assetName .= '.article.' . (int) $id;
-		}
+        if (empty($id) && empty($categoryId))
+        {
+            $section = 'component';
+        }
+        elseif (empty($id))
+        {
+            $section = 'category';
+            $assetName .= '.category.' . (int) $categoryId;
+        }
+        else
+        {
+            // Used only in com_content
+            $section = 'article';
+            $assetName .= '.article.' . (int) $id;
+        }
 
-		$actions = JAccess::getActionsFromFile($path, "/access/section[@name='" . $section . "']/");
+        $actions = Access::getActionsFromFile($path, "/access/section[@name='" . $section . "']/");
 
-		foreach ($actions as $action)
-		{
-			$result->set($action->name, $user->authorise($action->name, $assetName));
-		}
+        foreach ($actions as $action)
+        {
+            $result->set($action->name, $user->authorise($action->name, $assetName));
+        }
 
-		return $result;
-	}
+        return $result;
+    }
 
-	public static function getActions($component = '', $section = '', $id = 0, $parent_section = null)
-	{
-		// Check for deprecated arguments order
-		if (is_int($component) || is_null($component))
-		{
-			$result = self::_getActions($component, $section, $id);
+    public static function getActions($component = '', $section = '', $id = 0, $parent_section = null)
+    {
+        // Check for deprecated arguments order
+        if (is_int($component) || is_null($component))
+        {
+            $result = self::_getActions($component, $section, $id);
 
-			return $result;
-		}
+            return $result;
+        }
 
-		$user	= Factory::getApplication()->getIdentity();
-		$result	= new JObject;
+        $user	= Factory::getApplication()->getIdentity();
+        $result	= new CMSObject();
 
-		$path = JPATH_ADMINISTRATOR . '/components/com_tz_portfolio_plus/access.xml';
+        $path = JPATH_ADMINISTRATOR . '/components/com_tz_portfolio_plus/access.xml';
 
         $assetName = $component;
 
-		if ($section && $id)
-		{
-			$assetName = $component . '.' . $section . '.' . (int) $id;
+        if ($section && $id)
+        {
+            $assetName = $component . '.' . $section . '.' . (int) $id;
 
-            $tblAsset   = JTable::getInstance('Asset', 'JTable');
+            $tblAsset = Table::getInstance('Asset', 'JTable', ['dbo' => TZ_Portfolio_PlusDatabase::getDbo()]);
             if(!$tblAsset -> loadByName($assetName)){
                 $assetName  = $component . '.' . $parent_section;
             }
-		}elseif (empty($id))
+        }elseif (empty($id))
         {
             $assetName = $component . '.' . $section;
         }
 
-		$actions = JAccess::getActionsFromFile($path, "/access/section[@name='component']/");
+        $actions = Access::getActionsFromFile($path, "/access/section[@name='component']/");
 
-		foreach ($actions as $action)
-		{
-			$result->set($action->name, $user->authorise($action->name, $assetName));
-		}
+        foreach ($actions as $action)
+        {
+            $result->set($action->name, $user->authorise($action->name, $assetName));
+        }
 
-		return $result;
-	}
+        return $result;
+    }
 
-	/**
-	* Applies the content tag filters to arbitrary text as per settings for current user group
-	* @param text The string to filter
-	* @return string The filtered string
-	*/
-	public static function filterText($text)
-	{
-		// Filter settings
-		$config		= JComponentHelper::getParams('com_config');
-		$user		= Factory::getApplication()->getIdentity();
-		$userGroups	= JAccess::getGroupsByUser($user->get('id'));
+    /**
+     * Applies the content tag filters to arbitrary text as per settings for current user group
+     * @param text The string to filter
+     * @return string The filtered string
+     */
+    public static function filterText($text)
+    {
+        // Filter settings
+        $config = ComponentHelper::getParams('com_config');
+        $user = Factory::getApplication()->getIdentity();
+        $userGroups = Access::getGroupsByUser($user->id);
 
-		$filters = $config->get('filters');
+        $filters = $config->get('filters');
 
-		$blackListTags			= array();
-		$blackListAttributes	= array();
+        $blackListTags			= array();
+        $blackListAttributes	= array();
 
-		$customListTags			= array();
-		$customListAttributes	= array();
+        $customListTags			= array();
+        $customListAttributes	= array();
 
-		$whiteListTags			= array();
-		$whiteListAttributes	= array();
+        $whiteListTags			= array();
+        $whiteListAttributes	= array();
 
-		$noHtml				= false;
-		$whiteList			= false;
-		$blackList			= false;
-		$customList			= false;
-		$unfiltered			= false;
+        $noHtml				= false;
+        $whiteList			= false;
+        $blackList			= false;
+        $customList			= false;
+        $unfiltered			= false;
 
-		// Cycle through each of the user groups the user is in.
-		// Remember they are included in the Public group as well.
-		foreach ($userGroups as $groupId)
-		{
-			// May have added a group but not saved the filters.
-			if (!isset($filters->$groupId)) {
-				continue;
-			}
+        // Cycle through each of the user groups the user is in.
+        // Remember they are included in the Public group as well.
+        foreach ($userGroups as $groupId)
+        {
+            // May have added a group but not saved the filters.
+            if (!isset($filters->$groupId)) {
+                continue;
+            }
 
-			// Each group the user is in could have different filtering properties.
-			$filterData = $filters->$groupId;
-			$filterType	= strtoupper($filterData->filter_type);
+            // Each group the user is in could have different filtering properties.
+            $filterData = $filters->$groupId;
+            $filterType	= strtoupper($filterData->filter_type);
 
-			if ($filterType == 'NH') {
-				// Maximum HTML filtering.
-				$noHtml = true;
-			}
-			elseif ($filterType == 'NONE') {
-				// No HTML filtering.
-				$unfiltered = true;
-			}
-			else {
-				// Black, white or custom list.
-				// Preprocess the tags and attributes.
-				$tags			= explode(',', $filterData->filter_tags);
-				$attributes		= explode(',', $filterData->filter_attributes);
-				$tempTags		= array();
-				$tempAttributes	= array();
+            if ($filterType == 'NH') {
+                // Maximum HTML filtering.
+                $noHtml = true;
+            }
+            elseif ($filterType == 'NONE') {
+                // No HTML filtering.
+                $unfiltered = true;
+            }
+            else {
+                // Black, white or custom list.
+                // Preprocess the tags and attributes.
+                $tags			= explode(',', $filterData->filter_tags);
+                $attributes		= explode(',', $filterData->filter_attributes);
+                $tempTags		= array();
+                $tempAttributes	= array();
 
-				foreach ($tags as $tag)
-				{
-					$tag = trim($tag);
+                foreach ($tags as $tag)
+                {
+                    $tag = trim($tag);
 
-					if ($tag) {
-						$tempTags[] = $tag;
-					}
-				}
+                    if ($tag) {
+                        $tempTags[] = $tag;
+                    }
+                }
 
-				foreach ($attributes as $attribute)
-				{
-					$attribute = trim($attribute);
+                foreach ($attributes as $attribute)
+                {
+                    $attribute = trim($attribute);
 
-					if ($attribute) {
-						$tempAttributes[] = $attribute;
-					}
-				}
+                    if ($attribute) {
+                        $tempAttributes[] = $attribute;
+                    }
+                }
 
-				// Collect the black or white list tags and attributes.
-				// Each lists is cummulative.
-				if ($filterType == 'BL') {
-					$blackList				= true;
-					$blackListTags			= array_merge($blackListTags, $tempTags);
-					$blackListAttributes	= array_merge($blackListAttributes, $tempAttributes);
-				}
-				elseif ($filterType == 'CBL') {
-					// Only set to true if Tags or Attributes were added
-					if ($tempTags || $tempAttributes) {
-						$customList				= true;
-						$customListTags			= array_merge($customListTags, $tempTags);
-						$customListAttributes	= array_merge($customListAttributes, $tempAttributes);
-					}
-				}
-				elseif ($filterType == 'WL') {
-					$whiteList				= true;
-					$whiteListTags			= array_merge($whiteListTags, $tempTags);
-					$whiteListAttributes	= array_merge($whiteListAttributes, $tempAttributes);
-				}
-			}
-		}
+                // Collect the black or white list tags and attributes.
+                // Each lists is cummulative.
+                if ($filterType == 'BL') {
+                    $blackList				= true;
+                    $blackListTags			= array_merge($blackListTags, $tempTags);
+                    $blackListAttributes	= array_merge($blackListAttributes, $tempAttributes);
+                }
+                elseif ($filterType == 'CBL') {
+                    // Only set to true if Tags or Attributes were added
+                    if ($tempTags || $tempAttributes) {
+                        $customList				= true;
+                        $customListTags			= array_merge($customListTags, $tempTags);
+                        $customListAttributes	= array_merge($customListAttributes, $tempAttributes);
+                    }
+                }
+                elseif ($filterType == 'WL') {
+                    $whiteList				= true;
+                    $whiteListTags			= array_merge($whiteListTags, $tempTags);
+                    $whiteListAttributes	= array_merge($whiteListAttributes, $tempAttributes);
+                }
+            }
+        }
 
-		// Remove duplicates before processing (because the black list uses both sets of arrays).
-		$blackListTags			= array_unique($blackListTags);
-		$blackListAttributes	= array_unique($blackListAttributes);
-		$customListTags			= array_unique($customListTags);
-		$customListAttributes	= array_unique($customListAttributes);
-		$whiteListTags			= array_unique($whiteListTags);
-		$whiteListAttributes	= array_unique($whiteListAttributes);
+        // Remove duplicates before processing (because the black list uses both sets of arrays).
+        $blackListTags			= array_unique($blackListTags);
+        $blackListAttributes	= array_unique($blackListAttributes);
+        $customListTags			= array_unique($customListTags);
+        $customListAttributes	= array_unique($customListAttributes);
+        $whiteListTags			= array_unique($whiteListTags);
+        $whiteListAttributes	= array_unique($whiteListAttributes);
 
-		// Unfiltered assumes first priority.
-		if ($unfiltered) {
-			// Dont apply filtering.
-		}
-		else {
-			// Custom blacklist precedes Default blacklist
-			if ($customList) {
-				$filter = JFilterInput::getInstance(array(), array(), 1, 1);
+        // Unfiltered assumes first priority.
+        if ($unfiltered) {
+            // Dont apply filtering.
+        }
+        else {
+            // Custom blacklist precedes Default blacklist
+            if ($customList) {
+                $filter = InputFilter::getInstance(array(), array(), 1, 1);
 
-				// Override filter's default blacklist tags and attributes
-				if ($customListTags) {
-					$filter->tagBlacklist = $customListTags;
-				}
-				if ($customListAttributes) {
-					$filter->attrBlacklist = $customListAttributes;
-				}
-			}
-			// Black lists take third precedence.
-			elseif ($blackList) {
-				// Remove the white-listed attributes from the black-list.
-				$filter = JFilterInput::getInstance(
-					array_diff($blackListTags, $whiteListTags), 			// blacklisted tags
-					array_diff($blackListAttributes, $whiteListAttributes), // blacklisted attributes
-					1,														// blacklist tags
-					1														// blacklist attributes
-				);
-				// Remove white listed tags from filter's default blacklist
-				if ($whiteListTags) {
-					$filter->tagBlacklist = array_diff($filter->tagBlacklist, $whiteListTags);
-				}
-				// Remove white listed attributes from filter's default blacklist
-				if ($whiteListAttributes) {
-					$filter->attrBlacklist = array_diff($filter->attrBlacklist);
-				}
+                // Override filter's default blacklist tags and attributes
+                if ($customListTags) {
+                    $filter->tagBlacklist = $customListTags;
+                }
+                if ($customListAttributes) {
+                    $filter->attrBlacklist = $customListAttributes;
+                }
+            }
+            // Black lists take third precedence.
+            elseif ($blackList) {
+                // Remove the white-listed attributes from the black-list.
+                $filter = InputFilter::getInstance(
+                    array_diff($blackListTags, $whiteListTags), 			// blacklisted tags
+                    array_diff($blackListAttributes, $whiteListAttributes), // blacklisted attributes
+                    1,														// blacklist tags
+                    1														// blacklist attributes
+                );
+                // Remove white listed tags from filter's default blacklist
+                if ($whiteListTags) {
+                    $filter->tagBlacklist = array_diff($filter->tagBlacklist, $whiteListTags);
+                }
+                // Remove white listed attributes from filter's default blacklist
+                if ($whiteListAttributes) {
+                    $filter->attrBlacklist = array_diff($filter->attrBlacklist, $whiteListAttributes);
+                }
 
-			}
-			// White lists take fourth precedence.
-			elseif ($whiteList) {
-				$filter	= JFilterInput::getInstance($whiteListTags, $whiteListAttributes, 0, 0, 0);  // turn off xss auto clean
-			}
-			// No HTML takes last place.
-			else {
-				$filter = JFilterInput::getInstance();
-			}
+            }
+            // White lists take fourth precedence.
+            elseif ($whiteList) {
+                $filter = InputFilter::getInstance($whiteListTags, $whiteListAttributes, 0, 0, 0);  // turn off xss auto clean
+            }
+            // No HTML takes last place.
+            else {
+                $filter = InputFilter::getInstance();
+            }
 
-			$text = $filter->clean($text, 'html');
-		}
+            $text = $filter->clean($text, 'html');
+        }
 
-		return $text;
-	}
+        return $text;
+    }
 
-	public static function getMenuLinks($menuType = null, $parentId = 0, $mode = 0, $published = array(), $languages = array())
-	{
+    public static function getMenuLinks($menuType = null, $parentId = 0, $mode = 0, $published = array(), $languages = array())
+    {
         $db     = TZ_Portfolio_PlusDatabase::getDbo();
-		$query = $db->getQuery(true)
-			->select('a.id AS value, a.title AS text, a.alias, a.level, a.component_id,'
-				.' a.menutype, a.type, a.template_style_id, a.checked_out, a.params')
-			->from('#__menu AS a')
-			->join('LEFT', $db->quoteName('#__menu') . ' AS b ON a.lft > b.lft AND a.rgt < b.rgt')
-			-> join('LEFT', $db -> quoteName('#__extensions').' AS e ON e.extension_id = a.component_id')
-			-> where('e.name='.$db -> quote('com_tz_portfolio_plus'));
+        $query = $db->getQuery(true)
+            ->select('a.id AS value, a.title AS text, a.alias, a.level, a.component_id,'
+                .' a.menutype, a.type, a.template_style_id, a.checked_out, a.params')
+            ->from('#__menu AS a')
+            ->join('LEFT', $db->quoteName('#__menu') . ' AS b ON a.lft > b.lft AND a.rgt < b.rgt')
+            -> join('LEFT', $db -> quoteName('#__extensions').' AS e ON e.extension_id = a.component_id')
+            -> where('e.name='.$db -> quote('com_tz_portfolio_plus'));
 
-		// Filter by the type
-		if ($menuType)
-		{
-			$query->where('(a.menutype = ' . $db->quote($menuType) . ' OR a.parent_id = 0)');
-		}
+        // Filter by the type
+        if ($menuType)
+        {
+            $query->where('(a.menutype = ' . $db->quote($menuType) . ' OR a.parent_id = 0)');
+        }
 
-		if ($parentId)
-		{
-			if ($mode == 2)
-			{
-				// Prevent the parent and children from showing.
-				$query->join('LEFT', '#__menu AS p ON p.id = ' . (int) $parentId)
-					->where('(a.lft <= p.lft OR a.rgt >= p.rgt)');
-			}
-		}
+        if ($parentId)
+        {
+            if ($mode == 2)
+            {
+                // Prevent the parent and children from showing.
+                $query->join('LEFT', '#__menu AS p ON p.id = ' . (int) $parentId)
+                    ->where('(a.lft <= p.lft OR a.rgt >= p.rgt)');
+            }
+        }
 
-		if (!empty($languages))
-		{
-			if (is_array($languages))
-			{
-				$languages = '(' . implode(',', array_map(array($db, 'quote'), $languages)) . ')';
-			}
+        if (!empty($languages))
+        {
+            if (is_array($languages))
+            {
+                $languages = '(' . implode(',', array_map(array($db, 'quote'), $languages)) . ')';
+            }
 
-			$query->where('a.language IN ' . $languages);
-		}
+            $query->where('a.language IN ' . $languages);
+        }
 
-		if (!empty($published))
-		{
-			if (is_array($published))
-			{
-				$published = '(' . implode(',', $published) . ')';
-			}
+        if (!empty($published))
+        {
+            if (is_array($published))
+            {
+                $published = '(' . implode(',', $published) . ')';
+            }
 
-			$query->where('a.published IN ' . $published);
-		}
+            $query->where('a.published IN ' . $published);
+        }
 
-		$query->where('a.published != -2')
-			->group('a.id, a.title, a.alias, a.level, a.menutype, a.type,a.template_style_id')
-			->group('a.checked_out, a.lft, a.component_id, a.params')
-			->order('a.lft ASC');
+        $query->where('a.published != -2')
+            ->group('a.id, a.title, a.alias, a.level, a.menutype, a.type,a.template_style_id')
+            ->group('a.checked_out, a.lft, a.component_id, a.params')
+            ->order('a.lft ASC');
 
-		// Get the options.
-		$db->setQuery($query);
+        // Get the options.
+        $db->setQuery($query);
 
-		try
-		{
-			$links = $db->loadObjectList();
-		}
-		catch (RuntimeException $e)
-		{
-			Factory::getApplication() -> enqueueMessage($e->getMessage(), 'error');
+        try
+        {
+            $links = $db->loadObjectList();
+        }
+        catch (RuntimeException $e)
+        {
+            Factory::getApplication() -> enqueueMessage($e->getMessage(), 'error');
 
-			return false;
-		}
+            return false;
+        }
 
-		if (empty($menuType))
-		{
-			// If the menutype is empty, group the items by menutype.
-			$query->clear()
-				->select('*')
-				->from('#__menu_types')
-				->where('menutype <> ' . $db->quote(''))
-				->order('title, menutype');
-			$db->setQuery($query);
+        if (empty($menuType))
+        {
+            // If the menutype is empty, group the items by menutype.
+            $query->clear()
+                ->select('*')
+                ->from('#__menu_types')
+                ->where('menutype <> ' . $db->quote(''))
+                ->order('title, menutype');
+            $db->setQuery($query);
 
-			try
-			{
-				$menuTypes = $db->loadObjectList();
-			}
-			catch (RuntimeException $e)
-			{
-				Factory::getApplication() -> enqueueMessage($e->getMessage(), 'error');
+            try
+            {
+                $menuTypes = $db->loadObjectList();
+            }
+            catch (RuntimeException $e)
+            {
+                Factory::getApplication() -> enqueueMessage($e->getMessage(), 'error');
 
-				return false;
-			}
+                return false;
+            }
 
-			// Create a reverse lookup and aggregate the links.
-			$rlu = array();
+            // Create a reverse lookup and aggregate the links.
+            $rlu = array();
 
-			foreach ($menuTypes as &$type)
-			{
-				$rlu[$type->menutype] = & $type;
-				$type->links = array();
-			}
+            foreach ($menuTypes as &$type)
+            {
+                $rlu[$type->menutype] = & $type;
+                $type->links = array();
+            }
 
-			// Loop through the list of menu links.
-			foreach ($links as $i => &$link)
-			{
-				$registry       = new JRegistry($link -> params);
-				$link -> params = $registry;
-				if (isset($rlu[$link->menutype]))
-				{
-					$rlu[$link->menutype]->links[] = &$link;
+            // Loop through the list of menu links.
+            foreach ($links as $i => &$link)
+            {
+                $registry = new Registry($link->params);
+                $link->params = $registry;
+                if (isset($rlu[$link->menutype]))
+                {
+                    $rlu[$link->menutype]->links[] = &$link;
 
-					// Cleanup garbage.
-					unset($link->menutype);
-				}
-			}
+                    // Cleanup garbage.
+                    unset($link->menutype);
+                }
+            }
 
-			// Remove all menus group don't have menu items
-			if(count($menuTypes)){
-				foreach($menuTypes as $i => $item){
-					if(!$item -> links || ($item -> links && !count($item -> links))){
-						unset($menuTypes[$i]);
-					}
-				}
-			}
+            // Remove all menus group don't have menu items
+            if(count($menuTypes)){
+                foreach($menuTypes as $i => $item){
+                    if(!$item -> links || ($item -> links && !count($item -> links))){
+                        unset($menuTypes[$i]);
+                    }
+                }
+            }
 
-			return $menuTypes;
-		}
-		else
-		{
-			return $links;
-		}
-	}
+            return $menuTypes;
+        }
+        else
+        {
+            return $links;
+        }
+    }
 
-	public static function checkConnectServer($url, $method = 'get'){
+    public static function checkConnectServer($url, $method = 'get'){
 
         $url    = trim($url);
 
-	    $store  = __METHOD__.'::'.md5($url);
-	    $store2 = __CLASS__.'::getDataFromServer::'.$url;
+        $store  = __METHOD__.'::'.md5($url);
+        $store2 = __CLASS__.'::getDataFromServer::'.$url;
 
-	    if(!isset(self::$cache[$store])){
-	        self::$cache[$store]    = false;
+        if(!isset(self::$cache[$store])){
+            self::$cache[$store]    = false;
         }
 
         try {
-	        if($method == 'post'){
-                $response = \JHttpFactory::getHttp()->post($url, array());
+            if($method == 'post'){
+                $response = HttpFactory::getHttp()->post($url);
             }else {
-                $response = \JHttpFactory::getHttp()->get($url, array());
+                $response = HttpFactory::getHttp()->get($url);
             }
             self::$cache[$store2]   = $response;
         }
         catch (\RuntimeException $exception){
-
             self::$cache[$store]    = false;
-            \JLog::add(\Text::sprintf('JLIB_INSTALLER_ERROR_DOWNLOAD_SERVER_CONNECT', $exception->getMessage()), \JLog::WARNING, 'jerror');
-
+            Log::add(Text::sprintf('JLIB_INSTALLER_ERROR_DOWNLOAD_SERVER_CONNECT', $exception->getMessage()), Log::WARNING, 'jerror');
             return false;
         }
 
@@ -520,15 +550,15 @@ class TZ_Portfolio_PlusHelper
     public static function getDataFromServer($url = null, $method = 'get'){
 
         $url    = trim($url);
-	    $storeId    = __METHOD__.'::'.$url;
+        $storeId    = __METHOD__.'::'.$url;
 
-	    if(!isset(self::$cache[$storeId])){
-	        self::$cache[$storeId]  = false;
+        if(!isset(self::$cache[$storeId])){
+            self::$cache[$storeId]  = false;
         }
 
-	    if($url){
-	        if(!$check = self::checkConnectServer($url, $method)){
-	            return $check;
+        if($url){
+            if(!$check = self::checkConnectServer($url, $method)){
+                return $check;
             }
         }
         return self::$cache[$storeId];
@@ -575,22 +605,18 @@ class TZ_Portfolio_PlusHelper
 //    }
 
     public static function introGuideSkipped($view){
-	    if(!$view){
-	        return false;
+        if(!$view){
+            return false;
         }
-
-        $filePath   = \JPath::clean(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/cache'.'/introguide.json');
-
+        $filePath = Path::clean(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/cache'.'/introguide.json');
         if(!File::exists($filePath)){
             return false;
         }
-
         $introGuide = file_get_contents($filePath);
         $introGuide = json_decode($introGuide);
         if($introGuide && isset($introGuide -> $view) && $introGuide -> $view) {
             return true;
         }
-
         return false;
     }
 
@@ -642,8 +668,8 @@ class TZ_Portfolio_PlusHelper
         }
 
         if($license){
-            $nowDate    = Factory::getDate() -> toSql();
-            if($license -> $type < $nowDate){
+            $nowDate = Factory::getDate()->toSql();
+            if (isset($license->$type) && $license->$type < $nowDate) {
                 return true;
             }
         }

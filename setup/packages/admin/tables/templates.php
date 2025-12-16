@@ -19,8 +19,9 @@
 
 //no direct access
 defined('_JEXEC') or die('Restricted access');
-
-class TZ_Portfolio_PlusTableTemplates extends JTable
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Language\Text;
+class TZ_Portfolio_PlusTableTemplates extends Table
 {
     public function __construct(&$db) {
         parent::__construct('#__tz_portfolio_plus_templates','id',$db);
@@ -69,7 +70,7 @@ class TZ_Portfolio_PlusTableTemplates extends JTable
             return $data;
         }catch (\InvalidArgumentException $e)
         {
-            $this->setError(JText::sprintf('JLIB_DATABASE_ERROR_DELETE_FAILED', get_class($this), $e -> getMessage()));
+            $this->setError(Text::sprintf('JLIB_DATABASE_ERROR_DELETE_FAILED', get_class($this), $e -> getMessage()));
             return false;
         }
 //        }
@@ -92,7 +93,7 @@ class TZ_Portfolio_PlusTableTemplates extends JTable
 
             if (count($results) == 1 && $results[0] == $pk)
             {
-                $this->setError(JText::_('COM_TZ_PORTFOLIO_PLUS_TEMPLATE_STYLE_ERROR_CANNOT_DELETE_LAST_STYLE'));
+                $this->setError(Text::_('COM_TZ_PORTFOLIO_PLUS_TEMPLATE_STYLE_ERROR_CANNOT_DELETE_LAST_STYLE'));
 
                 return false;
             }

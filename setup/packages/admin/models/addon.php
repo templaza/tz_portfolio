@@ -22,15 +22,20 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
-use Joomla\CMS\Filesystem\File;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Path;
 use Joomla\Utilities\ArrayHelper;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
+use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\Text;
 
 jimport('joomla.filesytem.file');
 jimport('joomla.application.component.modeladmin');
 JLoader::import('com_tz_portfolio_plus.helpers.addons', JPATH_ADMINISTRATOR.'/components');
 
-class TZ_Portfolio_PlusModelAddon extends JModelAdmin
+class TZ_Portfolio_PlusModelAddon extends AdminModel
 {
     protected $type         = 'tz_portfolio_plus-plugin';
     protected $accept_types = array();
@@ -107,7 +112,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
 
     public function getTable($type = 'Extensions', $prefix = 'TZ_Portfolio_PlusTable', $config = array())
     {
-        return JTable::getInstance($type, $prefix, $config);
+        return Table::getInstance($type, $prefix, $config);
     }
 
     public function getForm($data = array(), $loadData = true){
@@ -168,7 +173,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
     }
 
 
-    protected function preprocessForm(JForm $form, $data, $group = 'content')
+    protected function preprocessForm(Form $form, $data, $group = 'content')
     {
         $input  = Factory::getApplication() -> input;
 
@@ -195,11 +200,11 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
                 $app->redirect(JRoute::_('index.php?option=com_tz_portfolio_plus&view=addons', false));
             }
 
-            $formFile = JPath::clean(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/' . $folder . '/' . $element . '/' . $element . '.xml');
+            $formFile = Path::clean(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/' . $folder . '/' . $element . '/' . $element . '.xml');
 
             if (!file_exists($formFile))
             {
-                throw new Exception(JText::sprintf('COM_TZ_PORTFOLIO_PLUS_ADDONS_ERROR_FILE_NOT_FOUND', $element . '.xml'));
+                throw new Exception(Text::sprintf('COM_TZ_PORTFOLIO_PLUS_ADDONS_ERROR_FILE_NOT_FOUND', $element . '.xml'));
             }
 
             // Load the core and/or local language file(s).
@@ -210,14 +215,14 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
                 // Get the plugin form.
                 if (!$form->loadFile($formFile, false, '//config'))
                 {
-                    throw new Exception(JText::_('JERROR_LOADFILE_FAILED'));
+                    throw new Exception(Text::_('JERROR_LOADFILE_FAILED'));
                 }
             }
 
             if($form -> getField('rules')){
                 if($data) {
                     if(isset($folder) && $folder && isset($element) && $element) {
-                        $form -> setFieldAttribute('title', 'value', JText::_('PLG_' . strtoupper($folder . '_' . $element)));
+                        $form -> setFieldAttribute('title', 'value', Text::_('PLG_' . strtoupper($folder . '_' . $element)));
                         if(!$form -> getFieldAttribute('rules', 'group')) {
                             $form->setFieldAttribute('rules', 'group', $folder);
                         }
@@ -243,7 +248,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
             // Attempt to load the xml file.
             if (!$xml = simplexml_load_file($formFile))
             {
-                throw new Exception(JText::_('JERROR_LOADFILE_FAILED'));
+                throw new Exception(Text::_('JERROR_LOADFILE_FAILED'));
             }
 
             // Get the help data from the XML file if present.
@@ -313,7 +318,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
         }
 
         $result = true;
-        $msg = JText::sprintf('COM_TZ_PORTFOLIO_PLUS_INSTALL_SUCCESS', JText::_('COM_TZ_PORTFOLIO_PLUS_' . $input->getCmd('view')));
+        $msg = Text::sprintf('COM_TZ_PORTFOLIO_PLUS_INSTALL_SUCCESS', Text::_('COM_TZ_PORTFOLIO_PLUS_' . $input->getCmd('view')));
 
         // This event allows a custom installation of the package or a customization of the package:
         $results = $app->triggerEvent('onInstallerBeforeInstaller', array($this, &$package));
@@ -330,7 +335,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
         if (!$package || !$package['type']) {
             JInstallerHelper::cleanupInstall($package['packagefile'], $package['extractdir']);
 
-            $this->setError(JText::_('COM_TZ_PORTFOLIO_PLUS_UNABLE_TO_FIND_INSTALL_PACKAGE'));
+            $this->setError(Text::_('COM_TZ_PORTFOLIO_PLUS_UNABLE_TO_FIND_INSTALL_PACKAGE'));
 
             return false;
         }
@@ -348,7 +353,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
 
             if(!in_array($type, $this -> accept_types) || (in_array($type, $this -> accept_types)
                     && $type != $this -> type)){
-                $this -> setError(JText::_('COM_TZ_PORTFOLIO_PLUS_UNABLE_TO_FIND_INSTALL_PACKAGE'));
+                $this -> setError(Text::_('COM_TZ_PORTFOLIO_PLUS_UNABLE_TO_FIND_INSTALL_PACKAGE'));
                 return false;
             }
 
@@ -362,7 +367,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
             $class  = 'TZ_Portfolio_Plus\Installer\Adapter\TZ_Portfolio_PlusInstaller'.ucfirst($_type).'Adapter';
 
             if(!class_exists($class)){
-                JLoader::register($class, JPath::clean(COM_TZ_PORTFOLIO_PLUS_LIBRARIES.'/adapter/'.$_type.'.php'));
+                JLoader::register($class, Path::clean(COM_TZ_PORTFOLIO_PLUS_LIBRARIES.'/adapter/'.$_type.'.php'));
             }
 
             $tzinstaller    = new $class($installer,$installer -> getDbo());
@@ -375,7 +380,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
 
             if(!$tzinstaller -> install()){
                 // There was an error installing the package.
-                $msg = JText::sprintf('COM_TZ_PORTFOLIO_PLUS_INSTALL_ERROR', $input -> getCmd('view'));
+                $msg = Text::sprintf('COM_TZ_PORTFOLIO_PLUS_INSTALL_ERROR', $input -> getCmd('view'));
                 $result = false;
                 $this -> setError($msg);
             }
@@ -401,7 +406,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
 
         if (!$user->authorise('core.delete', 'com_tz_portfolio_plus.addon'))
         {
-            \JLog::add(\JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), \JLog::WARNING, 'jerror');
+            \JLog::add(\Text::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), \JLog::WARNING, 'jerror');
             return false;
         }
 
@@ -430,7 +435,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
             $table->load($id);
 
             $langstring = 'COM_TZ_PORTFOLIO_PLUS_' . strtoupper($table->type);
-            $rowtype = JText::_($langstring);
+            $rowtype = Text::_($langstring);
 
             if (strpos($rowtype, $langstring) !== false)
             {
@@ -444,8 +449,8 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
                 // Because that is not a good idea...
                 if ($table->protected)
                 {
-                    JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_PLG_UNINSTALL_WARNCOREPLUGIN',
-                        JText::_('COM_TZ_PORTFOLIO_PLUS_'.$view)), JLog::WARNING, 'jerror');
+                    JLog::add(Text::sprintf('JLIB_INSTALLER_ERROR_PLG_UNINSTALL_WARNCOREPLUGIN',
+                        Text::_('COM_TZ_PORTFOLIO_PLUS_'.$view)), JLog::WARNING, 'jerror');
 
                     return false;
                 }
@@ -462,13 +467,13 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
                 if ($result === false)
                 {
                     // There was an error in uninstalling the package
-                    $msgs[] = JText::sprintf('COM_TZ_PORTFOLIO_PLUS_UNINSTALL_ERROR', JText::_('COM_TZ_PORTFOLIO_PLUS_'.$view));
+                    $msgs[] = Text::sprintf('COM_TZ_PORTFOLIO_PLUS_UNINSTALL_ERROR', Text::_('COM_TZ_PORTFOLIO_PLUS_'.$view));
 
                     continue;
                 }
 
                 // Package uninstalled sucessfully
-                $msgs[] = JText::sprintf('COM_TZ_PORTFOLIO_PLUS_UNINSTALL_SUCCESS', JText::_('COM_TZ_PORTFOLIO_PLUS_'.$view));
+                $msgs[] = Text::sprintf('COM_TZ_PORTFOLIO_PLUS_UNINSTALL_SUCCESS', Text::_('COM_TZ_PORTFOLIO_PLUS_'.$view));
                 $result = true;
             }
         }
@@ -491,7 +496,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
         // Make sure that file uploads are enabled in php.
         if (!(bool) ini_get('file_uploads'))
         {
-            JError::raiseWarning('', JText::_('COM_TZ_PORTFOLIO_PLUS_MSG_INSTALL_WARNINSTALLFILE'));
+            JError::raiseWarning('', Text::_('COM_TZ_PORTFOLIO_PLUS_MSG_INSTALL_WARNINSTALLFILE'));
 
             return false;
         }
@@ -499,7 +504,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
         // Make sure that zlib is loaded so that the package can be unpacked.
         if (!extension_loaded('zlib'))
         {
-            JError::raiseWarning('', JText::_('COM_TZ_PORTFOLIO_PLUS_MSG_INSTALL_WARNINSTALLZLIB'));
+            JError::raiseWarning('', Text::_('COM_TZ_PORTFOLIO_PLUS_MSG_INSTALL_WARNINSTALLZLIB'));
 
             return false;
         }
@@ -507,7 +512,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
         // If there is no uploaded file, we have a problem...
         if (!is_array($userfile))
         {
-            JError::raiseWarning('', JText::_('COM_TZ_PORTFOLIO_PLUS_MSG_INSTALL_NO_FILE_SELECTED'));
+            JError::raiseWarning('', Text::_('COM_TZ_PORTFOLIO_PLUS_MSG_INSTALL_NO_FILE_SELECTED'));
 
             return false;
         }
@@ -515,7 +520,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
         // Is the PHP tmp directory missing?
         if ($userfile['error'] && ($userfile['error'] == UPLOAD_ERR_NO_TMP_DIR))
         {
-            JError::raiseWarning('', JText::_('COM_TZ_PORTFOLIO_PLUS_MSG_INSTALL_WARNINSTALLUPLOADERROR') . '<br />' . JText::_('COM_TZ_PORTFOLIO_PLUS_MSG_WARNINGS_PHPUPLOADNOTSET'));
+            JError::raiseWarning('', Text::_('COM_TZ_PORTFOLIO_PLUS_MSG_INSTALL_WARNINSTALLUPLOADERROR') . '<br />' . Text::_('COM_TZ_PORTFOLIO_PLUS_MSG_WARNINGS_PHPUPLOADNOTSET'));
 
             return false;
         }
@@ -523,7 +528,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
         // Is the max upload size too small in php.ini?
         if ($userfile['error'] && ($userfile['error'] == UPLOAD_ERR_INI_SIZE))
         {
-            JError::raiseWarning('', JText::_('COM_TZ_PORTFOLIO_PLUS_MSG_INSTALL_WARNINSTALLUPLOADERROR') . '<br />' . JText::_('COM_TZ_PORTFOLIO_PLUS_MSG_WARNINGS_SMALLUPLOADSIZE'));
+            JError::raiseWarning('', Text::_('COM_TZ_PORTFOLIO_PLUS_MSG_INSTALL_WARNINSTALLUPLOADERROR') . '<br />' . Text::_('COM_TZ_PORTFOLIO_PLUS_MSG_WARNINGS_SMALLUPLOADSIZE'));
 
             return false;
         }
@@ -531,7 +536,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
         // Check if there was a different problem uploading the file.
         if ($userfile['error'] || $userfile['size'] < 1)
         {
-            JError::raiseWarning('', JText::_('COM_TZ_PORTFOLIO_PLUS_MSG_INSTALL_WARNINSTALLUPLOADERROR'));
+            JError::raiseWarning('', Text::_('COM_TZ_PORTFOLIO_PLUS_MSG_INSTALL_WARNINSTALLUPLOADERROR'));
 
             return false;
         }
@@ -596,7 +601,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
             }
 
             // Get the plugin XML.
-            $path = JPath::clean(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/' . $table->folder . '/'
+            $path = Path::clean(COM_TZ_PORTFOLIO_PLUS_ADDON_PATH . '/' . $table->folder . '/'
                 . $table->element . '/' . $table->element . '.xml');
 
             if (file_exists($path))
@@ -1059,7 +1064,7 @@ class TZ_Portfolio_PlusModelAddon extends JModelAdmin
         // Was the package downloaded?
         if (!$response)
         {
-            JError::raiseWarning('', JText::sprintf('COM_INSTALLER_PACKAGE_DOWNLOAD_FAILED', $url));
+            JError::raiseWarning('', Text::sprintf('COM_INSTALLER_PACKAGE_DOWNLOAD_FAILED', $url));
 
             return false;
         }

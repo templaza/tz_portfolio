@@ -27,6 +27,7 @@ use Joomla\Registry\Registry;
 use Joomla\String\StringHelper;
 use Joomla\CMS\Event\AbstractEvent;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
+use Joomla\CMS\Table\Table;
 
 /**
  * Content table
@@ -34,7 +35,7 @@ use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
  * @since       11.1
  * @deprecated  Class will be removed upon completion of transition to UCM
  */
-class TZ_Portfolio_PlusTableContent extends JTable
+class TZ_Portfolio_PlusTableContent extends Table
 {
     public $catid  = null;
     protected $m_catid  = null;
@@ -96,7 +97,7 @@ class TZ_Portfolio_PlusTableContent extends JTable
      *
      * @since   11.1
      */
-    protected function _getAssetParentId(JTable $table = null, $id = null)
+    protected function _getAssetParentId(Table $table = null, $id = null)
     {
         $assetId = null;
 
@@ -138,7 +139,7 @@ class TZ_Portfolio_PlusTableContent extends JTable
      *
      * @return  mixed  Null if operation was satisfactory, otherwise returns an error string
      *
-     * @see     JTable::bind()
+     * @see     Table::bind()
      * @since   11.1
      */
     public function bind($array, $ignore = '')
@@ -200,7 +201,7 @@ class TZ_Portfolio_PlusTableContent extends JTable
      *
      * @return  boolean  True on success, false on failure
      *
-     * @see     JTable::check()
+     * @see     Table::check()
      * @since   11.1
      */
     public function check()
@@ -534,7 +535,7 @@ class TZ_Portfolio_PlusTableContent extends JTable
     }
 
     /**
-     * Overrides JTable::store to set modified data and user id.
+     * Overrides Table::store to set modified data and user id.
      *
      * @param   boolean  $updateNulls  True to update fields even if they are null.
      *
@@ -545,7 +546,7 @@ class TZ_Portfolio_PlusTableContent extends JTable
     public function store($updateNulls = false)
     {
         $date = Factory::getDate();
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
 
         // Set publish_up to null date if not set
         if (!$this->publish_up)
@@ -611,8 +612,8 @@ class TZ_Portfolio_PlusTableContent extends JTable
         }
 
         // Verify that the alias is unique
-        $table  = JTable::getInstance('Content', 'TZ_Portfolio_PlusTable', array('dbo' => $this->getDbo()));
-        $tblMap = JTable::getInstance('Content_Category_Map', 'TZ_Portfolio_PlusTable', array('dbo' => $this->getDbo()));
+        $table  = Table::getInstance('Content', 'TZ_Portfolio_PlusTable', array('dbo' => $this->getDbo()));
+        $tblMap = Table::getInstance('Content_Category_Map', 'TZ_Portfolio_PlusTable', array('dbo' => $this->getDbo()));
 
         $catid  = 0;
         if($tblMap -> load(array('contentid' => $this -> id, 'main' => 1))){

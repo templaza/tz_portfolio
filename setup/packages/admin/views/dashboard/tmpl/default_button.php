@@ -19,10 +19,11 @@
 
 // No direct access.
 defined('_JEXEC') or die;
+use Joomla\CMS\HTML\HTMLHelper;
 ?>
 <div class="tpButton">
     <a href="<?php echo $this->button['link']; ?>">
-        <?php echo JHtml::_('image', $this->button['image'], null, null, false); ?>
+        <?php echo HTMLHelper::_('image', $this->button['image'], null, null, false); ?>
         <div>
             <?php echo $this->button['text']; ?>
         </div>

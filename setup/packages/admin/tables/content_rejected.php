@@ -22,8 +22,9 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\Database\DatabaseDriver;
+use Joomla\CMS\Table\Table;
 
-class TZ_Portfolio_PlusTableContent_Rejected extends JTable
+class TZ_Portfolio_PlusTableContent_Rejected extends Table
 {
     public function __construct($db)
     {
@@ -33,7 +34,7 @@ class TZ_Portfolio_PlusTableContent_Rejected extends JTable
     public function store($updateNulls = false)
     {
         $date = Factory::getDate();
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
 
 //        if (!$this->created)
 //        {

@@ -23,13 +23,13 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\Utilities\ArrayHelper;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
-
-jimport('joomla.application.component.modellist');
+use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\Language\Associations;
 
 /**
  * Methods supporting a list of article records.
  */
-class TZ_Portfolio_PlusModelArticles extends JModelList
+class TZ_Portfolio_PlusModelArticles extends ListModel
 {
 	/**
 	 * Constructor.
@@ -240,13 +240,13 @@ class TZ_Portfolio_PlusModelArticles extends JModelList
         $query -> join('LEFT', '#__tz_portfolio_plus_content_rejected AS cj ON a.id = cj.content_id');
 
 		// Join over the associations.
-		if (JLanguageAssociations::isEnabled())
-		{
-			$query->select('COUNT(asso2.id)>1 as association')
-				->join('LEFT', '#__associations AS asso ON asso.id = a.id AND asso.context=' . $db->quote('com_tz_portfolio_plus.article.item'))
-				->join('LEFT', '#__associations AS asso2 ON asso2.key = asso.key')
-				->group('a.id');
-		}
+        if (Associations::isEnabled())
+        {
+            $query->select('COUNT(asso2.id) > 1 AS association')
+                ->join('LEFT', $db->quoteName('#__associations', 'asso') . ' ON ' . $db->quoteName('asso.id') . ' = ' . $db->quoteName('a.id') . ' AND ' . $db->quoteName('asso.context') . ' = ' . $db->quote('com_tz_portfolio_plus.article.item'))
+                ->join('LEFT', $db->quoteName('#__associations', 'asso2') . ' ON ' . $db->quoteName('asso2.key') . ' = ' . $db->quoteName('asso.key'))
+                ->group($db->quoteName('a.id'));
+        }
 
         // Filter by access level.
         $access = $this->getState('filter.access');

@@ -8,7 +8,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
-
+use Joomla\CMS\MVC\View\HtmlView;
 jimport('joomla.application.component.view');
 
 /**
@@ -17,27 +17,26 @@ jimport('joomla.application.component.view');
  * @package		Joomla.Administrator
  * @subpakage	TZ.Portfolio
  */
-class TZ_Portfolio_PlusViewDashboard extends JViewLegacy {
+class TZ_Portfolio_PlusViewDashboard extends HtmlView {
     protected $feedBlog;
 
     /**
      * Display the view.
      */
     public function display($tpl = null) {
-        $app        = Factory::getApplication();
+        $app = Factory::getApplication();
 
-        $this -> feedBlog   = $this -> get('FeedBlog');
+        $this->feedBlog = $this->get('FeedBlog');
 
-        $json       = new JResponseJson();
-
-        $app -> setHeader('Content-Type', 'application/json; charset=' . $app->charSet, true);
-        $app -> sendHeaders();
+        $app->setHeader('Content-Type', 'application/json', true);
+        $app->sendHeaders();
 
         $result = $this->loadTemplate($tpl);
 
-        $json -> data   = $result;
+        $json = ['data' => $result];
+
         echo json_encode($json);
 
-        $app -> close();
+        $app->close();
     }
 }

@@ -19,8 +19,8 @@
 
 // no direct access
 defined('_JEXEC') or die;
-
-class TZ_Portfolio_PlusTableFeatured extends JTable
+use Joomla\CMS\Table\Table;
+class TZ_Portfolio_PlusTableFeatured extends Table
 {
 	/**
 	 * @param	JDatabase	A database connector object

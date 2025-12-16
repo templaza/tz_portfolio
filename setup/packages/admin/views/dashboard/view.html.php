@@ -6,16 +6,19 @@
 
 // No direct access.
 defined('_JEXEC') or die;
-
-jimport('joomla.application.component.view');
-
+use Joomla\CMS\MVC\View\HtmlView;
+use Joomla\CMS\HTML\Sidebar;
+use Joomla\CMS\Toolbar\ToolbarHelper as JToolBarHelper;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text as JText;
+use Joomla\CMS\Router\Route as JRoute;
 /**
  * Dashboard view.
  *
  * @package		Joomla.Administrator
  * @subpakage	TZ.Portfolio
  */
-class TZ_Portfolio_PlusViewDashboard extends JViewLegacy {
+class TZ_Portfolio_PlusViewDashboard extends HtmlView {
 //    protected $xml;
 
     /* @since 2.2.7 */
@@ -32,10 +35,7 @@ class TZ_Portfolio_PlusViewDashboard extends JViewLegacy {
             $this->addToolbar();
         }
 
-        if(!COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
-            TZ_Portfolio_PlusHelper::addSubmenu('dashboard');
-            $this->sidebar = JHtmlSidebar::render();
-        }
+        TZ_Portfolio_PlusHelper::addSubmenu('dashboard');
 
         parent::display($tpl);
     }
@@ -65,7 +65,7 @@ class TZ_Portfolio_PlusViewDashboard extends JViewLegacy {
 
         JToolbarHelper::link('javascript:', JText::_('COM_TZ_PORTFOLIO_PLUS_INTRO_GUIDE'), 'support');
 
-        JHtmlSidebar::setAction('index.php?option=com_tz_portfolio_plus&view=dashboard');
+        HTMLHelper::_('sidebar.setAction', 'index.php?option=com_tz_portfolio_plus&view=dashboard');
 
     }
 

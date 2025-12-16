@@ -23,35 +23,38 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Associations;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Button\FeaturedButton;
 use Joomla\Component\Content\Administrator\Helper\ContentHelper;
+use Joomla\CMS\Router\Route as JRoute;
+use Joomla\CMS\Layout\LayoutHelper;
 
 $j4Compare  = COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE;
-JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
+HTMLHelper::addIncludePath(JPATH_COMPONENT.'/helpers/html');
 
 if(!$j4Compare) {
-    JHtml::_('behavior.multiselect');
-    JHtml::_('bootstrap.tooltip');
-    JHtml::_('dropdown.init');
+    HTMLHelper::_('behavior.multiselect');
+    HTMLHelper::_('bootstrap.tooltip');
+    HTMLHelper::_('dropdown.init');
 
-    JHtml::_('formbehavior.chosen', '.multipleMediaType', null,
-        array('placeholder_text_multiple' => JText::_('COM_TZ_PORTFOLIO_PLUS_OPTION_SELECT_MEDIA_TYPE')));
-    JHtml::_('formbehavior.chosen', '.multipleAuthors', null,
-        array('placeholder_text_multiple' => JText::_('JOPTION_SELECT_AUTHOR')));
-    JHtml::_('formbehavior.chosen', '.multipleAccessLevels', null,
-        array('placeholder_text_multiple' => JText::_('JOPTION_SELECT_ACCESS')));
-    JHtml::_('formbehavior.chosen', '.multipleCategories', null,
-        array('placeholder_text_multiple' => JText::_('JOPTION_SELECT_CATEGORY')));
-    JHtml::_('formbehavior.chosen', '#filter_category_id_sec', null,
-        array('placeholder_text_multiple' => JText::_('COM_TZ_PORTFOLIO_PLUS_OPTION_SELECT_SECONDARY_CATEGORY')));
+//    HTMLHelper::_('formbehavior.chosen', '.multipleMediaType', null,
+//        array('placeholder_text_multiple' => Text::_('COM_TZ_PORTFOLIO_PLUS_OPTION_SELECT_MEDIA_TYPE')));
+//    HTMLHelper::_('formbehavior.chosen', '.multipleAuthors', null,
+//        array('placeholder_text_multiple' => Text::_('JOPTION_SELECT_AUTHOR')));
+//    HTMLHelper::_('formbehavior.chosen', '.multipleAccessLevels', null,
+//        array('placeholder_text_multiple' => Text::_('JOPTION_SELECT_ACCESS')));
+//    HTMLHelper::_('formbehavior.chosen', '.multipleCategories', null,
+//        array('placeholder_text_multiple' => Text::_('JOPTION_SELECT_CATEGORY')));
+//    HTMLHelper::_('formbehavior.chosen', '#filter_category_id_sec', null,
+//        array('placeholder_text_multiple' => Text::_('COM_TZ_PORTFOLIO_PLUS_OPTION_SELECT_SECONDARY_CATEGORY')));
 
-    JHtml::_('formbehavior.chosen', 'select');
+//    HTMLHelper::_('formbehavior.chosen', 'select');
 }else{
-    JHtml::_('formbehavior.chosen', 'select[multiple]:not(.choices__input)');
+//    HTMLHelper::_('formbehavior.chosen', 'select[multiple]:not(.choices__input)');
 }
 
-$user		    = Factory::getUser();
+$user		    = Factory::getApplication()->getIdentity();
 $userId		    = $user->get('id');
 $listOrder	    = $this->escape($this->state->get('list.ordering'));
 $listDirn	    = $this->escape($this->state->get('list.direction'));
@@ -65,13 +68,13 @@ if ($saveOrder)
 {
 	$saveOrderingUrl = 'index.php?option=com_tz_portfolio_plus&task=articles.saveOrderAjax&tmpl=component';
     if($j4Compare){
-        JHtml::_('draggablelist.draggable');
+        HTMLHelper::_('draggablelist.draggable');
     }else {
-        JHtml::_('sortablelist.sortable', 'articleList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
+        HTMLHelper::_('sortablelist.sortable', 'articleList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
     }
 }
 
-$assoc		= JLanguageAssociations::isEnabled();
+$assoc		= Associations::isEnabled();
 
 $this -> document -> addScript(TZ_Portfolio_PlusUri::root(true).'/js/core.min.js', array('version' => 'auto'));
 $this -> document -> addScriptDeclaration('(function($, TZ_Portfolio_Plus){
@@ -82,34 +85,34 @@ $this -> document -> addScriptDeclaration('(function($, TZ_Portfolio_Plus){
 
 <form action="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&view=articles');?>" method="post" name="adminForm" id="adminForm">
 
-<?php echo JHtml::_('tzbootstrap.addrow');?>
+<?php echo HTMLHelper::_('tzbootstrap.addrow');?>
     <?php if(!empty($this -> sidebar)){?>
         <div id="j-sidebar-container" class="span2 col-md-2">
             <?php echo $this -> sidebar; ?>
         </div>
     <?php } ?>
 
-    <?php echo JHtml::_('tzbootstrap.startcontainer', '10', !empty($this -> sidebar));?>
+    <?php echo HTMLHelper::_('tzbootstrap.startcontainer', '10', !empty($this -> sidebar));?>
 
         <div class="tpContainer">
             <?php
             // Search tools bar
-            echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+            echo LayoutHelper::render('joomla.searchtools.default', ['view' => $this]);
             ?>
 
             <?php if (empty($this->items)){ ?>
                 <div class="alert alert-warning alert-no-items">
-                    <?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+                    <?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
                 </div>
             <?php }else{ ?>
                 <table class="table table-striped" id="articleList">
                     <thead>
                         <tr>
                             <th width="1%" class="nowrap center text-center hidden-phone">
-                                <?php echo JHtml::_('searchtools.sort', '', 'a.ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2'); ?>
+                                <?php echo HTMLHelper::_('searchtools.sort', '', 'a.ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2'); ?>
                             </th>
                             <th width="1%" class="hidden-phone">
-                                <?php echo JHtml::_('grid.checkall'); ?>
+                                <?php echo HTMLHelper::_('grid.checkall'); ?>
                             </th>
                             <?php if($j4Compare){ ?>
                             <th scope="col" class="w-1 text-center d-none d-md-table-cell">
@@ -117,49 +120,49 @@ $this -> document -> addScriptDeclaration('(function($, TZ_Portfolio_Plus){
                             </th>
                             <?php } ?>
                             <th width="1%" style="min-width:55px" class="nowrap center text-center">
-                                <?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
+                                <?php echo HTMLHelper::_('searchtools.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
                             </th>
                             <th>
-                                <?php echo JHtml::_('searchtools.sort', 'JGLOBAL_TITLE', 'a.title', $listDirn, $listOrder); ?>
+                                <?php echo HTMLHelper::_('searchtools.sort', 'JGLOBAL_TITLE', 'a.title', $listDirn, $listOrder); ?>
                             </th>
                             <th width="6%" class="nowrap">
-                                <?php echo JHtml::_('searchtools.sort', 'COM_TZ_PORTFOLIO_PLUS_TYPE_OF_MEDIA', 'groupname', $listDirn, $listOrder); ?>
+                                <?php echo HTMLHelper::_('searchtools.sort', 'COM_TZ_PORTFOLIO_PLUS_TYPE_OF_MEDIA', 'groupname', $listDirn, $listOrder); ?>
                             </th>
                             <th width="10%" class="nowrap hidden-phone">
-                                <?php echo JHtml::_('searchtools.sort', 'COM_TZ_PORTFOLIO_PLUS_GROUP', 'groupname', $listDirn, $listOrder); ?>
+                                <?php echo HTMLHelper::_('searchtools.sort', 'COM_TZ_PORTFOLIO_PLUS_GROUP', 'groupname', $listDirn, $listOrder); ?>
                             </th>
                             <th width="6%" class="nowrap hidden-phone">
-                                <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ACCESS', 'a.access', $listDirn, $listOrder); ?>
+                                <?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ACCESS', 'a.access', $listDirn, $listOrder); ?>
                             </th>
 
                             <?php if ($assoc) : ?>
                             <th width="5%" class="nowrap hidden-phone">
-                                <?php echo JHtml::_('searchtools.sort', 'COM_TZ_PORTFOLIO_PLUS_HEADING_ASSOCIATION', 'association', $listDirn, $listOrder); ?>
+                                <?php echo HTMLHelper::_('searchtools.sort', 'COM_TZ_PORTFOLIO_PLUS_HEADING_ASSOCIATION', 'association', $listDirn, $listOrder); ?>
                             </th>
                             <?php endif;?>
 
                             <th width="10%" class="nowrap hidden-phone">
-                                <?php echo JHtml::_('searchtools.sort', 'JAUTHOR', 'a.created_by', $listDirn, $listOrder); ?>
+                                <?php echo HTMLHelper::_('searchtools.sort', 'JAUTHOR', 'a.created_by', $listDirn, $listOrder); ?>
                             </th>
                             <th width="5%" class="nowrap hidden-phone">
-                                <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
+                                <?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
                             </th>
                             <th width="8%" class="nowrap hidden-phone">
-                                <?php echo JHtml::_('searchtools.sort', 'JDATE', 'a.created', $listDirn, $listOrder); ?>
+                                <?php echo HTMLHelper::_('searchtools.sort', 'JDATE', 'a.created', $listDirn, $listOrder); ?>
                             </th>
                             <th width="5%" class="nowrap text-center hidden-phone">
-                                <?php echo JHtml::_('searchtools.sort', 'JGLOBAL_HITS', 'a.hits', $listDirn, $listOrder); ?>
+                                <?php echo HTMLHelper::_('searchtools.sort', 'JGLOBAL_HITS', 'a.hits', $listDirn, $listOrder); ?>
                             </th>
                             <th width="1%" class="nowrap center text-center hidden-phone">
-                                <?php echo JHtml::_('searchtools.sort', 'COM_TZ_PORTFOLIO_PLUS_PRIORITY', 'a.priority', $listDirn, $listOrder); ?>
+                                <?php echo HTMLHelper::_('searchtools.sort', 'COM_TZ_PORTFOLIO_PLUS_PRIORITY', 'a.priority', $listDirn, $listOrder); ?>
                                 <?php
                                 if($savePriority) {
-                                    echo JHTML::_('grid.order', $this->items, 'filesave.png', 'articles.savepriority');
+                                    echo HTMLHelper::_('grid.order', $this->items, 'filesave.png', 'articles.savepriority');
                                 }
                                 ?>
                             </th>
                             <th width="1%" class="nowrap hidden-phone">
-                                <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
+                                <?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
                             </th>
                         </tr>
                     </thead>
@@ -193,7 +196,7 @@ $this -> document -> addScriptDeclaration('(function($, TZ_Portfolio_Plus){
                                     }
                                     elseif (!$saveOrder)
                                     {
-                                        $iconClass = ' inactive tip-top hasTooltip" title="' . JHtml::_('tooltipText', 'JORDERINGDISABLED');
+                                        $iconClass = ' inactive tip-top hasTooltip" title="' . HTMLHelper::_('tooltipText', 'JORDERINGDISABLED');
                                     }
                                     ?>
                                     <span class="sortable-handler<?php echo $iconClass ?>">
@@ -203,7 +206,7 @@ $this -> document -> addScriptDeclaration('(function($, TZ_Portfolio_Plus){
                                 </td>
 
                                 <td class="center text-center">
-                                    <?php echo JHtml::_('grid.id', $i, $item->id); ?>
+                                    <?php echo HTMLHelper::_('grid.id', $i, $item->id); ?>
                                 </td>
                                 <?php if($j4Compare){ ?>
                                 <td class="center text-center">
@@ -230,17 +233,17 @@ $this -> document -> addScriptDeclaration('(function($, TZ_Portfolio_Plus){
                                         <?php
                                         }
                                         if($canApprove && ($item -> state == 3 || $item -> state == 4) ){
-                                            echo JHtml::_('tppgrid.approve', $i, $this->getName() . '.', $canChange, 'cb');
-                                            echo JHtml::_('tppgrid.reject', $i, $this->getName() . '.', $canChange, 'cb');
+                                            echo HTMLHelper::_('tppgrid.approve', $i, $this->getName() . '.', $canChange, 'cb');
+                                            echo HTMLHelper::_('tppgrid.reject', $i, $this->getName() . '.', $canChange, 'cb');
                                         }elseif($item -> state != 4){
                                             if($item -> state == -3 || $item -> state == 3){
-                                                echo JHtml::_('jgrid.action', $i, 'trash',
+                                                echo HTMLHelper::_('jgrid.action', $i, 'trash',
                                                     $this -> getName().'.', 'JTOOLBAR_TRASH', 'JTOOLBAR_TRASH', '', true, 'trash', $canChange);
                                             }else{
-                                                echo JHtml::_('tppgrid.status', $item->state, $i, $item -> state,
+                                                echo HTMLHelper::_('tppgrid.status', $item->state, $i, $item -> state,
                                                     $this -> getName().'.', $canChange, 'cb', $item->publish_up, $item->publish_down);
                                                 if(!$j4Compare) {
-                                                    echo JHtml::_('tzcontentadmin.featured', $item->featured, $i, $canChange);
+                                                    echo HTMLHelper::_('tzcontentadmin.featured', $item->featured, $i, $canChange);
                                                 }
                                             }
                                         }
@@ -249,13 +252,13 @@ $this -> document -> addScriptDeclaration('(function($, TZ_Portfolio_Plus){
                                             ($canApprove || (!$canApprove && $item -> state != 3 && $item -> state != 4)))
                                         {
                                             if($item -> state == 3) {
-                                                JHtml::_('actionsdropdown.trash', 'cb' . $i,  $this -> getName());
+                                                HTMLHelper::_('actionsdropdown.trash', 'cb' . $i,  $this -> getName());
                                             }else {
-                                                JHtml::_('actionsdropdown.' . ((int)$item->state === -2 ? 'un' : '')
+                                                HTMLHelper::_('actionsdropdown.' . ((int)$item->state === -2 ? 'un' : '')
                                                     . 'trash', 'cb' . $i,  $this -> getName());
                                             }
                                             if($item -> state != -3) {
-                                                echo JHtml::_('actionsdropdown.render', $this->escape($item->title));
+                                                echo HTMLHelper::_('actionsdropdown.render', $this->escape($item->title));
                                             }
                                         }
 
@@ -266,7 +269,7 @@ $this -> document -> addScriptDeclaration('(function($, TZ_Portfolio_Plus){
                                 </td>
                                 <td class="has-context">
                                     <?php if ($item->checked_out) : ?>
-                                        <?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'articles.', $canCheckin); ?>
+                                        <?php echo HTMLHelper::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'articles.', $canCheckin); ?>
                                     <?php endif; ?>
                                     <?php
                                     if(($canApprove && ($canEdit || $canEditOwn || $item -> state == 3 || $item -> state == 4)) ||
@@ -278,31 +281,31 @@ $this -> document -> addScriptDeclaration('(function($, TZ_Portfolio_Plus){
                                         <?php echo $this->escape($item->title); ?>
                                     <?php } ?>
                                     <?php if(isset($item -> rejected_id) && $item -> rejected_id && in_array($item -> state, array(-3,3,4))){ ?>
-                                        <span class="label label-danger label-important"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_REJECTED'); ?></span>
+                                        <span class="label label-danger label-important"><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_REJECTED'); ?></span>
                                     <?php } ?>
                                     <?php
                                     if($filterPublished === '*'){?>
                                         <?php if($item -> state == -3){ ?>
-                                            <span class="label"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_DRAFT'); ?></span>
+                                            <span class="label"><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_DRAFT'); ?></span>
                                         <?php } ?>
                                         <?php if($item -> state == 3){ ?>
-                                            <span class="label label-warning"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_PENDING'); ?>...</span>
+                                            <span class="label label-warning"><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_PENDING'); ?>...</span>
                                         <?php } ?>
                                         <?php if($item -> state == 4){ ?>
-                                            <span class="label label-info"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_UNDER_REVIEW'); ?></span>
+                                            <span class="label label-info"><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_UNDER_REVIEW'); ?></span>
                                         <?php } ?>
                                     <?php } ?>
                                     <div class="small">
                                         <div class="clearfix">
-                                            <?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
+                                            <?php echo Text::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
                                         </div>
                                         <div class="clearfix">
-                                            <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_MAIN_CATEGORY') . ": " ?>
+                                            <?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_MAIN_CATEGORY') . ": " ?>
                                             <a href="index.php?option=com_tz_portfolio_plus&task=category.edit&id=<?php echo $item -> catid;?>"><?php echo $this->escape($item->category_title); ?></a>
                                         </div>
                                         <?php if(isset($item -> categories) && $item -> categories && count($item -> categories)):?>
                                         <div class="clearfix">
-                                            <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SECONDARY_CATEGORY') . ": " ?>
+                                            <?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_SECONDARY_CATEGORY') . ": " ?>
                                             <?php foreach($item -> categories as $i => $category):?>
                                                 <a href="index.php?option=com_tz_portfolio_plus&task=category.edit&id=<?php echo $category -> id;?>"><?php echo $this->escape($category->title); ?></a>
                                                 <?php
@@ -316,7 +319,7 @@ $this -> document -> addScriptDeclaration('(function($, TZ_Portfolio_Plus){
                                     </div>
                                     <?php if(isset($item -> rejected_id) && $item -> rejected_id){ ?>
                                         <div class="tpp-reject__message">
-                                            <strong><u><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_REASON'); ?></u></strong>: <?php echo $item -> rejected_message; ?>
+                                            <strong><u><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_REASON'); ?></u></strong>: <?php echo $item -> rejected_message; ?>
                                         </div>
                                     <?php } ?>
                                 </td>
@@ -334,7 +337,7 @@ $this -> document -> addScriptDeclaration('(function($, TZ_Portfolio_Plus){
                                 <?php if ($assoc) : ?>
                                 <td class="hidden-phone">
                                     <?php if ($item->association) : ?>
-                                        <?php echo JHtml::_('tzcontentadmin.association', $item->id); ?>
+                                        <?php echo HTMLHelper::_('tzcontentadmin.association', $item->id); ?>
                                     <?php endif; ?>
                                 </td>
                                 <?php endif;?>
@@ -343,13 +346,13 @@ $this -> document -> addScriptDeclaration('(function($, TZ_Portfolio_Plus){
                                 </td>
                                 <td class="small hidden-phone">
                                     <?php if ($item->language=='*'):?>
-                                        <?php echo JText::alt('JALL', 'language'); ?>
+                                        <?php echo Text::alt('JALL', 'language'); ?>
                                     <?php else:?>
-                                        <?php echo $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
+                                        <?php echo $item->language_title ? $this->escape($item->language_title) : Text::_('JUNDEFINED'); ?>
                                     <?php endif;?>
                                 </td>
                                 <td class="small nowrap hidden-phone">
-                                    <?php echo JHtml::_('date', $item->created, JText::_('DATE_FORMAT_LC4')); ?>
+                                    <?php echo HTMLHelper::_('date', $item->created, Text::_('DATE_FORMAT_LC4')); ?>
                                 </td>
                                 <td class="center text-center hidden-phone">
                                     <?php echo (int) $item->hits; ?>
@@ -388,8 +391,8 @@ $this -> document -> addScriptDeclaration('(function($, TZ_Portfolio_Plus){
             <?php echo $this->loadTemplate('batch'); ?>
             <input type="hidden" name="task" value="" />
             <input type="hidden" name="boxchecked" value="0" />
-            <?php echo JHtml::_('form.token'); ?>
+            <?php echo HTMLHelper::_('form.token'); ?>
         </div>
-    <?php echo JHtml::_('tzbootstrap.endcontainer');?>
-<?php echo JHtml::_('tzbootstrap.endrow');?>
+    <?php echo HTMLHelper::_('tzbootstrap.endcontainer');?>
+<?php echo HTMLHelper::_('tzbootstrap.endrow');?>
 </form>

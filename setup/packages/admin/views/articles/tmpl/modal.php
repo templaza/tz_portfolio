@@ -21,35 +21,39 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
-
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
+use Joomla\CMS\Layout\LayoutHelper;
 $app    = Factory::getApplication();
 
 if ($app->isClient('site')) {
-    JSession::checkToken('get') or jexit(JText::_('JINVALID_TOKEN'));
+    Session::checkToken('get') or jexit(Text::_('JINVALID_TOKEN'));
 }
 
 require_once JPATH_ROOT . '/components/com_tz_portfolio_plus/helpers/route.php';
 
-JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
+HTMLHelper::addIncludePath(JPATH_COMPONENT.'/helpers/html');
 
 $j4Compare  = COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE;
 
-JHtml::_('formbehavior.chosen', '.multipleMediaType', null,
-    array('placeholder_text_multiple' => JText::_('COM_TZ_PORTFOLIO_PLUS_OPTION_SELECT_MEDIA_TYPE')));
-JHtml::_('formbehavior.chosen', '.multipleAuthors', null,
-    array('placeholder_text_multiple' => JText::_('JOPTION_SELECT_AUTHOR')));
-JHtml::_('formbehavior.chosen', '.multipleAccessLevels', null,
-    array('placeholder_text_multiple' => JText::_('JOPTION_SELECT_ACCESS')));
-JHtml::_('formbehavior.chosen', '.multipleCategories', null,
-    array('placeholder_text_multiple' => JText::_('JOPTION_SELECT_CATEGORY')));
-JHtml::_('formbehavior.chosen', '#filter_category_id_sec', null,
-    array('placeholder_text_multiple' => JText::_('COM_TZ_PORTFOLIO_PLUS_OPTION_SELECT_SECONDARY_CATEGORY')));
+HTMLHelper::_('formbehavior.chosen', '.multipleMediaType', null,
+    array('placeholder_text_multiple' => Text::_('COM_TZ_PORTFOLIO_PLUS_OPTION_SELECT_MEDIA_TYPE')));
+HTMLHelper::_('formbehavior.chosen', '.multipleAuthors', null,
+    array('placeholder_text_multiple' => Text::_('JOPTION_SELECT_AUTHOR')));
+HTMLHelper::_('formbehavior.chosen', '.multipleAccessLevels', null,
+    array('placeholder_text_multiple' => Text::_('JOPTION_SELECT_ACCESS')));
+HTMLHelper::_('formbehavior.chosen', '.multipleCategories', null,
+    array('placeholder_text_multiple' => Text::_('JOPTION_SELECT_CATEGORY')));
+HTMLHelper::_('formbehavior.chosen', '#filter_category_id_sec', null,
+    array('placeholder_text_multiple' => Text::_('COM_TZ_PORTFOLIO_PLUS_OPTION_SELECT_SECONDARY_CATEGORY')));
 
 if(!$j4Compare) {
-    JHtml::_('bootstrap.tooltip');
-    JHtml::_('behavior.multiselect');
+    HTMLHelper::_('bootstrap.tooltip');
+    HTMLHelper::_('behavior.multiselect');
 }else{
-    JHtml::_('formbehavior.chosen', 'select[multiple]');
+    HTMLHelper::_('formbehavior.chosen', 'select[multiple]');
 }
 
 $function	= $app->input->getCmd('function', 'tppSelectArticle');
@@ -80,25 +84,25 @@ function tzGetDatas(){
 }');
 ?>
 
-<form action="<?php echo JRoute::_('index.php?option=com_tz_portfolio_plus&view=articles&layout=modal&tmpl=component&function='
-    .$function.($isMultiple?'&ismultiple=true':'').'&'.JSession::getFormToken().'=1');?>"
+<form action="<?php echo Route::_('index.php?option=com_tz_portfolio_plus&view=articles&layout=modal&tmpl=component&function='
+    .$function.($isMultiple?'&ismultiple=true':'').'&'.Session::getFormToken().'=1');?>"
       method="post" name="adminForm" id="adminForm" class="tpContainer">
     <?php if($isMultiple){?>
     <div class="btn-toolbar">
         <button type="button" class="btn btn-primary" onclick="tzGetDatas();">
-            <i class="icon-checkmark"></i> <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_INSERT');?></button>
+            <i class="icon-checkmark"></i> <?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_INSERT');?></button>
         <hr class="hr-condensed" />
     </div>
     <?php } ?>
 
     <?php
     // Search tools bar
-    echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+    echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
     ?>
 
     <?php if (empty($this->items)){ ?>
         <div class="alert alert-no-items">
-            <?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+            <?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
         </div>
     <?php }else{ ?>
 
@@ -107,29 +111,29 @@ function tzGetDatas(){
         <tr>
             <?php if($isMultiple){?>
             <th width="1%">
-                <?php echo JHtml::_('grid.checkall'); ?>
+                <?php echo HTMLHelper::_('grid.checkall'); ?>
             </th>
             <?php } ?>
             <th class="title">
-                <?php echo JHtml::_('searchtools.sort', 'JGLOBAL_TITLE', 'a.title', $listDirn, $listOrder); ?>
+                <?php echo HTMLHelper::_('searchtools.sort', 'JGLOBAL_TITLE', 'a.title', $listDirn, $listOrder); ?>
             </th>
             <th width="6%" class="nowrap">
-                <?php echo JHtml::_('searchtools.sort', 'COM_TZ_PORTFOLIO_PLUS_TYPE_OF_MEDIA', 'groupname', $listDirn, $listOrder); ?>
+                <?php echo HTMLHelper::_('searchtools.sort', 'COM_TZ_PORTFOLIO_PLUS_TYPE_OF_MEDIA', 'groupname', $listDirn, $listOrder); ?>
             </th>
             <th width="15%">
-                <?php echo JHtml::_('searchtools.sort',  'JGRID_HEADING_ACCESS', 'access_level', $listDirn, $listOrder); ?>
+                <?php echo HTMLHelper::_('searchtools.sort',  'JGRID_HEADING_ACCESS', 'access_level', $listDirn, $listOrder); ?>
             </th>
             <th width="15%">
-                <?php echo JHtml::_('searchtools.sort', 'JCATEGORY', 'a.catid', $listDirn, $listOrder); ?>
+                <?php echo HTMLHelper::_('searchtools.sort', 'JCATEGORY', 'a.catid', $listDirn, $listOrder); ?>
             </th>
             <th width="5%">
-                <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
+                <?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
             </th>
             <th width="5%">
-                <?php echo JHtml::_('searchtools.sort',  'JDATE', 'a.created', $listDirn, $listOrder); ?>
+                <?php echo HTMLHelper::_('searchtools.sort',  'JDATE', 'a.created', $listDirn, $listOrder); ?>
             </th>
             <th width="1%" class="nowrap">
-                <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
+                <?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
             </th>
         </tr>
         </thead>
@@ -145,7 +149,7 @@ function tzGetDatas(){
             <tr class="row<?php echo $i % 2; ?>">
                 <?php if($isMultiple){?>
                 <td class="center text-center">
-                    <?php echo JHtml::_('grid.id', $i, $item->id); ?>
+                    <?php echo HTMLHelper::_('grid.id', $i, $item->id); ?>
                 </td>
                 <?php } ?>
                 <td>
@@ -179,13 +183,13 @@ function tzGetDatas(){
                 </td>
                 <td class="center text-center small">
                     <?php if ($item->language=='*'):?>
-                        <?php echo JText::alt('JALL', 'language'); ?>
+                        <?php echo Text::alt('JALL', 'language'); ?>
                     <?php else:?>
-                        <?php echo $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
+                        <?php echo $item->language_title ? $this->escape($item->language_title) : Text::_('JUNDEFINED'); ?>
                     <?php endif;?>
                 </td>
                 <td class="center text-center small nowrap">
-                    <?php echo JHtml::_('date', $item->created, JText::_('DATE_FORMAT_LC4')); ?>
+                    <?php echo HTMLHelper::_('date', $item->created, Text::_('DATE_FORMAT_LC4')); ?>
                 </td>
                 <td class="center text-center small">
                     <?php echo (int) $item->id; ?>
@@ -199,6 +203,6 @@ function tzGetDatas(){
     <div>
         <input type="hidden" name="task" value="" />
         <input type="hidden" name="boxchecked" value="0" />
-        <?php echo JHtml::_('form.token'); ?>
+        <?php echo HTMLHelper::_('form.token'); ?>
     </div>
 </form>

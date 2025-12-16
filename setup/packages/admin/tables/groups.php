@@ -21,8 +21,9 @@
 defined('_JEXEC') or die('Restricted access');
 
 use Joomla\CMS\Factory;
-
-class TZ_Portfolio_PlusTableGroups extends JTable
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Language\Text;
+class TZ_Portfolio_PlusTableGroups extends Table
 {
     function __construct(&$db) {
         parent::__construct('#__tz_portfolio_plus_fieldgroups','id',$db);
@@ -39,7 +40,7 @@ class TZ_Portfolio_PlusTableGroups extends JTable
         return $this->name;
     }
 
-    protected function _getAssetParentId(JTable $table = null, $id = null)
+    protected function _getAssetParentId(Table $table = null, $id = null)
     {
         $assetId = null;
 
@@ -75,7 +76,7 @@ class TZ_Portfolio_PlusTableGroups extends JTable
     public function store($updateNulls = false){
 
         $date = Factory::getDate();
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
 
         if (!(int) $this -> created)
         {

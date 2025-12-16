@@ -23,23 +23,23 @@
 
 // no direct access
 defined('_JEXEC') or die;
-
+use Joomla\CMS\Layout\LayoutHelper;
 class JHtmlTZBootstrap{
 
     protected static $loaded = array();
 
     public static function addRow($options = array()){
-        $options['gridrow'] = COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE?'row':'row-fluid';
+        $options['gridrow'] = !COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE?'row':'row-fluid';
 
         if(isset($options['attribute']) && is_array($options['attribute'])){
             $options['attribute']   = implode(' ', $options['attribute']);
         }
 
-        return JLayoutHelper::render('html.bootstrap.addrow', $options);
+        return LayoutHelper::render('html.bootstrap.addrow', $options);
     }
 
     public static function endRow(){
-        return JLayoutHelper::render('html.bootstrap.endrow', null);
+        return LayoutHelper::render('html.bootstrap.endrow', null);
     }
 
     public static function startContainer($gridColumn, $sidebar = false, $options = array()){
@@ -58,10 +58,10 @@ class JHtmlTZBootstrap{
             $opt['containerclass']   = $options['containerclass'];
         }
 
-        return JLayoutHelper::render('html.bootstrap.startcontainer', $opt);
+        return LayoutHelper::render('html.bootstrap.startcontainer', $opt);
     }
 
     public static function endContainer(){
-        return JLayoutHelper::render('html.bootstrap.endcontainer', null);
+        return LayoutHelper::render('html.bootstrap.endcontainer', null);
     }
 }

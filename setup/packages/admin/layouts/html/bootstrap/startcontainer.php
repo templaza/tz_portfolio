@@ -23,7 +23,7 @@
 
 // no direct access
 defined('_JEXEC') or die;
-
+use Joomla\CMS\Layout\LayoutHelper;
 $sidebar        = $displayData['sidebar'];
 $gridColumn     = $displayData['gridColumn'];
 $attribute      = isset($displayData['attribute'])?$displayData['attribute']:'';
@@ -47,6 +47,6 @@ $containerclass = isset($displayData['containerclass'])?$displayData['containerc
     <?php
 //    if($sidebar) {
         // Display message update to pro (it only use for free version)
-        echo JLayoutHelper::render('message');
+        echo LayoutHelper::render('message');
 //    }
     ?>

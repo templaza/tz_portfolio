@@ -31,12 +31,19 @@ use Joomla\Event\Event;
 use Joomla\CMS\Event\AbstractEvent;
 use Joomla\Utilities\ArrayHelper;
 
+use Joomla\CMS\Table\Nested;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Access\Rules;
+use Joomla\CMS\Table\Observer\Tags;
+use Joomla\CMS\Table\Observer\ContentHistory;
+
 /**
  * Category table
  *
  * @since  11.1
  */
-class TZ_Portfolio_PlusTableCategory extends JTableNested
+class TZ_Portfolio_PlusTableCategory extends Nested
 {
     /**
      * Constructor
@@ -52,11 +59,12 @@ class TZ_Portfolio_PlusTableCategory extends JTableNested
         if(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE) {
             $this->typeAlias = '{extension}.category';
         }else{
-            JTableObserverTags::createObserver($this, array('typeAlias' => '{extension}.category'));
-            JTableObserverContenthistory::createObserver($this, array('typeAlias' => '{extension}.category'));
+            Tags::createObserver($this, array('typeAlias' => '{extension}.category'));
+//            JTableObserverContenthistory::createObserver($this, array('typeAlias' => '{extension}.category'));
+            ContentHistory::createObserver($this, array('typeAlias' => '{extension}.category'));
         }
 
-        $this->access = (int) Factory::getConfig()->get('access');
+        $this->access = (int) Factory::getApplication()->getConfig()->get('access');
     }
 
     /**
@@ -97,7 +105,7 @@ class TZ_Portfolio_PlusTableCategory extends JTableNested
      *
      * @since   11.1
      */
-    protected function _getAssetParentId(JTable $table = null, $id = null)
+    protected function _getAssetParentId(Table $table = null, $id = null)
     {
         $assetId = null;
 
@@ -152,7 +160,7 @@ class TZ_Portfolio_PlusTableCategory extends JTableNested
      *
      * @return  boolean
      *
-     * @see     JTable::check()
+     * @see     Table::check()
      * @since   11.1
      */
     public function check()
@@ -160,7 +168,7 @@ class TZ_Portfolio_PlusTableCategory extends JTableNested
         // Check for a title.
         if (trim($this->title) == '')
         {
-            $this->setError(JText::_('JLIB_DATABASE_ERROR_MUSTCONTAIN_A_TITLE_CATEGORY'));
+            $this->setError(Text::_('JLIB_DATABASE_ERROR_MUSTCONTAIN_A_TITLE_CATEGORY'));
 
             return false;
         }
@@ -191,7 +199,7 @@ class TZ_Portfolio_PlusTableCategory extends JTableNested
      *
      * @return  mixed   Null if operation was satisfactory, otherwise returns an error
      *
-     * @see     JTable::bind()
+     * @see     Table::bind()
      * @since   11.1
      */
     public function bind($array, $ignore = '')
@@ -213,7 +221,7 @@ class TZ_Portfolio_PlusTableCategory extends JTableNested
         // Bind the rules.
         if (isset($array['rules']) && is_array($array['rules']))
         {
-            $rules = new JAccessRules($array['rules']);
+            $rules = new Rules($array['rules']);
             $this->setRules($rules);
         }
 
@@ -225,7 +233,7 @@ class TZ_Portfolio_PlusTableCategory extends JTableNested
     }
 
     /**
-     * Overridden JTable::store to set created/modified and user id.
+     * Overridden Table::store to set created/modified and user id.
      *
      * @param   boolean  $updateNulls  True to update fields even if they are null.
      *
@@ -236,7 +244,7 @@ class TZ_Portfolio_PlusTableCategory extends JTableNested
     public function store($updateNulls = false)
     {
         $date = Factory::getDate();
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
 
         $this->modified_time = $date->toSql();
 
@@ -253,12 +261,13 @@ class TZ_Portfolio_PlusTableCategory extends JTableNested
         }
 
         // Verify that the alias is unique
-        $table = JTable::getInstance('Category', 'TZ_Portfolio_PlusTable', array('dbo' => $this->getDbo()));
+        Table::addIncludePath(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH . DIRECTORY_SEPARATOR . 'tables');
+        $table = Table::getInstance('Category', 'TZ_Portfolio_PlusTable', array('dbo' => $this->getDbo()));
 
         if ($table->load(array('alias' => $this->alias, 'parent_id' => $this->parent_id, 'extension' => $this->extension))
             && ($table->id != $this->id || $this->id == 0))
         {
-            $this->setError(JText::_('JLIB_DATABASE_ERROR_CATEGORY_UNIQUE_ALIAS'));
+            $this->setError(Text::_('JLIB_DATABASE_ERROR_CATEGORY_UNIQUE_ALIAS'));
 
             return false;
         }

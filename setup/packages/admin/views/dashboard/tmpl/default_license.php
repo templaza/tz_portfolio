@@ -25,15 +25,16 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
-
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Language\Text;
 $doc    = Factory::getApplication() -> getDocument();
-$params = JComponentHelper::getParams('com_tz_portfolio_plus');
+$params = ComponentHelper::getParams('com_tz_portfolio_plus');
 
 $doc -> addScriptDeclaration('
     (function($, Joomla){
        $(document).ready(function(){
            $(".tp-license [data-tp-license-delete]").on("click", function(){
-               if(confirm("'.htmlspecialchars(JText::_('COM_TZ_PORTFOLIO_PLUS_DELETE_LICENSE_CONFIRM')).'")) {
+               if(confirm("'.htmlspecialchars(Text::_('COM_TZ_PORTFOLIO_PLUS_DELETE_LICENSE_CONFIRM')).'")) {
                    $.ajax({
                        type: "POST",
                        url: "index.php?option=com_tz_portfolio_plus",
@@ -60,36 +61,36 @@ $doc -> addScriptDeclaration('
 ?>
 <?php if($license = $this -> license){ ?>
 <div class="tp-widget tp-license<?php echo $this -> license?' tp-pro':''; ?>">
-    <h4 class="title text-uppercase"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_LICENSE_INFO'); ?></h4>
+    <h4 class="title text-uppercase"><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_LICENSE_INFO'); ?></h4>
     <ul class="inside">
-        <li class="text-success"><b><?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_IS_VERSION', JText::_('COM_TZ_PORTFOLIO_PLUS_PRO')); ?></b></li>
+        <li class="text-success"><b><?php echo Text::sprintf('COM_TZ_PORTFOLIO_PLUS_IS_VERSION', Text::_('COM_TZ_PORTFOLIO_PLUS_PRO')); ?></b></li>
         <li>
-            <div class="name"><?php echo JText::_('JGLOBAL_TITLE'); ?>:</div>
+            <div class="name"><?php echo Text::_('JGLOBAL_TITLE'); ?>:</div>
             <div class="value"><?php echo $license -> title; ?></div>
         </li>
         <li>
-            <div class="name"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_LICENSE'); ?>:</div>
+            <div class="name"><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_LICENSE'); ?>:</div>
             <div class="value"><?php echo $license -> reference; ?></div></li>
         <li>
-            <div class="name"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_DATE_EXPIRY'); ?>:</div>
+            <div class="name"><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_DATE_EXPIRY'); ?>:</div>
             <div class="value"><?php echo $license -> expire; ?><?php
                 if(TZ_Portfolio_PlusHelper::isLicenseExpired('expire')){
                     ?><span class="expired text-danger"><i class="icon-warning"></i><?php
-                    echo JText::_('COM_TZ_PORTFOLIO_PLUS_EXPIRED'); ?></span><?php
+                    echo Text::_('COM_TZ_PORTFOLIO_PLUS_EXPIRED'); ?></span><?php
                 } ?>
             </div>
         </li>
         <li>
-            <div class="name"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SUPPORT_VALID'); ?>:</div>
+            <div class="name"><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_SUPPORT_VALID'); ?>:</div>
             <div class="value"><?php echo $license -> support_expire; ?><?php
                 if(TZ_Portfolio_PlusHelper::isLicenseExpired('support_expire')){
                 ?><span class="expired text-danger"><i class="icon-warning"></i><?php
-                    echo JText::_('COM_TZ_PORTFOLIO_PLUS_EXPIRED'); ?></span><?php
+                    echo Text::_('COM_TZ_PORTFOLIO_PLUS_EXPIRED'); ?></span><?php
                 } ?>
             </div>
         </li>
         <li class="actions">
-            <a href="javascript:" class="btn btn-danger btn-large" data-tp-license-delete><i class="tps tp-times"></i> <?php echo JText::_('JACTION_DELETE'); ?></a>
+            <a href="javascript:" class="btn btn-danger btn-large" data-tp-license-delete><i class="tps tp-times"></i> <?php echo Text::_('JACTION_DELETE'); ?></a>
         </li>
     </ul>
 </div>

@@ -26,8 +26,13 @@ use Joomla\CMS\Uri\Uri;
 if(!defined('COM_TZ_PORTFOLIO_PLUS_JVERSION_COMPARE')) {
     define('COM_TZ_PORTFOLIO_PLUS_JVERSION_COMPARE', version_compare(JVERSION, '3.0', 'ge'));
 }
-if(!defined('COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE')) {
-    define('COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE', version_compare(JVERSION, '4.0', '=='));
+if (!defined('COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE')) {
+    define(
+        'COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE',
+        (defined('JVERSION')
+            && version_compare(JVERSION, '4.0', '>=')
+            && version_compare(JVERSION, '5.0', '<'))
+    );
 }
 if(!DIRECTORY_SEPARATOR){
     define('DIRECTORY_SEPARATOR',DS);

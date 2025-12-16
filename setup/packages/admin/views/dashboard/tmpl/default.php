@@ -21,8 +21,12 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Uri\Uri;
 
-$user   = Factory::getUser();
+$user   = Factory::getApplication()->getIdentity();
 $date   = Factory::getDate();
 $xml    = simplexml_load_file(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/tz_portfolio_plus.xml');
 
@@ -37,15 +41,15 @@ if(Factory::getApplication() -> getLanguage() -> isRtl()) {
 $tppIntroGuide  = '[{
                     /* Step 1: Video tutorial */
                     element: $("#toolbar-youtube")[0],
-                    intro: "<div class=\\"head\\">' . $this->escape(JText::_('COM_TZ_PORTFOLIO_PLUS_VIDEO_TUTORIALS'))
-    . '</div>' . $this->escape(JText::_('COM_TZ_PORTFOLIO_PLUS_INTRO_GUIDE_VIDEO_TUTORIALS_DESC')) . '",
+                    intro: "<div class=\\"head\\">' . $this->escape(Text::_('COM_TZ_PORTFOLIO_PLUS_VIDEO_TUTORIALS'))
+    . '</div>' . $this->escape(Text::_('COM_TZ_PORTFOLIO_PLUS_INTRO_GUIDE_VIDEO_TUTORIALS_DESC')) . '",
                     position: "left"
                 },
                 {
                     /* Step 2: Document */
                     element: $("#toolbar-help")[0],
                     intro: "<div class=\\"head\\">' . $this->escape('JHELP') . '</div>' .
-    $this->escape(JText::_('COM_TZ_PORTFOLIO_PLUS_INTRO_GUIDE_HELP_DESC')) . '",
+    $this->escape(Text::_('COM_TZ_PORTFOLIO_PLUS_INTRO_GUIDE_HELP_DESC')) . '",
                     position: "left"
                 },
                 '.(($user->authorise('core.admin', 'com_tz_portfolio_plus')
@@ -53,31 +57,31 @@ $tppIntroGuide  = '[{
                 {
                     /* Step 3: Options */
                     element: $("#toolbar-options")[0],
-                    intro: "<div class=\\"head\\">' . $this->escape(JText::_('JOPTIONS')) . '</div>'
-        . $this->escape(JText::_('COM_TZ_PORTFOLIO_PLUS_INTRO_GUIDE_GLOBAL_CONFIGURATION_DESC')) . '",
+                    intro: "<div class=\\"head\\">' . $this->escape(Text::_('JOPTIONS')) . '</div>'
+        . $this->escape(Text::_('COM_TZ_PORTFOLIO_PLUS_INTRO_GUIDE_GLOBAL_CONFIGURATION_DESC')) . '",
                     position: "left"
                 },':'').'
                 {
                     /* Step 4: Sidebar */
                     element: $("'.(COM_TZ_PORTFOLIO_PLUS_JVERSION_4_COMPARE?'.main-nav-container .collapse-level-1 > '
         .'.item.mm-active > .mm-collapse':'#j-sidebar-container').'")[0],
-                    intro: "<div class=\\"head\\">' . $this->escape(JText::_('JTOGGLE_SIDEBAR_LABEL')) . '</div>'
-    . $this->escape(JText::_('COM_TZ_PORTFOLIO_PLUS_INTRO_GUIDE_SIDEBAR_DESC')) . '",
+                    intro: "<div class=\\"head\\">' . $this->escape(Text::_('JTOGGLE_SIDEBAR_LABEL')) . '</div>'
+    . $this->escape(Text::_('COM_TZ_PORTFOLIO_PLUS_INTRO_GUIDE_SIDEBAR_DESC')) . '",
                     position: "right"
                 },
                 {
                     /* Step 5: Quick link */
                     element: $(".tpQuicklink")[0],
-                    intro: "<div class=\\"head\\">' . $this->escape(JText::_('COM_TZ_PORTFOLIO_PLUS_QUICK_LINKS')) . '</div>'
-    . $this->escape(JText::_('COM_TZ_PORTFOLIO_PLUS_INTRO_GUIDE_QUICK_LINK_DESC')) . '",
+                    intro: "<div class=\\"head\\">' . $this->escape(Text::_('COM_TZ_PORTFOLIO_PLUS_QUICK_LINKS')) . '</div>'
+    . $this->escape(Text::_('COM_TZ_PORTFOLIO_PLUS_INTRO_GUIDE_QUICK_LINK_DESC')) . '",
                     position: "top"
                 }
                 '.($user->authorise('core.manage', 'com_installer')?'
                 ,{
                     /* Step 6: Information */
                     element: $(".tpInfo")[0],
-                    intro: "<div class=\\"head\\">' . $this->escape(JText::_('COM_TZ_PORTFOLIO_PLUS_INFORMATION')) . '</div>'
-        . $this->escape(JText::_('COM_TZ_PORTFOLIO_PLUS_INTRO_INFORMATION_DESC')) . '",
+                    intro: "<div class=\\"head\\">' . $this->escape(Text::_('COM_TZ_PORTFOLIO_PLUS_INFORMATION')) . '</div>'
+        . $this->escape(Text::_('COM_TZ_PORTFOLIO_PLUS_INTRO_INFORMATION_DESC')) . '",
                     position: "left"
                 }':'').']';
 
@@ -86,7 +90,7 @@ $this->document->addScriptDeclaration('
     "use strict";
     $(document).ready(function(){
          tppIntroGuide("' . $this->getName() . '",'.$tppIntroGuide.', '
-    . (TZ_Portfolio_PlusHelper::introGuideSkipped($this->getName()) ? 1 : 0) . ', "' . JSession::getFormToken() . '");
+    . (TZ_Portfolio_PlusHelper::introGuideSkipped($this->getName()) ? 1 : 0) . ', "' . Session::getFormToken() . '");
         '.($user->authorise('core.manage', 'com_installer')?'var compareVersion = function (curVer, onVer) {
             for (var i=0; i< curVer.length || i< onVer.length; i++){
                 if (curVer[i] < onVer[i]) {
@@ -138,24 +142,24 @@ $this->document->addScriptDeclaration('
 
 ?>
 
-<?php echo JHtml::_('tzbootstrap.addrow');?>
+<?php echo HTMLHelper::_('tzbootstrap.addrow');?>
 <?php if(!empty($this -> sidebar)){?>
     <div id="j-sidebar-container" class="span2 col-md-2">
         <?php echo $this -> sidebar; ?>
     </div>
 <?php } ?>
 
-<?php echo JHtml::_('tzbootstrap.startcontainer', '10', !empty($this -> sidebar),
+<?php echo HTMLHelper::_('tzbootstrap.startcontainer', '10', !empty($this -> sidebar),
     array('containerclass' => false));?>
 
     <div class="tpDashboard">
         <?php if($user -> authorise('core.manage', 'com_installer')) {?>
             <div class="tpHeadline">
-                <h2 class="reset-heading"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_DASHBOARD'); ?></h2>
-                <p><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_DASHBOARD_DESC'); ?></p>
+                <h2 class="reset-heading"><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_DASHBOARD'); ?></h2>
+                <p><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_DASHBOARD_DESC'); ?></p>
             </div>
         <?php } ?>
-        <?php echo JHtml::_('tzbootstrap.addrow');?>
+        <?php echo HTMLHelper::_('tzbootstrap.addrow');?>
         <?php
         $col    = $user->authorise('core.manage', 'com_installer')?7:12;
         ?>
@@ -163,9 +167,9 @@ $this->document->addScriptDeclaration('
 
             <?php if($user -> authorise('core.manage', 'com_installer')) {?>
                 <div class="tp-widget free-license">
-                    <span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_GET_FREE_PERSONAL_LICENSE'); ?></span>
+                    <span><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_GET_FREE_PERSONAL_LICENSE'); ?></span>
                     <a href="<?php echo $xml -> freelicenseUrl; ?>" class="btn btn-danger" target="_blank"><?php
-                        echo JText::_('COM_TZ_PORTFOLIO_PLUS_GET_NOW'); ?></a>
+                        echo Text::_('COM_TZ_PORTFOLIO_PLUS_GET_NOW'); ?></a>
                 </div>
             <?php } ?>
             <div class="tpQuicklink">
@@ -205,7 +209,7 @@ $this->document->addScriptDeclaration('
                 }
                 if($user -> authorise('core.manage.admin', 'com_tz_portfolio_plus')
                     || $user -> authorise('core.manage.options', 'com_tz_portfolio_plus')) {
-                    $this->_quickIcon('index.php?option=com_config&view=component&component=com_tz_portfolio_plus&return=' . urlencode(base64_encode(JUri::getInstance())), 'icon-64-configure.png', 'COM_TZ_PORTFOLIO_PLUS_CONFIGURE');
+                    $this->_quickIcon('index.php?option=com_config&view=component&component=com_tz_portfolio_plus&return=' . urlencode(base64_encode(Uri::getInstance())), 'icon-64-configure.png', 'COM_TZ_PORTFOLIO_PLUS_CONFIGURE');
                 }
                 ?>
             </div>
@@ -219,34 +223,34 @@ $this->document->addScriptDeclaration('
             <div class="span5 col-md-5">
                 <div class="tpInfo">
                     <div class="tpDesc">
-                        <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_DESCRIPTION_2'); ?>
+                        <?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_DESCRIPTION_2'); ?>
                     </div>
                     <div class="tpVersion">
                         <b class="checking">
-                            <i class="tps tp-circle-notch tp-spin"></i> <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_CHECKING_FOR_UPDATES'); ?></b>
-                        <b class="latest"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SOFTWARE_IS_UP_TO_DATE'); ?></b>
+                            <i class="tps tp-circle-notch tp-spin"></i> <?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_CHECKING_FOR_UPDATES'); ?></b>
+                        <b class="latest"><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_SOFTWARE_IS_UP_TO_DATE'); ?></b>
                         <b class="requires-updating">
-                            <?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_REQUIRES_UPDATING'); ?>
-                            <a href="http://www.tzportfolio.com/" class="btn btn-default btn-sm btn-secondary"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_UPDATE_NOW'); ?></a>
+                            <?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_REQUIRES_UPDATING'); ?>
+                            <a href="http://www.tzportfolio.com/" class="btn btn-default btn-sm btn-secondary"><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_UPDATE_NOW'); ?></a>
                         </b>
                         <div class="versions-meta">
-                            <div class="text-muted local-version"><?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_INSTALLED_VERSION', '');?> <span data-local-version="<?php echo $xml->version; ?>"><?php echo $xml->version; ?></span></div>
-                            <div class="text-muted latest-version"><?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_LATEST_VERSION', '');?> <span data-online-version="">N/A</span></div>
+                            <div class="text-muted local-version"><?php echo Text::sprintf('COM_TZ_PORTFOLIO_PLUS_INSTALLED_VERSION', '');?> <span data-local-version="<?php echo $xml->version; ?>"><?php echo $xml->version; ?></span></div>
+                            <div class="text-muted latest-version"><?php echo Text::sprintf('COM_TZ_PORTFOLIO_PLUS_LATEST_VERSION', '');?> <span data-online-version="">N/A</span></div>
                         </div>
                     </div>
                     <div class="tpDetail">
                         <ul>
-                            <li><span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_AUTHOR'); ?>:</span> <a href="<?php echo $xml -> authorUrl;?>" target="_blank"><?php echo $xml->author; ?></a></li>
-                            <li><span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_COPYRIGHT'); ?>:</span> <?php echo JText::sprintf('COM_TZ_PORTFOLIO_PLUS_COPYRIGHT_FOOTER', $date ->year); ?></li>
-                            <li><span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SUPPORT'); ?>:</span> <a href="<?php echo $xml->forumUrl; ?>" title="<?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SUPPORT'); ?>" target="_blank"><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_SUPPORT_DESC'); ?></a></li>
-                            <li><span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_GROUP'); ?>:</span> <a href="<?php echo $xml->facebookGroupUrl; ?>" target="_blank"><?php echo $xml->facebookGroupUrl; ?></a></li>
-                            <li><span><?php echo JText::_('COM_TZ_PORTFOLIO_PLUS_FANPAGE'); ?>:</span> <a href="<?php echo $xml->facebookUrl; ?>" target="_blank"><?php echo $xml->facebookUrl; ?></a></li>
+                            <li><span><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_AUTHOR'); ?>:</span> <a href="<?php echo $xml -> authorUrl;?>" target="_blank"><?php echo $xml->author; ?></a></li>
+                            <li><span><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_COPYRIGHT'); ?>:</span> <?php echo Text::sprintf('COM_TZ_PORTFOLIO_PLUS_COPYRIGHT_FOOTER', $date ->year); ?></li>
+                            <li><span><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_SUPPORT'); ?>:</span> <a href="<?php echo $xml->forumUrl; ?>" title="<?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_SUPPORT'); ?>" target="_blank"><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_SUPPORT_DESC'); ?></a></li>
+                            <li><span><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_GROUP'); ?>:</span> <a href="<?php echo $xml->facebookGroupUrl; ?>" target="_blank"><?php echo $xml->facebookGroupUrl; ?></a></li>
+                            <li><span><?php echo Text::_('COM_TZ_PORTFOLIO_PLUS_FANPAGE'); ?>:</span> <a href="<?php echo $xml->facebookUrl; ?>" target="_blank"><?php echo $xml->facebookUrl; ?></a></li>
                         </ul>
                     </div>
                 </div>
             </div>
         <?php } ?>
-        <?php echo JHtml::_('tzbootstrap.endrow');?>
+        <?php echo HTMLHelper::_('tzbootstrap.endrow');?>
     </div>
-<?php echo JHtml::_('tzbootstrap.endcontainer');?>
-<?php echo JHtml::_('tzbootstrap.endrow');?>
+<?php echo HTMLHelper::_('tzbootstrap.endcontainer');?>
+<?php echo HTMLHelper::_('tzbootstrap.endrow');?>

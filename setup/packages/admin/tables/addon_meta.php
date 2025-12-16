@@ -24,8 +24,10 @@ defined('JPATH_PLATFORM') or die;
 
 use Joomla\Database\DatabaseDriver;
 use Joomla\Registry\Registry;
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Language\Text;
 
-class TZ_Portfolio_PlusTableAddon_Meta extends JTable
+class TZ_Portfolio_PlusTableAddon_Meta extends Table
 {
     public function __construct($db)
     {
@@ -34,7 +36,7 @@ class TZ_Portfolio_PlusTableAddon_Meta extends JTable
     public function check()
     {
         if(empty($this -> meta_key)){
-            $this -> setError(JText::_('Invaild Meta Key data. Please provide data for it'));
+            $this -> setError(Text::_('Invaild Meta Key data. Please provide data for it'));
                 return false;
         }
         return true;

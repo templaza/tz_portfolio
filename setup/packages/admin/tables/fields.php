@@ -21,8 +21,9 @@
 defined('_JEXEC') or die('Restricted access');
 
 use Joomla\CMS\Factory;
-
-class TZ_Portfolio_PlusTableFields extends JTable
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Language\Text;
+class TZ_Portfolio_PlusTableFields extends Table
 {
     function __construct(&$db) {
         parent::__construct('#__tz_portfolio_plus_fields','id',$db);
@@ -64,7 +65,7 @@ class TZ_Portfolio_PlusTableFields extends JTable
                 // We don't have a full primary key - return false
                 else
                 {
-                    $this->setError(JText::_('JLIB_DATABASE_ERROR_NO_ROWS_SELECTED'));
+                    $this->setError(Text::_('JLIB_DATABASE_ERROR_NO_ROWS_SELECTED'));
 
                     return false;
                 }
@@ -167,7 +168,7 @@ class TZ_Portfolio_PlusTableFields extends JTable
     public function store($updateNulls = false){
 
         $date = Factory::getDate();
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
 
         if (!(int) $this -> created)
         {

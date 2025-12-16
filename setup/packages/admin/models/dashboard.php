@@ -19,8 +19,10 @@
 
 // no direct access
 defined('_JEXEC') or die;
-
-use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Factory;
+use Joomla\Filesystem\File;
+use Joomla\CMS\Http\HttpFactory;
+use Joomla\CMS\Cache\CacheControllerFactoryInterface;
 
 require_once dirname(__FILE__) . '/articles.php';
 
@@ -167,37 +169,32 @@ class TZ_Portfolio_PlusModelDashboard extends TZ_Portfolio_PlusModelArticles
         return $query;
     }
 
-    public function getFeedBlog(){
+    public function getFeedBlog()
+    {
+        $file = COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH . '/tz_portfolio_plus.xml';
 
-        $options = array(
-            'defaultgroup'	=> $this -> option,
-            'storage' 		=> 'file',
-            'caching'		=> true,
-            'lifetime'      => 12 * 60 * 60,
-            'cachebase'		=> JPATH_ADMINISTRATOR.'/cache'
-        );
-        $cache = JCache::getInstance('', $options);
-
-        if($cacheData = $cache -> get('feedblog')){
-            return $cacheData;
-        }
-
-        $file   = COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/tz_portfolio_plus.xml';
-
-        if(!File::exists($file)){
+        if (!File::exists($file)) {
             return false;
         }
 
-        $xml    = simplexml_load_file(COM_TZ_PORTFOLIO_PLUS_ADMIN_PATH.'/tz_portfolio_plus.xml');
+        $xml = simplexml_load_file($file);
 
-        if($xml->feedBlogUrl){
-            $rssurl = $xml -> feedBlogUrl;
-            $rss    = new JFeedFactory;
-            if($feeds = $rss->getFeed($rssurl)) {
-                $cache -> store($feeds, 'feedblog');
-                return $feeds;
+        if (!empty($xml->feedBlogUrl)) {
+            $rssurl = (string) $xml->feedBlogUrl;
+
+            try {
+                $http = HttpFactory::getHttp();
+                $response = $http->get($rssurl);
+
+                if (isset($response->code) && (int) $response->code === 200 && !empty($response->body)) {
+                    $feeds = simplexml_load_string($response->body);
+                    return $feeds;
+                }
+            } catch (\Exception $e) {
+                // fail silently and return false
             }
         }
+
         return false;
     }
 }

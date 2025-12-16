@@ -24,6 +24,7 @@ use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
 use Joomla\String\StringHelper;
 use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\MVC\Model\AdminModel;
 
 tzportfolioplusimport('plugin.modelitem');
 JLoader::register('TZ_Portfolio_PlusHelper', COM_TZ_PORTFOLIO_PLUS_ADMIN_HELPERS_PATH
@@ -37,7 +38,7 @@ JLoader::import('com_tz_portfolio_plus.helpers.association',JPATH_ADMINISTRATOR.
 /**
  * Item Model for an Article.
  */
-class TZ_Portfolio_PlusModelArticle extends JModelAdmin
+class TZ_Portfolio_PlusModelArticle extends AdminModel
 {
     protected $text_prefix = 'COM_CONTENT';
     public $typeAlias = 'com_tz_portfolio_plus.article';

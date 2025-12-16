@@ -23,6 +23,6 @@
 
 // no direct access
 defined('_JEXEC') or die;
-
+use Joomla\CMS\Layout\LayoutHelper;
 // Display message update to pro (it only use for free version)
-echo JLayoutHelper::render('message_license');
+echo LayoutHelper::render('message_license');

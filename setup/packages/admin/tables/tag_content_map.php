@@ -19,8 +19,9 @@
  
 //no direct access
 defined('_JEXEC') or die('Restricted access');
-
-class TZ_Portfolio_PlusTableTag_Content_Map extends JTable
+use Joomla\CMS\Table\Table;
+use Joomla\CMS\Language\Text;
+class TZ_Portfolio_PlusTableTag_Content_Map extends Table
 {
 
     function __construct(&$db) {
