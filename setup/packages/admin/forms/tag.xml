@@ -24,7 +24,7 @@
             <option value="0">JUNPUBLISHED</option>
         </field>
         <field name="description" type="editor" class="inputbox"
-               filter="JComponentHelper::filterText" buttons="true"
+               filter="ComponentHelper::filterText" buttons="true"
                label="JGLOBAL_DESCRIPTION" />
 
         <field type="modal_article" name="articles_assignment"

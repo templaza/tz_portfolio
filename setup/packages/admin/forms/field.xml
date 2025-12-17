@@ -98,7 +98,7 @@
         <field type="categoriesassignment" name="categories_assignment" class="checkbox"/>
 
         <field name="description" type="editor" class="inputbox"
-               filter="JComponentHelper::filterText" buttons="true"
+               filter="ComponentHelper::filterText" buttons="true"
                label="JGLOBAL_DESCRIPTION" />
 
         <field name="rules" type="tzrules"

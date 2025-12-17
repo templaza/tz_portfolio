@@ -61,7 +61,7 @@ class LayoutModel extends AdminModel
         }
         else
         {
-            $this->_db = Factory::getDbo();
+            $this->_db = $this->getDatabase();
         }
     }
 

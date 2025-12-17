@@ -36,7 +36,7 @@ use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 class GroupModel extends AdminModel
 {
 
-    public function __construct($config = array(), MVCFactoryInterface $factory = null)
+    public function __construct($config = array(), ?MVCFactoryInterface $factory = null)
     {
         parent::__construct($config, $factory);
 
@@ -47,7 +47,7 @@ class GroupModel extends AdminModel
         }
         else
         {
-            $this->_db = Factory::getDbo();
+            $this->_db = $this->getDatabase();
         }
     }
 

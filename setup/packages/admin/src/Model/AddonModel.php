@@ -939,7 +939,7 @@ class AddonModel extends AdminModel implements WorkflowModelInterface
             $xml        = TZ_PortfolioHelper::getXMLManifest();
             $modules_core   = $xml -> xpath('modules/module/@module');
 
-            $db = Factory::getDbo();
+            $db = $this->getDatabase();
             $query = $db->getQuery(true)
                 ->select('*')
                 ->from('#__extensions')

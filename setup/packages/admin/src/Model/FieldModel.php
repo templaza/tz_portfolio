@@ -75,7 +75,7 @@ class FieldModel extends AdminModel
 
             if(!$data -> id){
                 // Set the type if available from the request
-                $data->set('type', $app->input->getWord('type', $this->state->get('field.type', $data->get('type'))));
+                $data->type = $app->input->getWord('type', $this->state->get('field.type', $data->type));
             }
         }
 

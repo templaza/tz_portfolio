@@ -93,7 +93,7 @@
 		label="JGLOBAL_DESCRIPTION"
 		description="COM_TZ_PORTFOLIO_CATEGORY_DESCRIPTION_DESC"
 		class="inputbox"
-		filter="JComponentHelper::filterText"
+		filter="ComponentHelper::filterText"
 		buttons="true"
 		hide="readmore,pagebreak"/>
 

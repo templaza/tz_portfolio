@@ -63,7 +63,7 @@ class ArticleModel extends AdminModel
 //        }
 //        else
 //        {
-//            $this->_db = Factory::getDbo();
+//            $this->_db = $this->getDatabase();
 //        }
 //    }
     protected $text_prefix = 'COM_CONTENT';
@@ -761,7 +761,7 @@ class ArticleModel extends AdminModel
                     try
                     {
                         // Deleting old association for these items
-                        $db = Factory::getDbo();
+                        $db = $this->getDatabase();
                         $query = $db->getQuery(true)
                             ->delete('#__associations')
                             ->where('context=' . $db->quote('com_tz_portfolio.item'))

@@ -62,7 +62,7 @@
         <field type="categoriesassignment" name="categories_assignment" class="checkbox menu-assignment"/>
 
         <field name="description" type="editor" class="inputbox"
-               filter="JComponentHelper::filterText" buttons="true"
+               filter="ComponentHelper::filterText" buttons="true"
                label="JGLOBAL_DESCRIPTION" />
 
 

@@ -64,7 +64,7 @@ class GroupsModel extends ListModel
         }
         else
         {
-            $this->_db = Factory::getDbo();
+            $this->_db = $this->getDatabase();
         }
     }
 

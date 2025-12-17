@@ -41,10 +41,10 @@ class CategoriesModel extends ListModel
      * Constructor.
      *
      * @param	array $config	An array of configuration options (name, state, dbo, table_path, ignore_request).
-     * @param   MVCFactoryInterface  $factory  The factory.
+     * @param MVCFactoryInterface|null $factory  The factory.
      *
      */
-    public function __construct($config = array(), MVCFactoryInterface $factory = null)
+    public function __construct($config = array(), ?MVCFactoryInterface $factory = null)
     {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
@@ -75,7 +75,7 @@ class CategoriesModel extends ListModel
         }
         else
         {
-            $this->_db = Factory::getDbo();
+            $this->_db = $this->getDatabase();
         }
     }
 

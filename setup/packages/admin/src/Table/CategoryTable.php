@@ -54,7 +54,7 @@ class CategoryTable extends Nested
         
         $this->typeAlias = '{extension}.category';
         parent::__construct('#__tz_portfolio_plus_categories', 'id', $db);
-        $this->access = (int) Factory::getConfig()->get('access');
+        $this->access = (int) Factory::getApplication()->getConfig()->get('access');
     }
 
     /**
@@ -234,7 +234,7 @@ class CategoryTable extends Nested
     public function store($updateNulls = false)
     {
         $date = Factory::getDate();
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
 
         $this->modified_time = $date->toSql();
 
