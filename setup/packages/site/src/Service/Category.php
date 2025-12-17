@@ -26,6 +26,7 @@ namespace TemPlaza\Component\TZ_Portfolio\Site\Service;
 use Joomla\CMS\Categories\CategoryNode;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Categories\Categories;
+use Joomla\Database\DatabaseInterface;
 
 \defined('_JEXEC') or die;
 
@@ -50,8 +51,8 @@ class Category extends Categories
 
     protected function _load($id)
     {
-        $db         = Factory::getDbo();
-        $user       = Factory::getUser();
+        $db         = Factory::getContainer()->get(DatabaseInterface::class);
+        $user       = Factory::getApplication()->getIdentity();
         $extension  = $this->_extension;
 
         // Record that has this $id has been checked
@@ -67,7 +68,7 @@ class Category extends Categories
         $case_when = ' CASE WHEN ';
         $case_when .= $query->charLength('c.alias', '!=', '0');
         $case_when .= ' THEN ';
-        $c_id = $query->castAsChar('c.id');
+        $c_id = 'CAST(' . $db->quoteName('c.id') . ' AS CHAR)';
         $case_when .= $query->concatenate(array($c_id, 'c.alias'), ':');
         $case_when .= ' ELSE ';
         $case_when .= $c_id . ' END as slug';

@@ -34,7 +34,7 @@ use Joomla\CMS\UCM\UCMType;
 use Joomla\CMS\Language\Text;
 use Joomla\Filesystem\Path;
 use Joomla\Registry\Registry;
-use Joomla\CMS\Filesystem\File;
+use Joomla\Filesystem\File;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\MVC\Model\AdminModel;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Helper\ExtraFieldsHelper;

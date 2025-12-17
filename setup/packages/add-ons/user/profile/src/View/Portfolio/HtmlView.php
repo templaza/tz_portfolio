@@ -28,7 +28,7 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
-use Joomla\CMS\Filesystem\File;
+use Joomla\Filesystem\File;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\WebAsset\WebAssetManager;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Library\TZ_PortfolioUri;

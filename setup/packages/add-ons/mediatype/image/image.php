@@ -20,7 +20,7 @@
 // No direct access
 defined('_JEXEC') or die;
 
-use Joomla\CMS\Filesystem\File;
+use Joomla\Filesystem\File;
 
 jimport('joomla.filesytem.file');
 

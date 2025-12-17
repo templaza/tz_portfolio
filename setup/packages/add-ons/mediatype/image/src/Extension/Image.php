@@ -28,7 +28,7 @@ use Joomla\CMS\Form\Form;
 use Joomla\CMS\Form\FormField;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Uri\Uri;
-use Joomla\CMS\Filesystem\File;
+use Joomla\Filesystem\File;
 use Psr\Container\ContainerInterface;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Library\AddOn\AddOn;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Library\Helper\AddonHelper;

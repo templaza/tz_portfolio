@@ -34,8 +34,8 @@ use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\Filesystem\Path;
 use Joomla\CMS\Language\Text;
 use Joomla\Registry\Registry;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Helper\CategoriesHelper;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Library\Image\ImageWaterMark;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Library\AddOn\AddOnAdminModel;
@@ -44,7 +44,7 @@ use TemPlaza\Component\TZ_Portfolio\Site\Helper\TZ_PortfolioHelper as TZ_Portfol
 class ImageModel extends AddOnAdminModel {
     private $base_path;
 
-    public function __construct($config = array(), MVCFactoryInterface $factory = null, FormFactoryInterface $formFactory = null)
+    public function __construct($config = array(), ?MVCFactoryInterface $factory = null, ?FormFactoryInterface $formFactory = null)
     {
         parent::__construct($config, $factory, $formFactory);
 

@@ -27,7 +27,7 @@ namespace TemPlaza\Component\TZ_Portfolio\Site\Helper;
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
+use Joomla\Filesystem\File;
 
 class TZ_PortfolioHelper{
 

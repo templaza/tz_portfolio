@@ -28,7 +28,7 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\Filesystem\Path;
-use Joomla\CMS\Filesystem\File;
+use Joomla\Filesystem\File;
 use Joomla\CMS\Feed\FeedFactory;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Cache\CacheControllerFactoryInterface;

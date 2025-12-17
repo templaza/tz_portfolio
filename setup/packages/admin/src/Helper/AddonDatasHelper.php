@@ -28,7 +28,7 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Access\Access;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
+use Joomla\Filesystem\File;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Table\Table;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Library\Helper\AddonHelper;

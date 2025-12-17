@@ -35,7 +35,7 @@ use Joomla\Event\DispatcherInterface;
 use Joomla\Filesystem\Path;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
-use Joomla\CMS\Filesystem\Folder;
+use Joomla\Filesystem\Folder;
 use Joomla\CMS\Plugin\PluginHelper;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Library\AddOn\AddOnController;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Library\AddOn\AddOnTrait;

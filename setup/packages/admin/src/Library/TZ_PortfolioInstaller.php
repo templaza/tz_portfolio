@@ -32,7 +32,7 @@ use Joomla\CMS\MVC\Factory\MVCFactory;
 use Joomla\CMS\Table\Table;
 use Joomla\DI\ContainerAwareInterface;
 use Joomla\String\StringHelper;
-use Joomla\CMS\Filesystem\Folder;
+use Joomla\Filesystem\Folder;
 use Joomla\CMS\Installer\Installer;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Table\ExtensionsTable;
 

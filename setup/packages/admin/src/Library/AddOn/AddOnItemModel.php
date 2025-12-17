@@ -38,7 +38,7 @@ class AddOnItemModel extends ItemModel {
     protected $article          = null;
     protected $trigger_params   = null;
 
-    public function __construct($config = [], MVCFactoryInterface $factory = null)
+    public function __construct($config = [], ?MVCFactoryInterface $factory = null)
     {
         parent::__construct($config, $factory);
 

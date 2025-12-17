@@ -20,8 +20,8 @@
 // No direct access
 defined('_JEXEC') or die;
 
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
 use Joomla\Registry\Registry;
 use TZ_Portfolio_Plus\Image\TppImageWaterMark;
 

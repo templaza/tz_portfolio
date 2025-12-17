@@ -30,7 +30,7 @@ use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Image\Image;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Filesystem\File;
+use Joomla\Filesystem\File;
 use Joomla\CMS\Form\Field\MediaField;
 use Joomla\CMS\WebAsset\WebAssetManager;
 

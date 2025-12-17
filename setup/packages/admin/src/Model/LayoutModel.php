@@ -28,7 +28,7 @@ defined('_JEXEC') or die('Restricted access');
 
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
+use Joomla\Filesystem\File;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
@@ -38,7 +38,7 @@ use Joomla\Filesystem\Path;
 use Joomla\Registry\Registry;
 use Joomla\String\StringHelper;
 use Joomla\Utilities\ArrayHelper;
-use Joomla\CMS\Filesystem\Folder;
+use Joomla\Filesystem\Folder;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Helper\StylesHelper;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Library\TZ_PortfolioTemplate;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
