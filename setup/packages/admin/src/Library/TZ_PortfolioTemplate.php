@@ -32,7 +32,7 @@ use Joomla\CMS\Table\Table;
 use Joomla\CMS\Version;
 use Joomla\Filesystem\Path;
 use Joomla\Registry\Registry;
-use Joomla\CMS\Filesystem\Folder;
+use Joomla\Filesystem\Folder;
 use ScssPhp\ScssPhp\Compiler;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Helper\CategoriesHelper;
 

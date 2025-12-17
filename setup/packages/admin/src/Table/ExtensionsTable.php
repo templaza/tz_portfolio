@@ -98,7 +98,7 @@ class ExtensionsTable extends Table
         return $this->name;
     }
 
-    protected function _getAssetParentId(Table $table = null, $id = null)
+    protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
         $assetId = null;
 

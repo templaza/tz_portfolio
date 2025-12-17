@@ -37,7 +37,7 @@ class FieldTable extends Table
         parent::__construct('#__tz_portfolio_plus_fields','id',$db);
     }
 
-    public function updateState($pks = null, $state = 1, $userId = 0)
+    public function updateState($pks = null, $state = 1, $userId = 0): bool
     {
         // Sanitize input
         $userId = (int) $userId;
@@ -141,7 +141,7 @@ class FieldTable extends Table
         return $this->title;
     }
 
-    protected function _getAssetParentId(Table $table = null, $id = null)
+    protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
         $assetId = null;
 

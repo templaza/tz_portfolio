@@ -94,14 +94,14 @@ class ArticleTable extends Table
     /**
      * Method to get the parent asset id for the record
      *
-     * @param   Table   $table  A JTable object (optional) for the asset parent
+     * @param Table|null $table  A JTable object (optional) for the asset parent
      * @param   integer  $id     The id (optional) of the content.
      *
      * @return  integer
      *
      * @since   11.1
      */
-    protected function _getAssetParentId(Table $table = null, $id = null)
+    protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
         $assetId = null;
 

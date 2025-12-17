@@ -605,7 +605,8 @@ class AddOn extends CMSPlugin implements
         }
     }
 
-    protected function getModuleLayout($type, $name, $folder, $module, $layout = 'default', Registry $params = null,$tmpl=false){
+    protected function getModuleLayout($type, $name, $folder, $module, $layout = 'default', ?Registry $params = null, $tmpl=false): false|string
+    {
         $path   = TZ_PortfolioModuleHelper::getAddOnModuleLayout($type, $name, $module, $layout, $folder, $params);
         return $path;
     }

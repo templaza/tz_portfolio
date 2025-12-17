@@ -88,14 +88,14 @@ class CategoryTable extends Nested
     /**
      * Get the parent asset id for the record
      *
-     * @param   JTable   $table  A JTable object for the asset parent.
+     * @param Table|null $table  A JTable object for the asset parent.
      * @param   integer  $id     The id for the asset
      *
      * @return  integer  The id of the asset's parent
      *
      * @since   11.1
      */
-    protected function _getAssetParentId(Table $table = null, $id = null)
+    protected function _getAssetParentId(?Table $table = null, $id = null): int
     {
         $assetId = null;
 
