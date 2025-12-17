@@ -23,7 +23,7 @@
 
 // no direct access
 defined('_JEXEC') or die;
-
+use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Language\Text;
 
@@ -122,7 +122,7 @@ use Joomla\CMS\Language\Text;
 <?php if ($active == 'complete') { ?>
 <div class="navi">
     <?php
-    $menu   = JFactory::getApplication() -> getMenu('site');
+    $menu   = Factory::getApplication() -> getMenu('site');
     $menuTpp    = $menu -> getItems('link', 'index.php?option=com_tz_portfolio&view=portfolio');
     $menuItemid = count($menuTpp)?$menuTpp[0] -> id:0;
     ?>

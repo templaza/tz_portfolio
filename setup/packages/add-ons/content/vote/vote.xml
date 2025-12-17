@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="4.1" type="tz_portfolio-addon" group="content" method="upgrade">
+	<name>plg_content_vote</name>
+	<author>TZ Portfolio</author>
+	<creationDate>July 25rd 2024</creationDate>
+	<copyright>Copyright (C) 2015 Open Source Matters. All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<authorEmail>support@templaza.com</authorEmail>
+	<authorUrl>www.templaza.com</authorUrl>
+	<version>4.0.0</version>
+	<description>PLG_CONTENT_VOTE_XML_DESCRIPTION</description>
+
+	<tpTargetPlatforms>
+		<tpTargetPlatform name="com_tz_portfolio" version="4.*"/>
+	</tpTargetPlatforms>
+
+	<files>
+		<folder addon="vote">services</folder>
+		<folder>admin</folder>
+		<folder>assets</folder>
+		<folder>css</folder>
+		<folder>images</folder>
+		<folder>js</folder>
+		<folder>language</folder>
+		<folder>services</folder>
+		<folder>src</folder>
+		<folder>tmpl</folder>
+	</files>
+
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				<fieldset name="basic__notification" label="PLG_CONTENT_VOTE_SPACER_NOTIFICATION">
+					<field type="number" name="ct_vote_notice_ttl"
+						   min="0" default="3000"
+						   label="PLG_CONTENT_VOTE_TIME_DISMISS_LABEL"
+						   description="PLG_CONTENT_VOTE_TIME_DISMISS_DESC"/>
+				</fieldset>
+				<!-- Start article options in category listings -->
+				<fieldset name="basic__category_listing"
+						  label="COM_TZ_PORTFOLIO_SPACER_ARTICLE_OPTIONS_IN_CATEGORY_LISTINGS">
+					<field type="spacer" name="spacer_article_category_listing_hr" hr="true"/>
+					<field type="spacer" name="spacer_article_category_listing_name"
+						   class="alert alert-warning btn-block"
+						   label="COM_TZ_PORTFOLIO_SPACER_ARTICLE_OPTIONS_IN_CATEGORY_LISTINGS"/>
+					<field type="radio" name="show_cat_vote"
+						   default="0" class="switcher btn-group"
+						   layout="joomla.form.field.radio.switcher"
+						   label="JGLOBAL_SHOW_VOTE_LABEL"
+						   description="JGLOBAL_SHOW_VOTE_DESC">
+						<option value="0">JHIDE</option>
+						<option value="1">JSHOW</option>
+					</field>
+					<field type="spacer" name="spacer_article_category_listing_t_hr" hr="true"/>
+					<field name="show_cat_counter" type="radio"
+						   default="1" class="switcher btn-group"
+						   layout="joomla.form.field.radio.switcher"
+						   label="PLG_CONTENT_VOTE_SHOW_COUNTER_LABEL"
+						   description="PLG_CONTENT_VOTE_SHOW_COUNTER_DESC">
+						<option value="0">JHIDE</option>
+						<option value="1">JSHOW</option>
+					</field>
+					<field name="cat_unrated" type="radio"
+						   class="switcher btn-group" default="1"
+						   layout="joomla.form.field.radio.switcher"
+						   label="PLG_CONTENT_VOTE_UNRATED_LABEL"
+						   description="PLG_CONTENT_VOTE_UNRATED_DESC">
+						<option value="0">JHIDE</option>
+						<option value="1">JSHOW</option>
+					</field>
+				</fieldset>
+				<!-- End article options in category listings -->
+
+				<!-- Start article options -->
+				<fieldset name="basic__article"
+						  label="COM_TZ_PORTFOLIO_ATTRIBS_FIELDSET_LABEL">
+					<field type="spacer" name="spacer_article_hr" hr="true"/>
+					<field type="spacer" name="spacer_article_name"
+						   class="alert alert-warning btn-block"
+						   label="COM_TZ_PORTFOLIO_ATTRIBS_FIELDSET_LABEL"/>
+					<field type="radio" name="show_vote"
+						   default="1" class="switcher btn-group"
+						   layout="joomla.form.field.radio.switcher"
+						   label="JGLOBAL_SHOW_VOTE_LABEL"
+						   description="JGLOBAL_SHOW_VOTE_DESC">
+						<option value="0">JHIDE</option>
+						<option value="1">JSHOW</option>
+					</field>
+					<field name="show_counter" type="radio"
+						   default="1" class="switcher btn-group"
+						   layout="joomla.form.field.radio.switcher"
+						   label="PLG_CONTENT_VOTE_SHOW_COUNTER_LABEL"
+						   description="PLG_CONTENT_VOTE_SHOW_COUNTER_DESC">
+						<option value="0">JHIDE</option>
+						<option value="1">JSHOW</option>
+					</field>
+					<field name="unrated" type="radio"
+						   class="switcher btn-group" default="1"
+						   layout="joomla.form.field.radio.switcher"
+						   label="PLG_CONTENT_VOTE_UNRATED_LABEL"
+						   description="PLG_CONTENT_VOTE_UNRATED_DESC">
+						<option value="0">JHIDE</option>
+						<option value="1">JSHOW</option>
+					</field>
+				</fieldset>
+				<!-- End article options -->
+			</fieldset>
+		</fields>
+	</config>
+</extension>

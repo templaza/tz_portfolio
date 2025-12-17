@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+    <fieldset>
+        <field type="textarea" name="message"
+               cols="10" rows="15"
+               hint="COM_TZ_PORTFOLIO_REJECT_DESC"
+               label="MESSAGE"
+               description="COM_TZ_PORTFOLIO_REJECT_DESC"/>
+    </fieldset>
+</form>

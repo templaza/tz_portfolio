@@ -55,12 +55,11 @@ return new class implements ServiceProviderInterface {
             function (Container $container) {
 
                 $component = new TZ_PortfolioComponent($container->get(ComponentDispatcherFactoryInterface::class));
-
                 $component->setMVCFactory($container->get(MVCFactoryInterface::class));
+
                 $component->setRegistry($container->get(Registry::class));
                 $component->setRouterFactory($container->get(RouterFactoryInterface::class));
                 $component->setCategoryFactory($container->get(CategoryFactoryInterface::class));
-
                 return $component;
             }
         );

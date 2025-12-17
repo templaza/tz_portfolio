@@ -28,6 +28,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Library\TZ_PortfolioTemplate;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Library\TZ_PortfolioInstaller;
+use Joomla\Database\DatabaseInterface;
 
 class TZ_PortfolioSetupControllerAddons_InstallStyle extends TZ_PortfolioSetupControllerLegacy
 {
@@ -101,7 +102,7 @@ class TZ_PortfolioSetupControllerAddons_InstallStyle extends TZ_PortfolioSetupCo
             // return false;
         // }
 
-        $db     = JFactory::getDbo();
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $query  = $db -> getQuery(true);
 
         $query -> select('COUNT(*)');
@@ -127,7 +128,7 @@ class TZ_PortfolioSetupControllerAddons_InstallStyle extends TZ_PortfolioSetupCo
             return false;
         }
 
-        $db     = JFactory::getDbo();
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $query  = $db -> getQuery(true);
 
         $query -> update('#__tz_portfolio_plus_extensions');

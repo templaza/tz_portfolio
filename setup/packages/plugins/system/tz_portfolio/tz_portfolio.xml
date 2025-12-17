@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" version="4.1" group="system" method="upgrade">
+    <name>plg_system_tz_portfolio</name>
+    <author>TZ Portfolio</author>
+    <creationDate>April 12nd 2024</creationDate>
+    <copyright>Copyright (C) 2015 TemPlaza. All rights reserved.</copyright>
+    <license>GNU/GPL v2 or later http://www.gnu.org/licenses/gpl-2.0.html</license>
+    <authorEmail>support@templaza.com</authorEmail>
+    <authorUrl>www.templaza.com/</authorUrl>
+    <version>4.0.0</version>
+
+    <namespace path="src">TemPlaza\Component\TZ_Portfolio\Plugin\System\TZ_Portfolio</namespace>
+
+    <files>
+        <folder plugin="tz_portfolio">services</folder>
+        <folder>src</folder>
+        <filename>index.html</filename>
+    </files>
+    <languages folder="language">
+        <language tag="en-GB">en-GB/plg_system_tz_portfolio.ini</language>
+        <language tag="en-GB">en-GB/plg_system_tz_portfolio.sys.ini</language>
+    </languages>
+    <config>
+        <fields name="params">
+        <fieldset name="basic">
+            <field type="radio" name="test" label="Test">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+            </field>
+            <field name="backgroundcolor" type="color" format="rgba"
+                   label="TPL_BEEZ3_FIELD_HEADER_BACKGROUND_COLOR_LABEL"
+                   description="TPL_BEEZ3_FIELD_HEADER_BACKGROUND_COLOR_DESC" />
+        </fieldset>
+        </fields>
+    </config>
+</extension>

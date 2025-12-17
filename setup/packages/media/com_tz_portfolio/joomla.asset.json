@@ -1,0 +1,197 @@
+{
+  "$schema": "https://developer.joomla.org/schemas/json-schema/web_assets.json",
+  "name": "com_tz_portfolio",
+  "version": "4.0.0",
+  "description": "TZ Portfolio",
+  "license": "GPL-2.0-or-later",
+  "assets": [
+    {
+      "name": "com_tz_portfolio.admin-style",
+      "type": "style",
+      "uri": "com_tz_portfolio/admin-style.min.css"
+    },
+    {
+      "name": "com_tz_portfolio.style.system.style",
+      "type": "style",
+      "uri": "com_tz_portfolio/style/system/style.min.css"
+    },
+    {
+      "name": "com_tz_portfolio.admin-script",
+      "type": "script",
+      "dependencies": [
+        "jquery"
+      ],
+      "attributes": {
+        "type": "module"
+      },
+      "uri": "com_tz_portfolio/admin-script.min.js"
+    },
+    {
+      "name": "com_tz_portfolio.server-list",
+      "type": "script",
+      "dependencies": [
+        "jquery"
+      ],
+      "attributes": {
+        "type": "module"
+      },
+      "uri": "com_tz_portfolio/server-list.min.js"
+    },
+    {
+      "name": "com_tz_portfolio.core",
+      "type": "script",
+      "dependencies": [
+        "jquery"
+      ],
+      "attributes": {
+        "type": "module"
+      },
+      "uri": "com_tz_portfolio/core.js"
+    },
+    {
+      "name": "com_tz_portfolio.jquery-ui",
+      "type": "script",
+      "dependencies": [
+        "jquery"
+      ],
+      "attributes": {
+        "type": "module"
+      },
+      "uri": "com_tz_portfolio/jquery-ui.min.js"
+    },
+    {
+      "name": "com_tz_portfolio.admin-layout",
+      "type": "script",
+      "dependencies": [
+        "jquery"
+      ],
+      "attributes": {
+        "type": "module"
+      },
+      "uri": "com_tz_portfolio/admin-layout.min.js"
+    },
+    {
+      "name": "com_tz_portfolio.introjs",
+      "type": "script",
+      "dependencies": [
+        "jquery"
+      ],
+      "uri": "com_tz_portfolio/intro.min.js",
+      "package": "",
+      "attributes": {
+        "cdn": "https://unpkg.com/intro.js/intro.min.js"
+      }
+    },
+    {
+      "name": "com_tz_portfolio.introguide",
+      "type": "script",
+      "dependencies": [
+        "jquery",
+        "com_tz_portfolio.introjs"
+      ],
+      "attributes": {
+        "defer": true
+      },
+      "uri": "com_tz_portfolio/introguide.min.js"
+    },
+    {
+      "name": "com_tz_portfolio.field-permissions",
+      "type": "script",
+      "dependencies": [
+        "jquery"
+      ],
+      "attributes": {
+        "type": "module"
+      },
+      "uri": "com_tz_portfolio/field-permissions.min.js"
+    },
+    {
+      "name": "com_tz_portfolio.introjs",
+      "type": "style",
+      "version": "7.2.0",
+      "uri": "com_tz_portfolio/introjs.min.css",
+      "attributes": {
+        "cdn": "https://unpkg.com/intro.js/introjs.css"
+      }
+    },
+    {
+      "name": "com_tz_portfolio.introjs-rtl",
+      "type": "style",
+      "version": "7.2.0",
+      "uri": "com_tz_portfolio/introjs-rtl.min.css",
+      "attributes": {
+        "cdn": "https://unpkg.com/intro.js/introjs-rtl.css"
+      }
+    },
+    {
+      "name": "com_tz_portfolio.uikit",
+      "type": "style",
+      "version": "3.21.4",
+      "uri": "com_tz_portfolio/uikit.min.css",
+      "attributes": {
+        "cdn": "https://cdn.jsdelivr.net/npm/uikit/dist/css/uikit.min.css"
+      }
+    },
+    {
+      "name": "com_tz_portfolio.fancybox",
+      "type": "style",
+      "version": "3.5.7",
+      "uri": "com_tz_portfolio/jquery.fancybox.min.css"
+    },
+    {
+      "name": "com_tz_portfolio.dm-uploader",
+      "type": "style",
+      "version": "1.0.1",
+      "uri": "com_tz_portfolio/jquery.dm-uploader.min.css"
+    },
+    {
+      "name": "com_tz_portfolio.uikit",
+      "type": "script",
+      "version": "3.21.4",
+      "uri": "com_tz_portfolio/uikit.min.js",
+      "attributes": {
+        "cdn": "https://cdn.jsdelivr.net/npm/uikit/dist/js/uikit.min.js"
+      }
+    },
+    {
+      "name": "com_tz_portfolio.uikiticon",
+      "type": "script",
+      "dependencies": [
+        "com_tz_portfolio.uikit"
+      ],
+      "uri": "com_tz_portfolio/uikit-icons.min.js",
+      "attributes": {
+        "cdn": "https://cdn.jsdelivr.net/npm/uikit/dist/js/uikit-icons.min.js"
+      }
+    },
+    {
+      "name": "com_tz_portfolio.uikit",
+      "type": "preset",
+      "dependencies": [
+        "com_tz_portfolio.uikit#style",
+        "com_tz_portfolio.uikit#script"
+      ]
+    },
+    {
+      "name": "com_tz_portfolio.infinite-scroll",
+      "type": "script",
+      "version": "4.0.1",
+      "uri": "com_tz_portfolio/infinite-scroll.pkgd.min.js",
+      "attributes": {
+        "cdn": "https://unpkg.com/infinite-scroll@4/dist/infinite-scroll.pkgd.min.js"
+      }
+    },
+    {
+      "name": "com_tz_portfolio.fancybox",
+      "type": "script",
+      "version": "3.5.7",
+      "uri": "com_tz_portfolio/jquery.fancybox.min.js"
+    },
+    {
+      "name": "com_tz_portfolio.dm-uploader",
+      "type": "script",
+      "version": "1.0.1",
+      "uri": "com_tz_portfolio/jquery.dm-uploader.min.js"
+    }
+  ]
+}

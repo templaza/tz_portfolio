@@ -28,7 +28,8 @@ use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Language\Text;
 
 $input -> set('active', 0);
-$xml    = simplexml_load_file(COM_TZ_PORTFOLIO_ADMIN_PATH.'/tz_portfolio.xml');
+$xml    = simplexml_load_file(JPATH_ADMINISTRATOR.DIRECTORY_SEPARATOR
+        .'components'.DIRECTORY_SEPARATOR.'com_tz_portfolio/tz_portfolio.xml');
 ?>
 <script>
     $(document).ready(function(){
