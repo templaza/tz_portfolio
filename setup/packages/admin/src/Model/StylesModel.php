@@ -26,11 +26,8 @@ namespace TemPlaza\Component\TZ_Portfolio\Administrator\Model;
 // no direct access
 defined('_JEXEC') or die;
 
-use Akeeba\WebPush\WebPush\VAPID;
-use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\Filesystem\Folder;
-use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\MVC\Model\ListModel;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Helper\StylesHelper;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Library\TZ_PortfolioTemplate;
@@ -98,23 +95,25 @@ class StylesModel extends ListModel
             if(count($folders)){
                 foreach($folders as $i => $folder){
                     $xmlFile    = $tpl_path.DIRECTORY_SEPARATOR.$folder.DIRECTORY_SEPARATOR.'template.xml';
+
                     if(file_exists($xmlFile)){
-                        $installer  = Installer::getInstance($tpl_path.DIRECTORY_SEPARATOR.$folder);
-                        if($manifest = $installer ->isManifest($xmlFile)){
-
-                            TZ_PortfolioTemplate::loadLanguage((string) $manifest -> name);
-
-                            $item                   = new \stdClass();
-                            $item -> id             = $i;
-                            $item -> name           = (string) $manifest -> name;
-                            $item -> type           = (string) $manifest -> type;
-                            $item -> version        = (string) $manifest -> version;
-                            $item -> creationDate   = (string) $manifest -> creationDate;
-                            $item -> author         = (string) $manifest -> author;
-                            $item -> authorEmail    = (string) $manifest -> authorEmail;
-                            $item -> description    = Text::_((string) $manifest -> description);
-                            $items[]    = $item;
+                        $manifest = @simplexml_load_file($xmlFile, 'SimpleXMLElement', LIBXML_NOCDATA);
+                        if ($manifest === false) {
+                            continue;
                         }
+
+                        $item = new \stdClass();
+                        $item->id = $i;
+                        $item->name = (string) ($manifest->name ?? $folder);
+                        $item->type = (string) ($manifest->type ?? '');
+                        $item->version = (string) ($manifest->version ?? '');
+                        $item->creationDate = (string) ($manifest->creationDate ?? '');
+                        $item->author = (string) ($manifest->author ?? '');
+                        $item->authorEmail = (string) ($manifest->authorEmail ?? '');
+                        // Description may contain HTML or CDATA; keep it as-is (string)
+                        $item->description = Text::_(trim((string) ($manifest->description ?? '')));
+                        $items[]    = $item;
+                        TZ_PortfolioTemplate::loadLanguage($item->name);
                     }
                 }
             }

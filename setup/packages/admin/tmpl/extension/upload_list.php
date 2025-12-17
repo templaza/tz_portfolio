@@ -28,6 +28,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Router\Route;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Helper\TZ_PortfolioHelper;
 
 $dataServer = $this -> state -> get('list.dataserver');
@@ -71,7 +72,7 @@ $wa -> addInlineScript('(function($){
 $xml    = TZ_PortfolioHelper::getXMLManifest();
 ?>
 <div class="tpContainer tpp-container__bar">
-    <a href="<?php echo JRoute::_('index.php?option=com_installer');?>" target="_blank"
+    <a href="<?php echo Route::_('index.php?option=com_installer');?>" target="_blank"
        class="btn btn-success pull-left float-left float-start hasTooltip btn-extension__upload" title="<?php echo Text::_('JTOOLBAR_UPLOAD');
     ?>"><span class="icon-upload"></span> <?php echo Text::_('JTOOLBAR_UPLOAD'); ?></a>
     <?php

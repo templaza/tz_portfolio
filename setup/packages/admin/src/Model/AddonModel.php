@@ -70,7 +70,7 @@ class AddonModel extends AdminModel implements WorkflowModelInterface
     protected $type         = 'tz_portfolio-addon';
     protected $accept_types = array();
 
-    public function __construct($config = array(), MVCFactoryInterface $factory = null, FormFactoryInterface $formFactory = null)
+    public function __construct($config = array(), ?MVCFactoryInterface $factory = null, ?FormFactoryInterface $formFactory = null)
     {
         parent::__construct($config, $factory, $formFactory);
 

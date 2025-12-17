@@ -42,7 +42,7 @@ class StyleModel extends AddonModel
     protected $type         = 'tz_portfolio-style';
     protected $folder       = 'styles';
 
-    public function __construct($config = array(), MVCFactoryInterface $factory = null)
+    public function __construct($config = array(), ?MVCFactoryInterface $factory = null)
     {
         parent::__construct($config, $factory);
 

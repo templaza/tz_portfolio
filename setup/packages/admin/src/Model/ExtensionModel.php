@@ -67,7 +67,7 @@ class ExtensionModel extends AddonModel
     protected $type         = 'module';
     protected $folder       = 'modules';
 
-    public function __construct($config = array(), MVCFactoryInterface $factory = null)
+    public function __construct($config = array(), ?MVCFactoryInterface $factory = null)
     {
         parent::__construct($config, $factory);
 
