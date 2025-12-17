@@ -612,7 +612,7 @@ class AddonHelper extends PluginHelper
         return $load;
     }
 
-    protected static function import($plugin, $autocreate = true, DispatcherInterface $dispatcher = null)
+    protected static function import($plugin, $autocreate = true, ?DispatcherInterface $dispatcher = null): void
     {
         static $plugins = array();
 
@@ -675,7 +675,7 @@ class AddonHelper extends PluginHelper
 //        }
     }
 
-    public static function importPlugin($type, $plugin = null, $autocreate = true, DispatcherInterface $dispatcher = null)
+    public static function importPlugin($type, $plugin = null, $autocreate = true, ?DispatcherInterface $dispatcher = null)
     {
         static $loaded = [];
 
