@@ -37,7 +37,6 @@ $wa = $this->document->getWebAssetManager();
 
 $wa->useScript('core')
     ->useScript('bootstrap.popover');
-HTMLHelper::_('formbehavior.chosen', 'select[multiple]');
 
 $wa -> addInlineScript('
     jQuery(function($) {
@@ -112,7 +111,7 @@ $jTab   = 'uitab';
                             <?php echo $this -> loadTemplate('column_settings');?>
                             <?php echo $this -> loadTemplate('generator');?>
                         </div>
-                        <div id="layout_disable" style="<?php echo intval($this->item->params->use_single_layout_builder) ? 'display: none;' : 'display: block;'; ?>">
+                        <div id="layout_disable" style="<?php echo $use_single_lb ? 'display: none;' : 'display: block;'; ?>">
                             <h3 style="text-align: center;"><?php echo Text::_('COM_TZ_PORTFOLIO_LAYOUT_DISABLED');?></h3>
                         </div>
                         <?php echo HTMLHelper::_($jTab.'.endTab'); ?>

@@ -28,7 +28,7 @@ if($item = $this -> item):
     if(isset($item -> extrafields) && !empty($item -> extrafields)):
         $params = $item -> params;
 ?>
-        <div class="tp-extrafield__list">
+        <div class="tp-extrafield__list uk-margin-bottom">
             <?php foreach($item -> extrafields as $field):?>
                 <div class="tp-extrafield__item uk-grid-small" data-uk-grid>
                     <?php if($field -> hasTitle()):?>

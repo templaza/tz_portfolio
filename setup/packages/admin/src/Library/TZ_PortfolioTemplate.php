@@ -56,7 +56,6 @@ class TZ_PortfolioTemplate {
         $templateId = self::getTemplateId();
         $template   = new \stdClass();
 
-//        $table  = Table::getInstance('TemplatesTable','TemPlaza\Component\TZ_Portfolio\Administrator\Table\\');
         $table  = Factory::getApplication() -> bootComponent('com_tz_portfolio')
             -> getMVCFactory() -> createTable('Style', 'Administrator');
 
@@ -423,15 +422,7 @@ class TZ_PortfolioTemplate {
         $variables  = (array) $variables;
 
         $storeId    = __METHOD__;
-//        $storeId   .= '::'.$styleName;
-//        $storeId   .= '::'.$params -> get('enable_bootstrap', 1);
-//        $storeId   .= '::'.$params -> get('bootstrapversion', 4);
-//        $storeId   .= '::'.serialize($variables);
         $storeId    = md5($storeId);
-
-//        if(!isset(self::$cache[$storeId])) {
-//            self::$cache[$storeId] = array();
-//        }
 
         $cssname    = '';
         $scss_files = array();
@@ -495,7 +486,15 @@ class TZ_PortfolioTemplate {
             if (!file_exists($css_path.'/'. $cssname . '.css')) {
                 self::clearCache($styleName, $bootverPrefix);
 
-                require_once COM_TZ_PORTFOLIO_ADMIN_PATH.'/vendor/scssphp/scss.inc.php';
+                // Check for the Scss compiler class and require Composer autoload only if missing
+                if (!class_exists(Compiler::class)) {
+                    $autoload = COM_TZ_PORTFOLIO_ADMIN_PATH . '/vendor/autoload.php';
+                    if (file_exists($autoload)) {
+                        require_once $autoload;
+                    } else {
+                        throw new \RuntimeException('Composer autoload not found: ' . $autoload);
+                    }
+                }
 
                 $scss       = new Compiler();
                 $coreSassPath  = COM_TZ_PORTFOLIO_PATH_SITE.'/scss';
@@ -506,81 +505,31 @@ class TZ_PortfolioTemplate {
 
                 $importPaths    = array( $coreSassPath, $sass_path);
 
-//                if(file_exists(COM_TZ_PORTFOLIO_PATH_SITE.'/scss/vendor/bootstrap/bootstrap-functions.scss')) {
-//                    $compileCode = '@import "vendor/bootstrap/bootstrap-functions.scss";';
-//                }
-//
-//                if($params -> get('enable_bootstrap',1)) {
-//                    if($styleName && file_exists($sass_path.'/'.$styleName.'/scss/variables_override.scss')) {
-//                        $compileCode .= '@import "variables_override.scss";';
-//                    }
-//                    if($params -> get('bootstrapversion', 4) == 4
-//                        && !isset(self::$imported['import_bootstrap'])){
-//                        if(file_exists(COM_TZ_PORTFOLIO_PATH_SITE.'/scss/vendor/bootstrap/bootstrap.scss')) {
-//                            $compileCode .= '@import "vendor/bootstrap/bootstrap.scss";';
-//                            self::$imported['import_bootstrap'] = true;
-//                        }
-//                        if(file_exists(COM_TZ_PORTFOLIO_PATH_SITE.'/scss/_basic.scss')) {
-//                            $compileCode .= '@import "basic.scss";';
-//                        }
-//                    }
-//                }
-
-//                // Import basic
-//                if(file_exists(COM_TZ_PORTFOLIO_PATH_SITE.'/scss/_basic.scss')
-//                    && !isset(self::$imported['import_basic'])) {
-//                    $compileCode .= '@import "basic.scss";';
-//                    self::$imported['import_basic'] = true;
-//                }
-//                $compileCode .= '@import "' . $sass_prefix_path . '/style.scss";';
-
                 if(!file_exists(COM_TZ_PORTFOLIO_STYLE_PATH.'/'.$sass_prefix_path.'/style.scss')){
                     return false;
                 }
 
                 $compileCode = '@import "' . $sass_prefix_path . '/style.scss";';
 
-//                // Import Font Awesome
-//                if(file_exists(COM_TZ_PORTFOLIO_PATH_SITE.'/scss/vendor/fontawesome/all.scss')
-//                    && !isset(self::$imported['import_fontawesome'])) {
-//                    $compileCode .= '@import "vendor/fontawesome/all.scss";';
-//                    self::$imported['import_fontawesome'] = true;
-//                }
-
                 if(count($variables)) {
-                    $scss->setVariables($variables);
+                    $scss->addVariables($variables);
                 }
                 $scss -> setImportPaths($importPaths);
-                $scss -> setFormatter('ScssPhp\ScssPhp\Formatter\Compressed');
+                $scss->setOutputStyle(\ScssPhp\ScssPhp\OutputStyle::COMPRESSED);
 
-                $content    = $scss -> compile($compileCode);
+                $content    = $scss -> compileString($compileCode);
 
                 if(!Folder::exists($css_path)){
                     Folder::create($css_path);
                 }
 
-                if($content) {
-                    file_put_contents($css_path . '/' . $cssname . '.css', $content);
-                }
+                file_put_contents($css_path . '/' . $cssname . '.css', $content);
             }
 
             if(file_exists($css_path . '/' . $cssname . '.css')) {
                 $result = 'style/'.($styleName ? $styleName . '/' . $cssname . '.css' : $cssname . '.css');
 
-                /*if($params -> get('enable_bootstrap', 1) && $params -> get('bootstrapversion', 4)
-                    && !isset(self::$loaded[$styleName]['import_bootstrap'])) {
-                    $styleSheets    = $document -> _styleSheets;
-                    $styleKeys      = array_keys($styleSheets);
-
-                    $grepKeys   = preg_grep('#components/com_tz_portfolio/css/style/'.$styleName.'/style-#', $styleKeys);
-                    if(count($grepKeys)) {
-                        $grepKey    = array_shift($grepKeys);
-                        if(isset($styleSheets[$grepKey])) {
-                            unset($document -> _styleSheets[$grepKey]);
-                        }
-                    }
-                    self::$loaded[$styleName]['import_bootstrap']   = true;
-                }else*/if(isset(self::$loaded[$styleName]['loaded'])){
+                if(isset(self::$loaded[$styleName]['loaded'])){
                     return false;
                 }
 
@@ -601,7 +550,6 @@ class TZ_PortfolioTemplate {
         $version->refreshMediaVersion();
         if (!file_exists($template_dir)) {
             return false;
-//            throw new \Exception("Template not found.", 404);
         }
 
         if (is_array($prefix)) {
@@ -612,7 +560,6 @@ class TZ_PortfolioTemplate {
                 }
             }
         } else {
-//            $styles = preg_grep('~^' . $prefix . '-.*\.(css)$~', scandir($template_dir));
             $styles = preg_grep('~^' . $prefix . '-'.$bootverPrefix.'-.*\.(css)$~', scandir($template_dir));
 
             foreach ($styles as $style) {

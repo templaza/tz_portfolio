@@ -50,7 +50,7 @@ jimport('joomla.application.component.modeladmin');
 class LayoutModel extends AdminModel
 {
 
-    public function __construct($config = array(), MVCFactoryInterface $factory = null)
+    public function __construct($config = array(), ?MVCFactoryInterface $factory = null)
     {
         parent::__construct($config, $factory);
 
@@ -255,11 +255,12 @@ class LayoutModel extends AdminModel
 
         if (property_exists($item, 'layout'))
         {
-            $item->layout = json_decode($item -> layout);
+
+            $item->layout = $item -> layout ? json_decode($item -> layout) : null;
         }
         if (property_exists($item, 'params'))
         {
-            $item->params = json_decode($item -> params);
+            $item->params = $item -> params ? json_decode($item -> params) : null;
         }
 
         // Set default for preset if the style has layout default
