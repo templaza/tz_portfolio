@@ -92,7 +92,7 @@ class TZ_PortfolioSetupControllerInstall extends TZ_PortfolioSetupControllerLega
         // Construct storage path
         $storage = COM_TZ_PORTFOLIO_SETUP_PACKAGES . '/' . $package;
 
-        $exists = file_exists($storage);
+        $exists = file_exists(COM_TZ_PORTFOLIO_SETUP_PACKAGES);
 
         // Test if package really exists
         if (!$exists) {
@@ -125,11 +125,14 @@ class TZ_PortfolioSetupControllerInstall extends TZ_PortfolioSetupControllerLega
         }
 
         // Try to extract the files
-        $state = $this->tppExtract($storage, $tmp);
-
-        if (!$state) {
-            $this->setInfo('COM_TZ_PORTFOLIO_SETUP_ERROR_EXTRACT_ERRORS', false);
-            return $this->output();
+//        $state = $this->tppExtract($storage, $tmp);
+        $folders = Folder::folders(COM_TZ_PORTFOLIO_SETUP_PACKAGES, '.', false, true);
+        foreach ($folders as $folder){
+            Folder::copy($folder, $tmp);
+        }
+        $files = Folder::files(COM_TZ_PORTFOLIO_SETUP_PACKAGES, '.', false, true);
+        foreach ($files as $file){
+            File::copy($file, $tmp);
         }
 
         $this->setInfo('COM_TZ_PORTFOLIO_SETUP_EXTRACT_SUCCESS', true, array('path' => $tmp));
