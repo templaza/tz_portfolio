@@ -86,57 +86,13 @@ class TZ_PortfolioSetupControllerInstall extends TZ_PortfolioSetupControllerLega
             File::delete(COM_TZ_PORTFOLIO_SETUP_LICENCE_PATH.'/license.php');
         }
 
-        // Get the package
-        $package = COM_TZ_PORTFOLIO_SETUP_PACKAGE;
-
-        // Construct storage path
-        $storage = COM_TZ_PORTFOLIO_SETUP_PACKAGES . '/' . $package;
-
-        $exists = file_exists(COM_TZ_PORTFOLIO_SETUP_PACKAGES);
-
         // Test if package really exists
-        if (!$exists) {
+        if (!file_exists(COM_TZ_PORTFOLIO_SETUP_PACKAGES)) {
             $this->setInfo('COM_TZ_PORTFOLIO_SETUP_ERROR_PACKAGE_DOESNT_EXIST', false);
             return $this->output();
         }
 
-        // Remove all files in tmp
-        try{
-            if(is_dir(COM_TZ_PORTFOLIO_SETUP_TMP)) {
-                Folder::delete(COM_TZ_PORTFOLIO_SETUP_TMP);
-            }
-        }catch (Exception $e){
-
-        }
-
-        // Check if the temporary folder exists
-        if (!is_dir(COM_TZ_PORTFOLIO_SETUP_TMP)) {
-            Folder::create(COM_TZ_PORTFOLIO_SETUP_TMP);
-        }
-
-        // Generate a temporary folder name
-        $fileName = 'com_tz_portfolio_package_' . uniqid();
-        $tmp = COM_TZ_PORTFOLIO_SETUP_TMP . '/' . $fileName;
-
-
-        // Delete any folders that already exists
-        if (is_dir($tmp)) {
-            Folder::delete($tmp);
-        }
-
-        // Try to extract the files
-//        $state = $this->tppExtract($storage, $tmp);
-        Folder::create($tmp);
-        $folders = Folder::folders(COM_TZ_PORTFOLIO_SETUP_PACKAGES, '.', false, true);
-        foreach ($folders as $folder){
-            Folder::copy($folder, $tmp);
-        }
-        $files = Folder::files(COM_TZ_PORTFOLIO_SETUP_PACKAGES, '.', false, true);
-        foreach ($files as $file){
-            File::copy($file, $tmp);
-        }
-
-        $this->setInfo('COM_TZ_PORTFOLIO_SETUP_EXTRACT_SUCCESS', true, array('path' => $tmp));
+        $this->setInfo('COM_TZ_PORTFOLIO_SETUP_EXTRACT_SUCCESS', true, array('path' => COM_TZ_PORTFOLIO_SETUP_PACKAGES));
         return $this->output();
     }
 }
