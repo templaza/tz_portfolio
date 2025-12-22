@@ -126,6 +126,7 @@ class TZ_PortfolioSetupControllerInstall extends TZ_PortfolioSetupControllerLega
 
         // Try to extract the files
 //        $state = $this->tppExtract($storage, $tmp);
+        Folder::create($tmp);
         $folders = Folder::folders(COM_TZ_PORTFOLIO_SETUP_PACKAGES, '.', false, true);
         foreach ($folders as $folder){
             Folder::copy($folder, $tmp);
