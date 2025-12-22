@@ -249,8 +249,8 @@ class AddonsModel extends ListModel
         );
         $cache = Cache::getInstance('', $options);
 
-        $model  = Factory::getApplication()->bootComponent('tz_portfolio')
-            ->getMVCFactory()->createModel('AddOn', 'Administrator');
+        $factory = $this->getMVCFactory();
+        $model  = $factory->createModel('Addon', 'Administrator', ['ignore_request' => true]);
 
         $page   = 1;
         while(!$finded){
