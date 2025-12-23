@@ -33,14 +33,6 @@ use Joomla\Event\DispatcherInterface;
 use Joomla\Filesystem\Path;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Library\Helper\AddonHelper;
 
-//jimport('joomla.plugin.plugin');
-//jimport('joomla.filesystem.folder');
-//jimport('joomla.filesystem.file');
-//
-//JLoader::register('TZ_Portfolio_PlusPlugin',JPATH_ADMINISTRATOR.DIRECTORY_SEPARATOR.'components'
-//                    .DIRECTORY_SEPARATOR.'com_tz_portfolio'.DIRECTORY_SEPARATOR.'libraries'
-//                    .DIRECTORY_SEPARATOR.'plugin'.DIRECTORY_SEPARATOR.'plugin.php');
-
 class TZ_Portfolio extends CMSPlugin {
 
     /**
