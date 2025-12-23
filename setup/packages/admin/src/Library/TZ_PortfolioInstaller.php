@@ -133,7 +133,6 @@ class TZ_PortfolioInstaller extends Installer
 //            'onExtensionAfterInstall',
 //            array('installer' => clone $this, 'eid' => $result)
 //        );
-
         if ($result !== false)
         {
             // Refresh versionable assets cache
@@ -185,7 +184,7 @@ class TZ_PortfolioInstaller extends Installer
 
         $adapterPrefix  = ucfirst($type);
 
-        $adapter = $this->loadAdapter($adapterPrefix, $params);
+        $adapter = $this->getAdapter($adapterPrefix, $params);
 
         if ($returnAdapter)
         {

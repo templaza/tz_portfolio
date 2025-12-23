@@ -42,6 +42,7 @@ use Joomla\CMS\Object\CMSObject;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Installer\Installer;
+use TemPlaza\Component\TZ_Portfolio\Administrator\Library\TZ_PortfolioInstaller;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Pagination\Pagination;
 use Joomla\CMS\Form\FormFactoryInterface;
@@ -473,7 +474,7 @@ class AddonModel extends AdminModel implements WorkflowModelInterface
         }
 
         // Get an installer instance.
-        $installer  = Installer::getInstance($package['dir']);
+        $installer  = TZ_PortfolioInstaller::getInstance();
         $installer -> setPath('source',$package['dir']);
 
         if($manifest = $installer ->getManifest()){
@@ -535,7 +536,7 @@ class AddonModel extends AdminModel implements WorkflowModelInterface
                     .ucfirst($_type).'Adapter.php');
             }
 
-            $tzinstaller    = new $class($installer,$installer -> getDbo());
+            $tzinstaller    = new $class($installer,$this -> getDatabase());
             $tzinstaller -> setMVCFactory($this -> getMVCFactory());
             $tzinstaller -> setRoute('install');
             $tzinstaller -> setManifest($installer -> getManifest());
