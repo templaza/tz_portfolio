@@ -53,11 +53,9 @@ class TZ_Portfolio extends CMSPlugin {
      */
     public function __construct($subject, $config = array())
     {
-        require_once JPATH_ADMINISTRATOR.'/components/com_tz_portfolio/includes/defines.php';
-//        JLoader::import('com_tz_portfolio.includes.framework',JPATH_ADMINISTRATOR.'/components');
-//
-//        JLoader::import('com_tz_portfolio.libraries.plugin.helper', JPATH_ADMINISTRATOR.'/components');
-//
+        if (file_exists(JPATH_ADMINISTRATOR.'/components/com_tz_portfolio/includes/defines.php')) {
+            require_once JPATH_ADMINISTRATOR.'/components/com_tz_portfolio/includes/defines.php';
+        }
         parent::__construct($subject,$config);
     }
 
