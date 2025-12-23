@@ -26,19 +26,25 @@ namespace TemPlaza\Component\TZ_Portfolio\Administrator\Library;
 // No direct access
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Event\Installer\AfterInstallerEvent;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Factory\MVCFactory;
 use Joomla\CMS\Table\Table;
 use Joomla\DI\ContainerAwareInterface;
+use Joomla\Registry\Registry;
 use Joomla\String\StringHelper;
 use Joomla\Filesystem\Folder;
 use Joomla\CMS\Installer\Installer;
+use Joomla\Database\DatabaseInterface;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Table\ExtensionsTable;
 
 class TZ_PortfolioInstaller extends Installer
 {
     protected static $instances;
+
+    protected array $accept_types = array();
 
     public function __construct($basepath = __DIR__, $classprefix = 'TemPlaza\Component\TZ_Portfolio\Administrator\Library\Adapter',
                                 $adapterfolder = 'adapter')
@@ -48,16 +54,19 @@ class TZ_PortfolioInstaller extends Installer
         // Get a generic TZ_Portfolio_PlusTableExtension instance for use if not already loaded
         if (!($this->extension instanceof ExtensionsTable)) {
             /* @var MVCFactory $mvc */
-//            $mvc    = Factory::getApplication() -> bootComponent('com_tz_portfolio') -> getMVCFactory();
-//            $this->extension = $mvc -> createTable('Extensions', 'Administrator');
             $this->extension = Table::getInstance('ExtensionsTable',
                 'TemPlaza\Component\TZ_Portfolio\Administrator\Table\\');
-
         }
 
         if(is_object($this -> extension) && isset($this -> extension -> id)) {
             $this->extension->extension_id = $this->extension->id;
         }
+
+        $this -> accept_types   = array(
+            'tz_portfolio-plugin',
+            'tz_portfolio-addon',
+            'tz_portfolio-style',
+            'module');
     }
 
     public static function getInstance($basepath = __DIR__,
@@ -81,7 +90,7 @@ class TZ_PortfolioInstaller extends Installer
         return self::$instances[$basepath];
     }
 
-    public function install($path = null)
+    public function install($path = null): false
     {
         if ($path && is_dir($path))
         {
@@ -93,53 +102,106 @@ class TZ_PortfolioInstaller extends Installer
 
             return false;
         }
+        $app = Factory::getApplication();
+        $input = $app->input;
+        if($manifest = $this ->getManifest()){
+            $attrib = $manifest -> attributes();
 
-        if (!$adapter = $this->setupInstall('install', true))
-        {
-            $this->abort(Text::_('JLIB_INSTALLER_ABORT_DETECTMANIFEST'));
+            /** Check add-on supported with tz portfolio
+             * @var \SimpleXMLElement $targetPlatForm
+             */
+            $targetPlatForm = $manifest ->xpath('tpTargetPlatforms/tpTargetPlatform[@name="com_tz_portfolio"]');
+            $hasSupported   = !empty($targetPlatForm);
 
-            return false;
+            $component = ComponentHelper::getComponent('com_tz_portfolio');
+            $extension = Table::getInstance('extension');
+
+            $extension -> load($component->id);
+
+            $compManifest   = new Registry($extension->manifest_cache);
+            $compVersion    = $compManifest->get('version');
+
+            if(!$hasSupported){
+                $app -> enqueueMessage(sprintf(Text::_('This add-on not supported for this component version %s'),
+                    $compVersion), 'error');
+                return false;
+            }
+
+            $platFormAttrib     = $targetPlatForm[0] -> attributes();
+            $platFormVersion    = (string)$platFormAttrib -> version;
+
+            if(!empty($platFormVersion)) {
+
+                if(!preg_match('/^' . $platFormVersion . '/', $compVersion)){
+                    $app -> enqueueMessage(sprintf(Text::_('This add-on not supported for this component version %s'),
+                        $compVersion), 'error');
+                    return false;
+                }
+            }
+
+            $name   = (string) $manifest -> name;
+            $type   = (string) $attrib -> type;
+
+            if(!in_array($type, $this -> accept_types)){
+                $app -> enqueueMessage(Text::_('COM_TZ_PORTFOLIO_UNABLE_TO_FIND_INSTALL_PACKAGE'), 'error');
+                return false;
+            }
+
+            $_type  = explode('-',$type);
+            $_type  = end($_type);
+
+            $_type  = $_type == 'plugin'?'addon':$_type;
+            $_type  = $_type == 'template'?'style':$_type;
+
+            // Install for add-ons to update version
+            $class  = 'TemPlaza\Component\TZ_Portfolio\Administrator\Library\Adapter\\'.ucfirst($_type).'Adapter';
+
+            if(!class_exists($class)){
+                \JLoader::registerPrefix(ucfirst($_type),COM_TZ_PORTFOLIO_ADMIN_PATH.'/src/Library/Adapter/'
+                    .ucfirst($_type).'Adapter.php');
+            }
+
+            $tzinstaller    = new $class($this,Factory::getContainer()->get(DatabaseInterface::class));
+            $tzinstaller -> setMVCFactory($app -> bootComponent('tz_portfolio') -> getMVCFactory());
+            $tzinstaller -> setRoute('install');
+            $tzinstaller -> setManifest($this -> getManifest());
+
+            if(!$tzinstaller -> install()){
+                // There was an error installing the package.
+                $msg = Text::sprintf('COM_TZ_PORTFOLIO_INSTALL_ERROR', $input -> getCmd('view'));
+                $result = false;
+                $this -> setError($msg);
+            }
         }
 
-        if (!is_object($adapter))
-        {
-            return false;
-        }
-
-        // Add the languages from the package itself
-        if (method_exists($adapter, 'loadLanguage'))
-        {
-            $adapter->loadLanguage($path);
-        }
-
-//        // Fire the onExtensionBeforeInstall event.
-//        JPluginHelper::importPlugin('extension');
-//        $dispatcher = JEventDispatcher::getInstance();
-//        $dispatcher->trigger(
-//            'onExtensionBeforeInstall',
-//            array(
-//                'method' => 'install',
-//                'type' => $this->manifest->attributes()->type,
-//                'manifest' => $this->manifest,
-//                'extension' => 0
-//            )
-//        );
-
-        // Run the install
-        $result = $adapter->install();
-
-//        // Fire the onExtensionAfterInstall
-//        $dispatcher->trigger(
-//            'onExtensionAfterInstall',
-//            array('installer' => clone $this, 'eid' => $result)
-//        );
-        if ($result !== false)
-        {
-            // Refresh versionable assets cache
-            Factory::getApplication()->flushAssets();
-
-            return true;
-        }
+//        if (!$adapter = $this->setupInstall('install', true))
+//        {
+//            $this->abort(Text::_('JLIB_INSTALLER_ABORT_DETECTMANIFEST'));
+//
+//            return false;
+//        }
+//
+//        if (!is_object($adapter))
+//        {
+//            return false;
+//        }
+//
+//        // Add the languages from the package itself
+//        if (method_exists($adapter, 'loadLanguage'))
+//        {
+//            $adapter->loadLanguage($path);
+//        }
+//
+//        // Run the install
+//        $result = $adapter->install();
+//
+//        if ($result !== false)
+//        {
+//            // Refresh versionable assets cache
+//            Factory::getApplication()->flushAssets();
+//
+//            return true;
+//        }
 
         return false;
     }

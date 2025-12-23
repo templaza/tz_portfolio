@@ -515,9 +515,7 @@ class AddonModel extends AdminModel implements WorkflowModelInterface
             $name   = (string) $manifest -> name;
             $type   = (string) $attrib -> type;
 
-            if(!in_array($type, $this -> accept_types) /*|| (in_array($type, $this -> accept_types)
-                    && $type != $this -> type)*/){
-//                $this -> setError(Text::_('COM_TZ_PORTFOLIO_UNABLE_TO_FIND_INSTALL_PACKAGE'));
+            if(!in_array($type, $this -> accept_types)){
                 $app -> enqueueMessage(Text::_('COM_TZ_PORTFOLIO_UNABLE_TO_FIND_INSTALL_PACKAGE'), 'error');
                 return false;
             }
@@ -561,9 +559,7 @@ class AddonModel extends AdminModel implements WorkflowModelInterface
             ]);
 
             $dispatcher = $this->getDispatcher();
-//            // This event allows a custom a post-flight:
             $dispatcher->dispatch('onInstallerAfterInstaller', $eventAfterInst);
-//            $app->triggerEvent('onInstallerAfterInstaller', array($this, &$package, $installer, &$result, &$msg));
         }
 
         InstallerHelper::cleanupInstall($package['packagefile'], $package['extractdir']);
