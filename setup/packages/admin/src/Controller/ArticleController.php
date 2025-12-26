@@ -51,10 +51,10 @@ class ArticleController extends FormController
      * @since	1.6
      */
     function __construct($config = array(),
-                         MVCFactoryInterface $factory = null,
+                         ?MVCFactoryInterface $factory = null,
                          ?CMSApplication $app = null,
                          ?Input $input = null,
-                         FormFactoryInterface $formFactory = null)
+                         ?FormFactoryInterface $formFactory = null)
     {
 
         parent::__construct($config, $factory, $app, $input, $formFactory);
