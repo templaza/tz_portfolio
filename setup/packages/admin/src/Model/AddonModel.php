@@ -462,7 +462,6 @@ class AddonModel extends AdminModel implements WorkflowModelInterface
         if (in_array(false, $results, true)) {
             return false;
         }
-
         // Was the package unpacked?
         if (!$package || !$package['type']) {
             InstallerHelper::cleanupInstall($package['packagefile'], $package['extractdir']);

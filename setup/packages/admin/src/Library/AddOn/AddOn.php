@@ -59,6 +59,7 @@ class AddOn extends CMSPlugin implements
     protected $data_manager         = false;
     protected $form;
     protected $item;
+    protected $_adminPath = '';
 
     protected $_myFormDataBeforeSave;
 
@@ -78,6 +79,7 @@ class AddOn extends CMSPlugin implements
                 \JLoader::registerNamespace('\\TemPlaza\\Component\\TZ_Portfolio\\AddOn\\'
                     . ucfirst($this->_type) . '\\' . ucfirst($this->_name) . '\\Administrator',
                     $adminPath);
+                $this -> _adminPath = $adminPath;
             }
         }
     }
@@ -652,16 +654,56 @@ class AddOn extends CMSPlugin implements
         }
     }
 
-    protected function getModel($name = null, $prefix = null, $config = array('ignore_request' => true, 'client' => 'admin'))
+    protected function getModel($name = null, $clientType = '', $config = array('ignore_request' => true, 'client' => 'admin'))
     {
         $_name          = $name;
         if(!$name){
             $_name      = ucfirst($this -> _name);
         }
-
-        $client = (!isset($config['client']) || (isset($config['client'])
-                && $config['client'] != 'site'))?'Administrator':'Site';
+        $client = $clientType;
+        if(!$clientType) {
+            $client = (!isset($config['client']) || (isset($config['client'])
+                    && $config['client'] != 'site'))?'Administrator':'Site';
+        }
         $model  = $this -> mvcFactory -> createModel(ucfirst($_name), $client, $config);
+        if (!$model) {
+            $adminModelPath = $this->_adminPath . '/Model/' . ucfirst($_name) . 'Model.php';
+
+            if (file_exists($adminModelPath)) {
+                $declBefore = get_declared_classes();
+
+                require_once $adminModelPath;
+
+                $declAfter = array_diff(get_declared_classes(), $declBefore);
+
+                // 1) Try fully-qualified expected class name
+                $expectedFQCN = '\\TemPlaza\\Component\\TZ_Portfolio\\AddOn\\'
+                    . ucfirst($this->_type) . '\\' . ucfirst($this->_name)
+                    . '\\'.$client.'\\Model\\' . ucfirst($_name) . 'Model';
+
+                if (class_exists($expectedFQCN, false)) {
+                    $modelClass = $expectedFQCN;
+                } else {
+                    // 2) Fallback: detect any newly-declared class that ends with "Model"
+                    $modelClass = null;
+                    foreach ($declAfter as $c) {
+                        if (strcasecmp(substr($c, -5), 'Model') === 0) {
+                            $modelClass = $c;
+                            break;
+                        }
+                    }
+
+                    // 3) Also check short name (in case class was declared in global namespace)
+                    if (!$modelClass && class_exists(ucfirst($_name) . 'Model', false)) {
+                        $modelClass = ucfirst($_name) . 'Model';
+                    }
+                }
+
+                if ($modelClass && class_exists($modelClass, false)) {
+                    $model = new $modelClass($config);
+                }
+            }
+        }
 
 //        if(stripos($_name, 'Model') === false){
 //            $_name .= 'Model';
@@ -959,19 +1001,17 @@ class AddOn extends CMSPlugin implements
         $_position -> group  = $this->_type;
 
         $_position -> position   = $position;
-
-        if($model = $this -> getModel($this -> _name, 'TZ_Portfolio_Plus_Addon_'.ucfirst($this -> _name).'Model')) {
+        if($model = $this -> getModel($this -> _name, 'Administrator')) {
             // Get addon info
             $addon      = AddonHelper::getPlugin($this -> _type, $this -> _name);
-
             $model->setState($this->_name . '.addon_id', $addon -> id);
 
             $table  = $model -> getTable();
             if($table -> load(array('extension_id' => $addon -> id, 'content_id' => $article -> id))) {
                 $model->setState($this->_name . '.id', (int)$table->get('id'));
-
                 $properties = $table->getProperties(1);
-                $data = ArrayHelper::toObject($properties, '\JObject');
+
+                $data = ArrayHelper::toObject($properties);
 
                 if($data && isset($data -> value) && is_string($data -> value)){
                     $data -> value  = json_decode($data -> value);
@@ -983,7 +1023,6 @@ class AddOn extends CMSPlugin implements
             if(method_exists($model, 'getForm')) {
                 $this->form = $model->getForm();
             }else {
-
                 $this->form->loadFile(COM_TZ_PORTFOLIO_ADDON_PATH . '/' . $this->_type . '/' . $this->_name
                     . '/admin/models/forms/' . $this->_name . '.xml', false);
             }

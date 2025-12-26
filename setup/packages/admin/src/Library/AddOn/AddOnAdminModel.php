@@ -41,12 +41,7 @@ class AddOnAdminModel extends AdminModel
     protected $data         = null;
     protected $plugin_type  = null;
 
-//    public function getTable($type = 'Article', $prefix = 'Table', $config = array())
-//    {
-//        return Table::getInstance($type, $prefix, $config);
-//    }
-
-    public function getTable($type = 'Article', $prefix = 'Administrator', $config = array())
+    public function getTable($type = 'AddonData', $prefix = 'Administrator', $config = array())
     {
         $mvc    = Factory::getApplication() -> bootComponent('tz_portfolio') -> getMVCFactory();
         return $mvc -> createTable($type, $prefix, $config);
@@ -64,9 +59,8 @@ class AddOnAdminModel extends AdminModel
 
         $xml_file   = Path::clean($path.'/'.$name.'.xml');
         $xml_file   = file_exists($xml_file)?$xml_file:Path::clean($path2.'/'.$name.'.xml');
-
         if(file_exists($xml_file)) {
-            $form = $this->loadForm('plg_' . $this->plugin_type . $name . '.' . $name, $name,
+            $form = $this->loadForm('plg_' . $this->plugin_type . '_' . $name . '.' . $name, $name,
                 array('control' => 'jform', 'load_data' => $loadData));
         }
 
@@ -87,6 +81,9 @@ class AddOnAdminModel extends AdminModel
             $data = $this->getItem();
         }
 
+        if (empty($data)) {
+            $data = new \stdClass();
+        }
         $this->preprocessData('com_tz_portfolio.article', $data);
 
         return $data;

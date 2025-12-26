@@ -95,7 +95,6 @@ class LayoutModel extends AdminModel
 
         // These variables are used to add data from the plugin XML files.
         $this->setState('layout.style', $template);
-
         $form = $this->loadForm('com_tz_portfolio.layout', 'layout',
             array('control' => 'jform', 'load_data' => $loadData));
 

@@ -402,7 +402,6 @@ class ArticleTable extends Table
         $query -> join('INNER', '#__tz_portfolio_plus_content_category_map AS m ON m.contentid = c.id AND m.main = 1');
 
         $fields = array_keys($this->getProperties());
-
         foreach ($keys as $field => $value)
         {
             // Check that $field is in the table.

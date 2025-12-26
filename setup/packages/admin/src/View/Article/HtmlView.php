@@ -116,7 +116,9 @@ class HtmlView extends BaseHtmlView
             if($mediaType  = $app -> triggerEvent('onAddMediaType')){
                 $mediaType  = array_filter($mediaType);
                 $mediaType  = array_reverse($mediaType);
+
                 $mediaForm	= $app -> triggerEvent('onMediaTypeDisplayArticleForm',array($this -> item));
+
                 $mediaForm  = array_filter($mediaForm);
                 $mediaForm  = array_reverse($mediaForm);
                 if(count($mediaType)){
