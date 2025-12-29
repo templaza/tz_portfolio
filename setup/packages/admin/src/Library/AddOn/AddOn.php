@@ -974,9 +974,9 @@ class AddOn extends CMSPlugin implements
     public function onContentValidateData ($form, $data){
         $context    = $form -> getName();
         if($context == 'com_tz_portfolio.article' || $context == 'com_tz_portfolio.form') {
-            $addon_data = (!empty($data) && isset($data['addon']))?$data['addon']:array();
-            $mydata     = (isset($addon_data[$this -> _name]) && !empty($addon_data[$this -> _name]))?$addon_data[$this -> _name]:array();
-            $this->_myFormDataBeforeSave = $mydata;
+            $addon_data = $data ?? array();
+//            $mydata     = (isset($addon_data[$this -> _name]) && !empty($addon_data[$this -> _name]))?$addon_data[$this -> _name]:array();
+            $this->_myFormDataBeforeSave = $addon_data;
         }
     }
     /*
@@ -1010,7 +1010,6 @@ class AddOn extends CMSPlugin implements
             if($table -> load(array('extension_id' => $addon -> id, 'content_id' => $article -> id))) {
                 $model->setState($this->_name . '.id', (int)$table->get('id'));
                 $properties = $table->getProperties(1);
-
                 $data = ArrayHelper::toObject($properties);
 
                 if($data && isset($data -> value) && is_string($data -> value)){
@@ -1028,9 +1027,9 @@ class AddOn extends CMSPlugin implements
             }
             if(!empty($this -> form)){
                 $_data   = new \stdClass();
-                $_data -> addon  = new \stdClass();
+                $_data ->{$this -> _type}  = new \stdClass();
                 if(isset($data)) {
-                    $_data->addon->{$this->_name} = $data->value;
+                    $_data->{$this -> _type}->{$this->_name} = $data->value;
                 }
                 $this -> form -> bind($_data);
             }

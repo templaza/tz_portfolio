@@ -94,23 +94,32 @@ class AddOnAdminModel extends AdminModel
         return $this->data;
     }
 
-    protected function __save($data,$dataInsert){
-        if($dataInsert && count($dataInsert)){
-            $registry = new Registry();
-            if($data && !empty($data) && isset($data -> media) && !is_object($data -> media)){
-                // Process data
-                $registry->loadString($data -> media);
-
-                if($registry -> get($this -> getName())) {
-                    $old_data   = ArrayHelper::fromObject($registry->get($this -> getName()));
-                    $dataInsert = array_merge($old_data, $dataInsert);
-                }
+    public function save($data){
+        $table      = $this->getTable();
+        $isNew = true;
+        if (isset($data['extension_id']) && !empty($data['extension_id'])
+            && isset($data['content_id']) && !empty($data['content_id'])) {
+            if ($table->load(array('extension_id' => $data['extension_id'], 'content_id' => $data['content_id']))) {
+                $isNew = false;
             }
+        }
 
-            // Store data to database
-            $registry -> set($this -> getName(),$dataInsert);
-            $data -> media  = $registry -> toString();
-            $data -> store();
+        if (!$table->bind($data)) {
+            $this->setError($table->getError());
+            return false;
+        }
+        // Prepare the row for saving
+        $this->prepareTable($table);
+        // Check the data.
+        if (!$table->check()) {
+            $this->setError($table->getError());
+
+            return false;
+        }
+        if (!$table->store()) {
+            $this->setError($table->getError());
+
+            return false;
         }
     }
 

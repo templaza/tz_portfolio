@@ -26,6 +26,7 @@ namespace TemPlaza\Component\TZ_Portfolio\Administrator\Table;
 
 use Joomla\CMS\Event\AbstractEvent;
 use Joomla\CMS\Table\Table;
+use Joomla\CMS\Factory;
 
 // No direct access
 defined('_JEXEC') or die;
@@ -34,18 +35,10 @@ class AddonDataTable extends Table
 {
     public function __construct(&$db)
     {
+        $this->_jsonEncode = ['value'];
         parent::__construct('#__tz_portfolio_plus_addon_data', 'id', $db);
     }
     public function load($keys = null, $reset = true) {
-        $event = AbstractEvent::create(
-            'onTableBeforeLoad',
-            [
-                'subject'	=> $this,
-                'keys'		=> $keys,
-                'reset'		=> $reset,
-            ]
-        );
-        $this->getDispatcher()->dispatch('onTableBeforeLoad', $event);
         $fields = array_keys($this->getProperties());
         $query = $this->_db->getQuery(true)
             ->select('*')
@@ -63,27 +56,28 @@ class AddonDataTable extends Table
         }
         $this->_db->setQuery($query);
         $row = $this->_db->loadAssoc();
-
         // Check that we have a result.
-        if (empty($row))
-        {
+        if (empty($row)) {
             $result = false;
-        }
-        else
-        {
+        } else {
             // Bind the object with the row and return.
             $result = $this->bind($row);
         }
-        $event = AbstractEvent::create(
-            'onTableAfterLoad',
-            [
-                'subject'		=> $this,
-                'result'		=> &$result,
-                'row'			=> $row,
-            ]
-        );
-        $this->getDispatcher()->dispatch('onTableAfterLoad', $event);
-
         return $result;
+    }
+
+    public function bind($src, $ignore = [])
+    {
+        parent::bind($src, $ignore);
+        if (empty($this->created)) {
+            $this->created = Factory::getDate()->toSql();
+        }
+        if (empty($this->created_by)) {
+            $this->created_by = Factory::getApplication()->getIdentity()->id;
+        }
+        if (empty($this->publish_up)) {
+            $this->publish_up = Factory::getDate()->toSql();
+        }
+        return true;
     }
 }
