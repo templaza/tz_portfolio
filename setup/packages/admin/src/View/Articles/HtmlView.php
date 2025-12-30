@@ -160,10 +160,9 @@ class HtmlView extends BaseHtmlView {
                 }
             }
         }
-
-
-        if (!$this->isEmptyState && ($canDo->get('core.delete')|| $canDo->get('core.delete.own'))) {
-            $toolbar->delete('groups.delete', 'JTOOLBAR_DELETE')
+        if ($this->state->get('filter.published') == -2)
+        {
+            $toolbar->delete('articles.delete', 'JTOOLBAR_DELETE_FROM_TRASH')
                 ->message('JGLOBAL_CONFIRM_DELETE')
                 ->listCheck(true);
         }

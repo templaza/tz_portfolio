@@ -62,6 +62,7 @@ class AddOn extends CMSPlugin implements
     protected $_adminPath = '';
 
     protected $_myFormDataBeforeSave;
+    protected $addon = null;
 
     public function __construct($subject, $config = array())
     {
@@ -81,6 +82,7 @@ class AddOn extends CMSPlugin implements
                     $adminPath);
                 $this -> _adminPath = $adminPath;
             }
+            $this -> addon = AddonHelper::getAddOn($this -> _type, $this -> _name);
         }
     }
 
@@ -115,20 +117,6 @@ class AddOn extends CMSPlugin implements
         }
 
         list($view, $task)  = explode('.', $addon_task);
-
-//        tzportfolioplusimport('html.sidebar');
-//        tzportfolioplusimport('controller.legacy');
-
-//        $component_path = JPATH_ADMINISTRATOR.DIRECTORY_SEPARATOR.'components';
-
-//        // Import addon_datas helper
-//        JLoader::import('com_tz_portfolio.helpers.addon_datas',$component_path);
-//
-//        // Import addon_data model
-//        JLoader::import('com_tz_portfolio.models.addon_data',$component_path);
-//
-//        // Import addon_datas model
-//        JLoader::import('com_tz_portfolio.models.addon_datas',$component_path);
 
         ob_start();
         $controller -> execute($task);
@@ -754,7 +742,22 @@ class AddOn extends CMSPlugin implements
         if($context == 'com_tz_portfolio.article' || $context == 'com_tz_portfolio.form') {
             if($model  = $this -> getModel()) {
                 if(method_exists($model,'save')) {
-                    $model->save($data);
+                    if(isset($this -> _myFormDataBeforeSave) && !empty($this -> _myFormDataBeforeSave) && isset($this -> _myFormDataBeforeSave[$this -> _type][$this -> _name])){
+                        $mydata     = array('value' => $this -> _myFormDataBeforeSave[$this -> _type][$this -> _name]);
+
+                        if(!empty($this->addon) && isset($this->addon -> id)){
+                            $mydata['extension_id'] = $this->addon -> id;
+                            $mydata['element'] = $this->addon -> name;
+                            if(!empty($data) && isset($data -> id)){
+                                $mydata['content_id']   = $data -> id;
+                            }
+                            $mydata['published']    = 1;
+
+                            $model->save($mydata);
+                        }
+                    } else {
+                        $model->save($data);
+                    }
                 }
             }
         }
@@ -765,6 +768,7 @@ class AddOn extends CMSPlugin implements
         if($context == 'com_tz_portfolio.article' || $context == 'com_tz_portfolio.form') {
             if($model  = $this -> getModel()) {
                 if(method_exists($model,'delete')) {
+                    $table -> addon = $this -> addon;
                     $model->delete($table);
                 }
             }

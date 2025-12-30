@@ -123,6 +123,26 @@ class AddOnAdminModel extends AdminModel
         }
     }
 
+    public function delete(&$article)
+    {
+        if($article) {
+            if (is_object($article)) {
+                if (!empty($article->addon)) {
+                    $table      = $this->getTable();
+                    if (isset($article->addon->id) && !empty($article->addon->id)
+                        && isset($article->id) && !empty($article->id)) {
+                        if ($table->load(array('extension_id' => $article->addon->id, 'content_id' => $article->id))) {
+                            if (!$table->delete($table->id)) {
+                                $this->setError($table->getError());
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     protected function prepareImageSize($image_size){
         if($image_size && !is_array($image_size) && preg_match_all('/(\{.*?\})/',$image_size,$match)) {
             $image_size = $match[1];
