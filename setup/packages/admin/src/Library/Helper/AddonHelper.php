@@ -618,7 +618,6 @@ class AddonHelper extends PluginHelper
 
         // Get the dispatcher's hash to allow paths to be tracked against unique dispatchers
         $hash = spl_object_hash($dispatcher) . $plugin->type . $plugin->name;
-
         if (\array_key_exists($hash, $plugins))
         {
             return;

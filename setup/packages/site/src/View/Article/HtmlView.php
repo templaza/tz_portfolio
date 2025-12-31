@@ -624,7 +624,6 @@ class HtmlView extends BaseHtmlView
 
                 $core_types         = AddonHelper::getCoreContentTypes();
                 $this -> core_types = ArrayHelper::getColumn($core_types, 'value');
-
                 $this->_generateLayout($article, $params, $dispatcher);
                 return $this -> generateLayout;
             }
@@ -677,7 +676,7 @@ class HtmlView extends BaseHtmlView
                                         }
 
                                         if($plugin_obj = AddonHelper::getPlugin('content', $plugin)) {
-                                            $className      = 'PlgTZ_Portfolio_PlusContent'.ucfirst($plugin);
+                                            $className      = '\\TemPlaza\\Component\\TZ_Portfolio\\AddOn\\Content\\'.ucfirst($plugin).'\\Extension\\'.ucfirst($plugin);
 
                                             if(!class_exists($className)){
                                                 AddonHelper::importPlugin('content', $plugin);

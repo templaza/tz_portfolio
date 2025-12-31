@@ -103,8 +103,7 @@ class TZCategoryField extends ListField
 
             Factory::getApplication() -> bootComponent('tz_portfolio');
 
-            $options = HTMLHelper::_('tzcategory.options', 'com_tz_portfolio_plus', $config);
-
+            $options = HTMLHelper::_('tzcategory.options', 'com_tz_portfolio', $config);
             // Verify permissions.  If the action attribute is set, then we scan the options.
             if ((string) $this->element['action'])
             {

@@ -67,12 +67,10 @@ class AddOn extends CMSPlugin implements
     public function __construct($subject, $config = array())
     {
         parent::__construct($subject,$config);
-
         if(!empty($this -> _type) && !empty($this -> _name)) {
             \JLoader::registerNamespace('\\TemPlaza\\Component\\TZ_Portfolio\\AddOn\\'
                 . ucfirst($this->_type) . '\\' . ucfirst($this->_name),
                 $this->getAddOnPath('src'));
-
             \JLoader::registerNamespace('\\TemPlaza\\Component\\TZ_Portfolio\\AddOn\\'
                 .ucfirst($this -> _type).'\\'.ucfirst($this -> _name).'\\Site',
                 $this -> getAddOnPath('src'));
