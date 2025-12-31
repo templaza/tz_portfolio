@@ -1,10 +1,9 @@
-![GitHub Release Date](https://img.shields.io/github/release-date/templaza/tz_portfolio-v4)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/m/templaza/tz_portfolio-v4)
-[![GitHub release](https://img.shields.io/github/release/templaza/tz_portfolio-v4.svg)](https://github.com/templaza/tz_portfolio-v4/releases)
+![GitHub Release Date](https://img.shields.io/github/release-date/templaza/tz_portfolio)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/templaza/tz_portfolio)
+[![GitHub release](https://img.shields.io/github/release/templaza/tz_portfolio.svg)](https://github.com/templaza/tz_portfolio/releases)
 ![GitHub](https://img.shields.io/github/license/templaza/tz_portfolio-v4)
-![Follow Us](https://img.shields.io/twitter/follow/templazavn?style=social)
 
-# TZ Portfolio v4 | Joomla 4.x - Jooma 5.x
+# TZ Portfolio v4 | Joomla 5.x - Jooma 6.x
 
 TZ Portfolio is a really good portfolio developing extensions for Joomla that allows users to display, style and manage their portfolio easily.
 
@@ -14,11 +13,9 @@ Documentation: http://tzportfolio.com/document.html
 
 Demo: http://demo.tzportfolio.com/
 
-Forum: https://github.com/templaza/tz_portfolio-v4/discussions
+Forum: https://github.com/templaza/tz_portfolio/discussions
 
 FanPage: https://www.facebook.com/templaza
-
-Twitter: https://twitter.com/templazavn
 
 ## Getting Started
  
