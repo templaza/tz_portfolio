@@ -42,6 +42,7 @@ use Joomla\CMS\Object\CMSObject;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Installer\Installer;
+use TemPlaza\Component\TZ_Portfolio\Administrator\Helper\EventsHelper;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Library\TZ_PortfolioInstaller;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Pagination\Pagination;
@@ -1054,8 +1055,9 @@ class AddonModel extends AdminModel implements WorkflowModelInterface
 
         // Load installer plugins, and allow URL and headers modification
         $headers = array();
-        \JPluginHelper::importPlugin('installer');
-        Factory::getApplication() -> triggerEvent('onInstallerBeforePackageDownload', array(&$url, &$headers));
+        PluginHelper::importPlugin('installer');
+        $event = new EventsHelper('onInstallerBeforePackageDownload',array(&$url, &$headers));
+        Factory::getApplication()->getDispatcher()->dispatch('onInstallerBeforePackageDownload', $event);
 
         $response   = TZ_PortfolioHelper::getDataFromServer($url);
 

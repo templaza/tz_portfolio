@@ -31,7 +31,6 @@ if($this -> item && isset($this -> item -> media)){
     }
 }
 ?>
-
 <div class="control-group">
     <div class="control-label"><?php echo $form -> getLabel('url',$group);?></div>
     <div class="controls">

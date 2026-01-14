@@ -152,7 +152,6 @@ class Image extends AddOn
                 $this -> setVariable('image_properties', $image_properties);
             }
             $this -> setVariable('item', $article);
-
             return parent::onContentDisplayMediaType($context, $article, $params, $page, $layout);
         }
     }

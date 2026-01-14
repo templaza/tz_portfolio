@@ -38,6 +38,7 @@ use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\Filesystem\Folder;
 use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\Database\DatabaseInterface;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Library\AddOn\AddOnController;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Library\AddOn\AddOnTrait;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Library\TZ_PortfolioTemplate;
@@ -377,14 +378,14 @@ class AddonHelper extends PluginHelper
             return static::$plugins;
         }
 
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
         $cache = Factory::getCache('com_tz_portfolio', '');
 
         $levels = implode(',', $user->getAuthorisedViewLevels());
 
         if (!(static::$plugins = $cache->get($levels)))
         {
-            $db     = Factory::getDbo();
+            $db     = Factory::getContainer()->get(DatabaseInterface::class);
             $query  = $db->getQuery(true)
                 ->select('id, folder AS type, element AS name, params, manifest_cache, asset_id')
                 ->from('#__tz_portfolio_plus_extensions')

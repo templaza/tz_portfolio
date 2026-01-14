@@ -29,7 +29,6 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Access\Access;
 use Joomla\CMS\Factory;
 use Joomla\Filesystem\File;
-use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Table\Table;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Library\Helper\AddonHelper;
 
@@ -44,8 +43,8 @@ class AddonDatasHelper{
     public static function getActions($id, $section = 'addon',$parent_section = '')
     {
         $component  = 'com_tz_portfolio';
-        $user	    = Factory::getUser();
-        $result	    = new CMSObject();
+        $user	    = Factory::getApplication()->getIdentity();
+        $result	    = new \Joomla\Registry\Registry();
 
         $path       = JPATH_ADMINISTRATOR . '/components/com_tz_portfolio/access.xml';
 

@@ -36,6 +36,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\Registry\Registry;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
+use Joomla\Utilities\ArrayHelper;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Helper\CategoriesHelper;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Library\Image\ImageWaterMark;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Library\AddOn\AddOnAdminModel;
@@ -52,7 +53,6 @@ class ImageModel extends AddOnAdminModel {
     }
 
     public function save($data){
-
         $app    = Factory::getApplication();
         $input  = $app -> input;
 
@@ -543,10 +543,6 @@ class ImageModel extends AddOnAdminModel {
             $image_data['url']   = COM_TZ_PORTFOLIO_IMAGES_BASE.'/'
                 .$data -> alias . '-' . $data -> id. '.' . File::getExt($path);
         }
-//        elseif(isset($media -> url) && $media -> url){
-//            $this -> watermark(JPATH_ROOT.DIRECTORY_SEPARATOR
-//                .TZ_PortfolioFrontHelper::getImageURLBySize($media -> url, 'o'), 'o');
-//        }
 
         if($path_hover && !empty($path_hover)){
             if($params -> get('mt_image_watermark_img_detail', 0)) {
@@ -555,17 +551,11 @@ class ImageModel extends AddOnAdminModel {
             $image_data['url_detail']   = COM_TZ_PORTFOLIO_IMAGES_BASE.'/'
                 .$data -> alias . '-' . $data -> id. '-h.' . File::getExt($path_hover);
         }
-//        elseif(isset($media -> url_detail) && $media -> url_detail
-//            && $params -> get('mt_image_watermark_img_detail', 0)){
-//            $this -> watermark(JPATH_ROOT.DIRECTORY_SEPARATOR
-//                .TZ_PortfolioFrontHelper::getImageURLBySize($media -> url_detail, 'o'), 'o');
-//        }
 
         unset($image_data['url_server']);
         unset($image_data['url_detail_server']);
 
         $this -> __save($data,$image_data);
-//        }
     }
 
     public function delete(&$article){

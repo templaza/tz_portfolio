@@ -35,9 +35,10 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\MVC\Controller\FormController;
 use Joomla\CMS\Table\Table;
+use Joomla\Filesystem\Path;
 use Joomla\Utilities\ArrayHelper;
 use stdClass;
-use TemPlaza\Component\TZ_Portfolio\Administrator\Helper\AddonsHelper;
+use TemPlaza\Component\TZ_Portfolio\Administrator\Library\Helper\AddonHelper;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Helper\TZ_PortfolioHelper;
 
 class AddonController extends FormController
@@ -290,13 +291,13 @@ class AddonController extends FormController
     protected function allowAdd($data = array())
     {
 //        $user = TZ_Portfolio_PlusUser::getUser();
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
         return ($user->authorise('core.create','com_tz_portfolio.'.$this -> getName()));
     }
 
     protected function allowEdit($data = array(), $key = 'id')
     {
-        $user       = Factory::getUser();
+        $user       = Factory::getApplication()->getIdentity();
         $recordId   = (int) isset($data[$key]) ? $data[$key] : 0;
         $tblAsset   = Table::getInstance('Asset','Table');
 
@@ -403,5 +404,29 @@ class AddonController extends FormController
         echo new JsonResponse(array('redirect' => $redirect), $message, !$result);
 
         exit();
+    }
+
+    public function exec()
+    {
+        $id = $this->input->getInt('addon_id');
+        $addon = AddonHelper::getPluginById($id);
+        $controllerClass = '\\TemPlaza\\Component\\TZ_Portfolio\\AddOn\\' . ucfirst($addon->type) . '\\' . ucfirst($addon->name) . '\\Administrator\\Controller\\' . ucfirst($addon->name) . 'Controller';
+
+        if (!class_exists($controllerClass)) {
+            $file = Path::clean(JPATH_ROOT . '/components/com_tz_portfolio/add-ons/' . $addon->type . '/' . $addon->name . '/admin/src/Controller/' . $addon->name . 'Controller.php');
+
+            if (file_exists($file)) {
+                require_once $file;
+            } else {
+                return false;
+            }
+        }
+
+        if (!class_exists($controllerClass)) {
+            return false;
+        }
+
+        $controller = new $controllerClass();
+        $controller -> execute($this->input -> getCmd('addon_task'));
     }
 }

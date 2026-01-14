@@ -150,4 +150,23 @@ class AddOnAdminModel extends AdminModel
         return $image_size;
     }
 
+    protected function __save($data,$image_data){
+        if($image_data && count($image_data)){
+            $registry = new Registry();
+            if($data && !empty($data) && isset($data -> media) && !is_object($data -> media)){
+                // Process data
+                $registry->loadString($data -> media);
+
+                if($registry -> get($this -> getName())) {
+                    $old_data   = ArrayHelper::fromObject($registry->get($this -> getName()));
+                    $image_data = array_merge($old_data, $image_data);
+                }
+            }
+
+            // Store data to database
+            $registry -> set($this -> getName(),$image_data);
+            $data -> media  = $registry -> toString();
+            $data -> store();
+        }
+    }
 }
