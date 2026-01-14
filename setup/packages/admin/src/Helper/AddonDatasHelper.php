@@ -50,7 +50,7 @@ class AddonDatasHelper{
 
         if($addon  = AddonHelper::getPluginById($id)){
             $_path   = COM_TZ_PORTFOLIO_ADDON_PATH.'/'.$addon -> type.'/'. $addon -> name.'/access.xml';
-            if(File::exists($_path)){
+            if(file_exists($_path)){
                 $path   = $_path;
             }
         }

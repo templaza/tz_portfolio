@@ -229,7 +229,7 @@ class DisplayController extends BaseController
                         if((TZ_PortfolioTemplate::getSassDirByStyle($template -> template)
                                 || (!TZ_PortfolioTemplate::getSassDirByStyle($template -> template)
                                     && TZ_PortfolioTemplate::getSassDirCore()))
-                            && !File::exists($legacyPath)
+                            && !file_exists($legacyPath)
                             && $cssRelativePath = TZ_PortfolioTemplate::getCssStyleName($template -> template,
                                 $params, $docOptions['params'] -> get('colors', array()), $view -> document)){
 
@@ -240,7 +240,7 @@ class DisplayController extends BaseController
 
 //                            $view->document->addStyleSheet(TZ_PortfolioUri::base(true)
 //                                . '/css/'.$cssRelativePath, array('version' => 'auto'));
-                        }/*elseif (File::exists($legacyPath)) {
+                        }/*elseif (file_exists($legacyPath)) {
                             $view->document->addStyleSheet(TZ_PortfolioUri::base(true) . '/templates/'
                                 . $template -> template . '/css/template.css', array('version' => 'auto'));
                         }*/

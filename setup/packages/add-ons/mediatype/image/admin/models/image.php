@@ -92,7 +92,7 @@ class PlgTZ_Portfolio_PlusMediaTypeModelImage extends TZ_Portfolio_PlusPluginMod
                 if(isset($image_data['url']) && $image_data['url']) {
                     $ext        = File::getExt($image_data['url']);
                     $path_copy  = str_replace('.'.$ext,'_o.'.$ext, $image_data['url']);
-                    if(File::exists(JPATH_ROOT.DIRECTORY_SEPARATOR.$path_copy)) {
+                    if(file_exists(JPATH_ROOT.DIRECTORY_SEPARATOR.$path_copy)) {
                         $image_data['url_server']   = $path_copy;
                         $image_data['url']          = '';
                     }
@@ -103,7 +103,7 @@ class PlgTZ_Portfolio_PlusMediaTypeModelImage extends TZ_Portfolio_PlusPluginMod
                 if(isset($image_data['url_detail']) && $image_data['url_detail']) {
                     $ext        = File::getExt($image_data['url_detail']);
                     $path_copy  = str_replace('.'.$ext,'_o.'.$ext, $image_data['url_detail']);
-                    if(File::exists(JPATH_ROOT.DIRECTORY_SEPARATOR.$path_copy)) {
+                    if(file_exists(JPATH_ROOT.DIRECTORY_SEPARATOR.$path_copy)) {
                         $image_data['url_detail_server']   = $path_copy;
                         $image_data['url_detail']          = '';
                     }
@@ -127,7 +127,7 @@ class PlgTZ_Portfolio_PlusMediaTypeModelImage extends TZ_Portfolio_PlusPluginMod
                         $image_url  = TZ_Portfolio_PlusFrontHelper::getImageURLBySize($media -> url,
                             $size ->image_name_prefix);
 
-                        if(File::exists(JPath::clean(JPATH_ROOT . DIRECTORY_SEPARATOR . $image_url))) {
+                        if(file_exists(JPath::clean(JPATH_ROOT . DIRECTORY_SEPARATOR . $image_url))) {
                             File::delete(JPath::clean(JPATH_ROOT . DIRECTORY_SEPARATOR . $image_url));
                         }
                     }elseif(isset($image_data['url']) && empty($image_data['url']) && !empty($alias)){
@@ -146,7 +146,7 @@ class PlgTZ_Portfolio_PlusMediaTypeModelImage extends TZ_Portfolio_PlusPluginMod
                         $image_url  = TZ_Portfolio_PlusFrontHelper::getImageURLBySize($media -> url_detail,
                             $size ->image_name_prefix);
 
-                        if(File::exists(JPath::clean(JPATH_ROOT . DIRECTORY_SEPARATOR . $image_url))) {
+                        if(file_exists(JPath::clean(JPATH_ROOT . DIRECTORY_SEPARATOR . $image_url))) {
                             File::delete(JPath::clean(JPATH_ROOT . DIRECTORY_SEPARATOR . $image_url));
                         }
                     }elseif(isset($image_data['url_detail']) && empty($image_data['url_detail']) && !empty($alias)){
@@ -369,7 +369,7 @@ class PlgTZ_Portfolio_PlusMediaTypeModelImage extends TZ_Portfolio_PlusPluginMod
 
                 $imgPath  = JPath::clean(JPATH_ROOT.DIRECTORY_SEPARATOR.'/'.$image_url);
 
-                if(File::exists($imgPath)) {
+                if(file_exists($imgPath)) {
                     File::delete($imgPath);
                 }
             }
@@ -413,7 +413,7 @@ class PlgTZ_Portfolio_PlusMediaTypeModelImage extends TZ_Portfolio_PlusPluginMod
                     .'.'.File::getExt($image_url),$image_url);
 
                 $imgDetailPath  = JPath::clean(JPATH_ROOT.DIRECTORY_SEPARATOR.'/'.$image_url);
-                if(File::exists($imgDetailPath)) {
+                if(file_exists($imgDetailPath)) {
                     File::delete($imgDetailPath);
                 }
             }
@@ -457,7 +457,7 @@ class PlgTZ_Portfolio_PlusMediaTypeModelImage extends TZ_Portfolio_PlusPluginMod
                                 .'.'.File::getExt($image_url),$image_url);
 
                             $imgPath  = JPath::clean(JPATH_ROOT.DIRECTORY_SEPARATOR.'/'.$image_url);
-                            if(File::exists($imgPath)) {
+                            if(file_exists($imgPath)) {
                                 File::delete($imgPath);
                             }
                         }
@@ -494,7 +494,7 @@ class PlgTZ_Portfolio_PlusMediaTypeModelImage extends TZ_Portfolio_PlusPluginMod
 
 
                             $imgDetailPath  = JPath::clean(JPATH_ROOT.DIRECTORY_SEPARATOR.'/'.$image_url_detail);
-                            if(File::exists($imgDetailPath)) {
+                            if(file_exists($imgDetailPath)) {
                                 File::delete($imgDetailPath);
                             }
                         }

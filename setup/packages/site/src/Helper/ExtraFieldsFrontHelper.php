@@ -308,7 +308,7 @@ class ExtraFieldsFrontHelper{
             if(file_exists($core_path) && $core_folders = Folder::folders($core_path)){
                 $core_f_xml_path    = $core_path.DIRECTORY_SEPARATOR.$name
                     .DIRECTORY_SEPARATOR.$name.'.xml';
-                if(File::exists($core_f_xml_path)){
+                if(file_exists($core_f_xml_path)){
                     self::$cache[$storeId]  = true;
                     return self::$cache[$storeId];
                 }

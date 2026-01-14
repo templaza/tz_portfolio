@@ -108,7 +108,7 @@ class ModuleHelper extends JoomlaModuleHelper{
 
             // Add template.css file if it has have in template
             if(is_dir(COM_TZ_PORTFOLIO_STYLE_PATH.DIRECTORY_SEPARATOR.$tpTemplate -> template)) {
-//            if (File::exists(COM_TZ_PORTFOLIO_STYLE_PATH . '/' . $tpTemplate -> template
+//            if (file_exists(COM_TZ_PORTFOLIO_STYLE_PATH . '/' . $tpTemplate -> template
 //                . '/css/template.css')) {
 
                 $docOptions = array();
@@ -125,13 +125,13 @@ class ModuleHelper extends JoomlaModuleHelper{
                     . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'template.css';
                 if((TZ_PortfolioTemplate::getSassDirByStyle($tpTemplate -> template)
                         || (!TZ_PortfolioTemplate::getSassDirByStyle($tpTemplate -> template) && TZ_PortfolioTemplate::getSassDirCore()))
-                    && !File::exists($legacyPath) &&
+                    && !file_exists($legacyPath) &&
                     $cssRelativePath = TZ_PortfolioTemplate::getCssStyleName($tpTemplate -> template,
                         $modParams, $docOptions['params'] -> get('colors', array()), $docClone)){
                     $docClone->addStyleSheet(TZ_PortfolioUri::base(true)
                         . '/css/'.$cssRelativePath, array('version' => 'auto'));
                 }else
-                    if (File::exists($legacyPath)) {
+                    if (file_exists($legacyPath)) {
                         $docClone->addStyleSheet(TZ_PortfolioUri::base(true) . '/templates/'
                             . $tpTemplate -> template . '/css/template.css', array('version' => 'auto'));
                     }
