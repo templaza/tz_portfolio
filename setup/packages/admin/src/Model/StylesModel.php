@@ -87,7 +87,7 @@ class StylesModel extends ListModel
     public function getTemplates(){
         $items  = array();
         $tpl_path   = COM_TZ_PORTFOLIO_STYLE_PATH;
-        if(!Folder::exists($tpl_path)){
+        if(!file_exists($tpl_path)){
             return false;
         }
 

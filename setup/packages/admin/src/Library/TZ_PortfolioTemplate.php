@@ -519,7 +519,7 @@ class TZ_PortfolioTemplate {
 
                 $content    = $scss -> compileString($compileCode);
 
-                if(!Folder::exists($css_path)){
+                if(!file_exists($css_path)){
                     Folder::create($css_path);
                 }
 
@@ -586,7 +586,7 @@ class TZ_PortfolioTemplate {
         $files      = array();
         $sassPath   = COM_TZ_PORTFOLIO_STYLE_PATH.'/'.$styleName.'/scss';
 
-        if(Folder::exists($sassPath) && $sFiles = Folder::files($sassPath, '.scss', true, true)){
+        if(file_exists($sassPath) && $sFiles = Folder::files($sassPath, '.scss', true, true)){
             if($cfiles = self::getSassDirCore()){
                 $files  = array_merge($files, $cfiles);
             }
@@ -613,7 +613,7 @@ class TZ_PortfolioTemplate {
 
         $sassPath  = COM_TZ_PORTFOLIO_MEDIA_PATH.'/scss/site';
 
-        if(Folder::exists($sassPath) && $files = Folder::files($sassPath, '.scss', true, true)){
+        if(file_exists($sassPath) && $files = Folder::files($sassPath, '.scss', true, true)){
             self::$cache[$storeId]  = $files;
             return $files;
         }

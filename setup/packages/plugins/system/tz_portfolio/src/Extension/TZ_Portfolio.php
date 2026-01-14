@@ -57,7 +57,7 @@ class TZ_Portfolio extends CMSPlugin {
         $task   = $app -> input -> get('task');
         if(class_exists('TemPlaza\Component\TZ_Portfolio\Administrator\Library\Helper\AddonHelper')
             && $this -> _tppAllowImport()) {
-            if(Folder::exists(COM_TZ_PORTFOLIO_ADDON_PATH)){
+            if(file_exists(COM_TZ_PORTFOLIO_ADDON_PATH)){
                 $plgGroups  = Folder::folders(COM_TZ_PORTFOLIO_ADDON_PATH);
                 if(count($plgGroups)){
 

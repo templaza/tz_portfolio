@@ -204,7 +204,7 @@ class DisplayController extends BaseController
         if($view){
             if(isset($view -> document)){
                 if($template = TZ_PortfolioTemplate::getTemplate(true)) {
-                    if(Folder::exists(COM_TZ_PORTFOLIO_STYLE_PATH.DIRECTORY_SEPARATOR.$template -> template)) {
+                    if(file_exists(COM_TZ_PORTFOLIO_STYLE_PATH.DIRECTORY_SEPARATOR.$template -> template)) {
 
                         $app		= Factory::getApplication('site');
                         $params     = $app -> getParams();

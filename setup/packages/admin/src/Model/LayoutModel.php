@@ -147,7 +147,7 @@ class LayoutModel extends AdminModel
         $default_directory  = 'components'.DIRECTORY_SEPARATOR.'com_tz_portfolio'.DIRECTORY_SEPARATOR.'styles';
         $directory          = $default_directory.DIRECTORY_SEPARATOR.$template.DIRECTORY_SEPARATOR.'html';
 
-        if(Folder::exists(JPATH_SITE.DIRECTORY_SEPARATOR.$directory)) {
+        if(file_exists(JPATH_SITE.DIRECTORY_SEPARATOR.$directory)) {
             $form->setFieldAttribute('layout', 'directory', $directory, 'params');
         }elseif ((is_array($data) && array_key_exists('protected', $data) && $data['protected'] == 1)
             || ((is_object($data) && isset($data->protected) && $data->protected == 1)))
@@ -613,7 +613,7 @@ class LayoutModel extends AdminModel
                                     $folder     = COM_TZ_PORTFOLIO_STYLE_PATH
                                         .DIRECTORY_SEPARATOR. $table -> template.DIRECTORY_SEPARATOR
                                         .'images'.DIRECTORY_SEPARATOR.'presets';
-                                    if(!Folder::exists($folder)){
+                                    if(!file_exists($folder)){
                                         Folder::create($folder);
                                     }
                                     if(File::copy($image_path, $folder.DIRECTORY_SEPARATOR.$image_name)){
@@ -943,7 +943,7 @@ class LayoutModel extends AdminModel
         if($item   = $this -> getItem()){
             $path   = COM_TZ_PORTFOLIO_STYLE_PATH.DIRECTORY_SEPARATOR.$item -> template
                 .DIRECTORY_SEPARATOR.'config';
-            if(Folder::exists($path)){
+            if(file_exists($path)){
                 $files  = Folder::files($path,'.json',true,false,array('.json'));
                 if(count($files)){
                     $items  = array();
