@@ -1037,7 +1037,7 @@ class AddOn extends CMSPlugin implements
             }
 
             $this -> item   = $article;
-            if(File::exists($path) && isset($this -> form) && $this -> form) {
+            if(file_exists($path) && isset($this -> form) && $this -> form) {
                 ob_start();
                 require $path;
                 $content = ob_get_contents();

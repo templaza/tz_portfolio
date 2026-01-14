@@ -601,14 +601,14 @@ class LayoutModel extends AdminModel
                             $tpl_base_path          = COM_TZ_PORTFOLIO_STYLE_PATH
                                 .DIRECTORY_SEPARATOR. $table -> template;
 
-                            while(File::exists($tpl_base_path.DIRECTORY_SEPARATOR.'config'
+                            while(file_exists($tpl_base_path.DIRECTORY_SEPARATOR.'config'
                                 .DIRECTORY_SEPARATOR.$preset_name.'.json')){
                                 $preset_name    = StringHelper::increment($preset_name,'dash');
                             }
 
                             if(isset($presets['image']) && $presets['image']){
                                 $image_path = JPATH_ROOT.DIRECTORY_SEPARATOR.$presets['image'];
-                                if(File::exists($image_path)){
+                                if(file_exists($image_path)){
                                     $image_name = $preset_name.'.'.File::getExt($image_path);
                                     $folder     = COM_TZ_PORTFOLIO_STYLE_PATH
                                         .DIRECTORY_SEPARATOR. $table -> template.DIRECTORY_SEPARATOR
@@ -678,7 +678,7 @@ class LayoutModel extends AdminModel
 
             // If the default.json config file exists in style
             $defaultLayout  = COM_TZ_PORTFOLIO_STYLE_PATH.'/'.$item -> template.'/config/default.json';
-//            if(File::exists($defaultLayout)){
+//            if(file_exists($defaultLayout)){
 ////                $pathfile   = $defaultLayout;
 //            }
 
@@ -967,7 +967,7 @@ class LayoutModel extends AdminModel
             $preset_name    = $data['preset'];
             $path           = COM_TZ_PORTFOLIO_STYLE_PATH.DIRECTORY_SEPARATOR.$data['template']
                 .DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.$preset_name.'.json';
-            if(File::exists($path)){
+            if(file_exists($path)){
                 $table      = $this->getTable();
                 $config     = file_get_contents($path);
                 $config     = json_decode($config);
@@ -1038,7 +1038,7 @@ class LayoutModel extends AdminModel
             $preset_name    = $data['preset'];
             $path           = COM_TZ_PORTFOLIO_STYLE_PATH.DIRECTORY_SEPARATOR.$data['template']
                 .DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.$preset_name.'.json';
-            if(File::exists($path)){
+            if(file_exists($path)){
                 // Remove file
                 if(File::delete($path)){
                     $table      = $this->getTable();
