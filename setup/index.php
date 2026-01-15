@@ -148,6 +148,14 @@ if ($active === 'complete') {
 
         $db -> setQuery($query);
         $db -> execute();
+
+        $query  = $db -> getQuery(true);
+        $query->update($db->quoteName('#__modules'));
+        $query->set($db->quoteName('published') . ' = 0');
+        $query->where($db->quoteName('module') . ' LIKE ' . $db->quote('mod_tz_portfolio_plus%'));
+
+        $db->setQuery($query);
+        $db->execute();
     }
 
     $activeStep = new stdClass();
