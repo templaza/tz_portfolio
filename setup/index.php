@@ -149,6 +149,7 @@ if ($active === 'complete') {
         $db -> setQuery($query);
         $db -> execute();
 
+        // Disable TZ Portfolio Plus modules
         $query  = $db -> getQuery(true);
         $query->update($db->quoteName('#__modules'));
         $query->set($db->quoteName('published') . ' = 0');
@@ -156,6 +157,24 @@ if ($active === 'complete') {
 
         $db->setQuery($query);
         $db->execute();
+
+        // Move Elegant style to TZ Portfolio style
+        $query  = $db -> getQuery(true);
+        $query->select($db->quoteName('layout'));
+        $query->from($db->quoteName('_tz_portfolio_plus_templates'));
+        $query->where($db->quoteName('template') . ' = ' . $db->quote('elegant'));
+
+        $db->setQuery($query);
+        $layout = $db->loadResult();
+
+        if (!empty($layout)) {
+            $query  = $db -> getQuery(true);
+            $query->update($db->quoteName('_tz_portfolio_plus_templates'));
+            $query->set($db->quoteName('layout') . ' = ' . $db->quote($layout));
+            $query->where($db->quoteName('template') . ' = ' . $db->quote('system'));
+            $db->setQuery($query);
+            $db->execute();
+        }
     }
 
     $activeStep = new stdClass();
