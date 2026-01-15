@@ -139,6 +139,15 @@ if ($active === 'complete') {
             $db -> setQuery($query);
             $db -> execute();
         }
+
+        // Update database
+        $query  = $db -> getQuery(true);
+        $query -> update('#__tz_portfolio_plus_categories');
+        $query -> set('extension = '.$db -> quote('com_tz_portfolio'));
+        $query -> where('extension = '.$db -> quote('com_tz_portfolio_plus'));
+
+        $db -> setQuery($query);
+        $db -> execute();
     }
 
     $activeStep = new stdClass();
