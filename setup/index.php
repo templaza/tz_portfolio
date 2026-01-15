@@ -161,7 +161,7 @@ if ($active === 'complete') {
         // Move Elegant style to TZ Portfolio style
         $query  = $db -> getQuery(true);
         $query->select($db->quoteName('layout'));
-        $query->from($db->quoteName('_tz_portfolio_plus_templates'));
+        $query->from($db->quoteName('#__tz_portfolio_plus_templates'));
         $query->where($db->quoteName('template') . ' = ' . $db->quote('elegant'));
 
         $db->setQuery($query);
@@ -169,7 +169,7 @@ if ($active === 'complete') {
 
         if (!empty($layout)) {
             $query  = $db -> getQuery(true);
-            $query->update($db->quoteName('_tz_portfolio_plus_templates'));
+            $query->update($db->quoteName('#__tz_portfolio_plus_templates'));
             $query->set($db->quoteName('layout') . ' = ' . $db->quote($layout));
             $query->where($db->quoteName('template') . ' = ' . $db->quote('system'));
             $db->setQuery($query);
