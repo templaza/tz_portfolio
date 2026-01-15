@@ -709,7 +709,7 @@ class LayoutModel extends AdminModel
     public function setHome($id = 0)
     {
         $user = Factory::getUser();
-        $db   = $this->getDbo();
+        $db   = $this->getDatabase();
 
         // Access checks.
         if (!$user->authorise('core.edit.state', 'com_tz_portfolio.style'))
@@ -749,7 +749,7 @@ class LayoutModel extends AdminModel
     public function unsetHome($id = 0)
     {
         $user = Factory::getUser();
-        $db   = $this->getDbo();
+        $db   = $this->getDatabase();
 
         // Access checks.
         if (!$user->authorise('core.edit.state', 'com_tz_portfolio.style'))
@@ -845,7 +845,7 @@ class LayoutModel extends AdminModel
             throw new \Exception(Text::_('JERROR_CORE_DELETE_NOT_PERMITTED'));
         }
 
-        $db     = $this -> getDbo();
+        $db     = $this -> getDatabase();
         $query  = $db -> getQuery(true);
 
         $query -> delete($db -> quoteName('#__tz_portfolio_plus_templates'));
@@ -909,7 +909,7 @@ class LayoutModel extends AdminModel
         $_artId = !empty($artId)?$artId:$this -> getState('content.id');
         $_catId = !empty($catId)?$catId:$this -> getState('category.id');
 
-        $db         = $this -> getDbo();
+        $db         = $this -> getDatabase();
         $templateId = null;
 
         if($_catId){

@@ -832,6 +832,7 @@ class HtmlView extends BaseHtmlView
             $class      = null;
             $rowName    = null;
             $responsive = null;
+            $wa         = Factory::getApplication()->getDocument() -> getWebAssetManager();
 
             if(isset($children -> name) && $children -> name){
                 $rowName    = ApplicationHelper::stringURLSafe($children -> name);

@@ -93,8 +93,7 @@ class LayoutsModel extends ListModel
 
         $query -> join('INNER',$db -> quoteName('#__tz_portfolio_plus_extensions').' AS e ON t.template = e.element')
             -> where('e.published = 1')
-            ->where('(e.type=' . $db->quote('tz_portfolio-style').' OR e.type = '
-                .$db -> quote('tz_portfolio_plus-template').')');
+            ->where('(e.type=' . $db->quote('tz_portfolio-style').')');
 
         // Filter by search in name.
         $search = $this->getState('filter.search');
@@ -137,9 +136,6 @@ class LayoutsModel extends ListModel
         if(!empty($orderCol) && !empty($orderDirn)){
             $query->order($db->escape($orderCol . ' ' . $orderDirn));
         }
-
-//        $query -> group('t.id');
-
         return $query;
     }
 
