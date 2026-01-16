@@ -170,7 +170,15 @@ if ($active === 'complete') {
         if (!empty($layout)) {
             $query  = $db -> getQuery(true);
             $query->update($db->quoteName('#__tz_portfolio_plus_templates'));
+            $query->set($db->quoteName('home') . ' = 0');
+            $query->where($db->quoteName('template') . ' = ' . $db->quote('elegant'));
+            $db->setQuery($query);
+            $db->execute();
+
+            $query  = $db -> getQuery(true);
+            $query->update($db->quoteName('#__tz_portfolio_plus_templates'));
             $query->set($db->quoteName('layout') . ' = ' . $db->quote($layout));
+            $query->set($db->quoteName('home') . ' = 1');
             $query->where($db->quoteName('template') . ' = ' . $db->quote('system'));
             $db->setQuery($query);
             $db->execute();
