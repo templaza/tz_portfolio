@@ -674,7 +674,6 @@ class HtmlView extends BaseHtmlView
                                         if(strpos($children -> type, ':') != false){
                                             list($plugin, $layout)  = explode(':', $children -> type);
                                         }
-
                                         if($plugin_obj = AddonHelper::getPlugin('content', $plugin)) {
                                             $className      = '\\TemPlaza\\Component\\TZ_Portfolio\\AddOn\\Content\\'.ucfirst($plugin).'\\Extension\\'.ucfirst($plugin);
 
@@ -684,16 +683,10 @@ class HtmlView extends BaseHtmlView
                                             if(class_exists($className)) {
                                                 $registry   = new Registry($plugin_obj -> params);
 
-//                                                $addOnClass = AddonHelper::getInstance($plugin_obj -> type,
-//                                                    $plugin_obj -> name, true, $dispatcher, array(
-//                                                        'params'    => $registry
-//                                                    ));
                                                 $plgClass = AddonHelper::getInstance($plugin_obj -> type,
                                                     $plugin_obj -> name, true, $dispatcher, array(
                                                         'params'    => $registry
                                                     ));
-//                                                $plgClass   = new $className($dispatcher,array('type' => ($plugin_obj -> type)
-//                                                , 'name' => ($plugin_obj -> name), 'params' => $registry));
 
                                                 if(method_exists($plgClass, 'onContentDisplayArticleView')) {
                                                     $html = $plgClass->onContentDisplayArticleView('com_tz_portfolio.'
@@ -716,10 +709,10 @@ class HtmlView extends BaseHtmlView
                                         || !empty($children -> {"col-sm-offset"}) || !empty($children -> {"col-xs-offset"})
                                         || !empty($children -> {"customclass"}) || $children -> responsiveclass){
                                         $childRows[] = '<div class="'
-                                            .(!empty($children -> {"col-lg"})?'uk-width-'.$children -> {"col-lg"}:'')
-                                            .(!empty($children -> {"col-md"})?' uk-width-'.$children -> {"col-md"}.'@l':'')
-                                            .(!empty($children -> {"col-sm"})?' uk-width-'.$children -> {"col-sm"}.'@m':'')
-                                            .(!empty($children -> {"col-xs"})?' uk-width-'.$children -> {"col-xs"}.'@s':'')
+                                            .(!empty($children -> {"col-lg"})?'uk-width-'.$children -> {"col-lg"}.'@l':'')
+                                            .(!empty($children -> {"col-md"})?' uk-width-'.$children -> {"col-md"}.'@m':'')
+                                            .(!empty($children -> {"col-sm"})?' uk-width-'.$children -> {"col-sm"}.'@s':'')
+                                            .(!empty($children -> {"col-xs"})?' uk-width-'.$children -> {"col-xs"}:'')
                                             .(!empty($children -> {"col-lg-offset"})?$offsetPrefixlg.$children -> {"col-lg-offset"}:'')
                                             .(!empty($children -> {"col-md-offset"})?$offsetPrefixmd.$children -> {"col-md-offset"}:'')
                                             .(!empty($children -> {"col-sm-offset"})?$offsetPrefixsm.$children -> {"col-sm-offset"}:'')
@@ -797,7 +790,7 @@ class HtmlView extends BaseHtmlView
                                 $rows[] = '<div class="' . UIkitHelper::mapBootstrapContainerWidth($tplItems->containertype) . '">';
                             }
 
-                            $rows[] = '<div class="uk-grid-collapse" data-uk-grid>';
+                            $rows[] = '<div data-uk-grid>';
 
                             $rows = array_merge($rows, $childRows);
 
@@ -896,9 +889,8 @@ class HtmlView extends BaseHtmlView
                             if(strpos($children -> type, ':') != false){
                                 list($plugin, $layout)  = explode(':', $children -> type);
                             }
-
                             if($plugin_obj = AddonHelper::getPlugin('content', $plugin)) {
-                                $className      = 'PlgTZ_Portfolio_PlusContent'.ucfirst($plugin);
+                                $className      = '\\TemPlaza\\Component\\TZ_Portfolio\\AddOn\\Content\\'.ucfirst($plugin).'\\Extension\\'.ucfirst($plugin);
 
                                 if(!class_exists($className)){
                                     AddonHelper::importPlugin('content', $plugin);
@@ -906,12 +898,15 @@ class HtmlView extends BaseHtmlView
                                 if(class_exists($className)) {
                                     $registry   = new Registry($plugin_obj -> params);
 
-                                    $plgClass   = new $className($dispatcher,array('type' => ($plugin_obj -> type)
-                                    , 'name' => ($plugin_obj -> name), 'params' => $registry));
+                                    $plgClass = AddonHelper::getInstance($plugin_obj -> type,
+                                        $plugin_obj -> name, true, $dispatcher, array(
+                                            'params'    => $registry
+                                        ));
 
                                     if(method_exists($plgClass, 'onContentDisplayArticleView')) {
-                                        $html = $plgClass->onContentDisplayArticleView('com_tz_portfolio.'.$this -> getName(),
-                                            $this->item, $this->item->params, $this->state->get('list.offset'), $layout);
+                                        $html = $plgClass->onContentDisplayArticleView('com_tz_portfolio.'
+                                            .$this -> getName(), $this->item, $this->item->params
+                                            , $this->state->get('list.offset'), $layout);
                                     }
                                 }
                                 if(is_array($html)) {
@@ -929,10 +924,10 @@ class HtmlView extends BaseHtmlView
                             || !empty($children -> {"col-sm-offset"}) || !empty($children -> {"col-xs-offset"})
                             || !empty($children -> {"customclass"}) || $children -> responsiveclass){
                             $childRows[] = '<div class="'
-                                .(!empty($children -> {"col-lg"})?'uk-width-'.$children -> {"col-lg"}:'')
-                                .(!empty($children -> {"col-md"})?' uk-width-'.$children -> {"col-md"}.'@l':'')
-                                .(!empty($children -> {"col-sm"})?' uk-width-'.$children -> {"col-sm"}.'@m':'')
-                                .(!empty($children -> {"col-xs"})?' uk-width-'.$children -> {"col-xs"}.'@s':'')
+                                .(!empty($children -> {"col-lg"})?'uk-width-'.$children -> {"col-lg"}.'@l':'')
+                                .(!empty($children -> {"col-md"})?' uk-width-'.$children -> {"col-md"}.'@m':'')
+                                .(!empty($children -> {"col-sm"})?' uk-width-'.$children -> {"col-sm"}.'@s':'')
+                                .(!empty($children -> {"col-xs"})?' uk-width-'.$children -> {"col-xs"}:'')
                                 .(!empty($children -> {"col-lg-offset"})?$offsetPrefixlg.$children -> {"col-lg-offset"}:'')
                                 .(!empty($children -> {"col-md-offset"})?$offsetPrefixmd.$children -> {"col-md-offset"}:'')
                                 .(!empty($children -> {"col-sm-offset"})?$offsetPrefixsm.$children -> {"col-sm-offset"}:'')
@@ -962,7 +957,7 @@ class HtmlView extends BaseHtmlView
                 $rows[] = '<div id="tp-portfolio-template-' .($rowName?$rowName:'')
                     . '-inner" class="'. ($class?$class:'').
                     ($responsive ? ' ' . $responsive : '') . '">';
-                $rows[] = '<div class="uk-grid-collapse" data-uk-grid>';
+                $rows[] = '<div data-uk-grid>';
                 $rows   = array_merge($rows, $childRows);
 
                 $rows[] = '</div>';

@@ -172,5 +172,18 @@ class LayoutsModel extends ListModel
         return false;
     }
 
-
+    public function setDefault($cid) {
+        $db = $this->getDatabase();
+        $query = $db->getQuery(true);
+        $query->update('#__tz_portfolio_plus_templates')
+            ->set('home = 0');
+        $db->setQuery($query);
+        $db->execute();
+        $query->clear();
+        $query->update('#__tz_portfolio_plus_templates')
+            ->set('home = 1')
+            ->where('id IN('.implode(',', $cid).')');
+        $db->setQuery($query);
+        $db->execute();
+    }
 }
