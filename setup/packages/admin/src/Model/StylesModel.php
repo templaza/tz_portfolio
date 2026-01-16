@@ -122,13 +122,12 @@ class StylesModel extends ListModel
     }
 
     function getListQuery(){
-        $db     = $this -> getDbo();
+        $db     = $this -> getDatabase();
         $query  = $db -> getQuery(true);
         $query -> select('t.*');
         $query -> from($db -> quoteName('#__tz_portfolio_plus_extensions').' AS t');
 
-        $query -> where('(type = '.$db -> quote('tz_portfolio-style')
-            .' OR type = '.$db -> quote('tz_portfolio_plus-template').')');
+        $query -> where('type = '.$db -> quote('tz_portfolio-style'));
 
         // Add the list ordering clause.
         $orderCol = $this->getState('list.ordering','t.id');
