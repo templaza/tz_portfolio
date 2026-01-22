@@ -1,7 +1,7 @@
 {
   "$schema": "https://developer.joomla.org/schemas/json-schema/web_assets.json",
   "name": "com_tz_portfolio",
-  "version": "4.0.0",
+  "version": "4.0.3",
   "description": "TZ Portfolio",
   "license": "GPL-2.0-or-later",
   "assets": [
@@ -191,7 +191,10 @@
       "name": "com_tz_portfolio.dm-uploader",
       "type": "script",
       "version": "1.0.1",
-      "uri": "com_tz_portfolio/jquery.dm-uploader.min.js"
+      "uri": "com_tz_portfolio/jquery.dm-uploader.min.js",
+      "dependencies": [
+        "jquery"
+      ]
     }
   ]
 }
