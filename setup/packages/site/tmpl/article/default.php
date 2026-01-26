@@ -41,8 +41,7 @@ $doc        = Factory::getDocument();
 
 ?>
 
-<div class="tp-item-page item-page<?php
-echo $this->pageclass_sfx?> uk-padding uk-padding-remove-horizontal"  itemscope itemtype="http://schema.org/Article">
+<div class="tp-item-page item-page<?php echo $this->pageclass_sfx?>"  itemscope itemtype="http://schema.org/Article">
     <div class="tp-item-page__inner" data-uk-margin>
         <meta itemprop="inLanguage" content="<?php
         echo ($item->language === '*') ? Factory::getConfig()->get('language') : $item->language; ?>" />
