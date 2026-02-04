@@ -5,7 +5,7 @@
 
 # ------------------------------------------------------------------------
 
-# Author:    DuongTVTemPlaza
+# Author:    Sonny
 
 # Copyright: Copyright (C) 2011-2024 TZ Portfolio.com. All Rights Reserved.
 
@@ -97,11 +97,16 @@ class AddOnAdminModel extends AdminModel
     public function save($data){
         $table      = $this->getTable();
         $isNew = true;
-        if (isset($data['extension_id']) && !empty($data['extension_id'])
-            && isset($data['content_id']) && !empty($data['content_id'])) {
+        if (is_array($data) && isset($data['extension_id']) && !empty($data['extension_id']) && isset($data['content_id']) && !empty($data['content_id'])) {
             if ($table->load(array('extension_id' => $data['extension_id'], 'content_id' => $data['content_id']))) {
                 $isNew = false;
             }
+        } else if (is_object($data)) {
+            if ($table->load($data->id)) {
+                $isNew = false;
+            }
+        } else {
+            return false;
         }
 
         if (!$table->bind($data)) {

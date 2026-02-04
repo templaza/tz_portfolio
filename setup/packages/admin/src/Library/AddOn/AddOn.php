@@ -5,7 +5,7 @@
 
 # ------------------------------------------------------------------------
 
-# Author:    DuongTVTemPlaza
+# Author:    Sonny
 
 # Copyright: Copyright (C) 2011-2024 TZ Portfolio.com. All Rights Reserved.
 
@@ -64,6 +64,8 @@ class AddOn extends CMSPlugin implements
     protected $_myFormDataBeforeSave;
     protected $addon = null;
 
+    public array $data_menu = [];
+
     public function __construct($subject, $config = array())
     {
         parent::__construct($subject,$config);
@@ -90,7 +92,7 @@ class AddOn extends CMSPlugin implements
     public function getDataManager(){
         if($plugin = AddonHelper::getAddOn($this -> _type, $this -> _name)){
             if(isset($plugin -> asset_id) &&  $plugin -> asset_id){
-                $user   = Factory::getUser();
+                $user   = Factory::getApplication()->getIdentity();
                 if(!$user -> authorise('core.manage', 'com_tz_portfolio.addon.'.$plugin -> id)){
                     return false;
                 }
@@ -99,37 +101,66 @@ class AddOn extends CMSPlugin implements
         return $this -> data_manager;
     }
 
-    public function onAddOnDisplayManager($task = null){
+    public function getDataMenu(): array
+    {
+        if (empty($this->data_menu)) {
+            return [];
+        }
+        return $this->data_menu;
+    }
 
-        $app    = $this -> getApplication();
-        $input  = $app -> input;
+    public function onAddOnDisplayManager($task = null): string
+    {
+        $app    = $this->getApplication();
+        $input  = $app->input;
 
-        $addon_task   = $input -> get('addon_task');
-        $mvc    = $this -> getMVCFactory();
-        $config['factory'] = $mvc;
+        $addonTask = $task ?? $input->get('addon_task', '', 'string');
+        $controllerName = 'Display';
+        $subtask = empty($addonTask) ? 'display' : $addonTask;
+        if (!empty($addonTask)) {
+            $parts = explode('.', $addonTask, 2);
+            $controllerName = $parts[0] ?? 'Display';
+            $subtask = $parts[1] ?? $subtask;
+        }
 
-        $controller = $this -> getMVCFactory() -> createController($this -> _name, 'administrator', $config,
-            $app, $input);
-        if(!$controller){
+        $controllerClass = '\\TemPlaza\\Component\\TZ_Portfolio\\AddOn\\' . ucfirst($this -> _type) . '\\' . ucfirst($this -> _name) . '\\Administrator\\Controller\\' . ucfirst($controllerName) . 'Controller';
+
+        if (!class_exists($controllerClass)) {
+            $file = Path::clean(JPATH_ROOT . '/components/com_tz_portfolio/add-ons/' . $this -> _type . '/' . $this -> _name . '/admin/src/Controller/' . ucfirst($controllerName) . 'Controller.php');
+
+            if (file_exists($file)) {
+                require_once $file;
+            } else {
+                return '';
+            }
+        }
+
+        if (!class_exists($controllerClass)) {
             return '';
         }
 
-        list($view, $task)  = explode('.', $addon_task);
-
+        $controller = new $controllerClass([
+            'addon' => $this -> addon
+        ]);
+        $html = null;
         ob_start();
-        $controller -> execute($task);
-        $controller -> redirect();
-        $html   = ob_get_contents();
-        ob_end_clean();
-
-        if($html){
-            $html   = trim($html);
-            if(!empty($html)) {
+        try {
+            $controller->execute($subtask);
+            $controller->redirect();
+            $html = ob_get_contents();
+        } catch (\Exception $e) {
+            // Suppress errors (retain previous behavior); logging can be added if needed.
+        } finally {
+            ob_end_clean();
+        }
+        if ($html) {
+            $html = trim($html);
+            if ($html !== '') {
                 return $html;
             }
         }
 
-        return false;
+        return '';
     }
 
     public function onAddContentType(){
@@ -232,18 +263,17 @@ class AddOn extends CMSPlugin implements
             AddonHelper::loadLanguage($this -> _name, $this -> _type);
 
             // Add plugin form's path
-            Form::addFormPath(COM_TZ_PORTFOLIO_ADDON_PATH.'/'.$this -> _type.'/'.$this -> _name.'/admin/models/form');
-            Form::addFormPath(COM_TZ_PORTFOLIO_ADDON_PATH.'/'.$this -> _type.'/'.$this -> _name.'/admin/models/forms');
-
-            Form::addFieldPath(COM_TZ_PORTFOLIO_ADDON_PATH.'/'.$this -> _type.'/'.$this -> _name.'/admin/models/field');
-            Form::addFieldPath(COM_TZ_PORTFOLIO_ADDON_PATH.'/'.$this -> _type.'/'.$this -> _name.'/admin/models/fields');
+            Form::addFormPath(COM_TZ_PORTFOLIO_ADDON_PATH.'/'.$this -> _type.'/'.$this -> _name.'/admin/form');
+            Form::addFormPath(COM_TZ_PORTFOLIO_ADDON_PATH.'/'.$this -> _type.'/'.$this -> _name.'/admin/forms');
+            Form::addFieldPath(COM_TZ_PORTFOLIO_ADDON_PATH.'/'.$this -> _type.'/'.$this -> _name.'/admin/field');
+            Form::addFieldPath(COM_TZ_PORTFOLIO_ADDON_PATH.'/'.$this -> _type.'/'.$this -> _name.'/admin/fields');
 
             if($app -> isClient('site') && $context  == 'com_tz_portfolio.form') {
-                Form::addFormPath(COM_TZ_PORTFOLIO_ADDON_PATH . '/' . $this->_type . '/' . $this->_name . '/models/form');
-                Form::addFormPath(COM_TZ_PORTFOLIO_ADDON_PATH . '/' . $this->_type . '/' . $this->_name . '/models/forms');
+                Form::addFormPath(COM_TZ_PORTFOLIO_ADDON_PATH . '/' . $this->_type . '/' . $this->_name . '/form');
+                Form::addFormPath(COM_TZ_PORTFOLIO_ADDON_PATH . '/' . $this->_type . '/' . $this->_name . '/forms');
 
-                Form::addFieldPath(COM_TZ_PORTFOLIO_ADDON_PATH . '/' . $this->_type . '/' . $this->_name . '/models/field');
-                Form::addFieldPath(COM_TZ_PORTFOLIO_ADDON_PATH . '/' . $this->_type . '/' . $this->_name . '/models/fields');
+                Form::addFieldPath(COM_TZ_PORTFOLIO_ADDON_PATH . '/' . $this->_type . '/' . $this->_name . '/field');
+                Form::addFieldPath(COM_TZ_PORTFOLIO_ADDON_PATH . '/' . $this->_type . '/' . $this->_name . '/fields');
             }
 
             $formPath   = COM_TZ_PORTFOLIO_ADDON_PATH.'/'.$this -> _type.'/'.$this -> _name.'/admin';
@@ -252,10 +282,10 @@ class AddOn extends CMSPlugin implements
                 $file  = Path::clean($formPath.'/forms/views/'.$viewName.'.xml');
             }elseif(file_exists($formPath.'/form/view/'.$viewName.'.xml')){
                 $file  = Path::clean($formPath.'/form/view/'.$viewName.'.xml');
-            }elseif(file_exists($formPath.'/models/forms/'.$viewName.'.xml')){
-                $file  = Path::clean($formPath.'/models/forms/'.$viewName.'.xml');
+            }elseif(file_exists($formPath.'/forms/'.$viewName.'.xml')){
+                $file  = Path::clean($formPath.'/forms/'.$viewName.'.xml');
             }else{
-                $file  = Path::clean($formPath.'/models/form/'.$viewName.'.xml');
+                $file  = Path::clean($formPath.'/form/'.$viewName.'.xml');
             }
 
             // Load xml form file from above path

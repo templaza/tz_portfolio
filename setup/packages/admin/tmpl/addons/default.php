@@ -5,7 +5,7 @@
 
 # ------------------------------------------------------------------------
 
-# Author:    DuongTVTemPlaza
+# Author:    Sonny
 
 # Copyright: Copyright (C) 2011-2024 TZ Portfolio.com. All Rights Reserved.
 
@@ -31,6 +31,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Layout\LayoutHelper;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Helper\TZ_PortfolioHelper;
+use TemPlaza\Component\TZ_Portfolio\Administrator\Helper\AddonDatasHelper;
 
 $user		= Factory::getUser();
 $listOrder	= $this->escape($this->state->get('list.ordering'));
@@ -261,9 +262,9 @@ $wa -> addInlineScript('(function($){
                                     } ?>
 
                                     <?php
-                                    if(isset($item -> data_manager) && !empty($item -> data_manager)){
+                                    if(!empty($item -> data_manager)){
                                         ?>
-                                        <a href="<?php echo Route::_(TZ_Portfolio_PlusHelperAddon_Datas::getRootURL($item -> id));?>"
+                                        <a href="<?php echo Route::_(AddonDatasHelper::getRootURL($item -> id, 'addon_datas', (!empty($item->data_manager['addon_view'])?$item->data_manager['addon_view']:null)));?>"
                                            class="btn btn-secondary btn-small btn-sm hasTooltip js-tpp-data-manage"
                                            title="<?php echo Text::_('COM_TZ_PORTFOLIO_ADDON_DATA_MANAGER')?>">
                                             <span class="icon-book me-1"></span><span><?php echo Text::_('COM_TZ_PORTFOLIO_ADDON_DATA_MANAGER')?></span>

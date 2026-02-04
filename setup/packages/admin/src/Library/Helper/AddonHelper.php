@@ -5,7 +5,7 @@
 
 # ------------------------------------------------------------------------
 
-# Author:    DuongTVTemPlaza
+# Author:    Sonny
 
 # Copyright: Copyright (C) 2011-2024 TZ Portfolio.com. All Rights Reserved.
 
@@ -582,6 +582,8 @@ class AddonHelper extends PluginHelper
 
     public static function loadLanguage($element, $type){
 
+
+        //----
         $lang           = Factory::getApplication() -> getLanguage();
         $tag            = $lang -> getTag();
         $prefix         = 'tp_addon_';

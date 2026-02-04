@@ -5,7 +5,7 @@
 
 # ------------------------------------------------------------------------
 
-# author    DuongTVTemPlaza
+# author    Sonny
 
 # copyright Copyright (C) 2015 templaza.com. All Rights Reserved.
 

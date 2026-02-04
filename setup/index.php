@@ -183,6 +183,16 @@ if ($active === 'complete') {
             $db->setQuery($query);
             $db->execute();
         }
+
+        // Copy data from TZ Portfolio Plus to TZ Portfolio
+        if (Folder::exists(JPATH_ROOT . '/media/tz_portfolio_plus/article/cache')) {
+            if (!Folder::exists(JPATH_ROOT . '/media/com_tz_portfolio/article')) {
+                Folder::create(JPATH_ROOT . '/media/com_tz_portfolio/article');
+            }
+
+            Folder::copy(JPATH_ROOT . '/media/tz_portfolio_plus/article/cache',
+                JPATH_ROOT . '/media/com_tz_portfolio/article/cache', '', true);
+        }
     }
 
     $activeStep = new stdClass();

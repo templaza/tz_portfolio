@@ -5,7 +5,7 @@
 
 # ------------------------------------------------------------------------
 
-# Author:    DuongTVTemPlaza
+# Author:    Sonny
 
 # Copyright: Copyright (C) 2011-2024 TZ Portfolio.com. All Rights Reserved.
 
@@ -98,7 +98,7 @@ class TzmediaField extends MediaField {
             $this -> __set('id',$field_name.'_server');
         }
 
-        $value  = $this -> value;
+        $value  = str_replace('tz_portfolio_plus', 'com_tz_portfolio', $this -> value);
         $this -> value  = '';
 
         $html[] = '<div style="padding-top: 5px;">'.parent::getInput();
@@ -113,6 +113,7 @@ class TzmediaField extends MediaField {
                     . '.' . File::getExt($value), $value);
 
             $urlImg .= '?time=' . time();
+
             $mUrlImg    = $urlImg;
 
             $img = '<img src="' . $urlImg. '" style="'

@@ -40,22 +40,27 @@ class AddonDataTable extends Table
     }
     public function load($keys = null, $reset = true) {
         $fields = array_keys($this->getProperties());
-        $query = $this->_db->getQuery(true)
+        $db = $this->getDatabase();
+        $query = $db->getQuery(true)
             ->select('*')
             ->from($this->_tbl.' AS ad');
-
-        foreach ($keys as $field => $value)
-        {
-            // Check that $field is in the table.
-            if (!in_array($field, $fields))
+        if (is_array($keys)) {
+            foreach ($keys as $field => $value)
             {
-                throw new \UnexpectedValueException(sprintf('Missing field in database: %s &#160; %s.', get_class($this), $field));
+                // Check that $field is in the table.
+                if (!in_array($field, $fields))
+                {
+                    throw new \UnexpectedValueException(sprintf('Missing field in database: %s &#160; %s.', get_class($this), $field));
+                }
+                // Add the search tuple to the query.
+                $query->where('ad.' . $db->quoteName($field) . ' = ' . $db->quote($value));
             }
-            // Add the search tuple to the query.
-            $query->where('ad.' . $this->_db->quoteName($field) . ' = ' . $this->_db->quote($value));
+        } else {
+            $query->where('ad.id = ' . (int) $keys);
         }
-        $this->_db->setQuery($query);
-        $row = $this->_db->loadAssoc();
+
+        $db->setQuery($query);
+        $row = $db->loadAssoc();
         // Check that we have a result.
         if (empty($row)) {
             $result = false;

@@ -5,7 +5,7 @@
 
 # ------------------------------------------------------------------------
 
-# Author:    DuongTVTemPlaza
+# Author:    Sonny
 
 # Copyright: Copyright (C) 2011-2024 TZ Portfolio.com. All Rights Reserved.
 
@@ -56,6 +56,7 @@ class AddOnController extends BaseController {
     {
         if(isset($config['addon'])){
             $this -> addon          = $config['addon'];
+            AddonHelper::loadLanguage($this->addon->name, $this->addon->type);
         }
 
         $config['base_path'] = COM_TZ_PORTFOLIO_ADDON_PATH.'/'.$this -> addon -> type
@@ -78,17 +79,6 @@ class AddOnController extends BaseController {
             $this->core_view_list = strtolower($view);
         }
 
-//        // Set a base path for use by the controller
-//        if (\array_key_exists('base_path', $config)) {
-//            $this->basePath = $config['base_path'];
-//        } else {
-//            $this->basePath = COM_TZ_PORTFOLIO_ADDON_PATH.'/'.$this -> addon -> type
-//                .'/'.$this -> addon -> name;
-////            $this->basePath = JPATH_COMPONENT;
-//        }
-
-//        $this->paths['view']    = $this -> basePath.'/views';
-//        $this->paths['view']    = $this -> basePath.'/src/View';
         $this->paths['view']    = '';
 
         if(isset($config['factory'])){
@@ -285,7 +275,6 @@ class AddOnController extends BaseController {
                 throw new \Exception(Text::sprintf('JLIB_APPLICATION_ERROR_VIEW_NOT_FOUND', $name, $type, $prefix), 404);
             }
         }
-
         return self::$views['addon'][$name][$type][$prefix];
     }
 

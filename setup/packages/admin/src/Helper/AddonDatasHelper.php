@@ -5,7 +5,7 @@
 
 # ------------------------------------------------------------------------
 
-# Author:    DuongTVTemPlaza
+# Author:    Sonny
 
 # Copyright: Copyright (C) 2011-2024 TZ Portfolio.com. All Rights Reserved.
 
@@ -33,9 +33,9 @@ use Joomla\CMS\Table\Table;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Library\Helper\AddonHelper;
 
 class AddonDatasHelper{
-    public static function getRootURL($addon_id,$root_view = 'addon_datas'){
+    public static function getRootURL($addon_id, $root_view = 'addon_datas', $default_view = null){
         if($addon_id){
-            return 'index.php?option=com_tz_portfolio&view='.$root_view.'&addon_id='.$addon_id;
+            return 'index.php?option=com_tz_portfolio&view='.$root_view.'&addon_id='.$addon_id.(!empty($default_view) ? '&addon_view='.$default_view : '');
         }
         return false;
     }

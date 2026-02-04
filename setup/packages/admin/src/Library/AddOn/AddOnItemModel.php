@@ -5,7 +5,7 @@
 
 # ------------------------------------------------------------------------
 
-# Author:    DuongTVTemPlaza
+# Author:    Sonny
 
 # Copyright: Copyright (C) 2011-2024 TZ Portfolio.com. All Rights Reserved.
 
@@ -100,5 +100,9 @@ class AddOnItemModel extends ItemModel {
     public function getReturnPage()
     {
         return base64_encode($this->getState('return_page'));
+    }
+
+    public function getAddon(){
+        return $this -> addon;
     }
 }
