@@ -137,7 +137,7 @@ class AddOnController extends BaseController {
 
         $view->document = $document;
 
-        $conf = Factory::getConfig();
+        $conf = Factory::getApplication()->getConfig();
 
         // Display the view
         if ($cachable && $viewType != 'feed' && $conf->get('caching') >= 1)
@@ -336,7 +336,6 @@ class AddOnController extends BaseController {
                 $prefix = $this->app->getName();
             }
         }
-
         if ($model = $this->createModel($name, $prefix, $config)) {
             // Task is a reserved state
 //            $model->setState('addon_task', $this->task);
@@ -367,6 +366,21 @@ class AddOnController extends BaseController {
         }
 
         return $model;
+    }
+
+    public function getName()
+    {
+        if (empty($this->name)) {
+            $r = null;
+
+            if (!preg_match('/([^\\\\]+)Controller$/i', \get_class($this), $r)) {
+                throw new \Exception(Text::sprintf('JLIB_APPLICATION_ERROR_GET_NAME', __METHOD__), 500);
+            }
+
+            $this->name = strtolower($r[1]);
+        }
+
+        return $this->name;
     }
 
 //    public function getModel($name = '', $prefix = '', $config = array())
