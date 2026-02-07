@@ -145,6 +145,12 @@
       "uri": "com_tz_portfolio/jquery.dm-uploader.min.css"
     },
     {
+      "name": "com_tz_portfolio.dm-uploader.gallery_upload",
+      "type": "style",
+      "version": "1.0.0",
+      "uri": "com_tz_portfolio/gallery_upload/style.css"
+    },
+    {
       "name": "com_tz_portfolio.uikit",
       "type": "script",
       "version": "3.21.4",
@@ -192,6 +198,24 @@
       "type": "script",
       "version": "1.0.1",
       "uri": "com_tz_portfolio/jquery.dm-uploader.min.js",
+      "dependencies": [
+        "jquery"
+      ]
+    },
+    {
+      "name": "com_tz_portfolio.dm-uploader.gallery_uploader",
+      "type": "script",
+      "version": "1.0.0",
+      "uri": "com_tz_portfolio/gallery_upload/gallery_uploader.js",
+      "dependencies": [
+        "jquery"
+      ]
+    },
+    {
+      "name": "com_tz_portfolio.dm-uploader.style_ui",
+      "type": "script",
+      "version": "1.0.0",
+      "uri": "com_tz_portfolio/gallery_upload/style-ui.js",
       "dependencies": [
         "jquery"
       ]
