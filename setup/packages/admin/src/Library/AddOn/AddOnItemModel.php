@@ -31,6 +31,7 @@ use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Registry\Registry;
 use Joomla\CMS\MVC\Model\ItemModel;
+use TemPlaza\Component\TZ_Portfolio\Administrator\Library\Helper\AddonHelper;
 
 class AddOnItemModel extends ItemModel {
 
@@ -104,5 +105,50 @@ class AddOnItemModel extends ItemModel {
 
     public function getAddon(){
         return $this -> addon;
+    }
+
+    protected function getListQuery()
+    {
+        $db = $this->getDatabase();
+        $query = $db->getQuery(true);
+        $query->select('DISTINCT d.*');
+        $query->from($db->quoteName('#__tz_portfolio_plus_addon_data').' AS d');
+        $query -> join('INNER', '#__tz_portfolio_plus_content AS c ON c.id = d.content_id');
+        $query ->join('INNER', '#__tz_portfolio_plus_content_category_map AS cm ON cm.contentid = c.id');
+        $query ->join('INNER', '#__tz_portfolio_plus_categories AS cc ON cc.id = cm.catid');
+        $query -> join('INNER', '#__tz_portfolio_plus_extensions AS e ON e.id = d.extension_id');
+
+        if($addon = AddonHelper::getPlugin($this->addon->type, $this->addon->name)) {
+            $query->where('d.extension_id =' .(int) $addon -> id);
+        }
+        $query -> where('d.element ='.$db -> quote($this->addon->name));
+
+        $item = $this -> getItem();
+
+        if($content_id = $item->id){
+            $query -> where('d.content_id = '.$content_id);
+        }
+        $query -> where('d.published = 1');
+
+        if($catid = $this -> getState('filter.catid', null)) {
+            if(is_array($catid)){
+                $query -> where('cc.id IN('.implode(',', $catid).')');
+            }else{
+                $query -> where('cc.id = '.(int) $catid);
+            }
+        }
+        return $query;
+    }
+
+    public function getAddonData()
+    {
+        $db = $this->getDatabase();
+        $db->setQuery($this->getListQuery());
+        $data = $db->loadObject();
+        $return = new \stdClass();
+        if (!empty($data->value)) {
+            $return = json_decode($data->value);
+        }
+        return $return;
     }
 }

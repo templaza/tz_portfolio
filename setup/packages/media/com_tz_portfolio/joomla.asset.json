@@ -219,6 +219,21 @@
       "dependencies": [
         "jquery"
       ]
+    },
+    {
+      "name": "com_tz_portfolio.addon-admin.style",
+      "type": "style",
+      "version": "1.0.0",
+      "uri": "com_tz_portfolio/addon-admin.css"
+    },
+    {
+      "name": "com_tz_portfolio.addon-admin.script",
+      "type": "script",
+      "version": "1.0.0",
+      "uri": "com_tz_portfolio/addon-admin.js",
+      "dependencies": [
+        "jquery"
+      ]
     }
   ]
 }
