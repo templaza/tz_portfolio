@@ -340,7 +340,6 @@
                         $(this).closest(".column").find('>.position-name').text(newIncludetype.toLowerCase());
                     });
 
-
                     var currentPosition = __el_pop.closest(".column").find('.positioninput').val();
 
                     setTimeout(function (value, $this) {
@@ -709,11 +708,10 @@
          *
          */
         $("#content,#element-box").delegate("a.columndelete", 'click', function () {
-
             if (confirm('Are you sure to delete this column?')) {
-                $parent2 = $(this).parent().parent().parent();
+                let $parent2 = $(this).parent().parent().parent();
                 $(this).parent().parent().fadeOut('fast').remove();
-                var totalSpan = $parent2.find('>.column').length;
+                let totalSpan = $parent2.find('>.column').length;
                 //resetColumns($parent2);
             }
             return false;
