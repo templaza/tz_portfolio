@@ -193,6 +193,11 @@ if ($active === 'complete') {
             Folder::copy(JPATH_ROOT . '/media/tz_portfolio_plus/article/cache',
                 JPATH_ROOT . '/media/com_tz_portfolio/article/cache', '', true);
         }
+
+        if (Folder::exists(JPATH_ROOT . '/images/tz_portfolio_plus')) {
+            Folder::copy(JPATH_ROOT . '/images/tz_portfolio_plus',
+                JPATH_ROOT . '/images/com_tz_portfolio', '', true);
+        }
     }
 
     $activeStep = new stdClass();
