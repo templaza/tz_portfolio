@@ -30,7 +30,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Filesystem\File;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
-use TemPlaza\Component\TZ_Portfolio\Administrator\Library\TZ_PortfolioUri;
+use TemPlaza\Component\TZ_Portfolio\Site\Helper\ArticleHelper;
 
 /**
  * Categories view class for the Category package.
@@ -45,10 +45,11 @@ class HtmlView extends BaseHtmlView
 
     public function display($tpl = null)
     {
-        $state          = $this -> get('State');
+        $model          = $this->getModel();
+        $state          = $model -> getState();
         $params         = $state -> get('params');
         $this -> params = $params;
-        $item           = $this -> get('Item');
+        $item           = $model -> getItem();
         $this -> image  = null;
 
         if($item){
@@ -57,7 +58,6 @@ class HtmlView extends BaseHtmlView
                     $image          = clone($media -> image);
 
                     if(isset($image -> url) && $image -> url) {
-
                         if(!$this -> head) {
                             $this -> head   = true;
                         }
@@ -76,7 +76,8 @@ class HtmlView extends BaseHtmlView
                                 if ($params->get('mt_image_uikit',0) && file_exists(JPATH_BASE.'/'.$image_url)) {
                                     $this->image_properties =   getimagesize(JPATH_BASE.'/'.$image_url);
                                 }
-                                $image->url = Uri::base( true ) . '/' . $image_url;
+                                $image->url = Uri::base( true ) . '/' . ArticleHelper::convertImageLegacy($image_url);
+
                             }
                         }
                         $this->image = $image;

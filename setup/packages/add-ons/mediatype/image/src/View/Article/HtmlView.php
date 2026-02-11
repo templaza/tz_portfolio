@@ -30,7 +30,9 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Filesystem\File;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\Filesystem\Path;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Library\TZ_PortfolioUri;
+use TemPlaza\Component\TZ_Portfolio\Site\Helper\ArticleHelper;
 
 /**
  * Categories view class for the Category package.
@@ -78,6 +80,9 @@ class HtmlView extends BaseHtmlView
                     $image  = clone($media -> image);
 
                     if(isset($image -> url) && $image -> url) {
+                        if (!file_exists(Path::clean(JPATH_ROOT.DIRECTORY_SEPARATOR.$image -> url))) {
+                            $image -> url = str_replace('tz_portfolio_plus', 'com_tz_portfolio', $image -> url);
+                        }
                         if ($size = $params->get('mt_image_related_size', 'o')) {
                             if (isset($image->url) && !empty($image->url)) {
                                 $image_url_ext = File::getExt($image->url);
@@ -86,8 +91,7 @@ class HtmlView extends BaseHtmlView
                                 }
                                 $image_url = str_replace('.' . $image_url_ext, '_' . $size . '.'
                                     . $image_url_ext, $image->url);
-
-                                $image->related_url = Uri::base( true ) . '/' . $image_url;
+                                $image->related_url = Uri::base( true ) . '/' . ArticleHelper::convertImageLegacy($image_url) ;
                             }
                         }
 
@@ -102,7 +106,7 @@ class HtmlView extends BaseHtmlView
                                 if ($params->get('mt_image_uikit',0) && file_exists(JPATH_BASE.'/'.$image_url)) {
                                     $this->image_properties =   getimagesize(JPATH_BASE.'/'.$image_url);
                                 }
-                                $image->url = Uri::base( true ) . '/' . $image_url;
+                                $image->url = Uri::base( true ) . '/' . ArticleHelper::convertImageLegacy($image_url);
 
                                 if($this -> getLayout() != 'related') {
                                     Factory::getDocument()->addCustomTag('<meta property="og:image" content="' . $image->url . '"/>');
@@ -119,7 +123,7 @@ class HtmlView extends BaseHtmlView
                                 if ($params->get('mt_image_uikit',0) && file_exists(JPATH_BASE.'/'.$image_url)) {
                                     $this->image_properties =   getimagesize(JPATH_BASE.'/'.$image_url);
                                 }
-                                $image->url_detail = Uri::base( true ) . '/' . $image_url;
+                                $image->url_detail = Uri::base( true ) . '/' . ArticleHelper::convertImageLegacy($image_url);
                             }
                         }
 
