@@ -27,6 +27,8 @@ namespace TemPlaza\Component\TZ_Portfolio\Site\Helper;
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\Filesystem\Path;
+use Joomla\Database\DatabaseInterface;
 
 class ArticleHelper{
     protected static $cache = array();
@@ -41,7 +43,7 @@ class ArticleHelper{
         if (!isset(self::$cache[$storeId]) || $resetCache) {
 
             if (!is_object($articleObject)) {
-                $db     = Factory::getDbo();
+                $db     = Factory::getContainer()->get(DatabaseInterface::class);
                 $query  = $db->getQuery(true);
                 $query  -> select('article.*, m.catid');
                 $query  -> from('#__tz_portfolio_plus_content AS article');
@@ -74,7 +76,7 @@ class ArticleHelper{
             return self::$cache[$storeId];
         }
 
-        $db     = Factory::getDbo();
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $query  = $db -> getQuery(true);
         $query -> select('DISTINCT ASCII(SUBSTR(LOWER(c.title),1,1)) AS letterKey');
         $query -> from('#__tz_portfolio_plus_content AS c');
@@ -152,7 +154,7 @@ class ArticleHelper{
             return self::$cache[$storeId];
         }
 
-        $db     = Factory::getDbo();
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $query  = $db->getQuery(true);
         $query  -> select('COUNT(article.id)');
         $query  -> from('#__tz_portfolio_plus_content AS article');
@@ -265,5 +267,13 @@ class ArticleHelper{
         $text_style     .=      isset($font->letterSpacing) && $font->letterSpacing ? 'letter-spacing:'.$font->letterSpacing.';' : '';
         $text_style     .=      isset($font->fontSize) && $font->fontSize ? 'font-size:'.$font->fontSize.';' : '';
         return $text_style;
+    }
+
+    public static function convertImageLegacy($image_url) : string
+    {
+        if (!file_exists(Path::clean(JPATH_ROOT.DIRECTORY_SEPARATOR.$image_url))) {
+            $image_url = str_replace('tz_portfolio_plus', 'com_tz_portfolio', $image_url);
+        }
+        return $image_url;
     }
 }
