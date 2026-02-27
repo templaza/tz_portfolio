@@ -308,7 +308,7 @@ class ExtraFieldsFrontHelper{
             if(file_exists($core_path) && $core_folders = Folder::folders($core_path)){
                 $core_f_xml_path    = $core_path.DIRECTORY_SEPARATOR.$name
                     .DIRECTORY_SEPARATOR.$name.'.xml';
-                if(file_exists($core_f_xml_path)){
+                if(File::exists($core_f_xml_path)){
                     self::$cache[$storeId]  = true;
                     return self::$cache[$storeId];
                 }
@@ -820,7 +820,7 @@ class ExtraFieldsFrontHelper{
                     if(count($options)) {
                         if(!isset($options['group']) || (isset($options['group']) && $options['group'])) {
                             if (!isset($fieldGroups[$field->groupid])) {
-                                $fieldGroups[$field->groupid] = new stdClass();
+                                $fieldGroups[$field->groupid] = new \stdClass();
                                 $fieldGroups[$field->groupid]->name = $field->field_group_name;
                                 $fieldGroups[$field->groupid]->id = $field->groupid;
                                 $fieldGroups[$field->groupid]->fields = array();
