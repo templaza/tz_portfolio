@@ -29,42 +29,34 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Helper\ModuleHelper;
+use Joomla\Registry\Registry;
 
-//$bootstrap4 = ($params -> get('enable_bootstrap',0) && $params -> get('bootstrapversion', 3) == 4);
+// Ensure we have the application instance (Joomla 6)
+$app = Factory::getApplication();
 
-//$doc    = Factory::getDocument();
-//if($params -> get('enable_bootstrap',0)){
-//    $doc -> addScriptDeclaration('
-//        (function($){
-//            $(document).off(\'click.modal.data-api\')
-//            .on(\'click.modal.data-api\', \'[data-toggle="modal"]\', function (e) {
-//                var $this = $(this)
-//                  , href = $this.attr(\'href\')
-//                  , $target = $($this.attr(\'data-target\') || (href && href.replace(/.*(?=#[^\s]+$)/, \'\'))) //strip for ie7
-//                  , option = $target.data(\'modal\') ? \'toggle\' : $.extend({ remote:!/#/.test(href) && href }, $target.data(), $this.data())
-//
-//                e.preventDefault();
-//
-//                $target
-//                  .modal(option)
-//                  .one(\'hide\', function () {
-//                    $this.focus()
-//                  });
-//              });
-//        })(jQuery);
-//    ');
-//}
-//$doc -> addStyleSheet(Uri::base(true).'/modules/mod_tz_portfolio_filter/css/style.css');
+// Provide safe defaults when template is inspected outside module context
+if (!isset($params) || !($params instanceof Registry)) {
+    $params = new Registry();
+}
+if (!isset($module) || !is_object($module)) {
+    $module = (object) ['id' => 0];
+}
+if (!isset($advfilter)) {
+    $advfilter = false;
+}
+if (!isset($categoryOptions) || !is_array($categoryOptions)) {
+    $categoryOptions = [];
+}
 
-$lang               = Factory::getApplication() -> getLanguage();
+$lang               = $app->getLanguage();
 $upper_limit        = $lang->getUpperLimitSearchWord();
 $width              = (int) $params->get('width');
 $maxlength          = $upper_limit;
 $button             = $params->get('button', 0);
 $imagebutton        = $params->get('imagebutton', 0);
 $button_pos         = $params->get('button_pos', 'left');
-$button_text        = htmlspecialchars($params->get('button_text',
-    Text::_('MOD_TZ_PORTFOLIO_FILTER_SEARCHBUTTON_TEXT')), ENT_COMPAT, 'UTF-8');
+$button_text        = htmlspecialchars($params->get('button_text', Text::_('MOD_TZ_PORTFOLIO_FILTER_SEARCHBUTTON_TEXT')), ENT_COMPAT, 'UTF-8');
 $text               = htmlspecialchars($params->get('text', Text::_('MOD_TZ_PORTFOLIO_FILTER_SEARCHBOX_TEXT')),
     ENT_COMPAT, 'UTF-8');
 $label              = htmlspecialchars($params->get('label',
@@ -78,7 +70,10 @@ if ($width)
 {
     $moduleclass_sfx .= ' ' . 'mod_search' . $module->id;
     $css = 'div.mod_search' . $module->id . ' input[type="search"]{ width:auto; }';
-    Factory::getDocument()->addStyleDeclaration($css);
+    // Use WebAssetManager when available (Joomla 6+); fallback to addStyleDeclaration
+    $document = $app->getDocument();
+    $wa = $document->getWebAssetManager();
+    $wa->addInlineStyle($css);
     $width = ' size="' . $width . '"';
 }
 else
@@ -86,7 +81,7 @@ else
     $width = '';
 }
 
-$input  = Factory::getApplication() -> input;
+$input  = $app->input;
 $column     =   [];
 $column[]   =   ($params -> get('column_lg', 1) && intval($params -> get('column_lg', 1))) ? 'uk-width-1-' . $params -> get('column_lg', 1).'@xl' : '';
 $column[]   =   ($params -> get('column_md', 1) && intval($params -> get('column_md', 1))) ? 'uk-width-1-' . $params -> get('column_md', 1) : 'col-md';
@@ -139,7 +134,7 @@ $button_width   =   $params -> get('button_width', '') ? ' style="width:'. $para
             }
         if($advfilter && $params -> get('show_fields', 1)){
             if ($params -> get('show_group_title', 0)) echo '<div class="col-12">';
-            require JModuleHelper::getLayoutPath('mod_tz_portfolio_filter', 'default_filter');
+            require ModuleHelper::getLayoutPath('mod_tz_portfolio_filter', 'default_filter');
             if ($params -> get('show_group_title', 0)) echo '</div>';
         }
         ?>

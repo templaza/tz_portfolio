@@ -20,6 +20,8 @@
 // No direct access
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\Uri\Uri;
+
 if ($list):
 
     $moduleclass_sfx    = htmlspecialchars($params->get('moduleclass_sfx', ''), ENT_COMPAT, 'UTF-8');
@@ -31,21 +33,22 @@ if ($list):
         <?php foreach ($list as $item): ?>
 
             <?php
-            if (count($list) > 1 AND isset($list[$i + 1]->level))
+            if (count($list) > 1 && isset($list[$i + 1]->level)) {
                 $subLevel = (int)$list[$i + 1]->level - (int)$list[$i]->level;
-            else
+            } else {
                 $subLevel = 0;
+            }
 
-            if(($i == count($list) - 1) && $item -> level > 1){
-                $subLevel   = - ($item -> level - 1);
+            if (($i == count($list) - 1) && $item->level > 1) {
+                $subLevel = -($item->level - 1);
             }
             ?>
             <?php if ($subLevel == 0): ?>
-                <div class="item level<?php echo $item -> level - 1;?>">
-                    <?php if ($params -> get('show_image', 1) && $item->images) {
-                        echo '<a href="' . $item->link . '"><img src="' . JUri::base() . $item->images . '" alt="' . $item->title . '"/></a>';
+                <div class="item level<?php echo $item->level - 1; ?>">
+                    <?php if ($params->get('show_image', 1) && $item->images) {
+                        echo '<a href="' . $item->link . '"><img src="' . Uri::base() . $item->images . '" alt="' . $item->title . '"/></a>';
                     } ?>
-                    <?php if ($params -> get('show_title',1)): ?>
+                    <?php if ($params->get('show_title', 1)): ?>
                         <a href="<?php echo $item->link ?>" class="uk-link"><?php echo $item->title; ?>
                             <?php if (isset($item->total)): ?>
                                 <span>(<?php echo $item->total ?>)</span>
@@ -53,20 +56,20 @@ if ($list):
                         </a>
                     <?php endif; ?>
 
-                    <?php if ($params -> get('show_desc', 1) && $item->description) {
+                    <?php if ($params->get('show_desc', 1) && $item->description) {
                         echo '<div class="tz_desc">' . $item->description . '</div>';
                     } ?>
                 </div>
             <?php elseif ($subLevel > 0): ?>
-                <div class="item level<?php echo $item -> level -1;?> haschild" data-uk-accordion>
+                <div class="item level<?php echo $item->level - 1; ?> haschild" data-uk-accordion>
                     <div class="uk-position-relative">
                         <a id="category-btn-<?php echo $item->id; ?>" href="#category-<?php echo $item->id; ?>"
                            class="uk-accordion-title uk-position-right uk-position-absolute"></a>
 
-                        <?php if ($params -> get('show_image', 1) && $item->images) {
-                            echo '<a href="' . $item->link . '"><img src="' . JUri::base() . $item->images . '" alt="' . $item->title . '"/></a>';
+                        <?php if ($params->get('show_image', 1) && $item->images) {
+                            echo '<a href="' . $item->link . '"><img src="' . Uri::base() . $item->images . '" alt="' . $item->title . '"/></a>';
                         } ?>
-                        <?php if ($params -> get('show_title', 1)): ?>
+                        <?php if ($params->get('show_title', 1)): ?>
                             <a href="<?php echo $item->link ?>" class="uk-link"><?php echo $item->title; ?>
                                 <?php if (isset($item->total)): ?>
                                     <span>(<?php echo $item->total ?>)</span>
@@ -74,18 +77,17 @@ if ($list):
                             </a>
                         <?php endif; ?>
 
-                        <?php if ($params -> get('show_desc',1) && $item->description) {
+                        <?php if ($params->get('show_desc', 1) && $item->description) {
                             echo '<div class="tz_desc">' . $item->description . '</div>';
                         } ?>
 
-                        <div class="sub-menu-category sub-menu-category-<?php echo $subLevel
-                    ?> uk-accordion-content uk-padding-small uk-padding-remove-vertical uk-padding-remove-right uk-margin-remove-top" id="category-<?php echo $item->id; ?>">
-            <?php elseif ($subLevel < 0):?>
-                <div class="item level<?php echo $item -> level -1;?>">
-                    <?php if ($params -> get('show_image',1) && $item->images) {
-                        echo '<a href="' . $item->link . '"><img src="' . JUri::base() . $item->images . '" alt="' . $item->title . '"/></a>';
+                        <div class="sub-menu-category sub-menu-category-<?php echo $subLevel; ?> uk-accordion-content uk-padding-small uk-padding-remove-vertical uk-padding-remove-right uk-margin-remove-top" id="category-<?php echo $item->id; ?>">
+            <?php elseif ($subLevel < 0): ?>
+                <div class="item level<?php echo $item->level - 1; ?>">
+                    <?php if ($params->get('show_image', 1) && $item->images) {
+                        echo '<a href="' . $item->link . '"><img src="' . Uri::base() . $item->images . '" alt="' . $item->title . '"/></a>';
                     } ?>
-                    <?php if ($params -> get('show_title',1)): ?>
+                    <?php if ($params->get('show_title', 1)): ?>
                         <a href="<?php echo $item->link ?>" class="uk-link"><?php echo $item->title; ?>
                             <?php if (isset($item->total)): ?>
                                 <span>(<?php echo $item->total ?>)</span>
@@ -93,12 +95,12 @@ if ($list):
                         </a>
                     <?php endif; ?>
 
-                    <?php if ($params -> get('show_desc',1) && $item->description) {
+                    <?php if ($params->get('show_desc', 1) && $item->description) {
                         echo '<div class="tz_desc">' . $item->description . '</div>';
                     } ?>
                 </div>
 
-                <?php for ($k = 0; $k > $subLevel; $k--):?>
+                <?php for ($k = 0; $k > $subLevel; $k--): ?>
                         </div>
                     </div>
                 </div>
@@ -112,3 +114,4 @@ if ($list):
         <?php echo $str; ?>
     </div>
 <?php endif; ?>
+
