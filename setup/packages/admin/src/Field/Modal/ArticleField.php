@@ -5,7 +5,7 @@
 
 # ------------------------------------------------------------------------
 
-# Author:    Sonny
+# Author:    DuongTVTemPlaza
 
 # Copyright: Copyright (C) 2011-2024 TZ Portfolio.com. All Rights Reserved.
 
@@ -25,12 +25,13 @@ namespace TemPlaza\Component\TZ_Portfolio\Administrator\Field\Modal;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Layout\FileLayout;
-use Joomla\CMS\Form\Field\CheckboxesField;
+use Joomla\CMS\Form\Field\ModalSelectField;
+use Joomla\Database\DatabaseInterface;
 
 // No direct access
 defined('_JEXEC') or die;
 
-class ArticleField extends CheckboxesField
+class ArticleField extends ModalSelectField
 {
 
     protected $type             = 'Modal_Article';
@@ -122,7 +123,7 @@ class ArticleField extends CheckboxesField
 
     protected function _getItems($ids){
         if($ids){
-            $db     = Factory::getDbo();
+            $db     = Factory::getContainer()->get(DatabaseInterface::class);
             $query  = $db -> getQuery(true);
 
             $query -> select('a.id,a.title,c.title AS category_title');

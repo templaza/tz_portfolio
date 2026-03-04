@@ -5,7 +5,7 @@
 
 # ------------------------------------------------------------------------
 
-# Author:    Sonny
+# Author:    DuongTVTemPlaza
 
 # Copyright: Copyright (C) 2011-2024 TZ Portfolio.com. All Rights Reserved.
 

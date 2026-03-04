@@ -5,7 +5,7 @@
 
 # ------------------------------------------------------------------------
 
-# Author:    Sonny
+# Author:    DuongTVTemPlaza
 
 # Copyright: Copyright (C) 2011-2024 TZ Portfolio.com. All Rights Reserved.
 
@@ -37,7 +37,7 @@ if(isset($field) && $field) {
     }
 }
 
-$doc    = Factory::getDocument();
+$doc    = Factory::getApplication()->getDocument();
 
 /* @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa     = $doc->getWebAssetManager();
@@ -115,4 +115,4 @@ $wa -> addInlineScript('
                 .($submitform?'$("#'.$id.'").parents("form").first().submit()':'').'
             }
         };
-    })(jQuery, window);', ['position' => 'after'], [], ['jQuery']);
+    })(jQuery, window);', ['position' => 'after']);
