@@ -24,7 +24,6 @@
 namespace TemPlaza\Component\TZ_Portfolio\AddOn\Extrafields\Dropdownlist\Extension;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Text;
 use Joomla\CMS\Language\Text as JText;
 use Joomla\Registry\Registry;
 use Joomla\String\StringHelper;
@@ -168,9 +167,9 @@ class Dropdownlist extends ExtraFieldCommon
 
             if($params -> get('search_type', 'dropdownlist') == 'dropdownlist'
                 || $params -> get('search_type', 'dropdownlist') == 'multiselect') {
-                $firstOption = new stdClass();
+                $firstOption = new \stdClass();
 
-                $lang = Factory::getLanguage();
+                $lang = Factory::getApplication()->getLanguage();
                 $lang->load('com_tz_portfolio_plus', JPATH_SITE);
 
                 $firstOption->text = JText::sprintf('COM_TZ_PORTFOLIO_PLUS_OPTION_SELECT', $this->getTitle());
