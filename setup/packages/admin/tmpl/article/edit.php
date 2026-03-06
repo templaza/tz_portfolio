@@ -196,7 +196,6 @@ $jTab   = 'uitab';
 
             <?php echo HTMLHelper::_($jTab.'.endTab');
             // End tab general
-
             ?>
 
             <?php if($assoc && $extensionassoc){ ?>
