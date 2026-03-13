@@ -206,7 +206,7 @@ class ArticleModel extends AdminModel
             {
                 return false;
             }
-            $user = Factory::getUser();
+            $user = Factory::getApplication()->getIdentity();
 
             $state  = $user->authorise('core.delete', 'com_tz_portfolio.article.' . (int) $record->id)
                 || ($user->authorise('core.delete.own', 'com_tz_portfolio.article.' . (int) $record->id)
@@ -279,7 +279,7 @@ class ArticleModel extends AdminModel
      */
     protected function canEditState($record)
     {
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
 
         // Check for existing article.
         if (!empty($record->id))
@@ -488,7 +488,7 @@ class ArticleModel extends AdminModel
             $form->setFieldAttribute('catid', 'action', 'core.create');
         }
 
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
 
         // Check for existing article.
         // Modify the form based on Edit State access controls.
@@ -588,8 +588,8 @@ class ArticleModel extends AdminModel
                 $data->catid = $app->input->get('catid', (!empty($filters['category_id']) ? $filters['category_id'] : array()));
 //                $data->set('language', $app->input->getString('language', (!empty($filters['language']) ? $filters['language'] : null)));
                 $data->language = $app->input->getString('language', (!empty($filters['language']) ? $filters['language'] : null));
-//                $data->set('access', $app->input->getInt('access', (!empty($filters['access']) ? $filters['access'] : Factory::getConfig()->get('access'))));
-                $data->access = $app->input->getInt('access', (!empty($filters['access']) ? $filters['access'] : Factory::getConfig()->get('access')));
+//                $data->set('access', $app->input->getInt('access', (!empty($filters['access']) ? $filters['access'] : Factory::getApplication()->getConfig()->get('access'))));
+                $data->access = $app->input->getInt('access', (!empty($filters['access']) ? $filters['access'] : Factory::getApplication()->getConfig()->get('access')));
             }
         }
 
@@ -609,7 +609,7 @@ class ArticleModel extends AdminModel
      */
     public function save($data)
     {
-        $user       = Factory::getUser();
+        $user       = Factory::getApplication()->getIdentity();
         $input      = Factory::getApplication()->input;
         $filter     = InputFilter::getInstance();
 
@@ -666,7 +666,7 @@ class ArticleModel extends AdminModel
         {
             if ($data['alias'] == null)
             {
-                if (Factory::getConfig()->get('unicodeslugs') == 1)
+                if (Factory::getApplication()->getConfig()->get('unicodeslugs') == 1)
                 {
                     $data['alias'] = OutputFilter::stringURLUnicodeSlug($data['title']);
                 }
@@ -915,6 +915,7 @@ class ArticleModel extends AdminModel
                     $fieldObj   = ExtraFieldsFrontHelper::getExtraField($field, $table);
                     $defValue   = $field -> getDefaultValues();
                     $fieldValue = isset($fieldsData[$field->id]) ? $fieldsData[$field->id] : "";
+
                     if((!$fieldValue || empty($fieldValue)) && isset($defValue) && !empty($defValue)){
                         $fieldValue = $defValue;
                     }
@@ -1150,7 +1151,7 @@ class ArticleModel extends AdminModel
         if($fieldGroups = ExtraFieldsFrontHelper::getFieldGroupsByArticleId($articleId)){
             $fieldsCache    = array();
 
-            foreach($fieldGroups as $i => $fieldGroup){
+            foreach($fieldGroups as $i => $fieldGroup) {
                 $fieldGroup->fields = array();
 
                 $query -> clear();
@@ -1169,7 +1170,7 @@ class ArticleModel extends AdminModel
                 $query->where("m.groupid = " . $fieldGroup->id);
 
                 // Implement View Level Access
-                $user       = Factory::getUser();
+                $user       = Factory::getApplication()->getIdentity();
                 $viewlevels = ArrayHelper::toInteger($user->getAuthorisedViewLevels());
                 $viewlevels = implode(',', $viewlevels);
                 $subquery   = $db -> getQuery(true);
@@ -1191,7 +1192,7 @@ class ArticleModel extends AdminModel
                  * @deprecated Will be removed when TZ Portfolio Plus wasn't supported
                  */
                 $filter_addons  = glob(COM_TZ_PORTFOLIO_ADDON_PATH.'/*/*', GLOB_ONLYDIR);
-                if(!empty($filter_addons)){
+                if(!empty($filter_addons)) {
                     $filter_addons  = array_map(function($value) use($db){
                         $new_value  = basename(dirname($value));
                         $new_value .= '/'.basename($value);
@@ -1202,11 +1203,12 @@ class ArticleModel extends AdminModel
 
                 $db->setQuery($query);
                 $_fields = $db->loadObjectList();
+
                 if ($_fields)
                 {
                     foreach ($_fields AS $field)
                     {
-                        if(!in_array($field -> id, $fieldsCache)) {
+                        if (!in_array($field -> id, $fieldsCache)) {
                             $fieldObj               = ExtraFieldsFrontHelper::getExtraField($field, $articleId);
                             $fieldGroup->fields[]   = $fieldObj;
                             $fieldsCache[]          = $field->id;
@@ -1214,7 +1216,7 @@ class ArticleModel extends AdminModel
                     }
                 }
 
-                if(!count($fieldGroup -> fields)){
+                if (!count($fieldGroup -> fields)) {
                     unset($fieldGroups[$i]);
                 }
             }

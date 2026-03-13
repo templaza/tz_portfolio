@@ -157,8 +157,11 @@ class ExtraFieldCommon implements BootableExtensionInterface,
             $app    = Factory::getApplication();
             if(isset($field -> id)) {
                 $this -> id = $field->id;
+                $this -> name = $this -> formcontrol.'['.$this -> group.'][' . $this->id . ']';
+                if($this -> multiple){
+                    $this -> name   .= '[]';
+                }
             }
-
             if($field -> type) {
                 if($addon = AddonHelper::getAddOn('extrafields', $field->type)) {
                     $this->plugin_params = new Registry($addon->params);
@@ -1072,14 +1075,13 @@ class ExtraFieldCommon implements BootableExtensionInterface,
         $_value = $value;
 
         // Set default value if the field can't edit value from article
-        $user   = Factory::getUser();
+        $user   = Factory::getApplication()->getIdentity();
         if(!$user -> authorise('core.edit.value', 'com_tz_portfolio.field.'.(int) $this -> id)
             && (!$user -> authorise('core.edit.value.own', 'com_tz_portfolio.field.'.$this -> id)
                 || ($user -> authorise('core.edit.value.own', 'com_tz_portfolio.field.'.$this -> id)
                     && $this -> field -> created_by != $user -> id))){
             $_value = $this -> getDefaultValues();
         }
-
 
         $_value = $this -> prepareFieldValue($_value);
 
