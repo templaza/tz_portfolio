@@ -9,8 +9,8 @@
 # Technical Support:  Forum - http://joomla.vargas.co.cr/forum
 -------------------------------------------------------------------------*/
 
-// No direct access.
-defined('_JEXEC') or die;
+define('_JEXEC', 1);
+
 use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
 use Joomla\Database\DatabaseInterface;
@@ -25,21 +25,18 @@ if (isset($url_arr['port']) && $url_arr['port'] != '80') {
 }
 if ($_SERVER['HTTP_HOST'] != $check) die();
 
-define( 'DS', DIRECTORY_SEPARATOR );
+defined('DS') or define('DS', DIRECTORY_SEPARATOR);
 
 define('JPATH_BASE', __DIR__.DS.'..'.DS.'..'.DS.'..'.DS.'..'.DS.'..'.DS.'..' );
 
 require_once ( JPATH_BASE .DS.'includes'.DS.'defines.php' );
 require_once ( JPATH_BASE .DS.'includes'.DS.'framework.php' );
 
-jimport('joomla.database.database');
-jimport('joomla.database.table');
-
 $app = Factory::getApplication('site');
 
 $user = Factory::getApplication()->getIdentity();
 
-JLoader::import('com_tz_portfolio_plus.includes.framework',JPATH_ROOT.DS.'administrator'.DS.'components');
+require_once(JPATH_ROOT.DS.'administrator'.DS.'components'.DS.'com_tz_portfolio_plus'.DS.'includes'.DS.'framework.php');
 
 // Register TZ_Portfolio_PlusPluginHelper class
 tzportfolioplusimport('plugin.helper');
