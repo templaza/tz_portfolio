@@ -39,14 +39,8 @@ $canEdit	= $this->item->params->get('access-edit');
             <?php // Note the actions class is deprecated. Use dropdown-menu instead. ?>
             <div class="uk-dropdown">
                 <ul class="uk-nav uk-dropdown-nav actions">
-<!--                    --><?php //if ($params->get('show_print_icon', 1)) : ?>
-<!--                        <li class="print-icon"> --><?php //echo HTMLHelper::_('icon.print_popup',  $this->item, $params); ?><!-- </li>-->
-<!--                    --><?php //endif; ?>
-<!--                    --><?php //if ($params->get('show_email_icon', 1)) : ?>
-<!--                        <li class="email-icon"> --><?php //echo HTMLHelper::_('icon.email',  $this->item, $params); ?><!-- </li>-->
-<!--                    --><?php //endif; ?>
                     <?php if ($canEdit) : ?>
-                        <li class="edit-icon"> <?php echo HTMLHelper::_('icon.edit', $this->item, $params); ?> </li>
+                        <li class="edit-icon"> <?php echo HTMLHelper::_('tpicon.edit', $this->item, $params); ?> </li>
                     <?php endif; ?>
                 </ul>
             </div>
@@ -54,6 +48,6 @@ $canEdit	= $this->item->params->get('access-edit');
     <?php endif; ?>
 <?php else : ?>
     <div class="pull-right float-right">
-        <?php echo HTMLHelper::_('icon.print_screen',  $this->item, $params); ?>
+        <?php echo HTMLHelper::_('tpicon.print_screen',  $this->item, $params); ?>
     </div>
 <?php endif; ?>
