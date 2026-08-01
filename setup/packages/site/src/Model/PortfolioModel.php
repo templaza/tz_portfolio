@@ -30,7 +30,7 @@ use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Multilanguage;
-use Joomla\CMS\Menu\SiteMenu;
+use Joomla\Database\DatabaseInterface;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
@@ -71,7 +71,7 @@ class PortfolioModel extends ListModel
             $params -> set('layout_type',$global_params -> get('layout_type',array()));
         }
 
-        $user		= Factory::getUser();
+        $user		= Factory::getApplication()->getIdentity();
 
         $offset = $app -> input -> getUInt('limitstart',0);
 
@@ -128,8 +128,8 @@ class PortfolioModel extends ListModel
 
     protected function getListQuery(){
         $params = $this -> getState('params');
-        $user	= Factory::getUser();
-        $db     = Factory::getDbo();
+        $user	= Factory::getApplication()->getIdentity();
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $query  = $db -> getQuery(true);
 
         $query -> select(
@@ -302,7 +302,7 @@ class PortfolioModel extends ListModel
         if($items = parent::getItems()){
 
             $app            = Factory::getApplication();
-            $user	        = Factory::getUser();
+            $user	        = Factory::getApplication()->getIdentity();
             $userId	        = $user->get('id');
             $guest	        = $user->get('guest');
 
@@ -616,7 +616,7 @@ class PortfolioModel extends ListModel
 
         $offset = $limit * ($page - 1);
 
-        $user   = Factory::getUser();
+        $user   = Factory::getApplication()->getIdentity();
         if ((!$user->authorise('core.edit.state', 'com_tz_portfolio')) &&  (!$user->authorise('core.edit', 'com_tz_portfolio'))){
             // limit to published for people who can't edit or edit.state.
             $this->setState('filter.published', 1);
@@ -818,7 +818,7 @@ class PortfolioModel extends ListModel
             if ($tppLatestItem) {
                 $query  =   $this->getListQuery();
                 $query->where ('c.id = '.$tppLatestItem);
-                $db = Factory::getDbo();
+                $db = Factory::getContainer()->get(DatabaseInterface::class);
                 $db->setQuery($query);
                 $data   =   $db->loadObject();
                 if ($data) {

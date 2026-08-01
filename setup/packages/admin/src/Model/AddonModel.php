@@ -83,16 +83,6 @@ class AddonModel extends AdminModel implements WorkflowModelInterface
             'tz_portfolio_plus-plugin',
             'tz_portfolio_plus-addon',
             'tz_portfolio_plus-template');
-
-//        // Set the model dbo
-//        if (array_key_exists('dbo', $config))
-//        {
-//            $this->_db = $config['dbo'];
-//        }
-//        else
-//        {
-//            $this->_db = TZ_Portfolio_PlusDatabase::getDbo();
-//        }
     }
 
     public function getTable($type = 'Extensions', $prefix = 'Table', $options = array())
@@ -569,7 +559,7 @@ class AddonModel extends AdminModel implements WorkflowModelInterface
 
     public function uninstall($eid = array())
     {
-        $user   = Factory::getUser();
+        $user   = Factory::getApplication()->getIdentity();
         $app    = Factory::getApplication();
         $view   = $app -> input -> getCmd('view');
 
@@ -631,7 +621,7 @@ class AddonModel extends AdminModel implements WorkflowModelInterface
 
                 $class  = 'TemPlaza\Component\TZ_Portfolio\Administrator\Library\Adapter\\'.$_type.'Adapter';
 
-                $tzinstaller    = new $class($installer,$installer -> getDbo());
+                $tzinstaller    = new $class($installer,$installer -> getDatabase());
 
                 $result = $tzinstaller->uninstall($id);
 
@@ -798,7 +788,7 @@ class AddonModel extends AdminModel implements WorkflowModelInterface
             $lang		= Factory::getApplication() -> getLanguage();
 
             // Load the core and/or local language sys file(s) for the ordering field.
-            $db     = $this -> getDbo();
+            $db     = $this -> getDatabase();
             $query  = $db->getQuery(true)
                 ->select($db->quoteName('element'))
                 ->from($db->quoteName('#__tz_portfolio_plus_extensions'))
@@ -847,7 +837,7 @@ class AddonModel extends AdminModel implements WorkflowModelInterface
 
             if($addonId = $input -> getInt('id')){
 
-                $user       = Factory::getUser();
+                $user       = Factory::getApplication()->getIdentity();
 
                 if(!$user->authorise('core.edit', 'com_tz_portfolio.addon.'.$addonId)){
                     $form -> setFieldAttribute('folder', 'type', 'hidden');

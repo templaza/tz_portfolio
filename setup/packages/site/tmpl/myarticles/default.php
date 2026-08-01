@@ -31,22 +31,9 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Language\Associations;
 
-//HTMLHelper::addIncludePath(JPATH_COMPONENT.'/helpers/html');
-//HTMLHelper::_('behavior.multiselect');
-
 $params     = $this -> params;
 
-//$j4Compare  = COM_TZ_PORTFOLIO_JVERSION_4_COMPARE;
-
-//if(!$j4Compare) {
-//    HTMLHelper::_('formbehavior.chosen', '.multipleMediaType', null,
-//        array('placeholder_text_multiple' => Text::_('COM_TZ_PORTFOLIO_OPTION_SELECT_MEDIA_TYPE')));
-//    HTMLHelper::_('formbehavior.chosen', '.multipleCategories', null,
-//        array('placeholder_text_multiple' => Text::_('JOPTION_SELECT_CATEGORY')));
-//    HTMLHelper::_('formbehavior.chosen', 'select');
-//}
-
-$user		    = Factory::getUser();
+$user		    = Factory::getApplication()->getIdentity();
 $userId		    = $user->get('id');
 $listOrder	    = $this->escape($this->state->get('list.ordering'));
 $listDirn	    = $this->escape($this->state->get('list.direction'));
@@ -59,11 +46,7 @@ $savePriority   = $listOrder == 'a.priority';
 if ($saveOrder)
 {
 	$saveOrderingUrl = 'index.php?option=com_tz_portfolio&task='.$this -> getName().'.saveOrderAjax&tmpl=component';
-//    if($j4Compare){
-        HTMLHelper::_('draggablelist.draggable');
-//    }else {
-//        HTMLHelper::_('sortablelist.sortable', 'myArticleList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
-//    }
+    HTMLHelper::_('draggablelist.draggable');
 }
 
 $assoc		= Associations::isEnabled();
@@ -82,25 +65,10 @@ $wa -> addInlineScript('
         });
     })(jQuery, window.TZ_Portfolio);');
 
-//$this -> document -> addScriptDeclaration('(function($, TZ_Portfolio_Plus){
-//        "use strict";
-//        TZ_Portfolio_Plus.dialogAjax(["'.$this -> getName().'.approve", "'.$this -> getName().'.reject", "'
-//    .$this -> getName().'.delete"]);
-//    })(jQuery, window.TZ_Portfolio_Plus);');
-
 $menu   = Factory::getApplication() -> getMenu();
 $active = $menu -> getActive();
 $url    = 'index.php?option=com_tz_portfolio&view='.$this -> getName()
     .((isset($active -> id) && $active -> id)?'&Itemid='.$active -> id:'');
-
-//$bootstrap4 = ($params -> get('enable_bootstrap',1) && $params -> get('bootstrapversion', 4) == 4);
-
-//$bootstrapClass = '';
-//if($params -> get('enable_bootstrap',1) && $params -> get('bootstrapversion', 4) == 4){
-//    $bootstrapClass = 'tpp-bootstrap ';
-//}elseif($params -> get('enable_bootstrap',1) && $params -> get('bootstrapversion', 4) == 3){
-//    $bootstrapClass = 'tzpp_bootstrap3 ';
-//}
 ?>
 
 <div class="tp-myarticles-page <?php echo $this->pageclass_sfx;?>">
@@ -110,7 +78,7 @@ $url    = 'index.php?option=com_tz_portfolio&view='.$this -> getName()
         </h1>
     <?php endif; ?>
 
-    <form action="<?php echo JRoute::_($url);
+    <form action="<?php echo Route::_($url);
     ?>" method="post" name="adminForm" id="adminForm">
 
     <?php echo HTMLHelper::_('tzbootstrap.addrow');?>
@@ -200,7 +168,7 @@ $url    = 'index.php?option=com_tz_portfolio&view='.$this -> getName()
                                                 ||($user->authorise('core.edit.state.own', 'com_tz_portfolio.article.'
                                                 .$item->id)
                                                 && $item->created_by == $userId)) && $canCheckin;
-                            $canApprove     = TZ_Portfolio_PlusHelperACL::allowApprove($item);
+                            $canApprove     = \TemPlaza\Component\TZ_Portfolio\Administrator\Helper\ACLHelper::allowApprove($item);
                             ?>
                             <tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item -> catid;
                             ?>" data-dragable-group="<?php echo $item->catid; ?>">
@@ -218,14 +186,11 @@ $url    = 'index.php?option=com_tz_portfolio&view='.$this -> getName()
                                         ?>
                                         <?php
                                         $editIcon   = '';
-//                                        if($j4Compare){
-//                                            $editIcon = $item->checked_out ? '' : '<span class="fa fa-pencil-square mr-2" aria-hidden="true"></span>';
-//                                        }
                                         ?>
                                         <a class="title" href="<?php
-                                        echo JRoute::_('index.php?option=com_tz_portfolio&task=article.edit&a_id='
+                                        echo Route::_('index.php?option=com_tz_portfolio&task=article.edit&a_id='
                                             .$item->id.((isset($active -> id) && $active -> id)?'&Itemid='.$active -> id:'')
-                                            .'&return='.base64_encode(JRoute::_($url)));?>">
+                                            .'&return='.base64_encode(Route::_($url)));?>">
                                             <?php echo $editIcon.$this->escape($item->title); ?></a>
                                     <?php }else{ ?>
                                         <?php echo $this->escape($item->title); ?>
@@ -242,7 +207,7 @@ $url    = 'index.php?option=com_tz_portfolio&view='.$this -> getName()
                                     <div class="uk-text-small uk-text-meta">
                                         <div class="clearfix">
                                             <?php echo Text::_('COM_TZ_PORTFOLIO_MAIN_CATEGORY') . ": " ?>
-                                            <a href="<?php echo JRoute::_(
+                                            <a href="<?php echo Route::_(
                                                 'index.php?option=com_tz_portfolio&view=myarticles&catid='
                                                 .$item -> catid);?>"><?php echo $this->escape($item->category_title); ?></a>
                                         </div>
@@ -250,7 +215,7 @@ $url    = 'index.php?option=com_tz_portfolio&view='.$this -> getName()
                                         <div class="clearfix">
                                             <?php echo Text::_('COM_TZ_PORTFOLIO_SECONDARY_CATEGORY') . ": " ?>
                                             <?php foreach($item -> categories as $i => $category):?>
-                                                <a href="<?php echo JRoute::_(
+                                                <a href="<?php echo Route::_(
                                                         'index.php?option=com_tz_portfolio&view=myarticles&catid='
                                                         .$category -> id);?>"><?php echo $this->escape($category->title); ?></a>
                                                 <?php

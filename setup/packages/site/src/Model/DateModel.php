@@ -75,9 +75,9 @@ class DateModel extends ListModel
         $this->setState('category.id', $pk);
 
         $this->setState('params', $params);
-        $user		= Factory::getUser();
+        $user		= Factory::getApplication()->getIdentity();
         // Create a new query object.
-        $db		= $this->getDbo();
+        $db		= $this->getDatabase();
         $query	= $db->getQuery(true);
         $groups	= implode(',', $user->getAuthorisedViewLevels());
 
@@ -150,7 +150,7 @@ class DateModel extends ListModel
 
     function getListQuery(){
         // Create a new query object.
-        $db = $this->getDbo();
+        $db = $this->getDatabase();
         $query = $db->getQuery(true);
 
         // Select the required fields from the table.
@@ -245,7 +245,7 @@ class DateModel extends ListModel
 
         // Filter by access level.
         if ($access = $this->getState('filter.access')) {
-            $user	= Factory::getUser();
+            $user	= Factory::getApplication()->getIdentity();
             $groups	= implode(',', $user->getAuthorisedViewLevels());
             $query->where('a.access IN ('.$groups.')');
             $query->where('c.access IN ('.$groups.')');
@@ -446,7 +446,7 @@ class DateModel extends ListModel
 
     public function getItems(){
         if($items	= parent::getItems()){
-            $user	= Factory::getUser();
+            $user	= Factory::getApplication()->getIdentity();
             $userId	= $user->get('id');
             $guest	= $user->get('guest');
             $groups	= $user->getAuthorisedViewLevels();
@@ -552,7 +552,7 @@ class DateModel extends ListModel
 
             // Compute selected asset permissions.
             if (is_object($this->_item)) {
-                $user	= Factory::getUser();
+                $user	= Factory::getApplication()->getIdentity();
                 $userId	= $user->get('id');
                 $asset	= 'com_tz_portfolio.category.'.$this->_item->id;
 
@@ -584,7 +584,7 @@ class DateModel extends ListModel
     protected function _buildContentOrderBy()
     {
         $app		= Factory::getApplication('site');
-        $db			= $this->getDbo();
+        $db			= $this->getDatabase();
         $params		= $this->state->params;
         $itemid		= $app -> input -> getInt('id', 0) . ':' . $app -> input -> getInt('Itemid', 0);
         $orderCol	= $app->getUserStateFromRequest('com_tz_portfolio.category.list.' . $itemid . '.filter_order', 'filter_order', '', 'string');

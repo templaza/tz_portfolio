@@ -135,7 +135,7 @@ class HtmlView extends BaseHtmlView
 		$component	= $this->state->get('filter.component');
 		$section	= $this->state->get('filter.section');
 		$canDo		= null;
-		$user		= Factory::getUser();
+		$user		= Factory::getApplication()->getIdentity();
         $toolbar    = Toolbar::getInstance();
 
 		// Need to load the menu language file as mod_menu hasn't been loaded yet.

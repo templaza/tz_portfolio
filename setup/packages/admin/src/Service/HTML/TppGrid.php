@@ -30,6 +30,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\Helpers\JGrid;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\Database\DatabaseInterface;
 
 class TppGrid extends JGrid {
 
@@ -65,10 +66,10 @@ class TppGrid extends JGrid {
         // Special state for dates
         if ($publish_up || $publish_down)
         {
-            $nullDate = Factory::getDbo()->getNullDate();
+            $nullDate = Factory::getContainer()->get(DatabaseInterface::class)->getNullDate();
             $nowDate = Factory::getDate()->toUnix();
 
-            $tz = Factory::getUser()->getTimezone();
+            $tz = Factory::getApplication()->getIdentity()->getTimezone();
 
             $publish_up = ($publish_up != $nullDate) ? Factory::getDate($publish_up, 'UTC')->setTimeZone($tz) : false;
             $publish_down = ($publish_down != $nullDate) ? Factory::getDate($publish_down, 'UTC')->setTimeZone($tz) : false;

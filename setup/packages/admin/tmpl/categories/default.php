@@ -31,7 +31,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Language\Multilanguage;
 
-$user		= Factory::getUser();
+$user		= Factory::getApplication()->getIdentity();
 $userId		= $user->get('id');
 $extension	= $this->escape($this->state->get('filter.extension'));
 $listOrder	= $this->escape($this->state->get('list.ordering'));

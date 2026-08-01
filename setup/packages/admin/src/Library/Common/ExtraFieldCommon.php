@@ -33,6 +33,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\Database\DatabaseInterface;
 use Psr\Container\ContainerInterface;
 use Joomla\CMS\MVC\Factory\MVCFactoryServiceTrait;
 use Joomla\CMS\Extension\BootableExtensionInterface;
@@ -320,7 +321,7 @@ class ExtraFieldCommon implements BootableExtensionInterface,
 
     protected function checkValueInArticle(&$options)
     {
-        $user   = Factory::getUser();
+        $user   = Factory::getApplication()->getIdentity();
         if(!$user -> authorise('core.edit.value', 'com_tz_portfolio.field.'.(int) $this -> id)
             && (!$user -> authorise('core.edit.value.own', 'com_tz_portfolio.field.'.$this -> id)
                 || ($user -> authorise('core.edit.value.own', 'com_tz_portfolio.field.'.$this -> id)
@@ -701,7 +702,7 @@ class ExtraFieldCommon implements BootableExtensionInterface,
     {
         $value = null;
 
-        $db     = Factory::getDbo();
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $query  = $db -> getQuery(true);
         $query -> select('value');
         $query -> from('#__tz_portfolio_plus_field_content_map');
@@ -1086,7 +1087,7 @@ class ExtraFieldCommon implements BootableExtensionInterface,
         $_value = $this -> prepareFieldValue($_value);
 
         // Store field value with the article
-        $db         = Factory::getDbo();
+        $db         = Factory::getContainer()->get(DatabaseInterface::class);
         $query      = $db -> getQuery(true);
         $result     = true;
         $table_name = '#__tz_portfolio_plus_field_content_map';
@@ -1226,7 +1227,7 @@ class ExtraFieldCommon implements BootableExtensionInterface,
                 . '.fieldsid = ' . $this -> id . ')');
         }
 
-        $db     = Factory::getDbo();
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
 
         if (is_string($search))
         {

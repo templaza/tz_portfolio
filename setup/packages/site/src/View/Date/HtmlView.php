@@ -100,7 +100,7 @@ class HtmlView extends BaseHtmlView
         }
 
         // Check whether category access level allows access.
-        $user	= Factory::getUser();
+        $user	= Factory::getApplication()->getIdentity();
 
         $content_ids    = array();
         if($items) {

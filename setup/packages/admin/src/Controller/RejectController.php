@@ -45,7 +45,7 @@ class RejectController extends BaseController
 
     protected function allowReject($data = array())
     {
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
 
         return $user->authorise('core.approve', $this->option);
     }

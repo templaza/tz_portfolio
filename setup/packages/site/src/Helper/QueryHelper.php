@@ -29,6 +29,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Content Component Query Helper.
@@ -78,7 +79,7 @@ class QueryHelper
 	 */
 	public static function orderbySecondary($orderby, $orderDate = 'created', $tblprefix = 'c')
 	{
-        $db = Factory::getDbo();
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
 		$queryDate  = self::getQueryDate($orderDate, $tblprefix);
 

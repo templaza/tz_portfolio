@@ -34,6 +34,7 @@ use Joomla\Filesystem\Path;
 use Joomla\Registry\Registry;
 use Joomla\Filesystem\Folder;
 use ScssPhp\ScssPhp\Compiler;
+use Joomla\Database\DatabaseInterface;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Helper\CategoriesHelper;
 
 class TZ_PortfolioTemplate {
@@ -64,7 +65,7 @@ class TZ_PortfolioTemplate {
         $template -> layout     = null;
         $template -> paths      = array();
 
-        $db                     = Factory::getDbo();
+        $db                     = Factory::getContainer()->get(DatabaseInterface::class);
         $query                  = $db -> getQuery(true);
 
         $query -> select('COUNT(t.id)');
@@ -233,8 +234,8 @@ class TZ_PortfolioTemplate {
         if(!$table -> load($id)){
             return false;
         }
-        if($db = $table -> getDbo()){
-            $query  = $db -> getQuery();
+        if($db = $table -> getDatabase()){
+            $query  = $db -> getQuery(true);
             $db -> setQuery($query);
             $template   = $db -> loadObject();
             if(is_string($template -> params)){
@@ -305,7 +306,7 @@ class TZ_PortfolioTemplate {
             return false;
         }
 
-        $data   = $table -> getDbo() -> loadObject();
+        $data   = $table -> getDatabase() -> loadObject();
         if(isset($data -> manifest_cache) && $data -> manifest_cache && is_string($data -> manifest_cache)){
             $data -> manifest_cache    = json_decode($data -> manifest_cache);
         }
@@ -317,7 +318,7 @@ class TZ_PortfolioTemplate {
 
     protected static function getTemplateId($artId = null,$catId = null){
 
-        $db         = Factory::getDbo();
+        $db         = Factory::getContainer()->get(DatabaseInterface::class);
         $app        = Factory::getApplication('site');
         $templateId = null;
         $_catId     = null;

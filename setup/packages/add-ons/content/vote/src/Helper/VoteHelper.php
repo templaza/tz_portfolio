@@ -24,6 +24,7 @@
 namespace TemPlaza\Component\TZ_Portfolio\AddOn\Content\Vote\Helper;
 
 use Joomla\CMS\Factory;
+use Joomla\Database\DatabaseInterface;
 
 defined('_JEXEC') or die;
 
@@ -41,7 +42,7 @@ class VoteHelper{
             return self::$cache[$storeId];
         }
 
-        $db     = Factory::getDbo();
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $query  = $db -> getQuery(true);
 
         $query -> select('*');

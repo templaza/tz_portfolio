@@ -43,7 +43,7 @@ class FieldController extends FormController
 
     protected function allowAdd($data = array())
     {
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
         return ($user->authorise('core.create','com_tz_portfolio.group')
             || count($user->getAuthorisedFieldGroups('core.create')) > 0);
     }

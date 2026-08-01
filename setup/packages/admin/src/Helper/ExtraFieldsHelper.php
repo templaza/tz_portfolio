@@ -29,12 +29,13 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
 use TemPlaza\Component\TZ_Portfolio\Site\Helper\ExtraFieldsFrontHelper;
+use Joomla\Database\DatabaseInterface;
 
 class ExtraFieldsHelper{
 
     public static function getExtraFields($groupid=null,$catid=null){
         if($groupid || $catid) {
-            $db     = Factory::getDbo();
+            $db     = Factory::getContainer()->get(DatabaseInterface::class);
             $query  = $db->getQuery(true);
 
             $query -> select('f.*');
@@ -62,7 +63,7 @@ class ExtraFieldsHelper{
             }
             $query -> order('f.ordering ASC');
 
-            $db = Factory::getDbo();
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
             $db -> setQuery($query);
 
             if($rows   = $db -> loadObjectList()){
@@ -73,7 +74,7 @@ class ExtraFieldsHelper{
     }
 
     public static function getAllExtraFields(){
-        $db     = Factory::getDbo();
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $query  = $db->getQuery(true);
 
         $query -> select('f.*');
@@ -105,7 +106,7 @@ class ExtraFieldsHelper{
 
     public static function getFieldGroups($fieldid){
         if($fieldid){
-            $db     = Factory::getDbo();
+            $db     = Factory::getContainer()->get(DatabaseInterface::class);
             $query  = $db -> getQuery(true);
 
             $query -> select('groupid');
@@ -121,7 +122,7 @@ class ExtraFieldsHelper{
 
     public static function removeFieldGroups($fieldid, $groupid = null){
         if($fieldid){
-            $db     = Factory::getDbo();
+            $db     = Factory::getContainer()->get(DatabaseInterface::class);
             $query  = $db -> getQuery(true);
 
             $query -> delete($db -> quoteName('#__tz_portfolio_plus_field_fieldgroup_map'));
@@ -147,7 +148,7 @@ class ExtraFieldsHelper{
 
     public static function insertFieldGroups($fieldid, $groupid){
         if($fieldid && $groupid){
-            $db         = Factory::getDbo();
+            $db         = Factory::getContainer()->get(DatabaseInterface::class);
             $_groupid   = $groupid;
             $_dbGroupid = null;
 

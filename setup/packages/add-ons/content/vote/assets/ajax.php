@@ -9,12 +9,11 @@
 # Technical Support:  Forum - http://joomla.vargas.co.cr/forum
 -------------------------------------------------------------------------*/
 
-// Set flag that this is a parent file
 define('_JEXEC', 1);
 
-// No direct access.
-defined('_JEXEC') or die;
-
+use Joomla\CMS\Factory;
+use Joomla\Registry\Registry;
+use Joomla\Database\DatabaseInterface;
 if (!isset($_SERVER['HTTP_REFERER'])) die();
 $refer = $_SERVER['HTTP_REFERER'];
 $url_arr = parse_url($refer);
@@ -26,29 +25,25 @@ if (isset($url_arr['port']) && $url_arr['port'] != '80') {
 }
 if ($_SERVER['HTTP_HOST'] != $check) die();
 
-define( 'DS', DIRECTORY_SEPARATOR );
+defined('DS') or define('DS', DIRECTORY_SEPARATOR);
 
 define('JPATH_BASE', __DIR__.DS.'..'.DS.'..'.DS.'..'.DS.'..'.DS.'..'.DS.'..' );
 
 require_once ( JPATH_BASE .DS.'includes'.DS.'defines.php' );
 require_once ( JPATH_BASE .DS.'includes'.DS.'framework.php' );
 
-jimport('joomla.database.database');
-jimport('joomla.database.table');
+$app = Factory::getApplication('site');
 
-$app = JFactory::getApplication('site');
-$app->initialise();
+$user = Factory::getApplication()->getIdentity();
 
-$user = JFactory::getUser();
-
-JLoader::import('com_tz_portfolio_plus.includes.framework',JPATH_ADMINISTRATOR.'/components');
+require_once(JPATH_ROOT.DS.'administrator'.DS.'components'.DS.'com_tz_portfolio_plus'.DS.'includes'.DS.'framework.php');
 
 // Register TZ_Portfolio_PlusPluginHelper class
 tzportfolioplusimport('plugin.helper');
 
-$plugin	= TZ_Portfolio_PlusPluginHelper::getPlugin('content', 'vote');
+$plugin	= \TemPlaza\Component\TZ_Portfolio\Administrator\Library\Helper\AddonHelper::getPlugin('content', 'vote');
 
-$params = new JRegistry;
+$params = new Registry;
 $params->loadString($plugin->params);
 
 if ( $params->get('access') == 1 && !$user->get('id') ) {
@@ -56,7 +51,7 @@ if ( $params->get('access') == 1 && !$user->get('id') ) {
 } else {
 	$user_rating = $app -> input -> getInt('user_rating');
 	$cid = $app -> input -> getInt('cid');
-	$db  = JFactory::getDbo();
+	$db  = Factory::getContainer()->get(DatabaseInterface::class);
 	if ($user_rating >= 1 && $user_rating <= 5) {
 		$currip = $_SERVER['REMOTE_ADDR'];
 		$query	= $db -> getQuery(true);

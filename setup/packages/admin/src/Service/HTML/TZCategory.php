@@ -31,6 +31,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\Utilities\ArrayHelper;
+use Joomla\Database\DatabaseInterface;
 
 /**
  * Utility class for categories
@@ -78,7 +79,7 @@ class TZCategory
         if (!isset(static::$items[$hash]))
         {
             $config = (array) $config;
-            $db     = Factory::getDbo();
+            $db     = Factory::getContainer()->get(DatabaseInterface::class);
             $query  = $db->getQuery(true)
                 ->select('a.id, a.title, a.level')
                 ->from('#__tz_portfolio_plus_categories AS a')
@@ -164,8 +165,7 @@ class TZCategory
         if (!isset(static::$items[$hash]))
         {
             $config = (array) $config;
-//            $db     = TZ_Portfolio_PlusDatabase::getDbo();
-            $db     = Factory::getDbo();
+            $db     = Factory::getContainer()->get(DatabaseInterface::class);
             $query  = $db->getQuery(true)
                 ->select('a.id, a.title, a.level, a.parent_id')
                 ->from('#__tz_portfolio_plus_categories AS a')

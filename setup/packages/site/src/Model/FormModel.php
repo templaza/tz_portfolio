@@ -130,7 +130,7 @@ class FormModel extends \TemPlaza\Component\TZ_Portfolio\Administrator\Model\Art
         }
 
         // Compute selected asset permissions.
-        $user   = Factory::getUser();
+        $user   = Factory::getApplication()->getIdentity();
         $userId = $user->get('id');
         $asset  = 'com_tz_portfolio.article.' . $value->id;
 

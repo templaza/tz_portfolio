@@ -28,6 +28,7 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\Registry\Registry;
+use Joomla\Database\DatabaseInterface;
 
 class CategoriesHelper
 {
@@ -37,7 +38,7 @@ class CategoriesHelper
     {
         $associations = array();
         try{
-            $db = Factory::getDbo();
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
 
             $query = $db->getQuery(true)
                 ->from('#__tz_portfolio_plus_categories as c')
@@ -82,7 +83,7 @@ class CategoriesHelper
 			}
 
 			if(!isset(self::$cache[$storeId])){
-                $db = Factory::getDbo();
+                $db = Factory::getContainer()->get(DatabaseInterface::class);
 				$query  =  $db -> getQuery(true);
 				$query  -> select('*');
 				$query  -> from('#__tz_portfolio_plus_categories');
@@ -130,7 +131,7 @@ class CategoriesHelper
 			}
 
 			if(!isset(self::$cache[$storeId])){
-                $db = Factory::getDbo();
+                $db = Factory::getContainer()->get(DatabaseInterface::class);
 				$query  =  $db -> getQuery(true);
 				$query  -> select('c.*');
 				$query  -> from('#__tz_portfolio_plus_categories AS c');
@@ -184,7 +185,7 @@ class CategoriesHelper
 		if($articleId){
 			if(!isset(self::$cache[$storeId])){
 				if($articleId){
-                    $db = Factory::getDbo();
+                    $db = Factory::getContainer()->get(DatabaseInterface::class);
 					$query	= $db -> getQuery(true);
 					$query -> select('c.*');
 					$query -> from('#__tz_portfolio_plus_categories AS c');
@@ -231,7 +232,7 @@ class CategoriesHelper
 		$storeId	= md5($storeId);
 
 		if(!isset(self::$cache[$storeId])) {
-            $db = Factory::getDbo();
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
 			$query = $db->getQuery(true);
 			$query -> select('c.*');
 			$query -> from('#__tz_portfolio_plus_categories AS c');

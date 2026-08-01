@@ -39,7 +39,7 @@ class ContentRejectedTable extends Table
     public function store($updateNulls = false)
     {
         $date = Factory::getDate();
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
 
 //        if (!$this->created)
 //        {

@@ -125,7 +125,7 @@ class StyleModel extends AddonModel
                     }
                     if(isset($config -> layout) && $config -> layout) {
                         // Store layout
-                        $db     = $this -> getDbo();
+                        $db     = $this -> getDatabase();
                         $query  = $db -> getQuery(true);
                         $query -> update('#__tz_portfolio_plus_templates');
                         $query -> set('layout='.$db -> quote($config->layout));
@@ -147,7 +147,7 @@ class StyleModel extends AddonModel
     }
 
     public function getTemplateStyle($template){
-        $db     = $this -> getDbo();
+        $db     = $this -> getDatabase();
         $query  = $db -> getQuery(true);
         $query -> select('*');
         $query -> from($db -> quoteName('#__tz_portfolio_plus_templates'));
@@ -269,7 +269,7 @@ class StyleModel extends AddonModel
     {
         if (!empty($record->id))
         {
-            $user = Factory::getUser();
+            $user = Factory::getApplication()->getIdentity();
 
             if(isset($record -> asset_id) && !empty($record -> asset_id)) {
                 $state = $user->authorise('core.delete', $this->option . '.template.' . (int)$record->id);
@@ -284,7 +284,7 @@ class StyleModel extends AddonModel
 
     protected function canEditState($record)
     {
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
 
         // Check for existing group.
         if (!empty($record->id))

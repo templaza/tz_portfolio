@@ -37,13 +37,7 @@ use Joomla\CMS\MVC\Model\ItemModel;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
-use Joomla\Utilities\ArrayHelper;
-use Joomla\CMS\MVC\Model\ListModel;
-use TemPlaza\Component\TZ_Portfolio\Site\Helper\CategoriesHelper;
-use TemPlaza\Component\TZ_Portfolio\Site\Helper\ExtraFieldsFrontHelper;
-use TemPlaza\Component\TZ_Portfolio\Site\Helper\QueryHelper;
-use TemPlaza\Component\TZ_Portfolio\Site\Helper\RouteHelper;
-use TemPlaza\Component\TZ_Portfolio\Site\Helper\TagHelper;
+use Joomla\Database\DatabaseInterface;
 
 class ArticleModel extends ItemModel
 {
@@ -80,7 +74,7 @@ class ArticleModel extends ItemModel
         $this->setState('params', $params);
 
         // TODO: Tune these values based on other permissions.
-        $user		= Factory::getUser();
+        $user		= Factory::getApplication()->getIdentity();
         if ((!$user->authorise('core.edit.state', 'com_tz_portfolio'))
             &&  (!$user->authorise('core.edit', 'com_tz_portfolio'))){
             $this->setState('filter.published', 1);
@@ -120,7 +114,7 @@ class ArticleModel extends ItemModel
                         break;
                 }
 
-                $db     = Factory::getDbo();
+                $db     = Factory::getContainer()->get(DatabaseInterface::class);
                 $query  = $db -> getQuery(true);
                 $query -> select('DISTINCT c.*, cc.id AS catid,CASE WHEN CHAR_LENGTH(c.alias) THEN CONCAT_WS(":", c.id, c.alias) ELSE c.id END as slug');
                 $query -> select('CASE WHEN CHAR_LENGTH(cc.alias) THEN CONCAT_WS(":", cc.id, cc.alias) ELSE cc.id END as catslug');
@@ -198,7 +192,7 @@ class ArticleModel extends ItemModel
         if (!isset($this->_item[$pk])) {
 
             try {
-                $db = $this->getDbo();
+                $db = $this->getDatabase();
                 $query = $db->getQuery(true);
 
                 $query->select($this->getState(
@@ -328,7 +322,7 @@ class ArticleModel extends ItemModel
                 $data -> media      = $media;
 
                 // Compute selected asset permissions.
-                $user	= Factory::getUser();
+                $user	= Factory::getApplication()->getIdentity();
 
                 // Technically guest could edit an article, but lets not check that to improve performance a little.
                 if (!$user->get('guest')) {
@@ -355,7 +349,7 @@ class ArticleModel extends ItemModel
                 }
                 else {
                     // If no access filter is set, the layout takes some responsibility for display of limited information.
-                    $user = Factory::getUser();
+                    $user = Factory::getApplication()->getIdentity();
                     $groups = $user->getAuthorisedViewLevels();
 
                     if ($data->catid == 0 || $data->category_access === null) {
@@ -419,7 +413,7 @@ class ArticleModel extends ItemModel
         {
             // Initialise variables.
             $pk = (!empty($pk)) ? $pk : (int) $this->getState('article.id');
-            $db = $this->getDbo();
+            $db = $this->getDatabase();
 
             $db->setQuery(
                 'UPDATE #__tz_portfolio_plus_content' .

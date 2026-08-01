@@ -121,7 +121,7 @@ class Textarea extends ExtraFieldCommon
                 if ($editor && $editor != 'none')
                 {
                     $groupsCanUseFrontendEditor = (array) $this->params->get('groups_can_use_frontend_editor', array());
-                    $user                       = Factory::getUser();
+                    $user                       = Factory::getApplication()->getIdentity();
                     $userGroups                 = $user->getAuthorisedViewLevels();
                     if (!count(array_intersect($userGroups, $groupsCanUseFrontendEditor)) > 0)
                     {

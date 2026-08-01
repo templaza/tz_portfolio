@@ -36,7 +36,7 @@ $params		= $item->params;
 $images     = json_decode($item->images);
 $urls       = json_decode($item->urls);
 $canEdit	= $item->params->get('access-edit');
-$user		= Factory::getUser();
+$user		= Factory::getApplication()->getIdentity();
 $doc        = Factory::getDocument();
 
 ?>

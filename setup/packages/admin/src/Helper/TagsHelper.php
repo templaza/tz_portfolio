@@ -30,6 +30,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Filter\OutputFilter;
 use Joomla\CMS\Table\Table;
 use Joomla\Utilities\ArrayHelper;
+use Joomla\Database\DatabaseInterface;
 
 class TagsHelper{
 
@@ -54,7 +55,7 @@ class TagsHelper{
             return false;
         }
 
-        $db     = Factory::getDbo();
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $query  = $db -> getQuery(true);
         
         $query -> select('t.*');
@@ -92,7 +93,7 @@ class TagsHelper{
             return false;
         }
 
-        $db     = Factory::getDbo();
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $query  = $db -> getQuery(true);
 
         $query -> select('*');
@@ -129,7 +130,7 @@ class TagsHelper{
             return false;
         }
 
-        $db     = Factory::getDbo();
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
 
         $query  = $db -> getQuery(true);
         $query -> select('*');
@@ -158,7 +159,7 @@ class TagsHelper{
 
         if($articleId) {
             // Delete old article's tag
-            $db     = Factory::getDbo();
+            $db     = Factory::getContainer()->get(DatabaseInterface::class);
             $query  = $db -> getQuery(true);
 
             if(!$tagTitles || ($tagTitles && !count($tagTitles))) {
@@ -246,7 +247,7 @@ class TagsHelper{
         }
 
         if($keys && count($keys)){
-            $db     = Factory::getDbo();
+            $db     = Factory::getContainer()->get(DatabaseInterface::class);
             $query  = $db -> getQuery(true);
             foreach($keys as $key => $value) {
                 $query -> select($key);
@@ -285,7 +286,7 @@ class TagsHelper{
             return self::$cache[$storeId];
         }
 
-        $db     = Factory::getDbo();
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
             ->select('id AS value')
             ->select('title AS text')
@@ -328,7 +329,7 @@ class TagsHelper{
     protected static function _insertTagsByTitle($titles){
         if($titles && is_array($titles) && count($titles)>0){
             try {
-                $db = Factory::getDbo();
+                $db = Factory::getContainer()->get(DatabaseInterface::class);
                 $query = $db->getQuery(true);
 
                 $query->insert('#__tz_portfolio_plus_tags');

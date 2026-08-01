@@ -27,6 +27,7 @@ namespace TemPlaza\Component\TZ_Portfolio\Administrator\Helper;
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\Database\DatabaseInterface;
 
 class AddonsHelper{
     protected static $cache = array();
@@ -40,7 +41,7 @@ class AddonsHelper{
             return self::$cache[$storeId];
         }
 
-        $db = Factory::getDbo();
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         $query = $db->getQuery(true)
             ->select('DISTINCT(folder) AS value, folder AS text')
@@ -73,7 +74,7 @@ class AddonsHelper{
             return self::$cache[$storeId];
         }
 
-        $db     = Factory::getDbo();
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $query  = $db -> getQuery(true);
         $query -> select('e.*');
         $query -> from($db -> quoteName('#__tz_portfolio_plus_extensions').' AS e');
@@ -119,7 +120,7 @@ class AddonsHelper{
             return self::$cache[$storeId];
         }
 
-        $db     = Factory::getDbo();
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $query  = $db -> getQuery(true);
         $query -> select('COUNT(e.id)');
         $query -> from($db -> quoteName('#__tz_portfolio_plus_extensions').' AS e');

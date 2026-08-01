@@ -77,7 +77,7 @@ class HtmlView extends BaseHtmlView
         $params = $this -> state -> get('params');
 
 
-//        $user   = JFactory::getUser();
+//        $user   = JFactory::getApplication()->getIdentity();
 //        $app    = JFactory::getApplication();
 //
 //        $filterPublished    = $this -> state -> get('filter.published');

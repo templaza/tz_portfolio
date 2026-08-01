@@ -26,6 +26,7 @@ namespace TemPlaza\Component\TZ_Portfolio\Administrator\Controller;
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Input\Input;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Language\Text;
@@ -85,7 +86,7 @@ class ArticleController extends FormController
     protected function allowAdd($data = array())
     {
         // Initialise variables.
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
         $categoryId = ArrayHelper::getValue($data, 'catid', $this -> input -> getInt('filter_category_id'), 'int');
         $allow = null;
 
@@ -138,7 +139,7 @@ class ArticleController extends FormController
     protected function allowEdit($data = array(), $key = 'id')
     {
         $recordId = (int) isset($data[$key]) ? $data[$key] : 0;
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
 
         // Zero record (id:0), return component edit permission by calling parent controller method
         if (!$recordId)
@@ -235,7 +236,7 @@ class ArticleController extends FormController
         if($edit && $this -> allowApprove()){
             // Set state is under review (state = 4) if the article is pending (state = 3).
             if($table -> load($recordId) && $table -> state == 3){
-                $db     = Factory::getDbo();
+                $db     = Factory::getContainer()->get(DatabaseInterface::class);
                 $query  = $db -> getQuery(true);
                 $query -> update($table -> getTableName());
                 $query -> set('state = 4');

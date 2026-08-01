@@ -27,6 +27,7 @@ namespace TemPlaza\Component\TZ_Portfolio\Administrator\Helper;
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\Database\DatabaseInterface;
 
 class StylesHelper{
 
@@ -37,7 +38,7 @@ class StylesHelper{
     public static function getTemplateOptions()
     {
         // Build the filter options.
-        $db     = Factory::getDbo();
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $query  = $db->getQuery(true);
 
         $query->select('element as value, name as text, id as e_id')
@@ -60,7 +61,7 @@ class StylesHelper{
             return self::$cache[$storeId];
         }
 
-        $db     = Factory::getDbo();
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $query  = $db -> getQuery(true);
         $query -> select('e.*');
         $query -> from($db -> quoteName('#__tz_portfolio_plus_extensions').' AS e');
@@ -97,7 +98,7 @@ class StylesHelper{
     }
 
     public static function getTotal($options = array()){
-        $db     = Factory::getDbo();
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $query  = $db -> getQuery(true);
         $query -> select('COUNT(e.id)');
         $query -> from($db -> quoteName('#__tz_portfolio_plus_extensions').' AS e');

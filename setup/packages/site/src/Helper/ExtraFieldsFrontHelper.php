@@ -30,7 +30,7 @@ use Joomla\CMS\Extension\PluginInterface;
 use Joomla\CMS\Factory;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Folder;
-use Joomla\Registry\Registry;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Utilities\ArrayHelper;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Library\Common\ExtraFieldCommon;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Library\Helper\AddonHelper;
@@ -182,7 +182,7 @@ class ExtraFieldsFrontHelper{
         $storeId = md5(__METHOD__ . "::" . (int) $fieldGroupId);
         if (!isset(self::$cache[$storeId]))
         {
-            $db    = Factory::getDbo();
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true);
 
             $query -> select('*');
@@ -194,7 +194,7 @@ class ExtraFieldsFrontHelper{
             }
             $query -> where('published = 1');
 
-            $user       = Factory::getUser();
+            $user       = Factory::getApplication()->getIdentity();
             $viewlevels = ArrayHelper::toInteger($user->getAuthorisedViewLevels());
 
             $query -> where('access IN (' . implode(',', $viewlevels) . ')');
@@ -213,7 +213,7 @@ class ExtraFieldsFrontHelper{
         if (!isset(self::$cache[$storeId]))
         {
             if($articleId) {
-                $db = Factory::getDbo();
+                $db = Factory::getContainer()->get(DatabaseInterface::class);
                 $query = $db->getQuery(true);
                 $subquery = $db->getQuery(true);
 
@@ -234,7 +234,7 @@ class ExtraFieldsFrontHelper{
                 $query->where('id IN(' . $subquery . ')');
 
                 // Implement View Level Access
-                $user       = Factory::getUser();
+                $user       = Factory::getApplication()->getIdentity();
                 $viewlevels = ArrayHelper::toInteger($user->getAuthorisedViewLevels());
 
                 $query -> where('access IN (' . implode(',', $viewlevels) . ')');
@@ -255,7 +255,7 @@ class ExtraFieldsFrontHelper{
         if (!isset(self::$cache[$storeId]))
         {
             if($catId) {
-                $db     = Factory::getDbo();
+                $db     = Factory::getContainer()->get(DatabaseInterface::class);
                 $query  = $db->getQuery(true);
 
                 $query -> select('g.*, c.id AS catid, c.title AS category_title');
@@ -270,7 +270,7 @@ class ExtraFieldsFrontHelper{
                 $query -> where('c.published = 1');
 
                 // Implement View Level Access
-                $user       = Factory::getUser();
+                $user       = Factory::getApplication()->getIdentity();
                 $viewlevels = ArrayHelper::toInteger($user->getAuthorisedViewLevels());
 
                 $query -> where('access IN (' . implode(',', $viewlevels) . ')');
@@ -332,7 +332,7 @@ class ExtraFieldsFrontHelper{
         {
             if (!is_object($fieldObj))
             {
-                $db    = Factory::getDbo();
+                $db    = Factory::getContainer()->get(DatabaseInterface::class);
                 $query = $db->getQuery(true);
                 $query->select('field.*, fg.id AS groupid')
                     ->from('#__tz_portfolio_plus_fields AS field');
@@ -364,7 +364,7 @@ class ExtraFieldsFrontHelper{
                 }
 
                 // Implement View Level Access
-                $user       = Factory::getUser();
+                $user       = Factory::getApplication()->getIdentity();
                 $viewlevels = ArrayHelper::toInteger($user->getAuthorisedViewLevels());
                 $viewlevels = implode(',', $viewlevels);
                 $subquery   = $db -> getQuery(true);
@@ -401,7 +401,7 @@ class ExtraFieldsFrontHelper{
             }
             if (!isset(self::$cache[$storeId])) {
                 if($groupid){
-                    $db     = Factory::getDbo();;
+                    $db     = Factory::getContainer()->get(DatabaseInterface::class);;
                     $query  = $db->getQuery(true);
 
                     $query -> select('f.*');
@@ -436,7 +436,7 @@ class ExtraFieldsFrontHelper{
                     }
 
                     // Implement View Level Access
-                    $user       = Factory::getUser();
+                    $user       = Factory::getApplication()->getIdentity();
                     $viewlevels = ArrayHelper::toInteger($user->getAuthorisedViewLevels());
                     $viewlevels = implode(',', $viewlevels);
                     $subquery   = $db -> getQuery(true);
@@ -477,7 +477,7 @@ class ExtraFieldsFrontHelper{
         $storeId    .= '::'.$article -> id;
         $storeId    .= json_encode($options);
 
-        $user       = Factory::getUser();
+        $user       = Factory::getApplication()->getIdentity();
         $viewlevels = ArrayHelper::toInteger($user->getAuthorisedViewLevels());
         $viewlevels = implode(',', $viewlevels);
 
@@ -488,7 +488,7 @@ class ExtraFieldsFrontHelper{
         $storeId    = md5($storeId);
 
         if(!isset(self::$cache[$storeId])){
-            $db         = Factory::getDbo();;
+            $db         = Factory::getContainer()->get(DatabaseInterface::class);;
             $query      = $db -> getQuery(true);
 
             $query -> select('f.*, fm.groupid');
@@ -613,7 +613,7 @@ class ExtraFieldsFrontHelper{
         {
             if (!is_object($fieldObj))
             {
-                $db    = Factory::getDbo();;
+                $db    = Factory::getContainer()->get(DatabaseInterface::class);;
                 $query = $db->getQuery(true);
                 $query->select('field.*, fg.id AS groupid')
                     ->from('#__tz_portfolio_plus_fields AS field');
@@ -647,7 +647,7 @@ class ExtraFieldsFrontHelper{
                 }
 
                 // Implement View Level Access
-                $user       = Factory::getUser();
+                $user       = Factory::getApplication()->getIdentity();
                 $viewlevels = ArrayHelper::toInteger($user->getAuthorisedViewLevels());
                 $viewlevels = implode(',', $viewlevels);
                 $subquery   = $db -> getQuery(true);
@@ -716,7 +716,7 @@ class ExtraFieldsFrontHelper{
         if (!isset(self::$cache[$storeId]))
         {
             $app      = Factory::getApplication();
-            $db     = Factory::getDbo();
+            $db     = Factory::getContainer()->get(DatabaseInterface::class);
 
             $query    = $db->getQuery(true);
             $query->select('e.folder, f.*, fg.name AS field_group_name, fg.id AS groupid');
@@ -771,7 +771,7 @@ class ExtraFieldsFrontHelper{
             }
 
             // Implement View Level Access
-            $user       = Factory::getUser();
+            $user       = Factory::getApplication()->getIdentity();
             $viewlevels = ArrayHelper::toInteger($user->getAuthorisedViewLevels());
             $viewlevels = implode(',', $viewlevels);
             $subquery   = $db -> getQuery(true);

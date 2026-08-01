@@ -197,9 +197,9 @@ class ArticlesModel extends ListModel
     protected function getListQuery()
     {
         // Create a new query object.
-        $db		= $this->getDbo();
+        $db		= $this->getDatabase();
         $query	= $db->getQuery(true);
-        $user	= Factory::getUser();
+        $user	= Factory::getApplication()->getIdentity();
 
         // Select the required fields from the table.
         $query->select(
@@ -400,7 +400,7 @@ class ArticlesModel extends ListModel
      */
     public function getAuthors() {
         // Create a new query object.
-        $db = $this->getDbo();
+        $db = $this->getDatabase();
         $query = $db->getQuery(true);
 
         // Construct the query
@@ -419,7 +419,7 @@ class ArticlesModel extends ListModel
 
     public function getGroupQuery($catid){
         // Create a new query object.
-        $db		= $this->getDbo();
+        $db		= $this->getDatabase();
         $query	= $db->getQuery(true);
 
         $query -> select('g.*');
@@ -435,7 +435,7 @@ class ArticlesModel extends ListModel
 
     function checkGroups($contentid){
         // Create a new query object.
-        $db		= $this->getDbo();
+        $db		= $this->getDatabase();
         $query	= $db->getQuery(true);
 
         $query -> select('xc.*');
@@ -472,7 +472,7 @@ class ArticlesModel extends ListModel
         $data   = array();
 
         if ($app->isClient('site')) {
-            $user	= Factory::getUser();
+            $user	= Factory::getApplication()->getIdentity();
             $groups	= $user->getAuthorisedViewLevels();
 
             for ($x = 0, $count = count($items); $x < $count; $x++) {

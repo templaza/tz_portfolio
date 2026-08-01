@@ -241,7 +241,7 @@ $url    = 'index.php?option=com_tz_portfolio&view='.$this -> getName()
         ?>
 
         <?php
-        $user       = Factory::getUser();
+        $user       = Factory::getApplication()->getIdentity();
         $canApprove = $user -> authorise('core.approve', 'com_tz_portfolio');
         $saveText   = Text::_('JSAVE');
         if(!$canApprove){

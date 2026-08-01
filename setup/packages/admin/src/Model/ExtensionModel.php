@@ -185,7 +185,7 @@ class ExtensionModel extends AddonModel
     {
         if (!empty($record->id))
         {
-            $user = Factory::getUser();
+            $user = Factory::getApplication()->getIdentity();
 
             if(isset($record -> asset_id) && !empty($record -> asset_id)) {
                 $state = $user->authorise('core.delete', $this->option . '.template.' . (int)$record->id);
@@ -200,7 +200,7 @@ class ExtensionModel extends AddonModel
 
     protected function canEditState($record)
     {
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
 
         // Check for existing group.
         if (!empty($record->id))

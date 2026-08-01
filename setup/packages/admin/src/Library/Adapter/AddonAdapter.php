@@ -232,7 +232,7 @@ class AddonAdapter extends PluginAdapter
 
         // If we are told to delete existing extension entries then do so.
         if ($deleteExisting) {
-            $db = $this->parent->getDbo();
+            $db = $this->parent->getDatabase();
 
             $query = $db->getQuery(true)
                 ->select($db->quoteName('id'))
@@ -314,7 +314,7 @@ class AddonAdapter extends PluginAdapter
 
         $row = null;
         $retval = true;
-        $db = $this->parent->getDbo();
+        $db = $this->parent->getDatabase();
 
         // First order of business will be to load the plugin object table from the database.
         // This should give us the necessary information to proceed.

@@ -27,6 +27,7 @@ namespace TemPlaza\Component\TZ_Portfolio\Administrator\Helper;
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Utilities\ArrayHelper;
 
 class GroupsHelper{
@@ -45,9 +46,9 @@ class GroupsHelper{
 
         if(!isset(self::$cache[$storeId])){
 
-            $user       = Factory::getUser();
+            $user       = Factory::getApplication()->getIdentity();
             $viewlevels = ArrayHelper::toInteger($user->getAuthorisedViewLevels());
-            $db         = Factory::getDbo();
+            $db         = Factory::getContainer()->get(DatabaseInterface::class);
             $query      = $db -> getQuery(true);
 
             $query -> select('*');

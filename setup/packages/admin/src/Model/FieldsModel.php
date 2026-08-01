@@ -112,7 +112,7 @@ class FieldsModel extends ListModel
         $db     = $this -> getDatabase();
         /* @var Joomla\Database\Mysqli\MysqliQuery $query */
         $query  = $db -> getQuery(true);
-        $user   = Factory::getUser();
+        $user   = Factory::getApplication()->getIdentity();
 
         $query->select(
             $this->getState(

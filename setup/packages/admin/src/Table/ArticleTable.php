@@ -514,16 +514,6 @@ class ArticleTable extends Table
      */
     protected function getDefaultAssetValues($component)
     {
-//        // Need to find the asset id by the name of the component.
-//        $db = TZ_Portfolio_PlusDatabase::getDbo();
-//        $query = $db->getQuery(true)
-//            ->select($db->quoteName('id'))
-//            ->from($db->quoteName('#__assets'))
-//            ->where($db->quoteName('name') . ' = ' . $db->quote($component));
-//        $db->setQuery($query);
-//        $assetId = (int) $db->loadResult();
-//
-//        return JAccess::getAssetRules($assetId);
         return '{}';
     }
 
@@ -539,7 +529,7 @@ class ArticleTable extends Table
     public function store($updateNulls = false)
     {
         $date = Factory::getDate();
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
 
         // Set publish_up to null date if not set
         if (!$this->publish_up)
@@ -605,8 +595,8 @@ class ArticleTable extends Table
         }
 
         // Verify that the alias is unique
-        $table  = self::getInstance('ArticleTable', 'TemPlaza\Component\TZ_Portfolio\Administrator\Table\\', array('dbo' => $this->getDbo()));
-        $tblMap = self::getInstance('ContentCategoryMapTable', 'TemPlaza\Component\TZ_Portfolio\Administrator\Table\\', array('dbo' => $this->getDbo()));
+        $table  = self::getInstance('ArticleTable', 'TemPlaza\Component\TZ_Portfolio\Administrator\Table\\', array('dbo' => $this->getDatabase()));
+        $tblMap = self::getInstance('ContentCategoryMapTable', 'TemPlaza\Component\TZ_Portfolio\Administrator\Table\\', array('dbo' => $this->getDatabase()));
 
         $catid  = 0;
         if($tblMap -> load(array('contentid' => $this -> id, 'main' => 1))){

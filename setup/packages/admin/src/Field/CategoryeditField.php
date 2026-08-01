@@ -30,6 +30,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Form\Field\ListField;
+use Joomla\Database\DatabaseInterface;
 
 class CategoryeditField extends ListField
 {
@@ -76,7 +77,7 @@ class CategoryeditField extends ListField
 			$extension = $this->element['extension'] ? (string) $this->element['extension'] : (string) $jinput->get('option', 'com_tz_portfolio');
 		}
 
-		$db     = Factory::getDbo();
+		$db     = Factory::getContainer()->get(DatabaseInterface::class);
 		$query  = $db->getQuery(true)
 			->select('DISTINCT a.id AS value, a.title AS text, a.level, a.published, a.lft');
 		$subQuery = $db->getQuery(true)
@@ -175,7 +176,7 @@ class CategoryeditField extends ListField
 		}
 
 		// Get the current user object.
-		$user = Factory::getUser();
+		$user = Factory::getApplication()->getIdentity();
 
 		// For new items we want a list of categories you are allowed to create in.
 		if ($oldCat == 0)

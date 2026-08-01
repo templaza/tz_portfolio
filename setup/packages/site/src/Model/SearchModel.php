@@ -31,19 +31,12 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Menu\SiteMenu;
-use Joomla\CMS\Plugin\PluginHelper;
-use Joomla\CMS\Router\Route;
-use Joomla\CMS\Uri\Uri;
-use Joomla\Registry\Registry;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\MVC\Model\ListModel;
-use TemPlaza\Component\TZ_Portfolio\Administrator\Library\Helper\AddonHelper;
 use TemPlaza\Component\TZ_Portfolio\Site\Helper\CategoriesHelper;
 use TemPlaza\Component\TZ_Portfolio\Site\Helper\ExtraFieldsFrontHelper;
 use TemPlaza\Component\TZ_Portfolio\Site\Helper\QueryHelper;
-use TemPlaza\Component\TZ_Portfolio\Site\Helper\RouteHelper;
-use TemPlaza\Component\TZ_Portfolio\Site\Helper\TagHelper;
 
 class SearchModel extends ListModel
 {
@@ -68,7 +61,7 @@ class SearchModel extends ListModel
             $params -> set('layout_type',$global_params -> get('layout_type',array()));
         }
 
-        $user		= Factory::getUser();
+        $user		= Factory::getApplication()->getIdentity();
 
         $offset = $app -> input -> getUInt('limitstart',0);
 
@@ -120,12 +113,12 @@ class SearchModel extends ListModel
     protected function getListQuery(){
         $params = $this -> getState('params');
 
-        $user		= Factory::getUser();
+        $user		= Factory::getApplication()->getIdentity();
 
         $app        = Factory::getApplication();
         $input      = $app -> input;
 
-        $db         = Factory::getDbo();
+        $db         = Factory::getContainer()->get(DatabaseInterface::class);
         $query      = $db -> getQuery(true);
 
         $catid      = $this -> getState('filter.category_id');
@@ -262,7 +255,7 @@ class SearchModel extends ListModel
         $params = $this -> getState('params');
         if($params -> get('use_filter_first_letter',1)){
             if($letters = $params -> get('tz_letters','a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z')){
-                $db = Factory::getDbo();
+                $db = Factory::getContainer()->get(DatabaseInterface::class);
                 $letters = explode(',',$letters);
                 $arr    = null;
                 if($catids = $params -> get('catid')){

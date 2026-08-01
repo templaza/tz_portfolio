@@ -25,7 +25,7 @@ namespace TemPlaza\Component\TZ_Portfolio\Site\Helper;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Router\Route;
-use Joomla\Registry\Registry;
+use Joomla\Database\DatabaseInterface;
 
 class CategoriesHelper{
     protected static $cache = array();
@@ -45,7 +45,7 @@ class CategoriesHelper{
             }
 
             if(!isset(self::$cache[$storeId])){
-                $db     =  Factory::getDbo();
+                $db     =  Factory::getContainer()->get(DatabaseInterface::class);
                 $query  =  $db -> getQuery(true);
 
                 $query  -> select('c.id, c.groupid, c.images, c.template_id, c.asset_id, c.parent_id');
@@ -139,7 +139,7 @@ class CategoriesHelper{
             }
 
             if(!isset(self::$cache[$storeId])){
-                $db     =  Factory::getDbo();
+                $db     =  Factory::getContainer()->get(DatabaseInterface::class);
                 $query  =  $db -> getQuery(true);
 
                 $query  -> select('c.*, m.contentid AS contentid');
@@ -234,7 +234,7 @@ class CategoriesHelper{
                 $storeId    = md5(__METHOD__ . '::' . $id);
             }
             if(!isset(self::$cache[$storeId])){
-                $db         = Factory::getDbo();
+                $db         = Factory::getContainer()->get(DatabaseInterface::class);
                 $query      = $db -> getQuery(true);
                 $subquery   = $db -> getQuery(true);
 
@@ -315,7 +315,7 @@ class CategoriesHelper{
             }
 
             if(!isset(self::$cache[$storeId])){
-                $db         = Factory::getDbo();
+                $db         = Factory::getContainer()->get(DatabaseInterface::class);
                 $query      = $db -> getQuery(true);
 
                 $query -> select('c.*');
@@ -363,7 +363,7 @@ class CategoriesHelper{
             return self::$cache[$storeId];
         }
 
-        $db     =  Factory::getDbo();
+        $db     =  Factory::getContainer()->get(DatabaseInterface::class);
         $query  =  $db -> getQuery(true);
         $query -> select('c.*');
         $query -> from('#__tz_portfolio_plus_categories AS c');

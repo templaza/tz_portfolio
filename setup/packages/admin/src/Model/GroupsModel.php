@@ -119,7 +119,7 @@ class GroupsModel extends ListModel
     protected function getListQuery(){
         $db         = $this -> getDatabase();
         $query      = $db -> getQuery(true);
-        $user       = Factory::getUser();
+        $user       = Factory::getApplication()->getIdentity();
 
         $subQuery   = $db -> getQuery(true);
         $subQuery -> select('COUNT(DISTINCT f.id)');

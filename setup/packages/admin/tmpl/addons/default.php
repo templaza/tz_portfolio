@@ -33,7 +33,8 @@ use Joomla\CMS\Layout\LayoutHelper;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Helper\TZ_PortfolioHelper;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Helper\AddonDatasHelper;
 
-$user		= Factory::getUser();
+$user		= Factory::getApplication()->getIdentity();
+$lang       = Factory::getApplication()->getLanguage();
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
 $canOrder	= $user->authorise('core.edit.state', 'com_tz_portfolio.addons');

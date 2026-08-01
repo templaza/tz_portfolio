@@ -114,7 +114,7 @@ class HtmlView extends BaseHtmlView
 	{
         // Initialise variables.
         $extension	= Factory::getApplication() -> input -> getCmd('extension');
-        $user		= Factory::getUser();
+        $user		= Factory::getApplication()->getIdentity();
         $userId		= $user->id;
         $toolbar    = Toolbar::getInstance();
 
