@@ -29,6 +29,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Router\Route;
 use Joomla\Registry\Registry;
+use Joomla\Database\DatabaseInterface;
 
 class TagHelper{
     protected static $cache = array();
@@ -44,7 +45,7 @@ class TagHelper{
             return self::$cache[$storeId];
         }
 
-        $db     = Factory::getDbo();
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $query  = $db -> getQuery(true);
 
         $query -> select('*');
@@ -74,7 +75,7 @@ class TagHelper{
             return false;
         }
 
-        $db     = Factory::getDbo();
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $query  = $db -> getQuery(true);
         $query -> select('t.*, c.id AS contentid');
         $query -> from('#__tz_portfolio_plus_tags AS t');
@@ -150,7 +151,7 @@ class TagHelper{
             $storeId    = md5(__METHOD__);
         }
         if (!isset(self::$cache[$storeId])) {
-            $db     = Factory::getDbo();
+            $db     = Factory::getContainer()->get(DatabaseInterface::class);
             $query  = $db -> getQuery(true);
             $query -> select('t.*');
             $query -> from('#__tz_portfolio_plus_tags AS t');
@@ -197,7 +198,7 @@ class TagHelper{
             }
 
             if(!isset(self::$cache[$storeId])){
-                $db     = Factory::getDbo();
+                $db     = Factory::getContainer()->get(DatabaseInterface::class);
                 $query  = $db -> getQuery(true);
                 $query -> select('t.*, c.id AS contentid');
                 $query -> select('CASE WHEN CHAR_LENGTH(t.alias) THEN CONCAT_WS(":", t.id, t.alias) ELSE t.id END as slug');

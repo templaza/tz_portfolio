@@ -105,7 +105,7 @@ class MyarticlesModel extends \TemPlaza\Component\TZ_Portfolio\Administrator\Mod
 
     protected function getListQuery()
     {
-        $user   = Factory::getUser();
+        $user   = Factory::getApplication()->getIdentity();
 
         $query  = parent::getListQuery();
 

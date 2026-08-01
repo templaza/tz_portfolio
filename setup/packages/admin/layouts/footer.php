@@ -29,7 +29,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Helper\TZ_PortfolioHelper;
 
-$user   = Factory::getUser();
+$user   = Factory::getApplication()->getIdentity();
 $doc    = Factory::getApplication() -> getDocument();
 $wa     = $doc -> getWebAssetManager();
 

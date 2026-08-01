@@ -121,14 +121,14 @@ class StyleController extends FormController
 
     protected function allowAdd($data = array())
     {
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
         return ($user->authorise('core.create','com_tz_portfolio.'.$this -> getName()));
     }
 
     protected function allowEdit($data = array(), $key = 'id')
     {
         $recordId = (int) isset($data[$key]) ? $data[$key] : 0;
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
 
         // Zero record (id:0), return component edit permission by calling parent controller method
         if (!$recordId)

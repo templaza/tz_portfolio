@@ -34,7 +34,7 @@ use Joomla\CMS\Button\FeaturedButton;
 use Joomla\CMS\Language\Associations;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Helper\ACLHelper;
 
-$user		    = Factory::getUser();
+$user		    = Factory::getApplication()->getIdentity();
 $userId		    = $user->get('id');
 $listOrder	    = $this->escape($this->state->get('list.ordering'));
 $listDirn	    = $this->escape($this->state->get('list.direction'));

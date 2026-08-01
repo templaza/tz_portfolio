@@ -27,6 +27,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Layout\LayoutHelper;
+use Joomla\CMS\Factory;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Helper\TZ_PortfolioHelper;
 
 $displayData = [
@@ -38,6 +39,7 @@ $displayData = [
 ];
 
 $user = $this->getCurrentUser();
+$lang = Factory::getApplication()->getLanguage();
 
 if ($user->authorise('core.create', 'com_content') || count($user->getAuthorisedCategories('com_tz_portfolio', 'core.create')) > 0) {
     $displayData['createURL'] = 'index.php?option=com_tz_portfolio&task=addon.add';

@@ -27,7 +27,7 @@ namespace TemPlaza\Component\TZ_Portfolio\Site\Helper;
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Menu\SiteMenu;
+use Joomla\Database\DatabaseInterface;
 use Joomla\CMS\Categories\Categories;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Categories\CategoryNode;
@@ -324,7 +324,7 @@ abstract class RouteHelper
     {
         if (count(self::$lang_lookup) == 0)
         {
-            $db    = Factory::getDbo();
+            $db    = Factory::getContainer()->get(DatabaseInterface::class);
             $query = $db->getQuery(true)
                 ->select('a.sef AS sef')
                 ->select('a.lang_code AS lang_code')
@@ -649,7 +649,7 @@ abstract class RouteHelper
 
 
     protected static function getCatIds(){
-        $db = Factory::getDbo();
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
             ->select('id')
             ->from('#__tz_portfolio_plus_categories')

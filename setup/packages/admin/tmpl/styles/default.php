@@ -33,6 +33,7 @@ use Joomla\CMS\Layout\LayoutHelper;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Helper\TZ_PortfolioHelper;
 
 $user		= Factory::getApplication() -> getIdentity();
+$lang   = Factory::getApplication()->getLanguage();
 
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));

@@ -27,6 +27,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Language\Text;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\Folder;
 use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Language\LanguageHelper;
@@ -61,7 +62,7 @@ class com_tz_portfolioInstallerScript{
         $modules = $_parent -> manifest -> xpath('modules/module');
         $plugins = $_parent -> manifest -> xpath('plugins/plugin');
 
-        $db = Factory::getDbo();
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
         $result = null;
         if($modules){
             foreach($modules as $module){

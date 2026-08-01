@@ -234,7 +234,7 @@ class AddonController extends FormController
 
     public function save($key = null, $urlVar = null)
     {
-        $user   = Factory::getUser();
+        $user   = Factory::getApplication()->getIdentity();
 
         $data   = $this->input->get('jform', array(), 'array');
 

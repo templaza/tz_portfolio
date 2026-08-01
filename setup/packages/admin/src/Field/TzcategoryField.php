@@ -108,7 +108,7 @@ class TZCategoryField extends ListField
             if ((string) $this->element['action'])
             {
                 // Get the current user object.
-                $user = Factory::getUser();
+                $user = Factory::getApplication()->getIdentity();
 
                 foreach ($options as $i => $option)
                 {

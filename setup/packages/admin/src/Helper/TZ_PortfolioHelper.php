@@ -29,12 +29,12 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Table\Asset;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Filesystem\File;
 use Joomla\Filesystem\Path;
 use Joomla\CMS\Access\Access;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Http\HttpFactory;
-use Joomla\CMS\Object\CMSObject;
+use Joomla\Http\HttpFactory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\Registry\Registry;
 
@@ -44,8 +44,8 @@ class TZ_PortfolioHelper  extends ContentHelper{
 
     public static function getActions($section = '', $id = 0, $parent_section = null)
     {
-        $user	    = Factory::getUser();
-        $result     = new CMSObject();
+        $user	    = Factory::getApplication()->getIdentity();
+        $result     = new Registry();
         $component  = 'com_tz_portfolio';
 
         $path = JPATH_ADMINISTRATOR . '/components/'.$component.'/access.xml';
@@ -55,7 +55,7 @@ class TZ_PortfolioHelper  extends ContentHelper{
         if ($section && $id)
         {
             $assetName  = $component . '.' . $section . '.' . (int) $id;
-            $asset      = new Asset(Factory::getDbo(), Factory::getApplication() -> getDispatcher());
+            $asset      = new Asset(Factory::getContainer()->get(DatabaseInterface::class), Factory::getApplication() -> getDispatcher());
 
             if(!$asset -> loadByName($assetName)){
                 $assetName  = $component . '.' . $parent_section;
@@ -271,7 +271,7 @@ class TZ_PortfolioHelper  extends ContentHelper{
 
     public static function getMenuLinks($menuType = null, $parentId = 0, $mode = 0, $published = array(), $languages = array())
     {
-        $db     = Factory::getDbo();
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->getQuery(true)
             ->select('a.id AS value, a.title AS text, a.alias, a.level, a.component_id,'
                 .' a.menutype, a.type, a.template_style_id, a.checked_out, a.params')

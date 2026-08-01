@@ -66,10 +66,6 @@ class CategoryModel extends AdminModel
         {
             $this->_db = $config['dbo'];
         }
-//        else
-//        {
-//            $this->_db = TZ_Portfolio_PlusDatabase::getDbo();
-//        }
     }
 
     /**
@@ -89,7 +85,7 @@ class CategoryModel extends AdminModel
             {
                 return;
             }
-            $user = Factory::getUser();
+            $user = Factory::getApplication()->getIdentity();
 
             $state  = $user->authorise('core.delete', $record->extension . '.category.' . (int) $record->id)
                 || ($user->authorise('core.delete.own', $record->extension . '.category.' . (int) $record->id)
@@ -110,7 +106,7 @@ class CategoryModel extends AdminModel
      */
     protected function canEditState($record)
     {
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
 
         // Check for existing category.
         if (!empty($record->id))
@@ -300,7 +296,7 @@ class CategoryModel extends AdminModel
             $data['extension'] = $extension;
         }
 //        $user = TZ_Portfolio_PlusUser::getUser();
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
         if (!$user->authorise('core.edit.state', 'com_tz_portfolio.category.' . $jinput->get('id'))
             && !$user->authorise('core.edit.state.own', 'com_tz_portfolio.category.' . $jinput->get('id')))
         {
@@ -996,7 +992,7 @@ class CategoryModel extends AdminModel
         $db         = $this -> getDatabase();
         $table      = $this->getTable();
         $query      = $db->getQuery(true);
-        $user       = Factory::getUser();
+        $user       = Factory::getApplication()->getIdentity();
         $extension = Factory::getApplication()->input->get('extension', '', 'word');
 
         // Check that the parent exists.

@@ -97,7 +97,7 @@ class TagModel extends AdminModel
     public function getArticlesAssignment($pk = null){
         $pk = (!empty($pk)) ? $pk : (int) $this->getState($this->getName() . '.id');
         if($pk > 0){
-            $db     = $this -> getDbo();
+            $db     = $this -> getDatabase();
             $query  = $db -> getQuery(true);
             $query -> select('contentid');
             $query -> from('#__tz_portfolio_plus_tag_content_map');
@@ -171,7 +171,7 @@ class TagModel extends AdminModel
         }
 
         if(parent::save($data)){
-            $db     = $this -> getDbo();
+            $db     = $this -> getDatabase();
             $query  = $db->getQuery(true);
             $id     = $this->getState($this->getName() . '.id');
             if(!empty($articlesAssignment)) {
@@ -230,7 +230,7 @@ class TagModel extends AdminModel
         $result = parent::delete($pks);
         if($result){
             if ($_pks && count($_pks)) {
-                $db     = $this->getDbo();
+                $db     = $this->getDatabase();
                 $query  = $db->getQuery(true);
 
                 // Remove tag map to content
@@ -275,7 +275,7 @@ class TagModel extends AdminModel
     {
         if (!empty($record->id))
         {
-            $user = Factory::getUser();
+            $user = Factory::getApplication()->getIdentity();
 
             if(isset($record -> asset_id) && !empty($record -> asset_id)) {
                 $state = $user->authorise('core.delete', $this->option . '.tag.' . (int)$record->id);
@@ -290,7 +290,7 @@ class TagModel extends AdminModel
 
     protected function canEditState($record)
     {
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
 
         // Check for existing tag.
         if (!empty($record->id))

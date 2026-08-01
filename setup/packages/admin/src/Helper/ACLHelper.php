@@ -34,7 +34,7 @@ class ACLHelper
 
 	public static function allowApprove($article = null, $option = 'com_tz_portfolio'){
 
-        $user       = Factory::getUser();
+        $user       = Factory::getApplication()->getIdentity();
 
         if($user->authorise('core.approve', $option)){
             if($article && $article -> id && $article -> created_by != $user -> id){

@@ -28,12 +28,8 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Menu\SiteMenu;
 use Joomla\Filesystem\Folder;
-use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\MVC\Model\ListModel;
-use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
-use TemPlaza\Component\TZ_Portfolio\Administrator\Helper\CategoriesHelper as TZ_PortfolioHelperCategories;
 
 class LayoutsModel extends ListModel
 {
@@ -75,7 +71,7 @@ class LayoutsModel extends ListModel
     }
 
     function getListQuery(){
-        $db     = $this -> getDbo();
+        $db     = $this -> getDatabase();
         $query  = $db -> getQuery(true);
         $query -> select($this->getState(
             'list.select',
@@ -142,13 +138,13 @@ class LayoutsModel extends ListModel
     public function getItems(){
         if($items = parent::getItems()){
             $component  = ComponentHelper::getComponent('com_tz_portfolio');
-            $menus  = SiteMenu::getInstance('site');
+            $menus  = Factory::getContainer()->get(\Joomla\CMS\Menu\MenuFactoryInterface::class)->createMenu('site');
             $menu_assigned  = array();
             if($menu_items  = $menus -> getItems(array('component_id'),$component -> id)){
                 if(count($menu_items)){
                     foreach($menu_items as $m){
-                        if(isset($m -> params)){
-                            $params = $m -> params;
+                        if($m->getParams() !== null){
+                            $params = $m -> getParams();
                             if($tpl_style_id = $params -> get('tz_template_style_id')){
                                 if(!isset($menu_assigned[$tpl_style_id])){
                                     $menu_assigned[$tpl_style_id]   = 0;

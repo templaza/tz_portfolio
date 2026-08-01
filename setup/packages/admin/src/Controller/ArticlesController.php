@@ -75,7 +75,7 @@ class ArticlesController extends AdminController
 
     protected function allowApprove($data = array())
     {
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
 
         return $user->authorise('core.approve', $this->option);
     }
@@ -176,7 +176,7 @@ class ArticlesController extends AdminController
         $this -> checkToken();
 
         // Initialise variables.
-        $user	= Factory::getUser();
+        $user	= Factory::getApplication()->getIdentity();
         $ids	= $this -> input -> get('cid', array(), 'array');
         $values	= array('featured' => 1, 'unfeatured' => 0);
         $task	= $this->getTask();

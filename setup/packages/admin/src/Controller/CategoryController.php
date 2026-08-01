@@ -81,7 +81,7 @@ class CategoryController extends FormController
     protected function allowAdd($data = array())
     {
 //        $user = TZ_Portfolio_PlusUser::getUser();
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
         return ($user->authorise('core.create', $this->extension) || count($user->getAuthorisedCategories($this->extension, 'core.create')));
     }
 
@@ -99,7 +99,7 @@ class CategoryController extends FormController
     {
         // Initialise variables.
         $recordId = (int) isset($data[$key]) ? $data[$key] : 0;
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
         $userId = $user->get('id');
 
         // Check general edit permission first.

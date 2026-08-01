@@ -33,6 +33,7 @@ use Joomla\CMS\Session\Session;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Form\Field\RulesField;
+use Joomla\Database\DatabaseInterface;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Library\Common\AccessCommon;
 
 class TZRulesField extends RulesField
@@ -132,7 +133,7 @@ class TZRulesField extends RulesField
             }
 
             // Get the component asset id as fallback.
-            $db     = Factory::getDbo();
+            $db     = Factory::getContainer()->get(DatabaseInterface::class);
             $query  = $db->getQuery(true)
                 ->select($db->quoteName('id'))
                 ->from($db->quoteName('#__assets'))
@@ -154,7 +155,7 @@ class TZRulesField extends RulesField
         if (!$isGlobalConfig)
         {
             // In this case we need to get the component rules too.
-            $db = Factory::getDbo();
+            $db = Factory::getContainer()->get(DatabaseInterface::class);
 
             $query = $db->getQuery(true)
                 ->select($db->quoteName('parent_id'))

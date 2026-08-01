@@ -81,7 +81,7 @@ class HtmlView extends BaseHtmlView
 //        $wa -> registerAndUseStyle('com_tz_portfolio.addon.content.vote2', TZ_PortfolioUri::root()
 //            . '/add-ons/content/vote/css/vote.css'/*, array('version' => 'auto')*/);
 
-        $user		= Factory::getUser();
+        $user		= Factory::getApplication()->getIdentity();
         $dispatcher	= Factory::getApplication()->getDispatcher();
 
         $this->state	= $this->get('State');

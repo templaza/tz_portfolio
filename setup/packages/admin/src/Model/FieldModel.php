@@ -190,7 +190,7 @@ class FieldModel extends AdminModel
 
     public function updateState(&$pks,$value=1, $task = null){
         if($table  = $this -> getTable()){
-            $user   = Factory::getUser();
+            $user   = Factory::getApplication()->getIdentity();
             switch($task){
                 default:
                     break;
@@ -325,7 +325,7 @@ class FieldModel extends AdminModel
     {
         if (!empty($record->id))
         {
-            $user = Factory::getUser();
+            $user = Factory::getApplication()->getIdentity();
 
             $state  = $user->authorise('core.delete', $this->option.'.field.' . (int) $record->id)
                 || ($user->authorise('core.delete.own', $this->option.'.field.' . (int) $record->id)
@@ -338,7 +338,7 @@ class FieldModel extends AdminModel
 
     protected function canEditState($record)
     {
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
 
         // Check for existing category.
         if (!empty($record->id))

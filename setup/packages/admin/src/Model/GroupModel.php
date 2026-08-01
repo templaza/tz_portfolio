@@ -195,7 +195,7 @@ class GroupModel extends AdminModel
     {
         if (!empty($record->id))
         {
-            $user = Factory::getUser();
+            $user = Factory::getApplication()->getIdentity();
 
             $state  = $user->authorise('core.delete', $this->option.'.group.' . (int) $record->id)
                 || ($user->authorise('core.delete.own', $this->option.'.group.' . (int) $record->id)
@@ -208,7 +208,7 @@ class GroupModel extends AdminModel
 
     protected function canEditState($record)
     {
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
 
         // Check for existing group.
         if (!empty($record->id))

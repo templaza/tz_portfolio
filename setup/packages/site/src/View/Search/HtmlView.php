@@ -105,7 +105,7 @@ class HtmlView extends BaseHtmlView
 
         if($items){
 
-            $user	        = Factory::getUser();
+            $user	        = Factory::getApplication()->getIdentity();
             $userId	        = $user->get('id');
             $guest	        = $user->get('guest');
 

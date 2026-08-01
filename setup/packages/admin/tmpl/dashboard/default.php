@@ -31,7 +31,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Session\Session;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Helper\TZ_PortfolioHelper;
 
-$user   = Factory::getUser();
+$user   = Factory::getApplication()->getIdentity();
 $date   = Factory::getDate();
 $lang   = Factory::getApplication() -> getLanguage();
 $xml    = $this -> info;

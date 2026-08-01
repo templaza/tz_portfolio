@@ -102,7 +102,7 @@ class AclModel extends AdminModel
                 }
 
                 if(parent::save($_data)){
-                    $db     = $this -> getDbo();
+                    $db     = $this -> getDatabase();
                     $query  = $db -> getQuery(true);
 
                     switch ($section){
@@ -160,7 +160,7 @@ class AclModel extends AdminModel
     protected function _storePermission($query, $groupSection, $section = null, $titleFieldName = 'title', &$start = 0){
 
         $limit  = 10;
-        $db     = $this -> getDbo();
+        $db     = $this -> getDatabase();
         $asset  = $this -> getTable();
 
         // Get parent asset id
@@ -234,7 +234,7 @@ class AclModel extends AdminModel
     // Update asset_id for each item
     protected function _updateAssetId($query, $id, $asset_id){
         if($query && $id && $asset_id) {
-            $db = $this->getDbo();
+            $db = $this->getDatabase();
             $from = $query->__get('from');
             $tbl = $from->getElements();
             $tbl = array_shift($tbl);

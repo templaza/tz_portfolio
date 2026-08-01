@@ -46,7 +46,7 @@ $params     = $this -> params;
 //    HTMLHelper::_('formbehavior.chosen', 'select');
 //}
 
-$user		    = Factory::getUser();
+$user		    = Factory::getApplication()->getIdentity();
 $userId		    = $user->get('id');
 $listOrder	    = $this->escape($this->state->get('list.ordering'));
 $listDirn	    = $this->escape($this->state->get('list.direction'));

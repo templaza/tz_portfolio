@@ -201,7 +201,7 @@ class LayoutModel extends AdminModel
     public function getCategoriesAssignment($pk = null){
         $pk = (!empty($pk)) ? $pk : (int) $this->getState($this->getName() . '.id');
         if($pk > 0){
-            $db     = $this -> getDbo();
+            $db     = $this -> getDatabase();
             $query  = $db -> getQuery(true);
             $query -> select('id');
             $query -> from('#__tz_portfolio_plus_categories');
@@ -217,7 +217,7 @@ class LayoutModel extends AdminModel
     public function getArticlesAssignment($pk = null){
         $pk = (!empty($pk)) ? $pk : (int) $this->getState($this->getName() . '.id');
         if($pk > 0){
-            $db     = $this -> getDbo();
+            $db     = $this -> getDatabase();
             $query  = $db -> getQuery(true);
             $query -> select('id');
             $query -> from('#__tz_portfolio_plus_content');
@@ -420,13 +420,13 @@ class LayoutModel extends AdminModel
 
             $db     = $this -> getDatabase();
 
-            $user = Factory::getUser();
+            $user = Factory::getApplication()->getIdentity();
 
             // Assign template style for menu
             if ($user->authorise('core.edit', 'com_menus'))
             {
                 $n    = 0;
-                $user = Factory::getUser();
+                $user = Factory::getApplication()->getIdentity();
 
                 // Assign menu items with this template;
                 if(!empty($post['jform']['menus_assignment_old']) && count($post['jform']['menus_assignment_old'])){
@@ -708,7 +708,7 @@ class LayoutModel extends AdminModel
 
     public function setHome($id = 0)
     {
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
         $db   = $this->getDatabase();
 
         // Access checks.
@@ -748,7 +748,7 @@ class LayoutModel extends AdminModel
 
     public function unsetHome($id = 0)
     {
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
         $db   = $this->getDatabase();
 
         // Access checks.
@@ -787,7 +787,7 @@ class LayoutModel extends AdminModel
     public function delete(&$pks)
     {
         $pks	= (array) $pks;
-        $user	= Factory::getUser();
+        $user	= Factory::getApplication()->getIdentity();
         $table	= $this->getTable();
 
         // Iterate the items to delete each one.
@@ -836,7 +836,7 @@ class LayoutModel extends AdminModel
 
     public function deleteTemplate(&$template)
     {
-        $user	= Factory::getUser();
+        $user	= Factory::getApplication()->getIdentity();
         $table	= $this->getTable();
 
         // Access checks.
@@ -864,7 +864,7 @@ class LayoutModel extends AdminModel
 
     public function duplicate(&$pks)
     {
-        $user	= Factory::getUser();
+        $user	= Factory::getApplication()->getIdentity();
 
         // Access checks.
         if (!$user->authorise('core.create', 'com_tz_portfolio.style'))
@@ -1110,7 +1110,7 @@ class LayoutModel extends AdminModel
     {
         if (!empty($record->id))
         {
-            $user = Factory::getUser();
+            $user = Factory::getApplication()->getIdentity();
 
             if(isset($record -> asset_id) && !empty($record -> asset_id)) {
                 $state = $user->authorise('core.delete', $this->option . '.style.' . (int)$record->id);
@@ -1125,7 +1125,7 @@ class LayoutModel extends AdminModel
 
     protected function canEditState($record)
     {
-        $user = Factory::getUser();
+        $user = Factory::getApplication()->getIdentity();
 
         // Check for existing group.
         if (!empty($record->id))

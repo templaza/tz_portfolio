@@ -26,6 +26,7 @@ namespace TemPlaza\Component\TZ_Portfolio\Administrator\Helper;
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\Database\DatabaseInterface;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Helper\CategoriesHelper as TZ_PortfolioHelperCategories;
 
 /**
@@ -79,7 +80,7 @@ abstract class AssociationHelper
     public static function getArticleAssociations($id, $extension = 'com_tz_portfolio', $pk = 'id', $aliasField = 'alias', $catField = 'catid')
     {
         $associations = array();
-        $db     = Factory::getDbo();
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $query  = $db->getQuery(true)
             ->select($db->quoteName('c2.language'))
             ->from($db->quoteName('#__tz_portfolio_plus_content', 'c'))

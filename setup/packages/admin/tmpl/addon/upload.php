@@ -32,6 +32,7 @@ use TemPlaza\Component\TZ_Portfolio\Administrator\Helper\TZ_PortfolioHelper;
 
 /** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this -> document -> getWebAssetManager();
+$lang = Factory::getApplication()->getLanguage();
 
 $wa -> useStyle('com_tz_portfolio.introjs');
 

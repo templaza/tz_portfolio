@@ -100,7 +100,7 @@ class AddOnController extends BaseController {
             // Check manage permission if the addon have manage datas (only use of back-end)
             if($app -> isClient('administrator') && $addon_id = $this -> input -> get('addon_id', 0, 'int')){
                 if($plugin = AddonHelper::getPluginById($addon_id)){
-                    $user   = Factory::getUser();
+                    $user   = Factory::getApplication()->getIdentity();
 
                     if(isset($plugin -> asset_id) &&$plugin -> asset_id && !$user -> authorise('core.manage',
                             'com_tz_portfolio.addon.'.$plugin -> id)){

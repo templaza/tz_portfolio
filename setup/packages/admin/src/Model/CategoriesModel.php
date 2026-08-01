@@ -202,9 +202,9 @@ class CategoriesModel extends ListModel
     function getListQuery()
     {
         // Create a new query object.
-        $db		= $this->getDbo();
+        $db		= $this->getDatabase();
         $query	= $db->getQuery(true);
-        $user	= Factory::getUser();
+        $user	= Factory::getApplication()->getIdentity();
 
         // Select the required fields from the table.
         $query->select(
@@ -336,7 +336,7 @@ class CategoriesModel extends ListModel
 
     public function getGroupQuery($catid){
         // Create a new query object.
-        $db		= $this->getDbo();
+        $db		= $this->getDatabase();
         $query	= $db->getQuery(true);
 
         $query -> select('fg.*');

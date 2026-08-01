@@ -84,7 +84,7 @@ class FeaturedModel extends ArticlesModel
     function getListQuery($resolveFKs = true)
     {
         // Create a new query object.
-        $db = $this->getDbo();
+        $db = $this->getDatabase();
         $query = $db->getQuery(true);
 
         // Select the required fields from the table.

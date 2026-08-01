@@ -27,7 +27,7 @@ namespace TemPlaza\Component\TZ_Portfolio\Administrator\Field;
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Form\FormHelper;
+use Joomla\Database\DatabaseInterface;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Helper\TagsHelper;
 use Joomla\CMS\Layout\FileLayout;
@@ -90,7 +90,7 @@ class TZTagField extends ListField {
 
         $tag       = $app->getLanguage()->getTag();
 
-        $db     = Factory::getDbo();
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $query  = $db -> getQuery(true);
         $query -> select('DISTINCT id AS value, title AS text, published');
         $query -> from('#__tz_portfolio_plus_tags');

@@ -30,7 +30,7 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
 
-$user		= Factory::getUser();
+$user		= Factory::getApplication()->getIdentity();
 $document   = Factory::getApplication() -> getDocument();
 ?>
 <form name="adminForm" id="adminForm" method="post" action="<?php

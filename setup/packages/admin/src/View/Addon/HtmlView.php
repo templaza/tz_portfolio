@@ -112,7 +112,7 @@ class HtmlView extends BaseHtmlView {
     {
         Factory::getApplication()->getInput()->set('hidemainmenu', true);
 
-        $user		= Factory::getUser();
+        $user		= Factory::getApplication()->getIdentity();
         $userId		= $user->get('id');
 
         $canDo = TZ_PortfolioHelper::getActions();

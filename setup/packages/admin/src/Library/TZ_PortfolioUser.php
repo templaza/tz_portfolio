@@ -30,6 +30,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\User\User;
 use Joomla\Registry\Registry;
 use Joomla\CMS\User\UserHelper;
+use Joomla\Database\DatabaseInterface;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 class TZ_PortfolioUser extends User{
@@ -38,7 +39,7 @@ class TZ_PortfolioUser extends User{
 
     public static function getUser($id = null)
     {
-        $instance = Factory::getUser();
+        $instance = Factory::getApplication()->getIdentity();
 
         if (is_null($id))
         {
@@ -95,7 +96,7 @@ class TZ_PortfolioUser extends User{
         $component  = !empty($component)?$component:'com_tz_portfolio';
         // Brute force method: get all published category rows for the component and check each one
         // TODO: Modify the way permissions are stored in the db to allow for faster implementation and better scaling
-        $db     = Factory::getDbo();
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
 
         $subQuery = $db->getQuery(true)
             ->select('id,asset_id')
@@ -127,7 +128,7 @@ class TZ_PortfolioUser extends User{
     {
         // Brute force method: get all published category rows for the component and check each one
         // TODO: Modify the way permissions are stored in the db to allow for faster implementation and better scaling
-        $db     = Factory::getDbo();
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
 
         $subQuery = $db->getQuery(true)
             ->select('id,asset_id')

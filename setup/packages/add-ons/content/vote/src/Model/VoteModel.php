@@ -27,6 +27,7 @@ namespace TemPlaza\Component\TZ_Portfolio\AddOn\Content\Vote\Site\Model;
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\Database\DatabaseInterface;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use TemPlaza\Component\TZ_Portfolio\AddOn\Content\Vote\Helper\VoteHelper;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Library\AddOn\AddOnItemModel;
@@ -40,7 +41,7 @@ class VoteModel extends AddOnItemModel {
                 $item -> rating_count   = 0;
                 $item -> rating_sum     = 0;
 
-                $db = Factory::getDbo();
+                $db = Factory::getContainer()->get(DatabaseInterface::class);
                 $query = $db->getQuery(true);
 
                 $query->select('*');
@@ -64,7 +65,7 @@ class VoteModel extends AddOnItemModel {
         $cid            = $data['cid'];
         $user_rating    = $data['user_rating'];
 
-        $db     = $this -> getDbo();
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $query	= $db -> getQuery(true);
 
         $input  = Factory::getApplication() -> input;
@@ -103,7 +104,7 @@ class VoteModel extends AddOnItemModel {
             return false;
         }
 
-        $db     = $this -> getDbo();
+        $db     = $this -> getDatabase();
         $query  = $db -> getQuery(true);
         $query -> delete('#__tz_portfolio_plus_content_rating');
         $query -> where('content_id='.$table -> id);

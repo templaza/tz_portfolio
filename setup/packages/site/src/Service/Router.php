@@ -24,23 +24,12 @@
 namespace TemPlaza\Component\TZ_Portfolio\Site\Service;
 
 use Joomla\CMS\Application\ApplicationHelper;
-use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Categories\Categories;
-use Joomla\CMS\Categories\CategoryFactoryInterface;
-use Joomla\CMS\Categories\CategoryInterface;
 use Joomla\CMS\Component\ComponentHelper;
-use Joomla\CMS\Component\Router\RouterBase;
 use Joomla\CMS\Component\Router\RouterView;
-use Joomla\CMS\Component\Router\RouterViewConfiguration;
-use Joomla\CMS\Component\Router\Rules\MenuRules;
-use Joomla\CMS\Component\Router\Rules\NomenuRules;
-use Joomla\CMS\Component\Router\Rules\StandardRules;
-use Joomla\CMS\Event\ErrorEvent;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Menu\AbstractMenu;
 use Joomla\Database\DatabaseInterface;
-use Joomla\Database\ParameterType;
 use Joomla\Registry\Registry;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Library\Helper\AddonHelper;
 
@@ -247,7 +236,7 @@ class Router extends RouterView
                     $catid = $query['catid'];
                     // Make sure we have the id and the alias
                     if (strpos($query['id'], ':') === false) {
-                        $db = Factory::getDbo();
+                        $db = Factory::getContainer()->get(DatabaseInterface::class);
                         $aquery = $db->setQuery($db->getQuery(true)
                             ->select('alias')
                             ->from('#__tz_portfolio_plus_content')
@@ -376,7 +365,7 @@ class Router extends RouterView
 
             // Make sure we have the id and the alias
             if (strpos($query['id'], ':') == false) {
-                $db = Factory::getDbo();
+                $db = Factory::getContainer()->get(DatabaseInterface::class);
                 $aquery = $db->setQuery($db->getQuery(true)
                     ->select('alias')
                     ->from('#__tz_portfolio_plus_tags')
@@ -455,7 +444,7 @@ class Router extends RouterView
                 if (isset($query['id'])) {
                     // Make sure we have the id and the name
                     if (strpos($query['id'], ':') == false) {
-                        $db = Factory::getDbo();
+                        $db = Factory::getContainer()->get(DatabaseInterface::class);
                         $aquery = $db->setQuery($db->getQuery(true)
                             ->select('name')
                             ->from('#__users')
@@ -629,7 +618,7 @@ class Router extends RouterView
                     $catid = $query['catid'];
                     // Make sure we have the id and the alias
                     if (strpos($query['id'], ':') === false) {
-                        $db = Factory::getDbo();
+                        $db = Factory::getContainer()->get(DatabaseInterface::class);
                         $aquery = $db->setQuery($db->getQuery(true)
                             ->select('alias')
                             ->from('#__tz_portfolio_plus_content')
@@ -734,7 +723,7 @@ class Router extends RouterView
 
             // Make sure we have the id and the alias
             if (strpos($query['id'], ':') == false) {
-                $db = Factory::getDbo();
+                $db = Factory::getContainer()->get(DatabaseInterface::class);
                 $aquery = $db->setQuery($db->getQuery(true)
                     ->select('alias')
                     ->from('#__tz_portfolio_plus_tags')
@@ -765,7 +754,7 @@ class Router extends RouterView
 
             // Make sure we have the id and the name
             if (strpos($query['id'], ':') == false) {
-                $db = Factory::getDbo();
+                $db = Factory::getContainer()->get(DatabaseInterface::class);
                 $aquery = $db->setQuery($db->getQuery(true)
                     ->select('name')
                     ->from('#__users')
@@ -899,7 +888,7 @@ class Router extends RouterView
         $params = ComponentHelper::getParams('com_tz_portfolio');
         if(isset($query['tid'])){
             $segments[] = $params -> get('sef_tags_prefix', 'tag');
-            $db         = Factory::getDbo();
+            $db         = Factory::getContainer()->get(DatabaseInterface::class);
             $aquery     = $db -> getQuery(true);
 
             $aquery -> select('alias');
@@ -974,7 +963,7 @@ class Router extends RouterView
             return false;
         }
 
-        $db     = Factory::getDbo();
+        $db     = Factory::getContainer()->get(DatabaseInterface::class);
         $query  = $db -> getQuery(true);
         $query -> select('*');
         $query -> from('#__tz_portfolio_plus_categories');
@@ -999,7 +988,7 @@ class Router extends RouterView
         }
 
         //Get the active menu item.
-        $db             = Factory::getDbo();
+        $db             = Factory::getContainer()->get(DatabaseInterface::class);
         $app            = Factory::getApplication();
         $menu           = $app->getMenu();
         $item           = $menu->getActive();
@@ -1178,7 +1167,7 @@ class Router extends RouterView
                     return $vars;
                 }
 
-                $db     = Factory::getDbo();
+                $db     = Factory::getContainer()->get(DatabaseInterface::class);
                 $query  = $db -> getQuery(true);
                 $query -> select('c.*');
                 $query -> from('#__tz_portfolio_plus_content AS c');
@@ -1290,7 +1279,7 @@ class Router extends RouterView
 
             if ($found == 0) {
                 if ($advanced) {
-                    $db = Factory::getDbo();
+                    $db = Factory::getContainer()->get(DatabaseInterface::class);
                     $query = 'SELECT c.id FROM #__tz_portfolio_plus_content AS c'
                         .' LEFT JOIN #__tz_portfolio_plus_content_category_map AS m ON m.contenti = c.id AND m.main = 1'
                         .' WHERE m.catid = ' . $vars['catid'] . ' AND c.alias = ' . $db->Quote($segment);
@@ -1337,7 +1326,7 @@ class Router extends RouterView
         $item = $menu->getActive();
         $params = ComponentHelper::getParams('com_tz_portfolio');
         $advanced = $params->get('sef_advanced_link', 0);
-        $db = Factory::getDbo();
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
 
         // Count route segments
         $count = count($segments);
@@ -1522,7 +1511,7 @@ class Router extends RouterView
 
             if ($found == 0) {
                 if ($advanced) {
-                    $db = Factory::getDbo();
+                    $db = Factory::getContainer()->get(DatabaseInterface::class);
                     $query = 'SELECT c.id FROM #__tz_portfolio_plus_content AS c'
                         .' LEFT JOIN #__tz_portfolio_plus_content_category_map AS m ON m.contentid = c.id AND m.main = 1'
                         .' WHERE m.catid = ' . $vars['catid'] . ' AND c.alias = ' . $db->Quote($segment);

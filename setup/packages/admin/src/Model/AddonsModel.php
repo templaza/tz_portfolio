@@ -133,7 +133,7 @@ class AddonsModel extends ListModel
 
     protected function getListQuery(){
         $db     = $this -> getDatabase();
-        $user   = Factory::getUser();
+        $user   = Factory::getApplication()->getIdentity();
         $query  = $db -> getQuery(true);
         $query -> select('e.*');
         $query -> from($db -> quoteName('#__tz_portfolio_plus_extensions').' AS e');

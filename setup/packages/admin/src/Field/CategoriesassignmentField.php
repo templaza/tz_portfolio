@@ -28,6 +28,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Field\CheckboxesField;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\Database\DatabaseInterface;
 use TZ_Portfolio_Plus\Database\TZ_Portfolio_PlusDatabase;
 
 class CategoriesAssignmentField extends CheckboxesField
@@ -38,7 +39,7 @@ class CategoriesAssignmentField extends CheckboxesField
     protected function getOptions()
     {
         $options    = array();
-        $db         = Factory::getDbo();
+        $db         = Factory::getContainer()->get(DatabaseInterface::class);
         $query      = $db -> getQuery(true);
 
         $query -> select('c.title AS text, c.id AS value,c.template_id, c.level');

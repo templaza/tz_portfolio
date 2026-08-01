@@ -127,7 +127,7 @@ class Icon{
      */
     public function edit($article, $params, $attribs = array())
     {
-        $user	= Factory::getUser();
+        $user	= Factory::getApplication()->getIdentity();
         $userId	= $user->get('id');
         $uri	= Uri::getInstance();
 

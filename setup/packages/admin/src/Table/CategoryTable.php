@@ -251,8 +251,7 @@ class CategoryTable extends Nested
         }
 
         // Verify that the alias is unique
-//        $table = Table::getInstance('Category', '\TemPlaza\Component\TZ_Portfolio\Administrator', array('dbo' => $this->getDbo()));
-        $table = new CategoryTable($this->getDbo(), $this->getDispatcher());
+        $table = new CategoryTable($this->getDatabase(), $this->getDispatcher());
 
         if ($table->load(array('alias' => $this->alias, 'parent_id' => $this->parent_id, 'extension' => $this->extension))
             && ($table->id != $this->id || $this->id == 0))

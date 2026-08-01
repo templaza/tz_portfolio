@@ -28,7 +28,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
 
-$user		= Factory::getUser();
+$user		= Factory::getApplication()->getIdentity();
 ?>
 <form name="adminForm" id="adminForm" method="post" action="index.php?option=com_tz_portfolio&view=acls">
 

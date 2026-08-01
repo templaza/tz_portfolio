@@ -24,6 +24,7 @@
 namespace TemPlaza\Component\TZ_Portfolio\AddOn\Extrafields\Text\Extension;
 
 use Joomla\CMS\Factory;
+use Joomla\Database\DatabaseInterface;
 use Joomla\CMS\Language\Text as JText;
 use TemPlaza\Component\TZ_Portfolio\Administrator\Library\Common\ExtraFieldCommon;
 
@@ -191,7 +192,7 @@ class Text extends ExtraFieldCommon
 
             else
             {
-                $db = Factory::getDbo();
+                $db = Factory::getContainer()->get(DatabaseInterface::class);
 
                 $where[] = $this->fieldvalue_column . " LIKE '%" . $db->escape($search, true) . "%'";
             }
@@ -229,7 +230,7 @@ class Text extends ExtraFieldCommon
 
             else
             {
-                $db     = Factory::getDbo();
+                $db     = Factory::getContainer()->get(DatabaseInterface::class);
                 $_where = array();
                 foreach ($search AS $value)
                 {
