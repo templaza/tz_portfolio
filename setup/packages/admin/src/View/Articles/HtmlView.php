@@ -45,7 +45,6 @@ use TemPlaza\Component\TZ_Portfolio\Administrator\Helper\ToolbarHelper as TZ_Por
  * @subpakage	TZ.Portfolio
  */
 class HtmlView extends BaseHtmlView {
-//    protected $xml;
 
     /* @since 2.2.7 */
     protected $license;
@@ -56,13 +55,14 @@ class HtmlView extends BaseHtmlView {
      * Display the view.
      */
     public function display($tpl = null) {
-        $this->items		    = $this->get('Items');
-        $this->pagination	    = $this->get('Pagination');
-        $this->state		    = $this->get('State');
-        $this->authors		    = $this->get('Authors');
-        $this -> filterForm     = $this -> get('FilterForm');
-        $this -> activeFilters  = $this -> get('ActiveFilters');
-        $this -> isEmptyState   = $this -> get('IsEmptyState');
+        $model = $this->getModel();
+        $this->items		    = $model->getItems();
+        $this->pagination	    = $model->getPagination();
+        $this->state		    = $model->getState();
+        $this->authors		    = $model->getAuthors();
+        $this -> filterForm     = $model->getFilterForm();
+        $this -> activeFilters  = $model->getActiveFilters();
+        $this -> isEmptyState   = $model->getIsEmptyState();
 
         // Check for errors.
         if (count($errors = $this->get('Errors'))) {
@@ -117,10 +117,8 @@ class HtmlView extends BaseHtmlView {
      */
     protected function addToolbar()
     {
-//        $user   = TZ_PortfolioUser::getUser();
         $user       = $this -> getCurrentUser();
-        $toolbar    = Toolbar::getInstance();
-
+        $toolbar    = $this->getDocument()->getToolbar();
         // Get the results for each action.
         $canDo      = TZ_PortfolioHelper::getActions( 'category', $this -> state -> get('filter.category_id'));
 
@@ -129,9 +127,8 @@ class HtmlView extends BaseHtmlView {
         if ($canDo->get('core.create')) {
             $toolbar->addNew('article.add');
         }
-
         if (!$this->isEmptyState && ($canDo->get('core.edit.state') || $canDo -> get('core.edit.state.own')
-                || $user->authorise('core.admin'))) {
+                || $user->authorise('core.admin', 'com_tz_portfolio') || $user->authorise('core.options', 'com_tz_portfolio'))) {
 
             /** @var  DropdownButton $dropdown */
             $dropdown = $toolbar->dropdownButton('status-group', 'JTOOLBAR_CHANGE_STATUS')
@@ -141,7 +138,6 @@ class HtmlView extends BaseHtmlView {
                 ->listCheck(true);
 
             $childBar = $dropdown->getChildToolbar();
-
             if ($canDo->get('core.edit.state')) {
                 $childBar->publish('articles.publish')->listCheck(true);
 

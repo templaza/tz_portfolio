@@ -59,8 +59,9 @@ class HtmlView extends BaseHtmlView
      */
     public function display($tpl = null)
     {
-        $this -> item   = $this -> get('Item');
-        $this -> form   = $this -> get('Form');
+        $model = $this->getModel();
+        $this -> item   = $model -> getItem();
+        $this -> form   = $model -> getForm();
 
         $this -> canDo  = TZ_PortfolioHelper::getActions(COM_TZ_PORTFOLIO, 'tag');
 
@@ -72,11 +73,9 @@ class HtmlView extends BaseHtmlView
     protected function addToolbar(){
         Factory::getApplication()->input->set('hidemainmenu', true);
 
-        $user	    = Factory::getApplication()->getIdentity();
+        $toolbar    = $this->getDocument()->getToolbar();
         $canDo      = $this -> canDo;
-        $userId     = $user -> id;
         $isNew      = ($this -> item -> id == 0);
-        $toolbar    = Toolbar::getInstance();
 
         ToolbarHelper::title(Text::sprintf('COM_TZ_PORTFOLIO_TAGS_MANAGER_TASK',
             Text::_(($isNew)?'COM_TZ_PORTFOLIO_PAGE_ADD_TAG':'COM_TZ_PORTFOLIO_PAGE_EDIT_TAG')),'tag');
@@ -89,11 +88,6 @@ class HtmlView extends BaseHtmlView
             $saveGroup->configure(
                 function (Toolbar $childBar) use ($user) {
                     $childBar->save('tag.save');
-
-//                    if ($user->authorise('core.create', 'com_menus.menu')) {
-//                        $childBar->save('tag.save2menu', 'JTOOLBAR_SAVE_TO_MENU');
-//                    }
-
                     $childBar->save2new('tag.save2new');
                 }
             );

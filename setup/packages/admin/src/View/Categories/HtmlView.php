@@ -73,16 +73,16 @@ class HtmlView extends BaseHtmlView
 	public function display($tpl = null)
 	{
         Factory::getApplication() -> getLanguage()->load('com_categories');
-
-		$this -> state		    = $this->get('State');
-		$this -> items		    = $this->get('Items');
-		$this -> pagination	    = $this->get('Pagination');
-        $this -> filterForm     = $this -> get('FilterForm');
-        $this -> activeFilters  = $this -> get('ActiveFilters');
-        $this -> isEmptyState   = $this->get('IsEmptyState');
+        $model = $this->getModel();
+		$this -> state		    = $model->getState();
+		$this -> items		    = $model->getItems();
+		$this -> pagination	    = $model->getPagination();
+        $this -> filterForm     = $model->getFilterForm();
+        $this -> activeFilters  = $model->getActiveFilters();
+        $this -> isEmptyState   = $model->getIsEmptyState();
 
 		// Check for errors.
-		if (($errors = $this->get('Errors')) && count($errors)) {
+		if (($errors = $model->getErrors()) && count($errors)) {
             throw new GenericDataException(implode("\n", $errors), 500);
 		}
 
@@ -134,9 +134,8 @@ class HtmlView extends BaseHtmlView
 		$categoryId	= $this->state->get('filter.category_id');
 		$component	= $this->state->get('filter.component');
 		$section	= $this->state->get('filter.section');
-		$canDo		= null;
-		$user		= Factory::getApplication()->getIdentity();
-        $toolbar    = Toolbar::getInstance();
+		$user		= $this -> getCurrentUser();
+        $toolbar    = $this->getDocument()->getToolbar();
 
 		// Need to load the menu language file as mod_menu hasn't been loaded yet.
 		$lang = Factory::getApplication() -> getLanguage();

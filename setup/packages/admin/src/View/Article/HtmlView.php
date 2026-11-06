@@ -90,20 +90,15 @@ class HtmlView extends BaseHtmlView
             }
 
             // Initialiase variables.
-            $this->form		= $this->get('Form');
-            $this->item		= $this->get('Item');
-            $this->state	= $this->get('State');
+            $model    = $this->getModel();
+            $this->form		= $model->getForm();
+            $this->item		= $model->getItem();
+            $this->state	= $model->getState();
 
             $canDo	= TZ_PortfolioHelper::getActions(COM_TZ_PORTFOLIO, 'article', $this -> item -> id);
             $this -> canDo	= $canDo;
 
-//            // Check for errors.
-//            if (count($errors = $this->get('Errors'))) {
-//                JError::raiseError(500, implode("\n", $errors));
-//                return false;
-//            }
-
-            $this -> extraFields	= $this -> get('ExtraFields');
+            $this -> extraFields	= $model->getExtraFields();
 
             // Import all add-ons
             AddonHelper::importAllAddOns();

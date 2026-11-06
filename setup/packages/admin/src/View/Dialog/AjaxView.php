@@ -49,8 +49,9 @@ class AjaxView extends BaseHtmlView
 
     public function display($tpl = null)
     {
-        $this -> state      = $this -> get('State');
-        $this -> formReject = $this -> get('FormReject');
+        $model = $this->getModel();
+        $this -> state      = $model->getState();
+        $this -> formReject = $model->getFormReject();
 
         ob_start();
         parent::display($tpl);

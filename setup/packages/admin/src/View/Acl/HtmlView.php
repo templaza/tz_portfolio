@@ -55,9 +55,10 @@ class HtmlView extends BaseHtmlView {
      * Display the view.
      */
     public function display($tpl = null) {
-        $this -> state = $this -> get('State');
-        $this -> item  = $this -> get('Item');
-        $this -> form  = $this -> get('Form');
+        $model = $this->getModel();
+        $this -> state = $model -> getState();
+        $this -> item  = $model -> getItem();
+        $this -> form  = $model -> getForm();
 
         $this -> addToolbar();
 
@@ -73,11 +74,11 @@ class HtmlView extends BaseHtmlView {
     {
         
         Factory::getApplication()->input->set('hidemainmenu', true);
-        
-        $toolbar    = Toolbar::getInstance();
+
+        $toolbar    = $this->getDocument()->getToolbar();
 
         // Get the results for each action.
-        $canDo      = TZ_PortfolioHelper::getActions('com_tz_portfolio_plus');
+        $canDo      = TZ_PortfolioHelper::getActions('component');
 
         $section    = $this -> state -> get('acl.section');
 

@@ -72,18 +72,17 @@ class HtmlView extends BaseHtmlView
      */
     public function display($tpl = null)
     {
-
         Factory::getApplication() -> getLanguage()->load('com_categories');
-
-        $this -> form	= $this->get('Form');
-        $this -> item	= $this->get('Item');
-        $this -> state	= $this->get('State');
-        $this -> assoc  = $this->get('Assoc');
+        $model = $this->getModel();
+        $this -> form	= $model->getForm();
+        $this -> item	= $model->getItem();
+        $this -> state	= $model->getState();
+        $this -> assoc  = $model->getAssoc();
 
         $this -> canDo	= TZ_PortfolioHelper::getActions(  'category', $this->item->id);
 
         // Check for errors.
-        if (count($errors = $this->get('Errors'))) {
+        if (count($errors = $model->getErrors())) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 
@@ -114,9 +113,9 @@ class HtmlView extends BaseHtmlView
 	{
         // Initialise variables.
         $extension	= Factory::getApplication() -> input -> getCmd('extension');
-        $user		= Factory::getApplication()->getIdentity();
+        $user       = $this -> getCurrentUser();
+        $toolbar    = $this->getDocument()->getToolbar();
         $userId		= $user->id;
-        $toolbar    = Toolbar::getInstance();
 
         $isNew		= ($this->item->id == 0);
         $checkedOut	= !($this->item->checked_out == 0 || $this->item->checked_out == $userId);

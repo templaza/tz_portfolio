@@ -39,7 +39,8 @@ class TplView extends HtmlView
 
     public function display($tpl=null)
     {
-        $this -> state  = $this -> get('State');
+        $model = $this -> getModel();
+        $this -> state      = $model -> getState();
 
         parent::display($tpl);
         $app    = Factory::getApplication();

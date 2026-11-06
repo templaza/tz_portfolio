@@ -68,15 +68,16 @@ class HtmlView extends BaseHtmlView
 	 */
 	public function display($tpl = null)
 	{
+        $model = $this->getModel();
         if($this -> getLayout() == 'upload') {
-            $this->form = $this->get('Form');
+            $this->form = $model->getForm();
         }
-        $this->state            = $this->get('State');
-        $this->items            = $this->get('Items');
-        $this -> templates      = $this -> get('Templates');
-        $this->pagination       = $this->get('pagination');
-        $this -> filterForm     = $this -> get('FilterForm');
-        $this -> activeFilters  = $this -> get('ActiveFilters');
+        $this->state            = $model->getState();
+        $this->items            = $model->getItems();
+        $this -> templates      = $model -> getTemplates();
+        $this->pagination       = $model->getPagination();
+        $this -> filterForm     = $model -> getFilterForm();
+        $this -> activeFilters  = $model -> getActiveFilters();
 
         Factory::getApplication() -> getLanguage() -> load('com_templates');
         Factory::getApplication() -> getLanguage() -> load('com_installer');
@@ -96,8 +97,8 @@ class HtmlView extends BaseHtmlView
 	protected function addToolbar()
 	{
 
-        $user       = Factory::getApplication()->getIdentity();
-        $toolbar    = Toolbar::getInstance();
+        $user       = $this->getCurrentUser();
+        $toolbar    = $this->getDocument()->getToolbar();
 
         // Get the results for each action.
         $canDo = TZ_PortfolioHelper::getActions('style');

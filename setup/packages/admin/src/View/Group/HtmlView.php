@@ -72,8 +72,9 @@ class HtmlView extends BaseHtmlView
      */
     public function display($tpl = null)
     {
-        $this -> form   = $this -> get('Form');
-        $this -> item   = $this -> get('Item');
+        $model = $this->getModel();
+        $this -> form   = $model->getForm();
+        $this -> item   = $model->getItem();
         $canDo	        = TZ_PortfolioHelper::getActions( 'group'
             , $this -> item -> id);
         $this -> canDo	= $canDo;
@@ -85,12 +86,12 @@ class HtmlView extends BaseHtmlView
     protected function addToolbar(){
         Factory::getApplication()->input->set('hidemainmenu', true);
 
-        $user	    = Factory::getApplication()->getIdentity();
+        $user       = $this->getCurrentUser();
+        $toolbar    = $this->getDocument()->getToolbar();
         $canDo      = $this -> canDo;
         $userId     = $user -> id;
         $isNew      = ($this -> item -> id == 0);
         $checkedOut = !($this -> item -> checked_out == 0 || $this -> item -> checked_out == $userId);
-        $toolbar    = Toolbar::getInstance();
 
         ToolbarHelper::title(Text::sprintf('COM_TZ_PORTFOLIO_GROUP_FIELDS_MANAGER_TASK',
             Text::_(($isNew)?'COM_TZ_PORTFOLIO_PAGE_ADD_GROUP_FIELD':'COM_TZ_PORTFOLIO_PAGE_EDIT_GROUP_FIELD')),'folder-plus-2');

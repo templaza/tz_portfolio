@@ -63,15 +63,12 @@ class HtmlView extends BaseHtmlView
     public function display($tpl=null)
     {
         Factory::getApplication() -> getLanguage() -> load('com_templates');
-        $document   = Factory::getApplication() -> getDocument();
-//        $this -> document -> addCustomTag('<link rel="stylesheet" href="'.Uri::base(true).'/components/com_tz_portfolio/css/admin-layout.min.css" type="text/css"/>');
-//        $this -> document -> addCustomTag('<link rel="stylesheet" href="'.Uri::base(true).'/components/com_tz_portfolio/css/spectrum.min.css" type="text/css"/>');
-
-        $this -> state      = $this -> get('State');
-        $this -> item       = $this -> get('Item');
-        $this -> tzlayout   = $this -> get('TZLayout');
-        $this -> form       = $this -> get('Form');
-        $this -> presets    = $this -> get('Presets');
+        $model = $this -> getModel();
+        $this -> state      = $model -> getState();
+        $this -> item       = $model -> getItem();
+        $this -> tzlayout   = $model -> getTZLayout();
+        $this -> form       = $model -> getForm();
+        $this -> presets    = $model -> getPresets();
 
         if($includeTypes = AddonHelper::getContentTypes()) {
             $this->includeTypes = $includeTypes;
@@ -90,10 +87,6 @@ class HtmlView extends BaseHtmlView
 
         $wa -> useStyle('minicolors');
 
-//        $this -> document -> addScript(Uri::base(true).'/components/com_tz_portfolio/js/libs.min.js', array('version' => 'auto'));
-//        $this -> document -> addScript(Uri::base(true).'/components/com_tz_portfolio/js/jquery-ui.min.js', array('version' => 'v=1.11.4'));
-//        $this -> document -> addScript(Uri::base(true).'/components/com_tz_portfolio/js/layout-admin.min.js', array('version' => 'auto'));
-//        $this -> document -> addScript(Uri::base(true).'/components/com_tz_portfolio/js/spectrum.min.js', array('version' => 'auto'));
         $wa -> addInlineScript('
         (function($){
             $(document).ready(function(){
@@ -121,7 +114,7 @@ class HtmlView extends BaseHtmlView
 
         Factory::getApplication()->input->set('hidemainmenu', true);
 
-        $user   = Factory::getApplication()->getIdentity();
+        $user   = $this->getCurrentUser();
         $isNew  = ($this -> item -> id == 0);
         $canDo  = ContentHelper::getActions('com_tz_portfolio');
 
