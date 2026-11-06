@@ -74,8 +74,8 @@ class HtmlView extends BaseHtmlView
 	public function display($tpl = null)
 	{
         $this -> addToolbar();
-
-        $this -> items  = $this -> get('Items');
+        $model = $this -> getModel();
+        $this -> items  = $model -> getItems();
 
         parent::display($tpl);
 	}
@@ -87,8 +87,8 @@ class HtmlView extends BaseHtmlView
 	protected function addToolbar()
 	{
 
-        $user       = Factory::getApplication()->getIdentity();
-        $toolbar    = Toolbar::getInstance();
+        $user       = $this -> getCurrentUser();
+        $toolbar    = $this->getDocument()->getToolbar();
 
         // Get the results for each action.
         $canDo = TZ_PortfolioHelper::getActions();

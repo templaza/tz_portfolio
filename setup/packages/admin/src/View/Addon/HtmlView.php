@@ -70,32 +70,32 @@ class HtmlView extends BaseHtmlView {
     public $activeFilters;
 
     private $isEmptyState = false;
+    public $return_link = null;
 
     /**
      * Display the view.
      */
     public function display($tpl = null) {
-
-        $this -> state              = $this->get('State');
-        $this -> item               = $this->get('Item');
-        $this -> return_link        = $this -> get('ReturnLink');
+        $model = $this->getModel();
+        $this -> state              = $model->getState();
+        $this -> item               = $model->getItem();
         $canDo	                    = TZ_PortfolioHelper::getActions('addon', $this -> item -> id);
         $this -> canDo	= $canDo;
 
         if($this -> getLayout() == 'manager') {
-            $this->addonItem = $this->get('AddonItem');
+            $this->addonItem = $model->getAddonItem();
         }
 
-        $this -> form       = $this -> get('form');
+        $this -> form       = $model -> getform();
 
         // Check for errors.
-        if (count($errors = $this->get('Errors')))
+        if (count($errors = $model->getErrors()))
         {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 
         if($this -> getLayout() == 'upload') {
-            $this -> filterForm   = $this -> get('FilterForm');
+            $this -> filterForm   = $model -> getFilterForm();
         }
 
         $this->addToolbar();
@@ -112,7 +112,9 @@ class HtmlView extends BaseHtmlView {
     {
         Factory::getApplication()->getInput()->set('hidemainmenu', true);
 
-        $user		= Factory::getApplication()->getIdentity();
+        $user       = $this -> getCurrentUser();
+        $toolbar    = $this->getDocument()->getToolbar();
+
         $userId		= $user->get('id');
 
         $canDo = TZ_PortfolioHelper::getActions();

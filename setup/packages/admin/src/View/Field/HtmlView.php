@@ -66,20 +66,12 @@ class HtmlView extends BaseHtmlView
      */
     public function display($tpl = null)
     {
-        $this -> state  = $this -> get('State');
-        $this -> form   = $this -> get('Form');
-        $this -> item   = $this -> get('Item');
+        $model = $this->getModel();
+        $this -> state  = $model->getState();
+        $this -> form   = $model->getForm();
+        $this -> item   = $model->getItem();
         $this -> canDo	= TZ_PortfolioHelper::getActions('field'
             , $this -> item -> id);
-
-//        $groupModel = $this -> getModel('Groups');
-//
-//        if($groupModel) {
-//            $groupModel -> setState('filter_order', 'name');
-//            $groupModel -> setState('filter_order_Dir', 'ASC');
-//
-//            $this -> groups = $groupModel -> getItems();
-//        }
 
         if($this -> item -> id == 0){
             $this -> item -> published = 'P';
@@ -101,12 +93,12 @@ class HtmlView extends BaseHtmlView
 
         Factory::getApplication()->input->set('hidemainmenu', true);
 
-        $user	    = Factory::getApplication()->getIdentity();
+        $user       = $this->getCurrentUser();
+        $toolbar    = $this->getDocument()->getToolbar();
         $userId     = $user -> id;
         $isNew      = ($this -> item -> id == 0);
         $canDo      = $this -> canDo;
         $checkedOut = !($this->item->checked_out == 0 || $this->item->checked_out == $userId);
-        $toolbar    = Toolbar::getInstance();
 
         ToolBarHelper::title(Text::sprintf('COM_TZ_PORTFOLIO_FIELDS_MANAGER_TASK',
             Text::_(($isNew)?'COM_TZ_PORTFOLIO_PAGE_ADD_FIELD':'COM_TZ_PORTFOLIO_PAGE_EDIT_FIELD')),'file-plus');
@@ -119,11 +111,6 @@ class HtmlView extends BaseHtmlView
             $saveGroup -> configure(
                 function (Toolbar $childBar) use ($user) {
                     $childBar -> save('field.save');
-
-//                    if ($user -> authorise('core.create', 'com_menus.menu')) {
-//                        $childBar -> save('field.save2menu', 'JTOOLBAR_SAVE_TO_MENU');
-//                    }
-
                     $childBar -> save2new('field.save2new');
                 }
             );

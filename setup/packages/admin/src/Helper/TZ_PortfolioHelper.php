@@ -44,45 +44,8 @@ class TZ_PortfolioHelper  extends ContentHelper{
 
     public static function getActions($section = '', $id = 0, $parent_section = null)
     {
-        $user	    = Factory::getApplication()->getIdentity();
-        $result     = new Registry();
         $component  = 'com_tz_portfolio';
-
-        $path = JPATH_ADMINISTRATOR . '/components/'.$component.'/access.xml';
-
-        $assetName = $component;
-
-        if ($section && $id)
-        {
-            $assetName  = $component . '.' . $section . '.' . (int) $id;
-            $asset      = new Asset(Factory::getContainer()->get(DatabaseInterface::class), Factory::getApplication() -> getDispatcher());
-
-            if(!$asset -> loadByName($assetName)){
-                $assetName  = $component . '.' . $parent_section;
-            }
-        }elseif (empty($id))
-        {
-            $assetName = $component . '.' . $section;
-        }
-
-        $actions = Access::getActionsFromFile($path, "/access/section[@name='component']/");
-//        $actions = Access::getActionsFromFile($path, "/access/section[@name='".(!empty($section)?$section:'component')."']/");
-
-        if ($actions === false)
-        {
-            Log::add(
-                Text::sprintf('JLIB_ERROR_COMPONENTS_ACL_CONFIGURATION_FILE_MISSING_OR_IMPROPERLY_STRUCTURED', $component), Log::ERROR, 'jerror'
-            );
-
-            return $result;
-        }
-
-        foreach ($actions as $action)
-        {
-            $result->set($action->name, $user->authorise($action->name, $assetName));
-        }
-
-        return $result;
+        return parent::getActions($component, $section, $id);
     }
 
     public static function getDataFromServer($url = null, $method = 'get'){

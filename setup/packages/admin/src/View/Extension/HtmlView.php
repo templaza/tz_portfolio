@@ -51,24 +51,22 @@ class HtmlView extends BaseHtmlView {
 
     public function display($tpl = null)
     {
-        $this->state                = $this->get('State');
-        $this->item                 = $this->get('Item');
-        $this -> return_link        = $this -> get('ReturnLink');
+        $model = $this->getModel();
+        $this->state                = $model->getState();
+        $this->item                 = $model->getItem();
 
         if($this -> getLayout() == 'manager') {
-            $this->addonItem = $this->get('AddonItem');
+            $this->addonItem = $model->getAddonItem();
         }
 
         // Check for errors.
-        if (count($errors = $this->get('Errors')))
+        if (count($errors = $model->getErrors()))
         {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 
         if($this -> getLayout() == 'upload') {
-//            $this -> document -> addScript(TZ_Portfolio_PlusUri::base(true, true).'/js/libs.min.js',
-//                array('version' => 'auto'));
-            $this -> filterForm   = $this -> get('FilterForm');
+            $this -> filterForm   = $model->getFilterForm();
         }
 
         $this->addToolbar();
@@ -78,8 +76,8 @@ class HtmlView extends BaseHtmlView {
 
     protected function addToolbar(){
 
-        $user		= Factory::getApplication()->getIdentity();
-        $userId		= $user->get('id');
+        $user       = $this -> getCurrentUser();
+        $userId		= $user->id;
 
         $canDo = ContentHelper::getActions('com_tz_portfolio');
         $checkedOut	= !($this->item->checked_out == 0 || $this->item->checked_out == $userId);

@@ -192,23 +192,9 @@ class DashboardModel extends ListModel
      * @return object|bool
      * */
     public function getInformation(){
-
-        $storeId    = md5(__METHOD__);
-
         $comp   = $this -> getState('component');
 
         return TZ_PortfolioHelper::getXMLManifest($comp);
-//        $file   = Path::clean(COM_TZ_PORTFOLIO_ADMIN_PATH.'/'.$comp.'.xml');
-//
-//        if(!file_exists($file)){
-//            return false;
-//        }
-//
-//        if($xml = simplexml_load_file($file)){
-//            return $this -> cache[$storeId] = $xml;
-//        }
-//
-//        return false;
     }
 
     /**

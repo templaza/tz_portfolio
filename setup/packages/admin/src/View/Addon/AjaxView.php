@@ -53,12 +53,12 @@ class AjaxView extends BaseHtmlView {
         $app    = Factory::getApplication();
         $json   = new JsonResponse();
         $data   = new \stdClass();
-
-        $this->state                = $this->get('State');
+        $model  = $this->getModel();
+        $this->state                = $model->getState();
 
         if($this -> getLayout() == 'upload_list_item') {
-            $this -> itemsServer    = $this -> get('ItemsFromServer');
-            $paginationServer       = $this -> get('PaginationFromServer');
+            $this -> itemsServer    = $model -> getItemsFromServer();
+            $paginationServer       = $model -> getPaginationFromServer();
             $data -> html           = $this -> loadTemplate($tpl);
 
             $pagHtml    = $paginationServer -> getListFooter();

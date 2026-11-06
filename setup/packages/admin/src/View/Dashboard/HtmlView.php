@@ -75,7 +75,6 @@ class HtmlView extends BaseHtmlView {
     protected function addToolbar()
     {
         $user   = $this -> getCurrentUser();
-        $canDo	= TZ_PortfolioHelper::getActions();
 
         ToolbarHelper::title(Text::_('COM_TZ_PORTFOLIO_DASHBOARD'), 'home-2');
 

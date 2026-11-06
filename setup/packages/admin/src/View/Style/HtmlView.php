@@ -84,9 +84,9 @@ class HtmlView extends BaseHtmlView
      * Display the view.
      */
     public function display($tpl = null) {
-
-        $this -> state              = $this->get('State');
-        $this -> item               = $this->get('Item');
+        $model = $this->getModel();
+        $this -> state              = $model->getState();
+        $this -> item               = $model->getItem();
         $canDo	                    = TZ_PortfolioHelper::getActions('addon', $this -> item -> id);
         $this -> canDo	= $canDo;
 

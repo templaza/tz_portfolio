@@ -73,16 +73,14 @@ class HtmlView extends BaseHtmlView
 	 */
 	public function display($tpl = null)
 	{
+        $model = $this->getModel();
+        $this -> items          = $model -> getItems();
+        $this -> state          = $model -> getState();
+        $this -> pagination     = $model -> getPagination();
+        $this -> filterForm     = $model -> getFilterForm();
+        $this -> activeFilters  = $model -> getActiveFilters();
+        $this -> isEmptyState   = $model -> getIsEmptyState();
 
-        $this -> items          = $this -> get('Items');
-        $this -> state          = $this -> get('State');
-        $this -> pagination     = $this -> get('Pagination');
-        $this -> filterForm     = $this -> get('FilterForm');
-        $this -> activeFilters  = $this -> get('ActiveFilters');
-        $this -> isEmptyState   = $this -> get('IsEmptyState');
-//        if (!\count($this->items) && $this -> isEmptyState = $this->get('IsEmptyState')) {
-//            $this -> setLayout('emptystate');
-//        }
         // Check for errors.
         if (\count($errors = $this->get('Errors'))) {
             throw new GenericDataException(implode("\n", $errors), 500);
@@ -102,9 +100,8 @@ class HtmlView extends BaseHtmlView
 	 */
 	protected function addToolbar()
 	{
-
-        $user       = Factory::getApplication()->getIdentity();
-        $toolbar    = Toolbar::getInstance();
+        $user       = $this->getCurrentUser();
+        $toolbar    = $this->getDocument()->getToolbar();
 
         // Get the results for each action.
         $canDo = TZ_PortfolioHelper::getActions('group');

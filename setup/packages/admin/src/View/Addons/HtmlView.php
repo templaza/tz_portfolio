@@ -77,17 +77,13 @@ class HtmlView extends BaseHtmlView {
      * Display the view.
      */
     public function display($tpl = null) {
-
-        $this -> state          = $this->get('State');
-        $this -> items          = $this->get('Items');
-        $this -> pagination     = $this->get('pagination');
-        $this -> filterForm     = $this->get('FilterForm');
-        $this -> activeFilters  = $this->get('ActiveFilters');
-        $this -> isEmptyState   = $this->get('IsEmptyState');
-
-//        if (!\count($this->items) && $this -> isEmptyState = $this->get('IsEmptyState')) {
-//            $this -> setLayout('emptystate');
-//        }
+        $model = $this->getModel();
+        $this -> state          = $model->getState();
+        $this -> items          = $model->getItems();
+        $this -> pagination     = $model->getPagination();
+        $this -> filterForm     = $model->getFilterForm();
+        $this -> activeFilters  = $model->getActiveFilters();
+        $this -> isEmptyState   = $model->getIsEmptyState();
 
         // We don't need toolbar in the modal window.
         if ($this->getLayout() !== 'modal' && $this->getLayout() !== 'upload') {
@@ -104,13 +100,10 @@ class HtmlView extends BaseHtmlView {
      */
     protected function addToolbar()
     {
-//        $user   = TZ_PortfolioUser::getUser();
         $user   = $this -> getCurrentUser();
-
 
         // Get the results for each action.
         $canDo  = TZ_PortfolioHelper::getActions( 'addon');
-
 
         ToolbarHelper::title(Text::_('COM_TZ_PORTFOLIO_ADDONS_MANAGER'), 'puzzle');
 

@@ -414,7 +414,6 @@ class AddonModel extends AdminModel implements WorkflowModelInterface
         $input = $app->input;
 
         // Load installer plugins for assistance if required:
-//        JPluginHelper::importPlugin('installer');
         PluginHelper::importPlugin('installer');
 
         $package = null;

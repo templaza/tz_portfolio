@@ -48,8 +48,8 @@ class AjaxView extends BaseHtmlView {
      */
     public function display($tpl = null) {
         $app        = Factory::getApplication();
-
-        $this -> feedBlog   = $this -> get('FeedBlog');
+        $model      = $this->getModel();
+        $this -> feedBlog   = $model->getFeedBlog();
 
         $json       = new JsonResponse();
 
