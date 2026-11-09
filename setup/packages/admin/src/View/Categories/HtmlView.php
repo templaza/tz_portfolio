@@ -11,13 +11,13 @@
 
 # @License - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 
-# Website: http://www.tzportfolio.com
+# Website: http://tzportfolio.com
 
-# Technical Support:  Forum - https://www.tzportfolio.com/help/forum.html
+# Technical Support:  Forum - https://github.com/templaza/tz_portfolio/issues/
 
-# Family website: http://www.templaza.com
+# Family website: http://templaza.com
 
-# Family Support: Forum - https://www.templaza.com/Forums.html
+# Family Support: Forum - https://templaza.com/Forums.html
 
 -------------------------------------------------------------------------*/
 
@@ -244,7 +244,7 @@ class HtmlView extends BaseHtmlView
 		}
 
 		ToolbarHelper::help($ref_key, false,
-            'https://www.tzportfolio.com/document/administration/48-how-to-create-a-category-in-tz-portfolio-plus.html?tmpl=component'
+            'https://tzportfolio.com/document/administration/48-how-to-create-a-category-in-tz-portfolio-plus.html?tmpl=component'
             , 'com_tz_portfolio');
 
         TZ_PortfolioToolbarHelper::customHelp('https://www.youtube.com/channel/UCrLN8LMXTyTahwDKzQ-YOqg/videos'

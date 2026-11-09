@@ -11,13 +11,13 @@
 
 # @License - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 
-# Website: http://www.tzportfolio.com
+# Website: http://tzportfolio.com
 
-# Technical Support:  Forum - https://www.tzportfolio.com/help/forum.html
+# Technical Support:  Forum - https://github.com/templaza/tz_portfolio/issues/
 
-# Family website: http://www.templaza.com
+# Family website: http://templaza.com
 
-# Family Support: Forum - https://www.templaza.com/Forums.html
+# Family Support: Forum - https://templaza.com/Forums.html
 
 -------------------------------------------------------------------------*/
 
@@ -243,7 +243,7 @@ $wa -> addInlineScript('
                         <b class="latest"><?php echo Text::_('COM_TZ_PORTFOLIO_SOFTWARE_IS_UP_TO_DATE'); ?></b>
                         <b class="requires-updating">
                             <?php echo Text::_('COM_TZ_PORTFOLIO_REQUIRES_UPDATING'); ?>
-                            <a href="http://www.tzportfolio.com/" class="btn btn-default btn-sm btn-secondary"><?php echo Text::_('COM_TZ_PORTFOLIO_UPDATE_NOW'); ?></a>
+                            <a href="http://tzportfolio.com/" class="btn btn-default btn-sm btn-secondary"><?php echo Text::_('COM_TZ_PORTFOLIO_UPDATE_NOW'); ?></a>
                         </b>
                         <div class="versions-meta">
                             <div class="text-muted local-version"><?php echo Text::sprintf('COM_TZ_PORTFOLIO_INSTALLED_VERSION', '');?> <span data-local-version="<?php echo $xml->version; ?>"><?php echo $xml->version; ?></span></div>

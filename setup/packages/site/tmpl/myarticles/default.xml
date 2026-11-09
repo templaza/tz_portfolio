@@ -3,7 +3,7 @@
         <layout title="COM_TZ_PORTFOLIO_MY_ARTICLES_VIEW_DEFAULT_TITLE"
                 option="COM_TZ_PORTFOLIO_ARTICLES_VIEW_DEFAULT_OPTION">
             <help
-                url="https://www.tzportfolio.com/document.html"
+                url="https://tzportfolio.com/document.html"
             />
             <message>
                 <![CDATA[COM_TZ_PORTFOLIO_MY_ARTICLES_VIEW_DEFAULT_DESC]]>
