@@ -11,13 +11,13 @@
 
 # @License - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 
-# Website: http://www.tzportfolio.com
+# Website: http://tzportfolio.com
 
-# Technical Support:  Forum - https://www.tzportfolio.com/help/forum.html
+# Technical Support:  Forum - https://github.com/templaza/tz_portfolio/issues/
 
-# Family website: http://www.templaza.com
+# Family website: http://templaza.com
 
-# Family Support: Forum - https://www.templaza.com/Forums.html
+# Family Support: Forum - https://templaza.com/Forums.html
 
 -------------------------------------------------------------------------*/
 
@@ -57,10 +57,10 @@ if(!defined('COM_TZ_PORTFOLIO_SETUP_TMP')) {
     define('COM_TZ_PORTFOLIO_SETUP_TMP', $path . '/tmp');
 }
 if(!defined('COM_TZ_PORTFOLIO_SETUP_VERIFY')) {
-    define('COM_TZ_PORTFOLIO_SETUP_VERIFY', 'https://www.tzportfolio.com/download.html?task=license.verify');
+    define('COM_TZ_PORTFOLIO_SETUP_VERIFY', 'https://tzportfolio.com/download.html?task=license.verify');
 }
 if(!defined('COM_TZ_PORTFOLIO_SETUP_ACTIVE')) {
-    define('COM_TZ_PORTFOLIO_SETUP_ACTIVE', 'https://www.tzportfolio.com/download.html?task=license.active');
+    define('COM_TZ_PORTFOLIO_SETUP_ACTIVE', 'https://tzportfolio.com/download.html?task=license.active');
 }
 
 

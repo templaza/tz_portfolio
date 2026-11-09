@@ -11,13 +11,13 @@
 
 # @License - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 
-# Website: http://www.tzportfolio.com
+# Website: http://tzportfolio.com
 
-# Technical Support:  Forum - https://www.tzportfolio.com/help/forum.html
+# Technical Support:  Forum - https://github.com/templaza/tz_portfolio/issues/
 
-# Family website: http://www.templaza.com
+# Family website: http://templaza.com
 
-# Family Support: Forum - https://www.templaza.com/Forums.html
+# Family Support: Forum - https://templaza.com/Forums.html
 
 -------------------------------------------------------------------------*/
 
@@ -34,7 +34,7 @@ $displayData = [
     'textPrefix' => 'COM_TZ_PORTFOLIO',
     'formURL'    => 'index.php?option=com_tz_portfolio&view=addons',
     'createURL'  => 'index.php?option=com_tz_portfolio&task=addon.upload',
-    'helpURL'    => 'https://www.tzportfolio.com/document/add-ons/28-installation.html',
+    'helpURL'    => 'https://tzportfolio.com/document/add-ons/28-installation.html',
     'icon'       => 'icon-copy article',
 ];
 

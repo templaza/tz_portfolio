@@ -6,19 +6,19 @@
     <copyright>Copyright (C) 2026 TZ Portfolio.com. All rights reserved.</copyright>
     <license>GNU/GPL v2 or later http://www.gnu.org/licenses/gpl-2.0.html</license>
     <authorEmail>support@templaza.com</authorEmail>
-    <authorUrl>http://www.tzportfolio.com</authorUrl>
-    <familyUrl>http://www.templaza.com</familyUrl>
-    <guideUrl>https://www.tzportfolio.com/document.html</guideUrl>
+    <authorUrl>http://tzportfolio.com</authorUrl>
+    <familyUrl>http://templaza.com</familyUrl>
+    <guideUrl>https://tzportfolio.com/document.html</guideUrl>
     <facebookUrl>https://www.facebook.com/tzportfolio</facebookUrl>
-    <forumUrl>https://www.tzportfolio.com/help/forum.html</forumUrl>
-    <pricingUrl>https://www.tzportfolio.com/pricing.html</pricingUrl>
+    <forumUrl>https://github.com/templaza/tz_portfolio/issues/</forumUrl>
+    <pricingUrl>https://tzportfolio.com/pricing.html</pricingUrl>
     <jedUrl>https://extensions.joomla.org/extension/tz-portfolio</jedUrl>
     <feedBlogUrl>http://feeds.feedburner.com/tzportfolio/blog</feedBlogUrl>
     <facebookGroupUrl>https://www.facebook.com/groups/tzportfolio</facebookGroupUrl>
     <transifexUrl>https://www.transifex.com/templaza-com/tz-portfolio</transifexUrl>
     <youtubeUrl>https://www.youtube.com/channel/UCrLN8LMXTyTahwDKzQ-YOqg/videos</youtubeUrl>
-    <tokenUrl>https://www.tzportfolio.com/blog/how-to-activate-tz-portfolio-pro.html</tokenUrl>
-    <freelicenseUrl>https://www.tzportfolio.com/component/tz_envato_license/licenses.html</freelicenseUrl>
+    <tokenUrl>https://tzportfolio.com/blog/how-to-activate-tz-portfolio-pro.html</tokenUrl>
+    <freelicenseUrl>https://tzportfolio.com/component/tz_envato_license/licenses.html</freelicenseUrl>
     <version>4.1.1</version>
 
     <scriptfile>script.php</scriptfile>
@@ -74,7 +74,7 @@
 
     <updateservers>
         <server type="extension" pirority="1" name="TZ Portfolio Component">
-            <![CDATA[http://www.tzportfolio.com/tzupdates/tz_portfolio.xml]]>
+            <![CDATA[http://tzportfolio.com/tzupdates/tz_portfolio.xml]]>
         </server>
     </updateservers>
 

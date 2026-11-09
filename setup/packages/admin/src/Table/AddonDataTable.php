@@ -12,13 +12,13 @@
 
 # @License - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 
-# Website: http://www.tzportfolio.com
+# Website: http://tzportfolio.com
 
-# Technical Support:  Forum - https://www.tzportfolio.com/help/forum.html
+# Technical Support:  Forum - https://github.com/templaza/tz_portfolio/issues/
 
-# Family website: http://www.templaza.com
+# Family website: http://templaza.com
 
-# Family Support: Forum - https://www.templaza.com/Forums.html
+# Family Support: Forum - https://templaza.com/Forums.html
 
 -------------------------------------------------------------------------*/
 

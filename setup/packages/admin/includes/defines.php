@@ -11,7 +11,7 @@
 
 # @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 
-# Websites: http://www.templaza.com
+# Websites: http://templaza.com
 
 # Technical Support:  Forum - http://templaza.com/Forum
 
@@ -83,8 +83,8 @@ if(!defined('COM_TZ_PORTFOLIO_EDITION')) {
 }
 /* since v2.2.7 */
 if(!defined('COM_TZ_PORTFOLIO_VERIFY_LICENSE')) {
-    define('COM_TZ_PORTFOLIO_VERIFY_LICENSE', 'https://www.tzportfolio.com/download.html?task=license.verify');
+    define('COM_TZ_PORTFOLIO_VERIFY_LICENSE', 'https://tzportfolio.com/download.html?task=license.verify');
 }
 if(!defined('COM_TZ_PORTFOLIO_ACTIVE_LICENSE')) {
-    define('COM_TZ_PORTFOLIO_ACTIVE_LICENSE', 'https://www.tzportfolio.com/download.html?task=license.active');
+    define('COM_TZ_PORTFOLIO_ACTIVE_LICENSE', 'https://tzportfolio.com/download.html?task=license.active');
 }
