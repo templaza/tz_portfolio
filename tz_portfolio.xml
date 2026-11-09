@@ -2,9 +2,9 @@
 <extension type="component" version="4.1" method="upgrade">
     <name>com_tz_portfolio</name>
     <author>TZ Portfolio</author>
-    <creationDate>March 4, 2026</creationDate>
+    <creationDate>November, 2026</creationDate>
     <copyright>Copyright (C) 2026 TZ Portfolio.com. All rights reserved.</copyright>
-    <license>GNU/GPL v2 or later http://www.gnu.org/licenses/gpl-2.0.html</license>
+    <license>GNU/GPL v3 or later http://www.gnu.org/licenses/gpl-3.0.html</license>
     <authorEmail>support@templaza.com</authorEmail>
     <authorUrl>http://tzportfolio.com</authorUrl>
     <familyUrl>http://templaza.com</familyUrl>
@@ -19,7 +19,7 @@
     <youtubeUrl>https://www.youtube.com/channel/UCrLN8LMXTyTahwDKzQ-YOqg/videos</youtubeUrl>
     <tokenUrl>https://tzportfolio.com/blog/how-to-activate-tz-portfolio-pro.html</tokenUrl>
     <freelicenseUrl>https://tzportfolio.com/component/tz_envato_license/licenses.html</freelicenseUrl>
-    <version>4.1.1</version>
+    <version>4.1.2</version>
 
     <scriptfile>script.php</scriptfile>
 
